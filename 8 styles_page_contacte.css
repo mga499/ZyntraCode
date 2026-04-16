@@ -1,0 +1,64 @@
+#tte_p {
+    color: rgb( 15,190, 175);
+    position:absolute;
+    left: 40%;
+    right: 40%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#txt_n{
+    color:white;
+    position: absolute;
+    left: 20%;
+    right: 30%;
+    margin-top: 150px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#txt_E{
+    color: white;
+    position: absolute;
+    left: 20%;
+    right: 30%;
+    margin-top: 70px;
+    font-family: Arial, Helvetica, sans-serif
+}
+
+/* menu caché */
+.menu {
+  position: fixed;
+  left: 20px; /* caché à gauche */
+  top: 0;
+  width: 200px;
+  height: 100%;
+  background: #33333379;
+  padding-top: 60px;
+  transition: 0.3s;
+}
+
+.menu a {
+  display: block;
+  color: rgb(255, 255, 255);
+  
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 10px;
+  text-decoration: none;
+}
+
+#pfch{
+    position: absolute;
+    left: 20%;
+    right: 40%;
+    margin-top: 50px;
+    color:white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#ou{
+    color: white;
+}
+
+
+body{
+    background-color: black;
+}
