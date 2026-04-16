@@ -1,0 +1,151 @@
+#txt_fdc {
+    text-align: center;
+    color: rgb(18, 155, 180);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#txt_E2{
+    position: absolute;
+    left: 40%;
+    right: 40%;
+    color: white;
+}
+
+#bar_E2{
+    position:absolute;
+    left: 30%;
+    right: 40%;
+    background-color: rgb(41, 36, 36);
+    color: white;
+    border-radius: 10px;
+}
+
+#bar_E2:focus{
+    box-shadow: 0px 0px 30px rgb(18, 155, 180);
+}
+
+#bar_E2:hover{
+    box-shadow: 0px 0px 30px rgb(18, 155, 180);
+}
+
+#txt_n{
+    position: absolute;
+    left: 39%;
+    right: 40%;
+    color:white;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#bar_n{
+    position: absolute;
+    left: 30%;
+    right: 40%;
+    background-color: rgb(41, 36, 36);
+    color: white;
+    border-radius: 10px;
+}
+
+#bar_n:focus{
+    box-shadow: 0px 0px 30px rgb(18, 155, 180);
+}
+
+#bar_n:hover{
+    box-shadow: 0px 0px 30px rgb(18, 155, 180);
+}
+
+#txt_D{
+    color: white;
+    position: absolute;
+    left: 39%;
+    right: 40%;
+    font-family: Arial, Helvetica, sans-serif;
+
+}
+
+#bar_D{
+    color: white;
+    background-color: rgb(41, 36, 36);
+    position: absolute;
+    left: 30%;
+    right: 40%;
+    border-radius: 10px;
+}
+
+#bar_D:focus{
+    box-shadow: 0px 0px 30px rgb(18, 155, 180);
+}
+
+#bar_D:hover{
+    box-shadow: 0px 0px 30px rgb(18, 155, 180);
+}
+
+#btn_env{
+    position: absolute;
+    left: 30%;
+    right: 40%;
+    background-color: green;
+    color: white;
+    border-radius: 10px;
+}
+#btn_env:focus{
+    box-shadow: 0px 0px 20px green;
+    background-color: white;
+    color: black;
+}
+
+#btn_env:hover{
+    box-shadow: 0px 0px 20px green;
+}
+#btn_r{
+    position: absolute;
+    left: 30%;
+    right: 40%;
+    background-color: red;
+    color:white;
+    border-radius: 10px;
+}
+
+#btn_r:focus{
+    box-shadow: 0px 0px 20px red;
+    background-color: white;
+    color: black;
+}
+
+#btn_r:hover{
+    box-shadow: 0px 0px 20px red;
+}
+
+#menu-btn{
+    padding: 10px 20px;
+    position: fixed;
+    top: 10px;
+    color: white;
+    background-color: black;
+    border: none;
+}
+
+
+/* menu caché */
+.menu {
+  position: fixed;
+  left: 20px; /* caché à gauche */
+  top: 0;
+  width: 200px;
+  height: 100%;
+  background: #33333379;
+  padding-top: 60px;
+  transition: 0.3s;
+}
+
+.menu a {
+  display: block;
+  color: rgb(255, 255, 255);
+  
+  font-family: Arial, Helvetica, sans-serif;
+  padding: 10px;
+  text-decoration: none;
+}
+
+body {
+    background-color: black;
+}

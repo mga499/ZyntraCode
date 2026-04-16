@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZyntraCode - Bot Discord</title>
+    <link rel="stylesheet" href="7-styles_page_bot.css">
+</head>
+<body>
+<h1 id="bot_dsd">🤖Bot Discord</h1>
+
+<input id="bar_rhr" type="text" placeholder="🔎Rechercher">
+<br>
+<br>
+<button id="btn_rhr">🔎Rechercher</button>
+
+<head>
+<style>
+.hidden {
+  display: none;
+}
+
+#menu {
+  background: #333;
+  width: 150px;
+  height: 600px; /*auteur*/
+  position: fixed;
+  top: 40px;
+}
+
+#menu a {
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  display: block;
+  padding: 10px;
+}
+</style>
+</head>
+
+<body>
+<button id="menu-btn">☰ Menu</button>
+
+<nav id="menu" class="hidden">
+  <a href="index.html">🏠Accueil</a>
+  <a href="2-Bot_discord.html">🤖Bot Discord</a>
+  <a href="3-contact.html">📞Contact</a>
+</nav>
+
+<script>
+const btn = document.getElementById("menu-btn");
+const menu = document.getElementById("menu");
+
+btn.addEventListener("click", () => {
+  menu.classList.toggle("hidden");
+});
+</script>
+
+<h2 id="o_bot">0 bot pour l’instant</h2>
+
+
+</html>
