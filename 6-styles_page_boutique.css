@@ -73,6 +73,10 @@
     border: none;
 }
 
+#txt_inver {
+    color: red;
+    border-color: red;
+
 
 body {
     background-color: rgb(0, 0, 0);
