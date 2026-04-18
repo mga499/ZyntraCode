@@ -91,6 +91,11 @@
     button {
         width: 70%;
     }
+    #btn_rhr {
+        position: absolute;
+        left: 30%;
+        right: 30%;
+    }
 }
 
 
