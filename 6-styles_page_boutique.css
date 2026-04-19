@@ -29,13 +29,6 @@ body {
   padding: 10px;
 }
 
-input, button {
-  width: 90%;
-  max-width: 300px;
-  margin: 10px auto;
-  display: block;
-}
-
 @media (max-width: 600px) {
   h1 {
     font-size: 22px;
