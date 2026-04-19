@@ -17,6 +17,35 @@
     border-radius: 10px;
 }
 
+body {
+  text-align: center;
+  overflow-x: hidden;
+}
+
+#centre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+input, button {
+  width: 90%;
+  max-width: 300px;
+  margin: 10px auto;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 22px;
+  }
+
+  input, button {
+    width: 95%;
+  }
+}
+
 #test_champ:focus{
     border-color: rgb(6, 162, 197);
     background-color: rgb(96, 95, 95);
