@@ -100,22 +100,17 @@ body {
     color: red;
     border-color: red;
 }
-
 @media (max-width: 600px) {
-    h1 {
-        font-size: 20px;
-    }
+  #test_champ,
+  #bouton_recherche {
+    width: 95%;
+  }
 
-    input {
-        width: 70%;
-    }
-
-    button {
-        width: 70%;
-        display: block;
-        margin: auto;
-    }
+  #ZyntraCode2 {
+    font-size: 22px;
+  }
 }
+
 
 
 body{
