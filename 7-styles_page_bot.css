@@ -18,6 +18,16 @@
     border-radius: 10px;
 }
 
+@media (max-width: 600px) {
+  h1 {
+    font-size: 22px;
+  }
+
+  input, button {
+    width: 95%;
+  }
+}
+
 #bar_rhr:focus{
     border-color: rgb(6, 162, 197);
     background-color: rgb(96, 95, 95);
