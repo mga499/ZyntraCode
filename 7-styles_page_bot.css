@@ -76,7 +76,7 @@
 /* bouton hamburger */
 #menu-btn {
     padding: 10px 20px;
-    position: fixed;
+    position: static;
     top: 10px;
     color: white;
     background-color: black;
