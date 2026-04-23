@@ -10,7 +10,7 @@
     color:white;
     font-family: Arial, Helvetica, sans-serif;
     font-size: larger;
-    position: absolute;
+    position: static;
     left: 40%;
     right: 40%;
     background-color: black;
@@ -44,7 +44,7 @@
 
 #btn_rhr{
     padding: 10px 20px;
-    position: absolute;
+    position: static;
     left: 40%;
     right: 40%;
     margin-top: 20px;
