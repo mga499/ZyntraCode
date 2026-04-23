@@ -5,19 +5,6 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-#bar_rhr{
-    padding: 10px 20px;
-    color:white;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: larger;
-    position: static;
-    left: 40%;
-    right: 40%;
-    background-color: black;
-    border-color:white;
-    border-radius: 10px;
-}
-
 @media (max-width: 600px) {
   h1 {
     font-size: 22px;
@@ -41,17 +28,14 @@
     background-color: rgb(96, 95, 95);
 }
 
-
+#bar_rhr,
 #btn_rhr{
-    padding: 10px 20px;
-    position: static;
-    left: 40%;
-    right: 40%;
-    margin-top: 20px;
-    border-radius: 10px;
-    background-color: rgb(15, 190, 175);
-}
+  width:90%;
+  max-width:320px;
+  margin:10px auto;
+  display:block;
 
+    
 #btn_rhr:focus{
     background-color: white;
     box-shadow: 0px 0px 10px rgb(14, 218, 170),
