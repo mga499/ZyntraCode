@@ -28,7 +28,13 @@
     background-color: rgb(96, 95, 95);
 }
 
-#bar_rhr,
+#bar_rhr{
+  width:90%;
+  max-width:320px;
+  margin:10px auto;
+  display:block;
+
+    }
 #btn_rhr{
   width:90%;
   max-width:320px;
