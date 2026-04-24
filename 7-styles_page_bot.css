@@ -4,7 +4,8 @@
   color:rgb(15,190,175);
 }
 
-#bar_rhr{width:90%;
+#bar_rhr{
+  width:90%;
   max-width:320px;
   margin:10px auto;
   display:block;
