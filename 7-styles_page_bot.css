@@ -8,6 +8,8 @@
   max-width:320px;
   margin:10px auto;
   display:block;
+  background-color: black;
+  color:white;
 }
 
 #btn_rhr{
@@ -15,6 +17,7 @@
   max-width:320px;
   margin:10px auto;
   display:block;
+  color:white;
 }
 
 #o_bot{
