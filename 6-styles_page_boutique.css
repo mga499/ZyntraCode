@@ -1,7 +1,10 @@
 #ZyntraCode2{
     text-align: center;
-    color: rgb(6, 162, 197);
     padding: 10px 20px;
+    font-size:38px;
+    font-weight:bold;
+    margin-top:30px;
+    color:rgb(15,190,175);
 }
 
 #test_champ {
