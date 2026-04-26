@@ -100,7 +100,7 @@ body {
 
 #txt_inver {
     text-align: center;
-    color: red;
+    color: white;
     border-color: red;
 }
 @media (max-width: 600px) {
