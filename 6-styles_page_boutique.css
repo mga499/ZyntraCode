@@ -95,7 +95,7 @@ body {
     top: 10px;
     z-index:1000%;
     left: 10%;
-    right: 50%;
+    right: -50%;
     color: white;
     background-color: black;
     border: none;
