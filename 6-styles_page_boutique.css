@@ -91,7 +91,7 @@ body {
 /* bouton hamburger */
 #menu-btn {
     padding: 10px 20px;
-    position: fixed;
+    position: stic;
     top: 10px;
     z-index:1000%;
     left: 10%;
