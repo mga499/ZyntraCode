@@ -93,8 +93,8 @@ body {
     padding: 10px 20px;
     position: fixed;
     top: 10px;
-    z-index:1000;
-    left: 10px;
+    z-index:1000%;
+    left: 10%;
     right: 30%;
     color: white;
     background-color: black;
