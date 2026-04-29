@@ -48,6 +48,48 @@ const menu = document.getElementById("menu");
 btn.addEventListener("click", () => {
   menu.classList.toggle("hidden");
 });
+
+
+const btn = document.getElementById("menu-btn");
+const menu = document.getElementById("menu");
+
+btn.addEventListener("click", () => {
+  menu.classList.toggle("hidden");
+});
+
+//=====================
+//bar de recherche//
+//=====================
+    const mots = [
+];
+
+const input = document.getElementById("bar_rhr");
+const resultats = document.getElementById("resultats");
+
+input.addEventListener("input", function(){
+
+let valeur = input.value.toLowerCase();
+resultats.innerHTML = "";
+
+if(valeur === "") return;
+
+let filtres = mots.filter(item =>
+item.nom.toLowerCase().startsWith(valeur)
+);
+
+if (filtres.length === 0){
+    resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
+}
+
+filtres.forEach(item => {
+resultats.innerHTML += `
+<a href="${item.lien}">
+<p>${item.nom}</p>
+</a>
+`;
+});
+
+});
 </script>
 
 <h2 id="o_bot">0 bot pour l’instant</h2>
