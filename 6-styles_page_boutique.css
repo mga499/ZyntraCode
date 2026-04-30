@@ -77,6 +77,35 @@ body {
     color: white;
 }
 
+/* MOBILE par défaut */
+#menu {
+  display: none;
+  position: fixed;
+  top: 40px;
+  background: #333;
+  width: 150px;
+}
+
+/* PC */
+@media (min-width: 768px) {
+  #menu {
+    display: block; /* toujours visible */
+    position: static;
+    width: auto;
+    height: auto;
+    background: none;
+  }
+
+  #menu a {
+    display: inline-block;
+    padding: 10px;
+  }
+
+  #menu-btn {
+    display: none; /* cacher bouton sur PC */
+  }
+}
+
 
 /* bouton hamburger */
 #menu-btn {
