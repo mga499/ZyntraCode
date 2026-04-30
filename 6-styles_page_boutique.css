@@ -90,7 +90,7 @@ body {
 @media (min-width: 768px) {
   #menu {
     display: block; /* toujours visible */
-    position: static;
+    position: fixed;
     width: auto;
     height: auto;
     background: none;
