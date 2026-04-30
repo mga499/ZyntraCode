@@ -79,11 +79,13 @@ body {
 
 /* MOBILE par défaut */
 #menu {
-  display: none;
   position: fixed;
   top: 40px;
   background: #333;
   width: 150px;
+}
+.hidden {
+  display: none;
 }
 
 /* PC */
@@ -112,7 +114,7 @@ body {
     padding: 10px 20px;
     position: fixed;
     top: 10px;
-    z-index:1000%;
+    z-index:1000;
     left: 10%;
     right: 40%;
     color: white;
@@ -126,13 +128,15 @@ body {
     color: white;
     border-color: red;
 }
+
 @media (max-width: 600px) {
   #test_champ,
   #bouton_recherche {
     width: 95%;
-  #menu-btn{
-      top:20%
   }
+
+  #menu-btn {
+    top: 10px;
   }
 
   #ZyntraCode2 {
