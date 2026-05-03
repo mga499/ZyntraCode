@@ -148,6 +148,9 @@ body {
     width: 150px;
 }
 
+#logo_moderion:focus{
+    width: 170px;
+}
 
 
 body{
