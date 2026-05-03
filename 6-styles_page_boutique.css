@@ -91,11 +91,15 @@ body {
 /* PC */
 @media (min-width: 768px) {
   #menu {
-    display: block; /* toujours visible */
-    position: fixed;
-    width: auto;
-    height: auto;
-    background: none;
+      display: block; /* toujours visible */
+      position: fixed;
+      width: auto;
+      height: auto;
+      background: none;
+  #logo_moderion{
+      margin-top: 10%;    
+      margin-left: -50%;/
+  }
   }
 
   #menu a {
