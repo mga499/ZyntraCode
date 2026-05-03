@@ -146,11 +146,12 @@ body {
 
 #logo_moderion{
     width: 150px;
-    margin-top: 20px;    /* descendre */
-    margin-left: 50px;   /* aller à droite */
+    margin-top: 30px;    /* descendre */
+    margin-left: 10px;/* aller à droite */
+    transition: 0.3s;
 }
 
-#logo_moderion:focus{
+#logo_moderion:hover{
     width: 170px;
 }
 
