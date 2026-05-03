@@ -64,6 +64,10 @@
     padding: 10px;
   }
 
+  #menu a:hover {
+  color: rgb(21, 213, 168);
+}
+
   #menu-btn {
     display: none; /* cacher bouton sur PC */
   }
