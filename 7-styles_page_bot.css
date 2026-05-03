@@ -45,17 +45,6 @@
 
 /* PC */
 @media (min-width: 768px) {
-  #menu {
-    display: block; /* toujours visible */
-    position: fixed;
-    background: none;
-    border-radius:10px;
-    box-shadow: 0px 0px 15px rgb(21, 213, 168);
-    text-decoration: none;
-    color: white;
-    padding: 10px;
-    transition: 0.3s;
-  }
 
   #menu a {
     display: inline-block;
