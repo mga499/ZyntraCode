@@ -48,8 +48,6 @@
   #menu {
     display: block; /* toujours visible */
     position: fixed;
-    width: auto;
-    height: auto;
     background: none;
     border-radius:10px;
     box-shadow: 0px 0px 15px rgb(21, 213, 168);
