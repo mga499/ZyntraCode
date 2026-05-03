@@ -47,11 +47,8 @@
 @media (min-width: 768px) {
 
   #menu a {
-    display: block; /* toujours visible */
-    position: fixed;
-    width: auto;
-    height: auto;
-    background: none;
+    display: inline-block;
+    padding: 10px;
   }
 
   #menu a:hover {
