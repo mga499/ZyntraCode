@@ -29,7 +29,7 @@
   margin-top: 30px;
 }
 
-#btn_rhr:focus{
+#bar_rhr:focus{
   border-color: rgb(6, 162, 197);
   background-color: rgb(96, 95, 95);
   box-shadow: 0px 0px 10px cyan,
@@ -37,7 +37,7 @@
     0px 0px 10px cyan;
 }
 
-#btn_rhr:hover{
+#bar_rhr:hover{
   border-color: rgb(6, 162, 197);
   background-color: rgb(96, 95, 95);
 }
