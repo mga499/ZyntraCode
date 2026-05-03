@@ -146,6 +146,8 @@ body {
 
 #logo_moderion{
     width: 150px;
+    margin-top: 20px;    /* descendre */
+    margin-left: 50px;   /* aller à droite */
 }
 
 #logo_moderion:focus{
