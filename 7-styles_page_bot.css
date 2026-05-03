@@ -46,7 +46,7 @@
 /* PC */
 @media (min-width: 768px) {
 
-    #menu {
+  #menu {
     display: block; /* toujours visible */
     position: fixed;
     width: auto;
