@@ -5,150 +5,353 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZyntraCode</title>
     <link rel="stylesheet" href="6-styles_page_boutique.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        /* MENU */
+        #menu-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: transparent;
+            border: 2px solid rgb(21, 213, 168);
+            color: rgb(21, 213, 168);
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 1001;
+        }
+        #menu {
+            background: #1a1a1a;
+            width: 180px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0px 0px 15px rgb(21, 213, 168);
+            padding: 60px 10px 10px 10px;
+            transition: 0.3s;
+        }
+        #menu a {
+            color: white;
+            display: block;
+            padding: 12px 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        #menu a:hover {
+            color: rgb(21, 213, 168);
+            background: #2a2a2a;
+        }
+        .hidden {
+            display: none;
+        }
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 100px 20px 50px 20px;
+        }
+        .hero h1 {
+            font-size: 60px;
+            color: rgb(21, 213, 168);
+            margin-bottom: 15px;
+        }
+        .hero h3 {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .hero p {
+            color: #aaa;
+            font-size: 16px;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+        }
+        /* BARRE DE RECHERCHE */
+        #test_champ {
+            padding: 12px 20px;
+            width: 350px;
+            border-radius: 10px;
+            border: 2px solid rgb(21, 213, 168);
+            background: #1a1a1a;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+        #resultats {
+            background: #1a1a1a;
+            color: white;
+            width: 350px;
+            margin: 5px auto;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #resultats a {
+            text-decoration: none;
+            color: white;
+        }
+        #resultats p {
+            padding: 10px 15px;
+            margin: 0;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        #resultats p:hover {
+            background: #2a2a2a;
+            color: rgb(21, 213, 168);
+        }
+        /* BOUTON CONTACT */
+        .btn-contact {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: rgb(21, 213, 168);
+            color: black;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .btn-contact:hover {
+            background: transparent;
+            color: rgb(21, 213, 168);
+            border: 2px solid rgb(21, 213, 168);
+        }
+        /* SERVICES */
+        .services {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            padding: 60px 20px;
+            flex-wrap: wrap;
+        }
+        .service-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 15px;
+            padding: 30px;
+            width: 250px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .service-card:hover {
+            border-color: rgb(21, 213, 168);
+            box-shadow: 0 0 20px rgba(21, 213, 168, 0.2);
+        }
+        .service-card .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        .service-card h3 {
+            color: rgb(21, 213, 168);
+            margin-bottom: 10px;
+        }
+        .service-card p {
+            color: #aaa;
+            font-size: 14px;
+        }
+        /* POURQUOI NOUS */
+        .pourquoi {
+            text-align: center;
+            padding: 40px 20px 80px 20px;
+        }
+        .pourquoi h2 {
+            color: rgb(21, 213, 168);
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+        .pourquoi-cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .pourquoi-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            width: 200px;
+            text-align: center;
+        }
+        .pourquoi-card .icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        .pourquoi-card h4 {
+            color: white;
+            margin-bottom: 8px;
+        }
+        .pourquoi-card p {
+            color: #aaa;
+            font-size: 13px;
+        }
+        /* BOT MODERION */
+        .featured {
+            text-align: center;
+            padding: 20px 20px 80px 20px;
+        }
+        .featured h2 {
+            color: rgb(21, 213, 168);
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+        #logo_moderion {
+            width: 120px;
+            border-radius: 50%;
+            border: 3px solid rgb(21, 213, 168);
+            transition: 0.3s;
+        }
+        #logo_moderion:hover {
+            box-shadow: 0 0 20px rgb(21, 213, 168);
+        }
+        .bot-card {
+            display: inline-block;
+            background: #1a1a1a;
+            border: 1px solid rgb(21, 213, 168);
+            border-radius: 15px;
+            padding: 30px 50px;
+            text-align: center;
+        }
+        .bot-card h3 {
+            color: white;
+            margin: 15px 0 10px 0;
+            font-size: 22px;
+        }
+        .bot-card p {
+            color: #aaa;
+            margin-bottom: 15px;
+        }
+        .tag-gratuit {
+            background: rgb(21, 213, 168);
+            color: black;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="box">
-   <h1 id="ZyntraCode2">ZyntraCode</h1> 
-   <br>
-   <h3 id="txt_inver">Bots Discord • Sites Web • Solutions Digitales</h3>
-   <br>
-   <input id="test_champ" type="search"  placeholder="🔎Recherche">
-  </div>
-<div id="resultats"></div>
+<!-- BOUTON MENU -->
 <button id="menu-btn">☰ Menu</button>
 
-<!-- Bouton hamburger -->
-<div class="menu-btn2" onclick="toggleMenu()">
-  <span></span>
-  <span></span>
-  <span></span>
-</div>
-
-
-<head>
-<style>
-.hidden {
-  display: none;
-}
-
-#menu {
-  background: #333;
-  width: 150px;
-  height: 600px; /*auteur*/
-  position: fixed;
-  top: 40px;
-  z-index: 1000;
-  border-radius:10px;
-  box-shadow: 0px 0px 15px rgb(21, 213, 168);
-  text-decoration: none;
-  color: white;
-  padding: 10px;
-  transition: 0.3s;
-}
-
-#menu a {
-  color: white;
-  font-family: Arial, Helvetica, sans-serif;
-  display: block;
-  padding: 10px;
-}
-
-#menu a:hover {
-  color: rgb(21, 213, 168);
-}
-
-
-#recherche{
-    padding:10px;
-    width:250px;
-    border-radius:10px;
-}
-
-#resultats{
-    background:black;
-    color:white;
-    width:250px;
-    margin:auto;
-}
-
-#resultats a{
-    text-decoration:none;
-    color:white;
-}
-
-#resultats p{
-    padding:10px;
-    margin:0;
-    cursor:pointer;
-}
-
-#resultats p:hover{
-    background:gray;
-}
-    
-</style>
-</head>
-
-<body>
-
-
+<!-- MENU -->
 <nav id="menu" class="hidden">
-  <a href="index.html">Accueil</a>
-  <a href="2-Bot_discord.html">Bot Discord</a>
-  <a href="3-contact.html">Contact</a>
+    <a href="index.html">Accueil</a>
+    <a href="2-Bot_discord.html">Bot Discord</a>
+    <a href="3-contact.html">Contact</a>
 </nav>
 
+<!-- HERO -->
+<div class="hero">
+    <h1>ZyntraCode</h1>
+    <h3>Bots Discord • Sites Web • Solutions Digitales</h3>
+    <p>Des solutions digitales professionnelles pour propulser votre serveur Discord et votre présence en ligne.</p>
+    <input id="test_champ" type="search" placeholder="🔎 Rechercher un produit...">
+    <div id="resultats"></div>
+    <br>
+    <a href="3-contact.html" class="btn-contact">📩 Nous contacter</a>
+</div>
+
+<!-- SERVICES -->
+<div class="services">
+    <div class="service-card">
+        <div class="icon">🤖</div>
+        <h3>Bots Discord</h3>
+        <p>Des bots personnalisés pour automatiser et améliorer votre serveur Discord.</p>
+    </div>
+    <div class="service-card">
+        <div class="icon">🌐</div>
+        <h3>Sites Web</h3>
+        <p>Des sites web modernes et professionnels adaptés à vos besoins.</p>
+    </div>
+    <div class="service-card">
+        <div class="icon">💡</div>
+        <h3>Solutions Digitales</h3>
+        <p>Des solutions sur mesure pour votre présence digitale.</p>
+    </div>
+</div>
+
+<!-- POURQUOI NOUS -->
+<div class="pourquoi">
+    <h2>⭐ Pourquoi nous choisir ?</h2>
+    <div class="pourquoi-cards">
+        <div class="pourquoi-card">
+            <div class="icon">⚡</div>
+            <h4>Rapide</h4>
+            <p>Livraison rapide de vos projets</p>
+        </div>
+        <div class="pourquoi-card">
+            <div class="icon">🔒</div>
+            <h4>Fiable</h4>
+            <p>Des solutions stables et sécurisées</p>
+        </div>
+        <div class="pourquoi-card">
+            <div class="icon">💰</div>
+            <h4>Abordable</h4>
+            <p>Des prix adaptés à tous les budgets</p>
+        </div>
+        <div class="pourquoi-card">
+            <div class="icon">🛠️</div>
+            <h4>Support</h4>
+            <p>Un support disponible pour vous aider</p>
+        </div>
+    </div>
+</div>
+
+<!-- BOT VEDETTE -->
+<div class="featured">
+    <h2>🤖 Notre bot vedette</h2>
+    <div class="bot-card">
+        <a href="dtl_moderion.html">
+            <img src="image_modérion.png" id="logo_moderion" alt="logo moderion">
+        </a>
+        <h3>Modérion</h3>
+        <p>Bot de modération complet pour votre serveur Discord</p>
+        <span class="tag-gratuit">✅ Gratuit</span>
+    </div>
+</div>
+
 <script>
-const btn = document.getElementById("menu-btn");
-const menu = document.getElementById("menu");
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    btn.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+    });
 
-btn.addEventListener("click", () => {
-  menu.classList.toggle("hidden");
-});
-
-//=====================
-//bar de recherche//
-//=====================
     const mots = [
         {nom: "Modérion", lien: "dtl_moderion.html"},
-];
-
-const input = document.getElementById("test_champ");
-const resultats = document.getElementById("resultats");
-
-input.addEventListener("input", function(){
-
-let valeur = input.value.toLowerCase();
-resultats.innerHTML = "";
-
-if(valeur === "") return;
-
-let filtres = mots.filter(item =>
-item.nom.toLowerCase().startsWith(valeur)
-);
-
-if (filtres.length === 0){
-    resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
-}
-
-filtres.forEach(item => {
-resultats.innerHTML += `
-<a href="${item.lien}">
-<p>${item.nom}</p>
-</a>
-`;
-});
-
-});
+    ];
+    const input = document.getElementById("test_champ");
+    const resultats = document.getElementById("resultats");
+    input.addEventListener("input", function() {
+        let valeur = input.value.toLowerCase();
+        resultats.innerHTML = "";
+        if (valeur === "") return;
+        let filtres = mots.filter(item =>
+            item.nom.toLowerCase().startsWith(valeur)
+        );
+        if (filtres.length === 0) {
+            resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
+        }
+        filtres.forEach(item => {
+            resultats.innerHTML += `<a href="${item.lien}"><p>${item.nom}</p></a>`;
+        });
+    });
 </script>
-
-
-
-<a href="dtl_moderion.html">
-    <img src="image_modérion.png" id="logo_moderion" alt="logo moderion">
-</a>
 
 </body>
 </html>
