@@ -126,6 +126,15 @@ body {
     #ZyntraCode2 {
         font-size: 22px;
     }
+
+    #menu {
+    display: block; /* toujours visible */
+    position: fixed;
+    width: auto;
+    height: auto;
+    background: none;
+  }
+
 }
 #logo_moderion{
     width: 120px;
