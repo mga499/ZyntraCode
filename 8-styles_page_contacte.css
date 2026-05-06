@@ -39,6 +39,7 @@
     padding: 60px 10px 10px 10px;
     box-shadow: 0px 0px 15px rgb(21, 213, 168);
     z-index: 1000;
+    display: block;
 }
 #menu a {
     display: block;
@@ -69,22 +70,38 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
-}
-/* PC */
-@media (min-width: 768px) {
-    #menu-btn {
-        display: block;
-    }
-}
-/* MOBILE */
-@media (max-width: 600px) {
-    #tte_p {
-        font-size: 32px;
-    }
+    display: none; /* caché par défaut sur PC */
 }
 body {
     background-color: #0a0a0a;
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
-    padding-left: 180px; /* ← décale le contenu pour pas qu'il soit sous le menu */
+}
+/* PC */
+@media (min-width: 769px) {
+    #menu {
+        display: block;
+    }
+    #menu-btn {
+        display: none;
+    }
+}
+/* MOBILE */
+@media (max-width: 768px) {
+    #menu {
+        display: none;
+        z-index: 1000;
+    }
+    #menu.visible {
+        display: block;
+    }
+    #menu-btn {
+        display: block; /* visible sur mobile */
+    }
+    #tte_p {
+        font-size: 32px;
+    }
+    body {
+        padding-left: 0; /* pas de décalage sur mobile */
+    }
 }
