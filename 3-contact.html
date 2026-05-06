@@ -181,4 +181,42 @@
 <!-- TITRE -->
 <h1 id="tte_p">📩 Contact</h1>
 
-<!-- CARTE CONTA
+<!-- CARTE CONTACT -->
+<div class="contact-card">
+    <p>Une question ? Un projet ? N'hésitez pas à nous contacter, nous répondons rapidement !</p>
+    <div class="email-box">
+        <span>📧</span>
+        <a href="mailto:zyntracode@gmail.com">zyntracode@gmail.com</a>
+    </div>
+    <a href="mailto:zyntracode@gmail.com" class="btn-email">✉️ Envoyer un email</a>
+</div>
+
+<!-- INFOS -->
+<div class="info-cards">
+    <div class="info-card">
+        <div class="icon">⚡</div>
+        <h4>Réponse rapide</h4>
+        <p>Nous répondons sous 48h</p>
+    </div>
+    <div class="info-card">
+        <div class="icon">🌍</div>
+        <h4>Disponible</h4>
+        <p>7j/7 pour vos projets</p>
+    </div>
+    <div class="info-card">
+        <div class="icon">💬</div>
+        <h4>Français</h4>
+        <p>Support en français</p>
+    </div>
+</div>
+
+<script>
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    btn.addEventListener("click", () => {
+        menu.classList.toggle("visible");
+    });
+</script>
+
+</body>
+</html>
