@@ -29,6 +29,7 @@
             cursor: pointer;
             font-size: 16px;
             z-index: 1001;
+            display: none; /* caché sur PC */
         }
         #menu {
             background: #1a1a1a;
@@ -41,6 +42,7 @@
             box-shadow: 0px 0px 15px rgb(21, 213, 168);
             padding: 60px 10px 10px 10px;
             transition: 0.3s;
+            display: block; /* toujours visible sur PC */
         }
         #menu a {
             color: white;
@@ -54,13 +56,10 @@
             color: rgb(21, 213, 168);
             background: #2a2a2a;
         }
-        .hidden {
-            display: none;
-        }
         /* HERO */
         .hero {
             text-align: center;
-            padding: 100px 20px 50px 20px;
+            padding: 100px 20px 50px 200px;
         }
         .hero h1 {
             font-size: 60px;
@@ -134,7 +133,7 @@
             display: flex;
             justify-content: center;
             gap: 30px;
-            padding: 60px 20px;
+            padding: 60px 20px 60px 200px;
             flex-wrap: wrap;
         }
         .service-card {
@@ -165,7 +164,7 @@
         /* POURQUOI NOUS */
         .pourquoi {
             text-align: center;
-            padding: 40px 20px 80px 20px;
+            padding: 40px 20px 80px 200px;
         }
         .pourquoi h2 {
             color: rgb(21, 213, 168);
@@ -200,7 +199,7 @@
         /* BOT MODERION */
         .featured {
             text-align: center;
-            padding: 20px 20px 80px 20px;
+            padding: 20px 20px 80px 200px;
         }
         .featured h2 {
             color: rgb(21, 213, 168);
@@ -241,6 +240,36 @@
             font-weight: bold;
             font-size: 14px;
         }
+        /* MOBILE */
+        @media (max-width: 768px) {
+            #menu-btn {
+                display: block; /* visible sur mobile */
+            }
+            #menu {
+                display: none; /* caché par défaut sur mobile */
+            }
+            #menu.visible {
+                display: block; /* visible quand ouvert */
+            }
+            .hero {
+                padding: 80px 20px 50px 20px;
+            }
+            .services {
+                padding: 60px 20px;
+            }
+            .pourquoi {
+                padding: 40px 20px 80px 20px;
+            }
+            .featured {
+                padding: 20px 20px 80px 20px;
+            }
+            #test_champ {
+                width: 95%;
+            }
+            .hero h1 {
+                font-size: 36px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -249,7 +278,7 @@
 <button id="menu-btn">☰ Menu</button>
 
 <!-- MENU -->
-<nav id="menu" class="hidden">
+<nav id="menu">
     <a href="index.html">Accueil</a>
     <a href="2-Bot_discord.html">Bot Discord</a>
     <a href="3-contact.html">Contact</a>
@@ -329,7 +358,7 @@
     const btn = document.getElementById("menu-btn");
     const menu = document.getElementById("menu");
     btn.addEventListener("click", () => {
-        menu.classList.toggle("hidden");
+        menu.classList.toggle("visible");
     });
 
     const mots = [
