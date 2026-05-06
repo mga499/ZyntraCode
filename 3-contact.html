@@ -1,69 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZyntraCode - Contacte</title>
+    <title>ZyntraCode - Contact</title>
     <link rel="stylesheet" href="8-styles_page_contacte.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+        /* BOUTON MENU */
+        #menu-btn {
+            padding: 8px 15px;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            color: rgb(21, 213, 168);
+            background-color: transparent;
+            border: 2px solid rgb(21, 213, 168);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        /* MENU */
+        #menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #1a1a1a;
+            width: 180px;
+            height: 100vh;
+            padding: 60px 10px 10px 10px;
+            box-shadow: 0px 0px 15px rgb(21, 213, 168);
+            z-index: 1000;
+        }
+        #menu a {
+            color: white;
+            display: block;
+            padding: 12px 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        #menu a:hover {
+            color: rgb(21, 213, 168);
+            background: #2a2a2a;
+        }
+        .hidden {
+            display: none;
+        }
+        /* TITRE */
+        #tte_p {
+            font-size: 48px;
+            color: rgb(21, 213, 168);
+            padding: 80px 20px 40px 20px;
+        }
+        /* CARTE CONTACT */
+        .contact-card {
+            background: #1a1a1a;
+            border: 1px solid rgb(21, 213, 168);
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 500px;
+            margin: 0 auto 30px auto;
+        }
+        .contact-card p {
+            color: #aaa;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        /* EMAIL */
+        .email-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+        .email-box span {
+            font-size: 24px;
+        }
+        .email-box a {
+            color: rgb(21, 213, 168);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .email-box a:hover {
+            text-decoration: underline;
+        }
+        /* BOUTON ENVOYER EMAIL */
+        .btn-email {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgb(21, 213, 168);
+            color: black;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .btn-email:hover {
+            background: transparent;
+            color: rgb(21, 213, 168);
+            border: 2px solid rgb(21, 213, 168);
+        }
+        /* INFOS SUPPLEMENTAIRES */
+        .info-cards {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 0 20px 80px 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .info-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            flex: 1;
+            min-width: 150px;
+        }
+        .info-card .icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        .info-card h4 {
+            color: rgb(21, 213, 168);
+            margin-bottom: 8px;
+        }
+        .info-card p {
+            color: #aaa;
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
-<h1 id="tte_p">Contact</h1>
-<br>
-<br>
-<h4 id="txt_E">Adresse E-mail : zyntracode@gmail.com </h4>
-<br>
-<br>
 
-<style>
-.hidden {
-  display: none;
-}
-
-#menu {
-    background: #333;
-    width: 150px;
-    height: 600px; /*auteur*/
-    position: fixed;
-    top: 40px;
-    z-index: 1000;
-    border-radius:10px;
-    box-shadow: 0px 0px 15px rgb(21, 213, 168);
-    text-decoration: none;
-    color: white;
-    padding: 10px;
-    transition: 0.3s;
-}
-
-#menu a {
-  color: white;
-  font-family: Arial, Helvetica, sans-serif;
-  display: block;
-  padding: 10px;
-}
-
- #menu a:hover {
-  color: rgb(21, 213, 168);
-}
-
-</style>
-</head>
+<!-- BOUTON MENU -->
 <button id="menu-btn">☰ Menu</button>
 
+<!-- MENU -->
 <nav id="menu" class="hidden">
-  <a href="index.html">Accueil</a>
-  <a href="2-Bot_discord.html">Bot Discord</a>
-  <a href="3-contact.html">Contact</a>
+    <a href="index.html">Accueil</a>
+    <a href="2-Bot_discord.html">Bot Discord</a>
+    <a href="3-contact.html">Contact</a>
 </nav>
 
+<!-- TITRE -->
+<h1 id="tte_p">📩 Contact</h1>
+
+<!-- CARTE CONTACT -->
+<div class="contact-card">
+    <p>Une question ? Un projet ? N'hésitez pas à nous contacter, nous répondons rapidement !</p>
+    
+    <div class="email-box">
+        <span>📧</span>
+        <a href="mailto:zyntracode@gmail.com">zyntracode@gmail.com</a>
+    </div>
+
+    <a href="mailto:zyntracode@gmail.com" class="btn-email">✉️ Envoyer un email</a>
+</div>
+
+<!-- INFOS -->
+<div class="info-cards">
+    <div class="info-card">
+        <div class="icon">⚡</div>
+        <h4>Réponse rapide</h4>
+        <p>Nous répondons sous 24h</p>
+    </div>
+    <div class="info-card">
+        <div class="icon">🌍</div>
+        <h4>Disponible</h4>
+        <p>7j/7 pour vos projets</p>
+    </div>
+    <div class="info-card">
+        <div class="icon">💬</div>
+        <h4>Français</h4>
+        <p>Support en français</p>
+    </div>
+</div>
+
 <script>
-const btn = document.getElementById("menu-btn");
-const menu = document.getElementById("menu");
-
-btn.addEventListener("click", () => {
-  menu.classList.toggle("hidden");
-});
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    btn.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+    });
 </script>
-
 
 </body>
 </html>
