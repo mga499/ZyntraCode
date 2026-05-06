@@ -6,7 +6,6 @@
     margin-top:30px;
     color:rgb(15,190,175);
 }
-
 #test_champ {
     padding: 10px 20px;
     color:white;
@@ -19,19 +18,17 @@
     border-color:white;
     border-radius: 10px;
 }
-
 body {
   text-align: center;
   overflow-x: hidden;
+  background-color: black;
 }
-
 #centre {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 10px;
 }
-
 #test_champ:focus{
     border-color: rgb(6, 162, 197);
     background-color: rgb(96, 95, 95);
@@ -39,12 +36,10 @@ body {
                 0px 0px 10px cyan,
                 0px 0px 10px cyan;
 }
-
 #test_champ:hover{
     border-color: rgb(6, 162, 197);
     background-color: rgb(96, 95, 95);
 }
-
 #bouton_recherche {
     padding: 10px 20px;
     position: static;
@@ -55,7 +50,6 @@ body {
     margin-top: 30px;
     background-color: rgb(14, 218, 170);
 }
-
 #bouton_recherche:focus{
     background-color: white;
     box-shadow: 0px 0px 10px rgb(14, 218, 170),
@@ -65,8 +59,6 @@ body {
 #bouton_recherche:hover{
     background-color: white;
 }
-
-
 #o_article {
     padding: 10px 20px;
     font-weight: 1500;
@@ -76,90 +68,74 @@ body {
     margin-top: 150px;
     color: white;
 }
-
 /* MOBILE par défaut */
 #menu {
-  position: fixed;
-  top: 40px;
-  background: #333;
-  width: 150px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #1a1a1a;
+    width: 180px;
+    height: 100vh;
+    padding: 60px 10px 10px 10px;
+    box-shadow: 0px 0px 15px rgb(21, 213, 168);
+    z-index: 1000;
+}
+#menu a {
+    color: white;
+    display: block;
+    padding: 12px 10px;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.2s;
+    font-family: Arial, Helvetica, sans-serif;
+}
+#menu a:hover {
+    color: rgb(21, 213, 168);
+    background: #2a2a2a;
 }
 .hidden {
-  display: none;
+    display: none;
 }
-
-/* PC */
-@media (min-width: 768px) {
-  #menu {
-      display: block; /* toujours visible */
-      position: fixed;
-      width: auto;
-      height: auto;
-      background: none;
-  #logo_moderion{
-      margin-top: 10%;    
-      margin-left: -50%;/
-  }
-  }
-
-  #menu a {
-    display: inline-block;
-    padding: 10px;
-  }
-
-  #menu-btn {
-    display: none; /* cacher bouton sur PC */
-  }
-}
-
-
 /* bouton hamburger */
 #menu-btn {
-    padding: 10px 20px;
+    padding: 8px 15px;
     position: fixed;
-    top: 10px;
-    z-index:1000;
-    left: 40%;
-    right: 40%;
-    color: white;
-    background-color: black;
-    border: none;
-    margin-top: 70%
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    color: rgb(21, 213, 168);
+    background-color: transparent;
+    border: 2px solid rgb(21, 213, 168);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 0;
 }
-
 #txt_inver {
     text-align: center;
     color: white;
-    border-color: red;
 }
-
 @media (max-width: 600px) {
-  #test_champ,
-  #bouton_recherche {
-    width: 95%;
-  }
-
-  #menu-btn {
-    top: 10px;
-  }
-
-  #ZyntraCode2 {
-    font-size: 22px;
-  }
+    #test_champ,
+    #bouton_recherche {
+        width: 95%;
+    }
+    #menu-btn {
+        top: 10px;
+        left: 10px;
+    }
+    #ZyntraCode2 {
+        font-size: 22px;
+    }
 }
-
 #logo_moderion{
-    width: 150px;
-    margin-top: 20%;    /* descendre */
-    margin-left: -50%;/* aller à droite */
+    width: 120px;
+    border-radius: 50%;
+    border: 3px solid rgb(21, 213, 168);
     transition: 0.3s;
+    margin: 0;
 }
-
 #logo_moderion:hover{
-    width: 170px;
-}
-
-
-body{
-    background-color: black;
+    width: 130px;
+    box-shadow: 0 0 20px rgb(21, 213, 168);
 }
