@@ -19,15 +19,15 @@
     border-radius: 10px;
 }
 body {
-  text-align: center;
-  overflow-x: hidden;
-  background-color: black;
+    text-align: center;
+    overflow-x: hidden;
+    background-color: black;
 }
 #centre {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
 }
 #test_champ:focus{
     border-color: rgb(6, 162, 197);
@@ -68,7 +68,7 @@ body {
     margin-top: 150px;
     color: white;
 }
-/* MOBILE par défaut */
+/* MENU - toujours visible */
 #menu {
     position: fixed;
     top: 0;
@@ -79,6 +79,7 @@ body {
     padding: 60px 10px 10px 10px;
     box-shadow: 0px 0px 15px rgb(21, 213, 168);
     z-index: 1000;
+    display: block !important; /* toujours visible */
 }
 #menu a {
     color: white;
@@ -94,9 +95,9 @@ body {
     background: #2a2a2a;
 }
 .hidden {
-    display: none;
+    display: none !important; /* désactive le hidden sur PC */
 }
-/* bouton hamburger */
+/* BOUTON MENU - caché sur PC, visible sur mobile */
 #menu-btn {
     padding: 8px 15px;
     position: fixed;
@@ -110,31 +111,11 @@ body {
     cursor: pointer;
     font-size: 16px;
     margin-top: 0;
+    display: none; /* caché par défaut sur PC */
 }
 #txt_inver {
     text-align: center;
     color: white;
-}
-@media (max-width: 600px) {
-    #test_champ,
-    #bouton_recherche {
-        width: 95%;
-    }
-    #menu-btn {
-        display: none;
-    }
-    #ZyntraCode2 {
-        font-size: 22px;
-    }
-
-    #menu {
-    display: block; /* toujours visible */
-    position: fixed;
-    width: auto;
-    height: auto;
-    background: none;
-  }
-
 }
 #logo_moderion{
     width: 120px;
@@ -146,4 +127,40 @@ body {
 #logo_moderion:hover{
     width: 130px;
     box-shadow: 0 0 20px rgb(21, 213, 168);
+}
+/* MOBILE */
+@media (max-width: 768px) {
+    #menu-btn {
+        display: block; /* bouton visible sur mobile */
+        left: 15px;
+    }
+    #menu {
+        display: none !important; /* caché par défaut sur mobile */
+        width: 180px;
+    }
+    #menu.visible {
+        display: block !important; /* visible quand ouvert */
+    }
+    #test_champ,
+    #bouton_recherche {
+        width: 95%;
+    }
+    #ZyntraCode2 {
+        font-size: 22px;
+    }
+    body {
+        padding-left: 0;
+    }
+}
+/* PC */
+@media (min-width: 769px) {
+    #menu {
+        display: block !important;
+    }
+    #menu-btn {
+        display: none;
+    }
+    body {
+        padding-left: 180px;
+    }
 }
