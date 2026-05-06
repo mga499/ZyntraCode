@@ -121,8 +121,7 @@ body {
         width: 95%;
     }
     #menu-btn {
-        top: 10px;
-        left: 10px;
+        display: none;
     }
     #ZyntraCode2 {
         font-size: 22px;
