@@ -1,97 +1,89 @@
 #tte_p {
     padding: 10px 20px;
-    color: rgb( 15,190, 175);
-    position:absolute;
-    left: 40%;
-    right: 40%;
+    color: rgb(15, 190, 175);
     font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    margin-top: 80px;
+    font-size: 48px;
 }
-
-#txt_n{
-    padding: 10px 20px;
-    color:white;
-    position: absolute;
-    left: 20%;
-    right: 30%;
-    margin-top: 150px;
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-#txt_E{
+#txt_n {
     padding: 10px 20px;
     color: white;
-    position: absolute;
-    left: 20%;
-    right: 30%;
-    margin-top: 70px;
-    font-family: Arial, Helvetica, sans-serif
-}
-
-/* menu caché */
-.menu {
-  position: fixed;
-  left: 20px; /* caché à gauche */
-  top: 0;
-  width: 200px;
-  height: 100%;
-  background: #33333379;
-  padding-top: 60px;
-  transition: 0.3s;
-}
-
-.menu a {
-  display: block;
-  color: rgb(255, 255, 255);
-  
-  font-family: Arial, Helvetica, sans-serif;
-  padding: 10px;
-  text-decoration: none;
-}
-
-#pfch{
-    padding: 10px 20px;
-    position: absolute;
-    left: 20%;
-    right: 40%;
-    margin-top: 50px;
-    color:white;
     font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
 }
-
-#ou{
-    color: white;
-}
-
-#menu-btn{
+#txt_E {
     padding: 10px 20px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+#pfch {
+    padding: 10px 20px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+#ou {
+    color: white;
+    text-align: center;
+}
+/* MENU */
+#menu {
     position: fixed;
-    top: 10px;
-    color: white;
-    background-color: black;
-    border: none;
+    top: 0;
+    left: 0;
+    background: #1a1a1a;
+    width: 180px;
+    height: 100vh;
+    padding: 60px 10px 10px 10px;
+    box-shadow: 0px 0px 15px rgb(21, 213, 168);
+    z-index: 1000;
 }
-
+#menu a {
+    display: block;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 12px 10px;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+#menu a:hover {
+    color: rgb(21, 213, 168);
+    background: #2a2a2a;
+}
+.hidden {
+    display: none;
+}
+/* BOUTON MENU */
+#menu-btn {
+    padding: 8px 15px;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    color: rgb(21, 213, 168);
+    background-color: transparent;
+    border: 2px solid rgb(21, 213, 168);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
 /* PC */
 @media (min-width: 768px) {
-  #menu {
-    display: block; /* toujours visible */
-    position: fixed;
-    width: auto;
-    height: auto;
-    background: none;
-  }
-
-  #menu a {
-    display: inline-block;
-    padding: 10px;
-  }
-
-  #menu-btn {
-    display: none; /* cacher bouton sur PC */
-  }
+    #menu-btn {
+        display: block;
+    }
 }
-
-
-body{
-    background-color: black;
+/* MOBILE */
+@media (max-width: 600px) {
+    #tte_p {
+        font-size: 32px;
+    }
+}
+body {
+    background-color: #0a0a0a;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
 }
