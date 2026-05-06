@@ -180,7 +180,7 @@
     <h4 id="in_moderion">Bot de modération complet pour votre serveur Discord. Gratuit et facile à configurer !</h4>
     <h5 id="gtt_moderion">✅ Gratuit</h5>
     <br><br>
-    <a href="https://discord.com/oauth2/authorize?client_id=1500932045839269968" class="btn-ajouter">📩 Obtenir le bot</a>
+    <a href="https://discord.com/oauth2/authorize?client_id=1500932045839269968" class="btn-ajouter" id="btn-obtenir" target="_blank">📩 Obtenir le bot</a>
 </div>
 
 <!-- FONCTIONNALITÉS -->
@@ -250,6 +250,20 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById("btn-obtenir").addEventListener("click", function() {
+        fetch("https://discord.com/api/webhooks/1501551921314402314/3kaH_14I60syzQT1uFJzWcWzHghdkXPIUI6S8L9jDN4ycQeiehFrGHHGspe9f9RS7w4b", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                content: "🎉 Quelqu'un vient de cliquer sur **Obtenir le bot** sur le site ZyntraCode !"
+            })
+        });
+    });
+</script>
 
 </body>
 </html>
