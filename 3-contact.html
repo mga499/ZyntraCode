@@ -30,6 +30,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            display: none; /* caché sur PC */
         }
         /* MENU */
         #menu {
@@ -42,6 +43,7 @@
             padding: 60px 10px 10px 10px;
             box-shadow: 0px 0px 15px rgb(21, 213, 168);
             z-index: 1000;
+            display: block; /* toujours visible sur PC */
         }
         #menu a {
             color: white;
@@ -55,8 +57,9 @@
             color: rgb(21, 213, 168);
             background: #2a2a2a;
         }
-        .hidden {
-            display: none;
+        /* CONTENU */
+        .contenu {
+            padding-left: 180px; /* décale pour pas être sous le menu */
         }
         /* TITRE */
         #tte_p {
@@ -119,7 +122,7 @@
             color: rgb(21, 213, 168);
             border: 2px solid rgb(21, 213, 168);
         }
-        /* INFOS SUPPLEMENTAIRES */
+        /* INFOS */
         .info-cards {
             display: flex;
             justify-content: center;
@@ -148,6 +151,24 @@
             color: #aaa;
             font-size: 13px;
         }
+        /* MOBILE */
+        @media (max-width: 768px) {
+            #menu-btn {
+                display: block;
+            }
+            #menu {
+                display: none;
+            }
+            #menu.visible {
+                display: block;
+            }
+            .contenu {
+                padding-left: 0;
+            }
+            #tte_p {
+                font-size: 32px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -156,51 +177,54 @@
 <button id="menu-btn">☰ Menu</button>
 
 <!-- MENU -->
-<nav id="menu" class="hidden">
+<nav id="menu">
     <a href="index.html">Accueil</a>
     <a href="2-Bot_discord.html">Bot Discord</a>
     <a href="3-contact.html">Contact</a>
 </nav>
 
-<!-- TITRE -->
-<h1 id="tte_p">📩 Contact</h1>
+<!-- CONTENU -->
+<div class="contenu">
 
-<!-- CARTE CONTACT -->
-<div class="contact-card">
-    <p>Une question ? Un projet ? N'hésitez pas à nous contacter, nous répondons rapidement !</p>
-    
-    <div class="email-box">
-        <span>📧</span>
-        <a href="mailto:zyntracode@gmail.com">zyntracode@gmail.com</a>
+    <!-- TITRE -->
+    <h1 id="tte_p">📩 Contact</h1>
+
+    <!-- CARTE CONTACT -->
+    <div class="contact-card">
+        <p>Une question ? Un projet ? N'hésitez pas à nous contacter, nous répondons rapidement !</p>
+        <div class="email-box">
+            <span>📧</span>
+            <a href="mailto:zyntracode@gmail.com">zyntracode@gmail.com</a>
+        </div>
+        <a href="mailto:zyntracode@gmail.com" class="btn-email">✉️ Envoyer un email</a>
     </div>
 
-    <a href="mailto:zyntracode@gmail.com" class="btn-email">✉️ Envoyer un email</a>
-</div>
+    <!-- INFOS -->
+    <div class="info-cards">
+        <div class="info-card">
+            <div class="icon">⚡</div>
+            <h4>Réponse rapide</h4>
+            <p>Nous répondons sous 48h</p>
+        </div>
+        <div class="info-card">
+            <div class="icon">🌍</div>
+            <h4>Disponible</h4>
+            <p>7j/7 pour vos projets</p>
+        </div>
+        <div class="info-card">
+            <div class="icon">💬</div>
+            <h4>Français</h4>
+            <p>Support en français</p>
+        </div>
+    </div>
 
-<!-- INFOS -->
-<div class="info-cards">
-    <div class="info-card">
-        <div class="icon">⚡</div>
-        <h4>Réponse rapide</h4>
-        <p>Nous répondons sous 48h</p>
-    </div>
-    <div class="info-card">
-        <div class="icon">🌍</div>
-        <h4>Disponible</h4>
-        <p>7j/7 pour vos projets</p>
-    </div>
-    <div class="info-card">
-        <div class="icon">💬</div>
-        <h4>Français</h4>
-        <p>Support en français</p>
-    </div>
 </div>
 
 <script>
     const btn = document.getElementById("menu-btn");
     const menu = document.getElementById("menu");
     btn.addEventListener("click", () => {
-        menu.classList.toggle("hidden");
+        menu.classList.toggle("visible");
     });
 </script>
 
