@@ -30,7 +30,7 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            display: none; /* caché sur PC */
+            display: none;
         }
         /* MENU */
         #menu {
@@ -43,7 +43,7 @@
             padding: 60px 10px 10px 10px;
             box-shadow: 0px 0px 15px rgb(21, 213, 168);
             z-index: 1000;
-            display: block; /* toujours visible sur PC */
+            display: block;
         }
         #menu a {
             color: white;
@@ -57,15 +57,11 @@
             color: rgb(21, 213, 168);
             background: #2a2a2a;
         }
-        /* CONTENU */
-        .contenu {
-            padding-left: 180px; /* décale pour pas être sous le menu */
-        }
         /* TITRE */
         #tte_p {
             font-size: 48px;
             color: rgb(21, 213, 168);
-            padding: 80px 20px 40px 20px;
+            padding: 80px 20px 40px 200px;
         }
         /* CARTE CONTACT */
         .contact-card {
@@ -74,7 +70,9 @@
             border-radius: 15px;
             padding: 40px;
             max-width: 500px;
-            margin: 0 auto 30px auto;
+            margin: 0 auto 30px calc(180px + auto);
+            margin-left: 200px;
+            margin-right: auto;
         }
         .contact-card p {
             color: #aaa;
@@ -128,9 +126,9 @@
             justify-content: center;
             gap: 20px;
             flex-wrap: wrap;
-            padding: 0 20px 80px 20px;
-            max-width: 600px;
-            margin: 0 auto;
+            padding: 0 20px 80px 200px;
+            max-width: 800px;
+            margin: 0 auto 0 180px;
         }
         .info-card {
             background: #1a1a1a;
@@ -162,11 +160,17 @@
             #menu.visible {
                 display: block;
             }
-            .contenu {
-                padding-left: 0;
-            }
             #tte_p {
                 font-size: 32px;
+                padding: 80px 20px 40px 20px;
+            }
+            .contact-card {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .info-cards {
+                padding: 0 20px 80px 20px;
+                margin: 0 auto;
             }
         }
     </style>
@@ -183,41 +187,36 @@
     <a href="3-contact.html">Contact</a>
 </nav>
 
-<!-- CONTENU -->
-<div class="contenu">
+<!-- TITRE -->
+<h1 id="tte_p">📩 Contact</h1>
 
-    <!-- TITRE -->
-    <h1 id="tte_p">📩 Contact</h1>
-
-    <!-- CARTE CONTACT -->
-    <div class="contact-card">
-        <p>Une question ? Un projet ? N'hésitez pas à nous contacter, nous répondons rapidement !</p>
-        <div class="email-box">
-            <span>📧</span>
-            <a href="mailto:zyntracode@gmail.com">zyntracode@gmail.com</a>
-        </div>
-        <a href="mailto:zyntracode@gmail.com" class="btn-email">✉️ Envoyer un email</a>
+<!-- CARTE CONTACT -->
+<div class="contact-card">
+    <p>Une question ? Un projet ? N'hésitez pas à nous contacter, nous répondons rapidement !</p>
+    <div class="email-box">
+        <span>📧</span>
+        <a href="mailto:zyntracode@gmail.com">zyntracode@gmail.com</a>
     </div>
+    <a href="mailto:zyntracode@gmail.com" class="btn-email">✉️ Envoyer un email</a>
+</div>
 
-    <!-- INFOS -->
-    <div class="info-cards">
-        <div class="info-card">
-            <div class="icon">⚡</div>
-            <h4>Réponse rapide</h4>
-            <p>Nous répondons sous 48h</p>
-        </div>
-        <div class="info-card">
-            <div class="icon">🌍</div>
-            <h4>Disponible</h4>
-            <p>7j/7 pour vos projets</p>
-        </div>
-        <div class="info-card">
-            <div class="icon">💬</div>
-            <h4>Français</h4>
-            <p>Support en français</p>
-        </div>
+<!-- INFOS -->
+<div class="info-cards">
+    <div class="info-card">
+        <div class="icon">⚡</div>
+        <h4>Réponse rapide</h4>
+        <p>Nous répondons sous 48h</p>
     </div>
-
+    <div class="info-card">
+        <div class="icon">🌍</div>
+        <h4>Disponible</h4>
+        <p>7j/7 pour vos projets</p>
+    </div>
+    <div class="info-card">
+        <div class="icon">💬</div>
+        <h4>Français</h4>
+        <p>Support en français</p>
+    </div>
 </div>
 
 <script>
