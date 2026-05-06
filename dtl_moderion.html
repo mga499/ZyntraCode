@@ -1,24 +1,255 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>explication - Moderion</title>
+    <title>Modérion - ZyntraCode</title>
     <link rel="stylesheet" href="styles_exp-moderion.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+        /* BOUTON RETOUR */
+        #retoure {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            padding: 8px 15px;
+            background: transparent;
+            border: 2px solid rgb(21, 213, 168);
+            color: rgb(21, 213, 168);
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 16px;
+            z-index: 1001;
+            transition: 0.3s;
+        }
+        #retoure:hover {
+            background: rgb(21, 213, 168);
+            color: black;
+        }
+        /* HERO */
+        .hero {
+            padding: 80px 20px 40px 20px;
+        }
+        #img_moderion {
+            width: 130px;
+            border-radius: 50%;
+            border: 3px solid rgb(21, 213, 168);
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+        #img_moderion:hover {
+            box-shadow: 0 0 25px rgb(21, 213, 168);
+        }
+        #txt_moderion {
+            font-size: 48px;
+            color: rgb(21, 213, 168);
+            margin-bottom: 10px;
+        }
+        #in_moderion {
+            color: #aaa;
+            font-size: 16px;
+            font-weight: normal;
+            max-width: 500px;
+            margin: 0 auto 15px auto;
+        }
+        #gtt_moderion {
+            display: inline-block;
+            background: rgb(21, 213, 168);
+            color: black;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 30px;
+        }
+        /* BOUTON AJOUTER */
+        .btn-ajouter {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgb(21, 213, 168);
+            color: black;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.3s;
+            margin-bottom: 60px;
+        }
+        .btn-ajouter:hover {
+            background: transparent;
+            color: rgb(21, 213, 168);
+            border: 2px solid rgb(21, 213, 168);
+        }
+        /* FONCTIONNALITÉS */
+        .features {
+            padding: 20px 40px 80px 40px;
+        }
+        .features h2 {
+            color: rgb(21, 213, 168);
+            font-size: 32px;
+            margin-bottom: 40px;
+        }
+        .features-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .feature-card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 12px;
+            padding: 25px;
+            width: 200px;
+            transition: 0.3s;
+        }
+        .feature-card:hover {
+            border-color: rgb(21, 213, 168);
+            box-shadow: 0 0 15px rgba(21, 213, 168, 0.2);
+        }
+        .feature-card .icon {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+        .feature-card h4 {
+            color: rgb(21, 213, 168);
+            margin-bottom: 8px;
+        }
+        .feature-card p {
+            color: #aaa;
+            font-size: 13px;
+        }
+        /* COMMANDES */
+        .commandes {
+            padding: 0 40px 80px 40px;
+        }
+        .commandes h2 {
+            color: rgb(21, 213, 168);
+            font-size: 32px;
+            margin-bottom: 30px;
+        }
+        .commande-list {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+        .commande-item {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .commande-item code {
+            background: #2a2a2a;
+            color: rgb(21, 213, 168);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 14px;
+            min-width: 140px;
+        }
+        .commande-item p {
+            color: #aaa;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 
-<h1 id="txt_moderion">Moderion</h1>
-<br>
-<img id="img_moderion" src="image_modérion.png" alt="logo moderion">
-<br>
-<h4 id="in_moderion">
-    Moderion en développement
-</h4>
-<br>
-<h5 id="gtt_moderion">Bot - GRATUIT</h5>
+<!-- BOUTON RETOUR -->
+<a id="retoure" href="index.html">← Retour</a>
 
-<a id="retoure" href="index.html"> X </a>
-    
+<!-- HERO -->
+<div class="hero">
+    <img id="img_moderion" src="image_modérion.png" alt="logo moderion">
+    <h1 id="txt_moderion">Modérion</h1>
+    <h4 id="in_moderion">Bot de modération complet pour votre serveur Discord. Gratuit et facile à configurer !</h4>
+    <h5 id="gtt_moderion">✅ Gratuit</h5>
+    <br><br>
+    <a href="3-contact.html" class="btn-ajouter">📩 Obtenir le bot</a>
+</div>
+
+<!-- FONCTIONNALITÉS -->
+<div class="features">
+    <h2>⚡ Fonctionnalités</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="icon">👋</div>
+            <h4>Bienvenue</h4>
+            <p>Message de bienvenue en embed avec photo de profil</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">👋</div>
+            <h4>Départ</h4>
+            <p>Message de départ automatique quand un membre quitte</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">🎫</div>
+            <h4>Tickets</h4>
+            <p>Système de tickets privés pour le support</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">🎭</div>
+            <h4>Auto-rôles</h4>
+            <p>Rôles donnés automatiquement à l'arrivée</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">📝</div>
+            <h4>Logs</h4>
+            <p>Logs des tickets fermés dans un salon dédié</p>
+        </div>
+        <div class="feature-card">
+            <div class="icon">🔒</div>
+            <h4>Sécurisé</h4>
+            <p>Système de permissions par rôle</p>
+        </div>
+    </div>
+</div>
+
+<!-- COMMANDES -->
+<div class="commandes">
+    <h2>📄 Commandes</h2>
+    <div class="commande-list">
+        <div class="commande-item">
+            <code>/setup</code>
+            <p>Configurer les salons bienvenue/départ</p>
+        </div>
+        <div class="commande-item">
+            <code>/ticket</code>
+            <p>Ouvrir un ticket de support</p>
+        </div>
+        <div class="commande-item">
+            <code>/fermer</code>
+            <p>Fermer un ticket</p>
+        </div>
+        <div class="commande-item">
+            <code>/autoroleadd</code>
+            <p>Ajouter un rôle automatique</p>
+        </div>
+        <div class="commande-item">
+            <code>/setlogs</code>
+            <p>Définir le salon de logs</p>
+        </div>
+        <div class="commande-item">
+            <code>/help</code>
+            <p>Voir toutes les commandes</p>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
