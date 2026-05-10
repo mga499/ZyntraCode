@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZyntraCode - Contact</title>
     <link rel="stylesheet" href="8-styles_page_contacte.css">
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -17,7 +18,6 @@
             font-family: Arial, Helvetica, sans-serif;
             text-align: center;
         }
-        /* BOUTON MENU */
         #menu-btn {
             padding: 8px 15px;
             position: fixed;
@@ -32,7 +32,6 @@
             font-size: 16px;
             display: none;
         }
-        /* MENU */
         #menu {
             position: fixed;
             top: 0;
@@ -57,13 +56,12 @@
             color: rgb(21, 213, 168);
             background: #2a2a2a;
         }
-        /* TITRE */
         #tte_p {
             font-size: 48px;
             color: rgb(21, 213, 168);
             padding: 80px 20px 40px 20px;
         }
-        /* CARTE CONTACT */
+        /* FORMULAIRE */
         .contact-card {
             background: #1a1a1a;
             border: 1px solid rgb(21, 213, 168);
@@ -71,54 +69,82 @@
             padding: 40px;
             max-width: 500px;
             margin: 0 auto 30px auto;
+            text-align: left;
         }
         .contact-card p {
             color: #aaa;
             margin-bottom: 30px;
             font-size: 16px;
+            text-align: center;
         }
-        /* EMAIL */
-        .email-box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            background: #2a2a2a;
-            border-radius: 10px;
-            padding: 15px 20px;
+        .form-group {
             margin-bottom: 20px;
         }
-        .email-box span {
-            font-size: 24px;
-        }
-        .email-box a {
+        .form-group label {
+            display: block;
             color: rgb(21, 213, 168);
-            text-decoration: none;
-            font-size: 16px;
+            margin-bottom: 8px;
+            font-size: 14px;
             font-weight: bold;
         }
-        .email-box a:hover {
-            text-decoration: underline;
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            outline: none;
+            transition: 0.2s;
         }
-        /* BOUTON ENVOYER EMAIL */
-        .btn-email {
-            display: inline-block;
-            padding: 12px 30px;
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: rgb(21, 213, 168);
+            box-shadow: 0 0 10px rgba(21, 213, 168, 0.2);
+        }
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        .btn-envoyer {
+            width: 100%;
+            padding: 14px;
             background: rgb(21, 213, 168);
             color: black;
+            border: none;
             border-radius: 10px;
-            text-decoration: none;
             font-weight: bold;
             font-size: 16px;
+            cursor: pointer;
             transition: 0.3s;
-            margin-top: 10px;
         }
-        .btn-email:hover {
+        .btn-envoyer:hover {
             background: transparent;
             color: rgb(21, 213, 168);
             border: 2px solid rgb(21, 213, 168);
         }
-        /* INFOS */
+        /* MESSAGE SUCCÈS/ERREUR */
+        #message-status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            display: none;
+            text-align: center;
+            font-weight: bold;
+        }
+        .succes {
+            background: rgba(21, 213, 168, 0.2);
+            color: rgb(21, 213, 168);
+            border: 1px solid rgb(21, 213, 168);
+        }
+        .erreur {
+            background: rgba(255, 50, 50, 0.2);
+            color: #ff5555;
+            border: 1px solid #ff5555;
+        }
         .info-cards {
             display: flex;
             justify-content: center;
@@ -147,22 +173,11 @@
             color: #aaa;
             font-size: 13px;
         }
-        /* MOBILE */
         @media (max-width: 768px) {
-            #menu-btn {
-                display: block;
-            }
-            #menu {
-                display: none;
-                position: fixed;
-                z-index: 1000;
-            }
-            #menu.visible {
-                display: block;
-            }
-            #tte_p {
-                font-size: 32px;
-            }
+            #menu-btn { display: block; }
+            #menu { display: none; position: fixed; z-index: 1000; }
+            #menu.visible { display: block; }
+            #tte_p { font-size: 32px; }
         }
     </style>
 </head>
@@ -181,14 +196,25 @@
 <!-- TITRE -->
 <h1 id="tte_p">📩 Contact</h1>
 
-<!-- CARTE CONTACT -->
+<!-- FORMULAIRE -->
 <div class="contact-card">
     <p>Une question ? Un projet ? N'hésitez pas à nous contacter, nous répondons rapidement !</p>
-    <div class="email-box">
-        <span>📧</span>
-        <a href="mailto:zyntracode@gmail.com">zyntracode@gmail.com</a>
+
+    <div class="form-group">
+        <label>👤 Nom</label>
+        <input type="text" id="nom" placeholder="Votre nom">
     </div>
-    <a href="mailto:zyntracode@gmail.com" class="btn-email">✉️ Envoyer un email</a>
+    <div class="form-group">
+        <label>📧 Email</label>
+        <input type="email" id="email" placeholder="Votre email">
+    </div>
+    <div class="form-group">
+        <label>💬 Message</label>
+        <textarea id="message" placeholder="Votre message..."></textarea>
+    </div>
+
+    <button class="btn-envoyer" onclick="envoyerEmail()">✉️ Envoyer</button>
+    <div id="message-status"></div>
 </div>
 
 <!-- INFOS -->
@@ -211,11 +237,46 @@
 </div>
 
 <script>
+    // Menu
     const btn = document.getElementById("menu-btn");
     const menu = document.getElementById("menu");
     btn.addEventListener("click", () => {
         menu.classList.toggle("visible");
     });
+
+    // EmailJS
+    emailjs.init("CIEjPItwnunl99qyE"); // ← Remplace par ta Public Key
+
+    function envoyerEmail() {
+        const nom = document.getElementById("nom").value;
+        const email = document.getElementById("email").value;
+        const message = document.getElementById("message").value;
+        const status = document.getElementById("message-status");
+
+        if (!nom || !email || !message) {
+            status.textContent = "❌ Remplis tous les champs !";
+            status.className = "erreur";
+            status.style.display = "block";
+            return;
+        }
+
+        emailjs.send("service_w538eid", "template_bb5opqq", {
+            from_name: nom,
+            from_email: email,
+            message: message
+        }).then(() => {
+            status.textContent = "✅ Message envoyé ! On te répond sous 48h 😊";
+            status.className = "succes";
+            status.style.display = "block";
+            document.getElementById("nom").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("message").value = "";
+        }).catch(() => {
+            status.textContent = "❌ Erreur lors de l'envoi, réessaie !";
+            status.className = "erreur";
+            status.style.display = "block";
+        });
+    }
 </script>
 
 </body>
