@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZyntraCode - Conditions d'utilisation</title>
+    <link rel="stylesheet" href="6-styles_page_boutique.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0a0a0a; color: white; font-family: Arial, sans-serif; }
+        #menu-btn {
+            position: fixed; top: 15px; left: 15px;
+            background: transparent; border: 2px solid rgb(21, 213, 168);
+            color: rgb(21, 213, 168); padding: 8px 15px;
+            border-radius: 8px; cursor: pointer; font-size: 16px;
+            z-index: 1001; display: none;
+        }
+        #menu {
+            background: #1a1a1a; width: 180px; height: 100vh;
+            position: fixed; top: 0; left: 0; z-index: 1000;
+            box-shadow: 0px 0px 15px rgb(21, 213, 168);
+            padding: 60px 10px 10px 10px; display: block;
+        }
+        #menu a {
+            color: white; display: block; padding: 12px 10px;
+            text-decoration: none; border-radius: 8px; transition: 0.2s;
+        }
+        #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
+        .contenu {
+            padding: 80px 40px 80px 220px;
+            max-width: 900px;
+        }
+        h1 { color: rgb(21, 213, 168); font-size: 40px; margin-bottom: 10px; }
+        .date { color: #555; font-size: 13px; margin-bottom: 40px; }
+        h2 { color: rgb(21, 213, 168); font-size: 20px; margin: 30px 0 10px 0; }
+        p { color: #aaa; font-size: 15px; line-height: 1.7; margin-bottom: 15px; }
+        .footer {
+            text-align: center; padding: 20px; color: #555;
+            font-size: 13px; border-top: 1px solid #1a1a1a;
+            margin-top: 20px; padding-left: 200px;
+        }
+        .footer a { color: rgb(21, 213, 168); text-decoration: none; }
+        @media (max-width: 768px) {
+            #menu-btn { display: block; }
+            #menu { display: none; }
+            #menu.visible { display: block; }
+            .contenu { padding: 80px 20px; }
+            .footer { padding-left: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<button id="menu-btn">☰ Menu</button>
+<nav id="menu">
+    <a href="index.html">Accueil</a>
+    <a href="2-Bot_discord.html">Bot Discord</a>
+    <a href="3-contact.html">Contact</a>
+</nav>
+
+<div class="contenu">
+    <h1>📄 Conditions d'utilisation</h1>
+    <p class="date">Dernière mise à jour : Mai 2026</p>
+
+    <h2>1. Acceptation des conditions</h2>
+    <p>En utilisant les services de ZyntraCode, vous acceptez les présentes conditions d'utilisation. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser nos services.</p>
+
+    <h2>2. Propriété intellectuelle</h2>
+    <p>Tous les contenus présents sur ce site (code, design, textes, images, bots Discord) sont la propriété exclusive de ZyntraCode. Toute reproduction, modification ou distribution sans autorisation écrite est strictement interdite.</p>
+    <p>© 2026 ZyntraCode — Tous droits réservés.</p>
+
+    <h2>3. Utilisation des bots Discord</h2>
+    <p>Nos bots Discord sont fournis tels quels. ZyntraCode se réserve le droit de modifier, suspendre ou arrêter un service à tout moment. L'utilisation de nos bots à des fins illégales ou malveillantes est strictement interdite.</p>
+
+    <h2>4. Responsabilité</h2>
+    <p>ZyntraCode ne peut être tenu responsable des dommages directs ou indirects résultant de l'utilisation de nos services. L'utilisateur est seul responsable de l'utilisation qu'il fait de nos produits.</p>
+
+    <h2>5. Données personnelles</h2>
+    <p>ZyntraCode ne collecte pas de données personnelles sans consentement. Les données transmises via le formulaire de contact sont utilisées uniquement pour répondre à vos demandes.</p>
+
+    <h2>6. Modifications</h2>
+    <p>ZyntraCode se réserve le droit de modifier ces conditions à tout moment. Les modifications prennent effet dès leur publication sur ce site.</p>
+
+    <h2>7. Contact</h2>
+    <p>Pour toute question concernant ces conditions, contactez-nous à : <a href="mailto:zyntracode@gmail.com" style="color: rgb(21, 213, 168);">zyntracode@gmail.com</a></p>
+</div>
+
+<div class="footer">
+    © 2026 ZyntraCode — Tous droits réservés |
+    <a href="3-contact.html">Contact</a> |
+    <a href="conditions.html">Conditions d'utilisation</a>
+</div>
+
+<script>
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    btn.addEventListener("click", () => {
+        menu.classList.toggle("visible");
+    });
+</script>
+
+</body>
+</html>
