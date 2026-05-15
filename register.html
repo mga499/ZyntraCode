@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZyntraCode - S'inscrire</title>
+    <link rel="icon" type="image/png" href="logo_zyntracode2.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+        }
+        #menu-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: transparent;
+            border: 2px solid rgb(21, 213, 168);
+            color: rgb(21, 213, 168);
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 1001;
+            display: none;
+        }
+        #menu {
+            background: #1a1a1a;
+            width: 180px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0px 0px 15px rgb(21, 213, 168);
+            padding: 60px 10px 10px 10px;
+            transition: 0.3s;
+            display: block;
+        }
+        #menu a {
+            color: white;
+            display: block;
+            padding: 12px 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        #menu a:hover {
+            color: rgb(21, 213, 168);
+            background: #2a2a2a;
+        }
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            margin-left: 180px;
+        }
+        .card h2 {
+            color: rgb(21, 213, 168);
+            font-size: 28px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .sous-titre {
+            color: #aaa;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .champ {
+            margin-bottom: 20px;
+        }
+        .champ label {
+            display: block;
+            color: #aaa;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        .champ input {
+            width: 100%;
+            padding: 12px 15px;
+            background: #0a0a0a;
+            border: 2px solid #2a2a2a;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .champ input:focus {
+            border-color: rgb(21, 213, 168);
+        }
+        .force-barre {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+        .force-barre div {
+            flex: 1;
+            height: 4px;
+            background: #2a2a2a;
+            border-radius: 2px;
+            transition: background 0.3s;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: rgb(21, 213, 168);
+            color: black;
+            border: 2px solid rgb(21, 213, 168);
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 5px;
+        }
+        .btn-submit:hover {
+            background: transparent;
+            color: rgb(21, 213, 168);
+        }
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .msg {
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: none;
+            text-align: center;
+        }
+        .msg.erreur {
+            background: rgba(255, 77, 77, 0.1);
+            border: 1px solid #ff4d4d;
+            color: #ff4d4d;
+        }
+        .msg.succes {
+            background: rgba(21, 213, 168, 0.1);
+            border: 1px solid rgb(21, 213, 168);
+            color: rgb(21, 213, 168);
+        }
+        .lien-bas {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #aaa;
+        }
+        .lien-bas a {
+            color: rgb(21, 213, 168);
+            text-decoration: none;
+        }
+        .lien-bas a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            #menu-btn { display: block; }
+            #menu { display: none; }
+            #menu.visible { display: block; }
+            .card { margin-left: 0; margin: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<button id="menu-btn">☰ Menu</button>
+
+<nav id="menu">
+    <a href="index.html">Accueil</a>
+    <a href="2-Bot_discord.html">Bot Discord</a>
+    <a href="3-contact.html">Contact</a>
+    <a href="login.html">🔐 Se connecter</a>
+    <a href="register.html">✨ S'inscrire</a>
+</nav>
+
+<div class="card">
+    <h2>✨ Inscription</h2>
+    <p class="sous-titre">Rejoins ZyntraCode, c'est gratuit !</p>
+
+    <div class="msg erreur" id="msg-erreur"></div>
+    <div class="msg succes" id="msg-succes"></div>
+
+    <div class="champ">
+        <label>Nom d'utilisateur</label>
+        <input type="text" id="username" placeholder="MonPseudo">
+    </div>
+    <div class="champ">
+        <label>Adresse email</label>
+        <input type="email" id="email" placeholder="toi@exemple.com">
+    </div>
+    <div class="champ">
+        <label>Mot de passe</label>
+        <input type="password" id="password" placeholder="••••••••" oninput="verifierForce(this.value)">
+        <div class="force-barre">
+            <div id="b1"></div>
+            <div id="b2"></div>
+            <div id="b3"></div>
+            <div id="b4"></div>
+        </div>
+    </div>
+    <div class="champ">
+        <label>Confirmer le mot de passe</label>
+        <input type="password" id="password2" placeholder="••••••••">
+    </div>
+
+    <button class="btn-submit" id="btn-inscription" onclick="register()">Créer mon compte</button>
+
+    <div class="lien-bas">
+        Déjà un compte ? <a href="login.html">Se connecter</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+<script>
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    btn.addEventListener("click", () => menu.classList.toggle("visible"));
+
+    function verifierForce(val) {
+        const couleurs = ["#ff4d4d", "#ffaa00", "rgb(21,213,168)", "rgb(21,213,168)"];
+        let score = 0;
+        if (val.length >= 6) score++;
+        if (val.length >= 10) score++;
+        if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+        for (let i = 1; i <= 4; i++) {
+            document.getElementById("b" + i).style.background = i <= score ? couleurs[score - 1] : "#2a2a2a";
+        }
+    }
+
+    function afficherErreur(msg) {
+        const el = document.getElementById("msg-erreur");
+        el.textContent = msg;
+        el.style.display = "block";
+        document.getElementById("msg-succes").style.display = "none";
+    }
+
+    function afficherSucces(msg) {
+        const el = document.getElementById("msg-succes");
+        el.textContent = msg;
+        el.style.display = "block";
+        document.getElementById("msg-erreur").style.display = "none";
+    }
+
+    async function register() {
+        const username = document.getElementById("username").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        const password2 = document.getElementById("password2").value;
+
+        if (!username || !email || !password || !password2) return afficherErreur("Remplis tous les champs.");
+        if (password !== password2) return afficherErreur("Les mots de passe ne correspondent pas.");
+        if (password.length < 6) return afficherErreur("Mot de passe trop court (6 caractères minimum).");
+
+        const btnEl = document.getElementById("btn-inscription");
+        btnEl.disabled = true;
+        btnEl.textContent = "Création...";
+
+        const { error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: { data: { username } }
+        });
+
+        if (error) {
+            afficherErreur(error.message === "User already registered" ? "Cet email est déjà utilisé." : error.message);
+            btnEl.disabled = false;
+            btnEl.textContent = "Créer mon compte";
+        } else {
+            afficherSucces("Compte créé ! Vérifie ton email pour confirmer.");
+            btnEl.textContent = "Compte créé ✓";
+        }
+    }
+</script>
+
+</body>
+</html>
