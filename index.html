@@ -7,285 +7,90 @@
     <link rel="stylesheet" href="6-styles_page_boutique.css">
     <link rel="icon" type="image/png" href="logo_zyntracode2.png">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #0a0a0a;
-            color: white;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        /* MENU */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0a0a0a; color: white; font-family: Arial, Helvetica, sans-serif; }
         #menu-btn {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            background: transparent;
-            border: 2px solid rgb(21, 213, 168);
-            color: rgb(21, 213, 168);
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            z-index: 1001;
-            display: none; /* caché sur PC */
+            position: fixed; top: 15px; left: 15px;
+            background: transparent; border: 2px solid rgb(21, 213, 168);
+            color: rgb(21, 213, 168); padding: 8px 15px; border-radius: 8px;
+            cursor: pointer; font-size: 16px; z-index: 1001; display: none;
         }
         #menu {
-            background: #1a1a1a;
-            width: 180px;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
+            background: #1a1a1a; width: 180px; height: 100vh;
+            position: fixed; top: 0; left: 0; z-index: 1000;
             box-shadow: 0px 0px 15px rgb(21, 213, 168);
-            padding: 60px 10px 10px 10px;
-            transition: 0.3s;
-            display: block; /* toujours visible sur PC */
+            padding: 60px 10px 10px 10px; transition: 0.3s; display: block;
         }
         #menu a {
-            color: white;
-            display: block;
-            padding: 12px 10px;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: 0.2s;
+            color: white; display: block; padding: 12px 10px;
+            text-decoration: none; border-radius: 8px; transition: 0.2s;
         }
-        #menu a:hover {
-            color: rgb(21, 213, 168);
-            background: #2a2a2a;
-        }
-        /* HERO */
-        .hero {
-            text-align: center;
-            padding: 100px 20px 50px 200px;
-        }
-        .hero h1 {
-            font-size: 60px;
-            color: rgb(21, 213, 168);
-            margin-bottom: 15px;
-        }
-        .hero h3 {
-            color: white;
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-        .hero p {
-            color: #aaa;
-            font-size: 16px;
-            max-width: 600px;
-            margin: 0 auto 30px auto;
-        }
-        /* BARRE DE RECHERCHE */
+        #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
+        .hero { text-align: center; padding: 100px 20px 50px 200px; }
+        .hero h1 { font-size: 60px; color: rgb(21, 213, 168); margin-bottom: 15px; }
+        .hero h3 { color: white; font-size: 18px; margin-bottom: 10px; }
+        .hero p { color: #aaa; font-size: 16px; max-width: 600px; margin: 0 auto 30px auto; }
         #test_champ {
-            padding: 12px 20px;
-            width: 350px;
-            border-radius: 10px;
-            border: 2px solid rgb(21, 213, 168);
-            background: #1a1a1a;
-            color: white;
-            font-size: 16px;
-            outline: none;
+            padding: 12px 20px; width: 350px; border-radius: 10px;
+            border: 2px solid rgb(21, 213, 168); background: #1a1a1a;
+            color: white; font-size: 16px; outline: none;
         }
-        #resultats {
-            background: #1a1a1a;
-            color: white;
-            width: 350px;
-            margin: 5px auto;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        #resultats a {
-            text-decoration: none;
-            color: white;
-        }
-        #resultats p {
-            padding: 10px 15px;
-            margin: 0;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        #resultats p:hover {
-            background: #2a2a2a;
-            color: rgb(21, 213, 168);
-        }
-        /* BOUTON CONTACT */
+        #resultats { background: #1a1a1a; color: white; width: 350px; margin: 5px auto; border-radius: 10px; overflow: hidden; }
+        #resultats a { text-decoration: none; color: white; }
+        #resultats p { padding: 10px 15px; margin: 0; cursor: pointer; transition: 0.2s; }
+        #resultats p:hover { background: #2a2a2a; color: rgb(21, 213, 168); }
         .btn-contact {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 30px;
-            background: rgb(21, 213, 168);
-            color: black;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-            transition: 0.3s;
+            display: inline-block; margin-top: 20px; padding: 12px 30px;
+            background: rgb(21, 213, 168); color: black; border-radius: 10px;
+            text-decoration: none; font-weight: bold; font-size: 16px; transition: 0.3s;
         }
-        .btn-contact:hover {
-            background: transparent;
-            color: rgb(21, 213, 168);
-            border: 2px solid rgb(21, 213, 168);
-        }
-        /* SERVICES */
-        .services {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            padding: 60px 20px 60px 200px;
-            flex-wrap: wrap;
-        }
-        .service-card {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 15px;
-            padding: 30px;
-            width: 250px;
-            text-align: center;
-            transition: 0.3s;
-        }
-        .service-card:hover {
-            border-color: rgb(21, 213, 168);
-            box-shadow: 0 0 20px rgba(21, 213, 168, 0.2);
-        }
-        .service-card .icon {
-            font-size: 40px;
-            margin-bottom: 15px;
-        }
-        .service-card h3 {
-            color: rgb(21, 213, 168);
-            margin-bottom: 10px;
-        }
-        .service-card p {
-            color: #aaa;
-            font-size: 14px;
-        }
-        /* POURQUOI NOUS */
-        .pourquoi {
-            text-align: center;
-            padding: 40px 20px 80px 200px;
-        }
-        .pourquoi h2 {
-            color: rgb(21, 213, 168);
-            font-size: 32px;
-            margin-bottom: 40px;
-        }
-        .pourquoi-cards {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .pourquoi-card {
-            background: #1a1a1a;
-            border-radius: 12px;
-            padding: 20px;
-            width: 200px;
-            text-align: center;
-        }
-        .pourquoi-card .icon {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
-        .pourquoi-card h4 {
-            color: white;
-            margin-bottom: 8px;
-        }
-        .pourquoi-card p {
-            color: #aaa;
-            font-size: 13px;
-        }
-        /* BOT MODERION */
-        .featured {
-            text-align: center;
-            padding: 20px 20px 80px 200px;
-        }
-        .featured h2 {
-            color: rgb(21, 213, 168);
-            font-size: 32px;
-            margin-bottom: 40px;
-        }
-        #logo_moderion {
-            width: 120px;
-            border-radius: 50%;
-            border: 3px solid rgb(21, 213, 168);
-            transition: 0.3s;
-        }
-        #logo_moderion:hover {
-            box-shadow: 0 0 20px rgb(21, 213, 168);
-        }
-        .bot-card {
-            display: inline-block;
-            background: #1a1a1a;
-            border: 1px solid rgb(21, 213, 168);
-            border-radius: 15px;
-            padding: 30px 50px;
-            text-align: center;
-        }
-        .bot-card h3 {
-            color: white;
-            margin: 15px 0 10px 0;
-            font-size: 22px;
-        }
-        .bot-card p {
-            color: #aaa;
-            margin-bottom: 15px;
-        }
-        .tag-gratuit {
-            background: rgb(21, 213, 168);
-            color: black;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        /* MOBILE */
+        .btn-contact:hover { background: transparent; color: rgb(21, 213, 168); border: 2px solid rgb(21, 213, 168); }
+        .services { display: flex; justify-content: center; gap: 30px; padding: 60px 20px 60px 200px; flex-wrap: wrap; }
+        .service-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 15px; padding: 30px; width: 250px; text-align: center; transition: 0.3s; }
+        .service-card:hover { border-color: rgb(21, 213, 168); box-shadow: 0 0 20px rgba(21, 213, 168, 0.2); }
+        .service-card .icon { font-size: 40px; margin-bottom: 15px; }
+        .service-card h3 { color: rgb(21, 213, 168); margin-bottom: 10px; }
+        .service-card p { color: #aaa; font-size: 14px; }
+        .pourquoi { text-align: center; padding: 40px 20px 80px 200px; }
+        .pourquoi h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 40px; }
+        .pourquoi-cards { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .pourquoi-card { background: #1a1a1a; border-radius: 12px; padding: 20px; width: 200px; text-align: center; }
+        .pourquoi-card .icon { font-size: 30px; margin-bottom: 10px; }
+        .pourquoi-card h4 { color: white; margin-bottom: 8px; }
+        .pourquoi-card p { color: #aaa; font-size: 13px; }
+        .featured { text-align: center; padding: 20px 20px 80px 200px; }
+        .featured h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 40px; }
+        #logo_moderion { width: 120px; border-radius: 50%; border: 3px solid rgb(21, 213, 168); transition: 0.3s; }
+        #logo_moderion:hover { box-shadow: 0 0 20px rgb(21, 213, 168); }
+        .bot-card { display: inline-block; background: #1a1a1a; border: 1px solid rgb(21, 213, 168); border-radius: 15px; padding: 30px 50px; text-align: center; }
+        .bot-card h3 { color: white; margin: 15px 0 10px 0; font-size: 22px; }
+        .bot-card p { color: #aaa; margin-bottom: 15px; }
+        .tag-gratuit { background: rgb(21, 213, 168); color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; }
         @media (max-width: 768px) {
-            #menu-btn {
-                display: block; /* visible sur mobile */
-            }
-            #menu {
-                display: none; /* caché par défaut sur mobile */
-            }
-            #menu.visible {
-                display: block; /* visible quand ouvert */
-            }
-            .hero {
-                padding: 80px 20px 50px 20px;
-            }
-            .services {
-                padding: 60px 20px;
-            }
-            .pourquoi {
-                padding: 40px 20px 80px 20px;
-            }
-            .featured {
-                padding: 20px 20px 80px 20px;
-            }
-            #test_champ {
-                width: 95%;
-            }
-            .hero h1 {
-                font-size: 36px;
-            }
+            #menu-btn { display: block; }
+            #menu { display: none; }
+            #menu.visible { display: block; }
+            .hero { padding: 80px 20px 50px 20px; }
+            .services { padding: 60px 20px; }
+            .pourquoi { padding: 40px 20px 80px 20px; }
+            .featured { padding: 20px 20px 80px 20px; }
+            #test_champ { width: 95%; }
+            .hero h1 { font-size: 36px; }
         }
     </style>
 </head>
 <body>
 
-<!-- BOUTON MENU -->
 <button id="menu-btn">☰ Menu</button>
 
-<!-- MENU -->
 <nav id="menu">
     <a href="index.html">Accueil</a>
     <a href="2-Bot_discord.html">Bot Discord</a>
     <a href="3-contact.html">Contact</a>
+    <a href="login.html">🔐 Se connecter</a>
+    <a href="register.html">✨ S'inscrire</a>
 </nav>
 
-<!-- HERO -->
 <div class="hero">
     <h1>ZyntraCode</h1>
     <h3>Bots Discord • Sites Web • Solutions Digitales</h3>
@@ -294,9 +99,10 @@
     <div id="resultats"></div>
     <br>
     <a href="3-contact.html" class="btn-contact">📩 Nous contacter</a>
+    <a href="login.html" class="btn-contact" style="background: transparent; color: rgb(21,213,168); border: 2px solid rgb(21,213,168); margin-left: 10px;">🔐 Se connecter</a>
+    <a href="register.html" class="btn-contact" style="margin-left: 10px;">✨ S'inscrire</a>
 </div>
 
-<!-- SERVICES -->
 <div class="services">
     <div class="service-card">
         <div class="icon">🤖</div>
@@ -315,7 +121,6 @@
     </div>
 </div>
 
-<!-- POURQUOI NOUS -->
 <div class="pourquoi">
     <h2>⭐ Pourquoi nous choisir ?</h2>
     <div class="pourquoi-cards">
@@ -342,7 +147,6 @@
     </div>
 </div>
 
-<!-- BOT VEDETTE -->
 <div class="featured">
     <h2>🤖 Notre bot vedette</h2>
     <div class="bot-card">
@@ -371,9 +175,7 @@
         let valeur = input.value.toLowerCase();
         resultats.innerHTML = "";
         if (valeur === "") return;
-        let filtres = mots.filter(item =>
-            item.nom.toLowerCase().startsWith(valeur)
-        );
+        let filtres = mots.filter(item => item.nom.toLowerCase().startsWith(valeur));
         if (filtres.length === 0) {
             resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
         }
@@ -383,21 +185,11 @@
     });
 </script>
 
-<!-- COPYRIGHT -->
-<div style="
-    text-align: center;
-    padding: 20px;
-    color: #555;
-    font-size: 13px;
-    border-top: 1px solid #1a1a1a;
-    margin-top: 20px;
-    padding-left: 200px;
-">
+<div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px; padding-left: 200px;">
     © 2026 ZyntraCode — Tous droits réservés | 
     <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
     <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a>
 </div>
-
 
 </body>
 </html>
