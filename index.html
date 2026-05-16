@@ -87,8 +87,9 @@
     <a href="index.html">Accueil</a>
     <a href="2-Bot_discord.html">Bot Discord</a>
     <a href="3-contact.html">Contact</a>
-    <a href="login.html">🔐 Se connecter</a>
-    <a href="register.html">✨ S'inscrire</a>
+    <!-- Ces liens sont cachés si connecté -->
+    <a href="login.html" id="menu-login">🔐 Se connecter</a>
+    <a href="register.html" id="menu-register">✨ S'inscrire</a>
 </nav>
 
 <div class="hero">
@@ -99,8 +100,9 @@
     <div id="resultats"></div>
     <br>
     <a href="3-contact.html" class="btn-contact">📩 Nous contacter</a>
-    <a href="login.html" class="btn-contact" style="background: transparent; color: rgb(21,213,168); border: 2px solid rgb(21,213,168); margin-left: 10px;">🔐 Se connecter</a>
-    <a href="register.html" class="btn-contact" style="margin-left: 10px;">✨ S'inscrire</a>
+    <!-- Ces boutons sont cachés si connecté -->
+    <a href="login.html" class="btn-contact" id="btn-login" style="background: transparent; color: rgb(21,213,168); border: 2px solid rgb(21,213,168); margin-left: 10px;">🔐 Se connecter</a>
+    <a href="register.html" class="btn-contact" id="btn-register" style="margin-left: 10px;">✨ S'inscrire</a>
 </div>
 
 <div class="services">
@@ -159,12 +161,16 @@
     </div>
 </div>
 
+<div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px; padding-left: 200px;">
+    © 2026 ZyntraCode — Tous droits réservés | 
+    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
+    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a>
+</div>
+
 <script>
     const btn = document.getElementById("menu-btn");
     const menu = document.getElementById("menu");
-    btn.addEventListener("click", () => {
-        menu.classList.toggle("visible");
-    });
+    btn.addEventListener("click", () => menu.classList.toggle("visible"));
 
     const mots = [
         {nom: "Modérion", lien: "dtl_moderion.html"},
@@ -185,14 +191,21 @@
     });
 </script>
 
-<div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px; padding-left: 200px;">
-    © 2026 ZyntraCode — Tous droits réservés | 
-    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
-    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a>
-</div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/profil-menu.js"></script>
-    
+<script src="profil-menu.js"></script>
+<script>
+    // Cacher les boutons connexion/inscription si connecté
+    async function verifierConnexion() {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (user) {
+            document.getElementById('btn-login').style.display = 'none';
+            document.getElementById('btn-register').style.display = 'none';
+            document.getElementById('menu-login').style.display = 'none';
+            document.getElementById('menu-register').style.display = 'none';
+        }
+    }
+    verifierConnexion();
+</script>
+
 </body>
 </html>
