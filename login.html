@@ -253,8 +253,14 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase.js"></script>
 <script>
+    // Initialisation Supabase
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
+        'https://nvvpvwqcjqujyzvdimix.supabase.co',
+        'sb_publishable_7oQ8rUh7OCE0Uo-DUwSUcw_CKOPnCU4'
+    );
+
     const btn = document.getElementById("menu-btn");
     const menu = document.getElementById("menu");
     btn.addEventListener("click", () => menu.classList.toggle("visible"));
