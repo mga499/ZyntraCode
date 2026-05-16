@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZyntraCode - Paramètres</title>
+    <link rel="icon" type="image/png" href="logo_zyntracode2.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            padding: 40px 20px 40px 220px;
+        }
+        #menu-btn {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            background: transparent;
+            border: 2px solid rgb(21, 213, 168);
+            color: rgb(21, 213, 168);
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 1001;
+            display: none;
+        }
+        #menu {
+            background: #1a1a1a;
+            width: 180px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0px 0px 15px rgb(21, 213, 168);
+            padding: 60px 10px 10px 10px;
+            transition: 0.3s;
+            display: block;
+        }
+        #menu a {
+            color: white;
+            display: block;
+            padding: 12px 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
+
+        h1 {
+            color: rgb(21, 213, 168);
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            color: rgb(21, 213, 168);
+            font-size: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        .champ { margin-bottom: 18px; }
+        .champ label {
+            display: block;
+            color: #aaa;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        .champ input {
+            width: 100%;
+            padding: 11px 15px;
+            background: #0a0a0a;
+            border: 2px solid #2a2a2a;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+        .champ input:focus { border-color: rgb(21, 213, 168); }
+        .champ input:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn {
+            padding: 11px 25px;
+            background: rgb(21, 213, 168);
+            color: black;
+            border: 2px solid rgb(21, 213, 168);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn:hover { background: transparent; color: rgb(21, 213, 168); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .btn-danger {
+            padding: 11px 25px;
+            background: transparent;
+            color: #ff4d4d;
+            border: 2px solid #ff4d4d;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-danger:hover { background: rgba(255,77,77,0.1); }
+
+        .msg {
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .msg.erreur { background: rgba(255,77,77,0.1); border: 1px solid #ff4d4d; color: #ff4d4d; }
+        .msg.succes { background: rgba(21,213,168,0.1); border: 1px solid rgb(21,213,168); color: rgb(21,213,168); }
+
+        .force-barre { display: flex; gap: 4px; margin-top: 8px; }
+        .force-barre div { flex: 1; height: 4px; background: #2a2a2a; border-radius: 2px; transition: background 0.3s; }
+
+        @media (max-width: 768px) {
+            #menu-btn { display: block; }
+            #menu { display: none; }
+            #menu.visible { display: block; }
+            body { padding: 80px 15px 40px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<button id="menu-btn">☰ Menu</button>
+
+<nav id="menu">
+    <a href="index.html">Accueil</a>
+    <a href="2-Bot_discord.html">Bot Discord</a>
+    <a href="3-contact.html">Contact</a>
+    <a href="login.html">🔐 Se connecter</a>
+    <a href="register.html">✨ S'inscrire</a>
+</nav>
+
+<h1>⚙️ Paramètres</h1>
+
+<!-- PROFIL -->
+<div class="section">
+    <h2>👤 Informations du profil</h2>
+    <div class="msg erreur" id="msg-profil-err"></div>
+    <div class="msg succes" id="msg-profil-ok"></div>
+    <div class="champ">
+        <label>Nom d'utilisateur</label>
+        <input type="text" id="username" placeholder="MonPseudo">
+    </div>
+    <div class="champ">
+        <label>Email (non modifiable)</label>
+        <input type="email" id="email" disabled>
+    </div>
+    <button class="btn" onclick="sauvegarderProfil()">Sauvegarder</button>
+</div>
+
+<!-- MOT DE PASSE -->
+<div class="section">
+    <h2>🔒 Changer le mot de passe</h2>
+    <div class="msg erreur" id="msg-pwd-err"></div>
+    <div class="msg succes" id="msg-pwd-ok"></div>
+    <div class="champ">
+        <label>Nouveau mot de passe</label>
+        <input type="password" id="new-pwd" placeholder="••••••••" oninput="verifierForce(this.value)">
+        <div class="force-barre">
+            <div id="b1"></div><div id="b2"></div><div id="b3"></div><div id="b4"></div>
+        </div>
+    </div>
+    <div class="champ">
+        <label>Confirmer le mot de passe</label>
+        <input type="password" id="new-pwd2" placeholder="••••••••">
+    </div>
+    <button class="btn" onclick="changerMotDePasse()">Changer</button>
+</div>
+
+<!-- SUPPRIMER COMPTE -->
+<div class="section">
+    <h2>⚠️ Zone dangereuse</h2>
+    <p style="color:#aaa; font-size:13px; margin-bottom:15px;">La suppression de ton compte est irréversible.</p>
+    <button class="btn-danger" onclick="supprimerCompte()">Supprimer mon compte</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/profil-menu.js"></script>
+<script>
+    const btnMenu = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    btnMenu.addEventListener("click", () => menu.classList.toggle("visible"));
+
+    function affMsg(idOk, idErr, msg, type) {
+        const ok = document.getElementById(idOk);
+        const err = document.getElementById(idErr);
+        if (type === 'succes') { ok.textContent = msg; ok.style.display = 'block'; err.style.display = 'none'; }
+        else { err.textContent = msg; err.style.display = 'block'; ok.style.display = 'none'; }
+        setTimeout(() => { ok.style.display = 'none'; err.style.display = 'none'; }, 4000);
+    }
+
+    function verifierForce(val) {
+        const couleurs = ["#ff4d4d", "#ffaa00", "rgb(21,213,168)", "rgb(21,213,168)"];
+        let score = 0;
+        if (val.length >= 6) score++;
+        if (val.length >= 10) score++;
+        if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+        for (let i = 1; i <= 4; i++) {
+            document.getElementById("b" + i).style.background = i <= score ? couleurs[score - 1] : "#2a2a2a";
+        }
+    }
+
+    async function chargerProfil() {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) { window.location.href = 'login.html'; return; }
+        document.getElementById('username').value = user.user_metadata?.username || '';
+        document.getElementById('email').value = user.email;
+    }
+
+    async function sauvegarderProfil() {
+        const username = document.getElementById('username').value.trim();
+        if (!username) return affMsg('msg-profil-ok', 'msg-profil-err', 'Entre un nom d\'utilisateur.', 'erreur');
+        const { error } = await supabaseClient.auth.updateUser({ data: { username } });
+        if (error) affMsg('msg-profil-ok', 'msg-profil-err', 'Erreur : ' + error.message, 'erreur');
+        else affMsg('msg-profil-ok', 'msg-profil-err', 'Profil mis à jour ✓', 'succes');
+    }
+
+    async function changerMotDePasse() {
+        const p1 = document.getElementById('new-pwd').value;
+        const p2 = document.getElementById('new-pwd2').value;
+        if (!p1) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Entre un nouveau mot de passe.', 'erreur');
+        if (p1 !== p2) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Les mots de passe ne correspondent pas.', 'erreur');
+        if (p1.length < 6) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Minimum 6 caractères.', 'erreur');
+        const { error } = await supabaseClient.auth.updateUser({ password: p1 });
+        if (error) affMsg('msg-pwd-ok', 'msg-pwd-err', 'Erreur : ' + error.message, 'erreur');
+        else {
+            affMsg('msg-pwd-ok', 'msg-pwd-err', 'Mot de passe changé ✓', 'succes');
+            document.getElementById('new-pwd').value = '';
+            document.getElementById('new-pwd2').value = '';
+        }
+    }
+
+    async function supprimerCompte() {
+        if (!confirm('Es-tu sûr de vouloir supprimer ton compte ? Cette action est irréversible.')) return;
+        alert('Pour supprimer ton compte, contacte-nous via la page Contact.');
+    }
+
+    chargerProfil();
+</script>
+
+</body>
+</html>
