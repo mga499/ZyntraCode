@@ -3,79 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZyntraCode</title>
-    <link rel="stylesheet" href="6-styles_page_boutique.css">
+    <title>ZyntraCode - Connexion</title>
     <link rel="icon" type="image/png" href="logo_zyntracode2.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #0a0a0a; color: white; font-family: Arial, Helvetica, sans-serif; }
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
         #menu-btn {
-            position: fixed; top: 15px; left: 15px;
-            background: transparent; border: 2px solid rgb(21, 213, 168);
-            color: rgb(21, 213, 168); padding: 8px 15px; border-radius: 8px;
-            cursor: pointer; font-size: 16px; z-index: 1001; display: none;
+            position: fixed;
+            top: 15px; left: 15px;
+            background: transparent;
+            border: 2px solid rgb(21, 213, 168);
+            color: rgb(21, 213, 168);
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 1001;
+            display: none;
         }
         #menu {
-            background: #1a1a1a; width: 180px; height: 100vh;
-            position: fixed; top: 0; left: 0; z-index: 1000;
+            background: #1a1a1a;
+            width: 180px; height: 100vh;
+            position: fixed; top: 0; left: 0;
+            z-index: 1000;
             box-shadow: 0px 0px 15px rgb(21, 213, 168);
-            padding: 60px 10px 10px 10px; transition: 0.3s; display: block;
+            padding: 60px 10px 10px 10px;
+            transition: 0.3s; display: block;
         }
         #menu a {
-            color: white; display: block; padding: 12px 10px;
-            text-decoration: none; border-radius: 8px; transition: 0.2s;
+            color: white; display: block;
+            padding: 12px 10px; text-decoration: none;
+            border-radius: 8px; transition: 0.2s;
         }
         #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
-        .hero { text-align: center; padding: 100px 20px 50px 200px; }
-        .hero h1 { font-size: 60px; color: rgb(21, 213, 168); margin-bottom: 15px; }
-        .hero h3 { color: white; font-size: 18px; margin-bottom: 10px; }
-        .hero p { color: #aaa; font-size: 16px; max-width: 600px; margin: 0 auto 30px auto; }
-        #test_champ {
-            padding: 12px 20px; width: 350px; border-radius: 10px;
-            border: 2px solid rgb(21, 213, 168); background: #1a1a1a;
-            color: white; font-size: 16px; outline: none;
+        .card {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 15px;
+            padding: 40px;
+            width: 100%; max-width: 420px;
+            margin-left: 180px;
         }
-        #resultats { background: #1a1a1a; color: white; width: 350px; margin: 5px auto; border-radius: 10px; overflow: hidden; }
-        #resultats a { text-decoration: none; color: white; }
-        #resultats p { padding: 10px 15px; margin: 0; cursor: pointer; transition: 0.2s; }
-        #resultats p:hover { background: #2a2a2a; color: rgb(21, 213, 168); }
-        .btn-contact {
-            display: inline-block; margin-top: 20px; padding: 12px 30px;
-            background: rgb(21, 213, 168); color: black; border-radius: 10px;
-            text-decoration: none; font-weight: bold; font-size: 16px; transition: 0.3s;
+        .card h2 { color: rgb(21, 213, 168); font-size: 28px; margin-bottom: 8px; text-align: center; }
+        .sous-titre { color: #aaa; font-size: 14px; text-align: center; margin-bottom: 30px; }
+        .champ { margin-bottom: 20px; }
+        .champ label { display: block; color: #aaa; font-size: 13px; margin-bottom: 6px; }
+        .champ input {
+            width: 100%; padding: 12px 15px;
+            background: #0a0a0a;
+            border: 2px solid #2a2a2a;
+            border-radius: 10px;
+            color: white; font-size: 15px;
+            outline: none; transition: 0.2s;
         }
-        .btn-contact:hover { background: transparent; color: rgb(21, 213, 168); border: 2px solid rgb(21, 213, 168); }
-        .services { display: flex; justify-content: center; gap: 30px; padding: 60px 20px 60px 200px; flex-wrap: wrap; }
-        .service-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 15px; padding: 30px; width: 250px; text-align: center; transition: 0.3s; }
-        .service-card:hover { border-color: rgb(21, 213, 168); box-shadow: 0 0 20px rgba(21, 213, 168, 0.2); }
-        .service-card .icon { font-size: 40px; margin-bottom: 15px; }
-        .service-card h3 { color: rgb(21, 213, 168); margin-bottom: 10px; }
-        .service-card p { color: #aaa; font-size: 14px; }
-        .pourquoi { text-align: center; padding: 40px 20px 80px 200px; }
-        .pourquoi h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 40px; }
-        .pourquoi-cards { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .pourquoi-card { background: #1a1a1a; border-radius: 12px; padding: 20px; width: 200px; text-align: center; }
-        .pourquoi-card .icon { font-size: 30px; margin-bottom: 10px; }
-        .pourquoi-card h4 { color: white; margin-bottom: 8px; }
-        .pourquoi-card p { color: #aaa; font-size: 13px; }
-        .featured { text-align: center; padding: 20px 20px 80px 200px; }
-        .featured h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 40px; }
-        #logo_moderion { width: 120px; border-radius: 50%; border: 3px solid rgb(21, 213, 168); transition: 0.3s; }
-        #logo_moderion:hover { box-shadow: 0 0 20px rgb(21, 213, 168); }
-        .bot-card { display: inline-block; background: #1a1a1a; border: 1px solid rgb(21, 213, 168); border-radius: 15px; padding: 30px 50px; text-align: center; }
-        .bot-card h3 { color: white; margin: 15px 0 10px 0; font-size: 22px; }
-        .bot-card p { color: #aaa; margin-bottom: 15px; }
-        .tag-gratuit { background: rgb(21, 213, 168); color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; }
+        .champ input:focus { border-color: rgb(21, 213, 168); }
+        .btn-submit {
+            width: 100%; padding: 13px;
+            background: rgb(21, 213, 168);
+            color: black;
+            border: 2px solid rgb(21, 213, 168);
+            border-radius: 10px;
+            font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: 0.3s; margin-top: 5px;
+        }
+        .btn-submit:hover { background: transparent; color: rgb(21, 213, 168); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .divider {
+            display: flex; align-items: center;
+            gap: 10px; margin: 25px 0;
+            color: #555; font-size: 13px;
+        }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #2a2a2a; }
+        .btn-social {
+            width: 100%; padding: 11px;
+            background: transparent; color: white;
+            border: 1px solid #2a2a2a;
+            border-radius: 10px; font-size: 14px;
+            cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center;
+            justify-content: center; gap: 8px;
+            margin-bottom: 10px;
+        }
+        .btn-social:hover { border-color: rgb(21, 213, 168); color: rgb(21, 213, 168); }
+        .msg {
+            padding: 10px 15px; border-radius: 8px;
+            font-size: 13px; margin-bottom: 15px;
+            display: none; text-align: center;
+        }
+        .msg.erreur { background: rgba(255,77,77,0.1); border: 1px solid #ff4d4d; color: #ff4d4d; }
+        .msg.succes { background: rgba(21,213,168,0.1); border: 1px solid rgb(21,213,168); color: rgb(21,213,168); }
+        .lien-bas { text-align: center; margin-top: 20px; font-size: 14px; color: #aaa; }
+        .lien-bas a { color: rgb(21, 213, 168); text-decoration: none; }
+        .lien-bas a:hover { text-decoration: underline; }
+
+        /* Zone code OTP */
+        #zone-otp { display: none; }
+        .code-inputs {
+            display: flex; gap: 10px;
+            justify-content: center; margin: 15px 0;
+        }
+        .code-inputs input {
+            width: 48px; height: 56px;
+            text-align: center;
+            font-size: 22px; font-weight: bold;
+            background: #0a0a0a;
+            border: 2px solid #2a2a2a;
+            border-radius: 10px; color: white;
+            outline: none; transition: 0.2s;
+        }
+        .code-inputs input:focus { border-color: rgb(21, 213, 168); }
+        .renvoyer {
+            background: transparent; border: none;
+            color: rgb(21, 213, 168); font-size: 13px;
+            cursor: pointer; text-decoration: underline;
+            margin-top: 10px; display: block; width: 100%; text-align: center;
+        }
+        .renvoyer:disabled { opacity: 0.4; cursor: not-allowed; }
+
         @media (max-width: 768px) {
             #menu-btn { display: block; }
             #menu { display: none; }
             #menu.visible { display: block; }
-            .hero { padding: 80px 20px 50px 20px; }
-            .services { padding: 60px 20px; }
-            .pourquoi { padding: 40px 20px 80px 20px; }
-            .featured { padding: 20px 20px 80px 20px; }
-            #test_champ { width: 95%; }
-            .hero h1 { font-size: 36px; }
+            .card { margin-left: 0; margin: 20px; }
         }
     </style>
 </head>
@@ -87,124 +144,224 @@
     <a href="index.html">Accueil</a>
     <a href="2-Bot_discord.html">Bot Discord</a>
     <a href="3-contact.html">Contact</a>
-    <!-- Ces liens sont cachés si connecté -->
-    <a href="login.html" id="menu-login">🔐 Se connecter</a>
-    <a href="register.html" id="menu-register">✨ S'inscrire</a>
+    <a href="login.html">🔐 Se connecter</a>
+    <a href="register.html">✨ S'inscrire</a>
 </nav>
 
-<div class="hero">
-    <h1>ZyntraCode</h1>
-    <h3>Bots Discord • Sites Web • Solutions Digitales</h3>
-    <p>Des solutions digitales professionnelles pour propulser votre serveur Discord et votre présence en ligne.</p>
-    <input id="test_champ" type="search" placeholder="🔎 Rechercher un produit...">
-    <div id="resultats"></div>
-    <br>
-    <a href="3-contact.html" class="btn-contact">📩 Nous contacter</a>
-    <!-- Ces boutons sont cachés si connecté -->
-    <a href="login.html" class="btn-contact" id="btn-login" style="background: transparent; color: rgb(21,213,168); border: 2px solid rgb(21,213,168); margin-left: 10px;">🔐 Se connecter</a>
-    <a href="register.html" class="btn-contact" id="btn-register" style="margin-left: 10px;">✨ S'inscrire</a>
-</div>
+<div class="card">
 
-<div class="services">
-    <div class="service-card">
-        <div class="icon">🤖</div>
-        <h3>Bots Discord</h3>
-        <p>Des bots personnalisés pour automatiser et améliorer votre serveur Discord.</p>
-    </div>
-    <div class="service-card">
-        <div class="icon">🌐</div>
-        <h3>Sites Web</h3>
-        <p>Des sites web modernes et professionnels adaptés à vos besoins.</p>
-    </div>
-    <div class="service-card">
-        <div class="icon">💡</div>
-        <h3>Solutions Digitales</h3>
-        <p>Des solutions sur mesure pour votre présence digitale.</p>
-    </div>
-</div>
+    <!-- ÉTAPE 1 : Email + mot de passe -->
+    <div id="zone-login">
+        <h2>🔐 Connexion</h2>
+        <p class="sous-titre">Content de te revoir sur ZyntraCode !</p>
 
-<div class="pourquoi">
-    <h2>⭐ Pourquoi nous choisir ?</h2>
-    <div class="pourquoi-cards">
-        <div class="pourquoi-card">
-            <div class="icon">⚡</div>
-            <h4>Rapide</h4>
-            <p>Livraison rapide de vos projets</p>
+        <div class="msg erreur" id="msg-erreur"></div>
+        <div class="msg succes" id="msg-succes"></div>
+
+        <div class="champ">
+            <label>Adresse email</label>
+            <input type="email" id="email" placeholder="toi@exemple.com">
         </div>
-        <div class="pourquoi-card">
-            <div class="icon">🔒</div>
-            <h4>Fiable</h4>
-            <p>Des solutions stables et sécurisées</p>
+        <div class="champ">
+            <label>Mot de passe</label>
+            <input type="password" id="password" placeholder="••••••••">
         </div>
-        <div class="pourquoi-card">
-            <div class="icon">💰</div>
-            <h4>Abordable</h4>
-            <p>Des prix adaptés à tous les budgets</p>
-        </div>
-        <div class="pourquoi-card">
-            <div class="icon">🛠️</div>
-            <h4>Support</h4>
-            <p>Un support disponible pour vous aider</p>
+
+        <button class="btn-submit" id="btn-connexion" onclick="login()">Se connecter</button>
+
+        <div class="divider">ou</div>
+
+        <button class="btn-social" onclick="loginGoogle()">
+            <svg width="16" height="16" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continuer avec Google
+        </button>
+
+        <button class="btn-social" onclick="loginGitHub()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            Continuer avec GitHub
+        </button>
+
+        <div class="lien-bas">
+            Pas encore de compte ? <a href="register.html">S'inscrire</a>
         </div>
     </div>
-</div>
 
-<div class="featured">
-    <h2>🤖 Notre bot vedette</h2>
-    <div class="bot-card">
-        <a href="dtl_moderion.html">
-            <img src="image_modérion.png" id="logo_moderion" alt="logo moderion">
-        </a>
-        <h3>Modérion</h3>
-        <p>Bot de modération complet pour votre serveur Discord</p>
-        <span class="tag-gratuit">✅ Gratuit</span>
+    <!-- ÉTAPE 2 : Code de sécurité -->
+    <div id="zone-otp">
+        <h2>📧 Code de sécurité</h2>
+        <p class="sous-titre" id="otp-subtitle">Un code a été envoyé à ton email</p>
+
+        <div class="msg erreur" id="msg-otp-erreur"></div>
+        <div class="msg succes" id="msg-otp-succes"></div>
+
+        <div class="code-inputs">
+            <input type="text" maxlength="1" class="otp-case" id="c1">
+            <input type="text" maxlength="1" class="otp-case" id="c2">
+            <input type="text" maxlength="1" class="otp-case" id="c3">
+            <input type="text" maxlength="1" class="otp-case" id="c4">
+            <input type="text" maxlength="1" class="otp-case" id="c5">
+            <input type="text" maxlength="1" class="otp-case" id="c6">
+        </div>
+
+        <button class="btn-submit" id="btn-verifier" onclick="verifierCode()">Vérifier le code</button>
+        <button class="renvoyer" id="btn-renvoyer" onclick="renvoyerCode()">Renvoyer le code</button>
+
+        <div class="lien-bas" style="margin-top:15px;">
+            <a href="#" onclick="retourLogin()">← Retour</a>
+        </div>
     </div>
+
 </div>
 
-<div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px; padding-left: 200px;">
-    © 2026 ZyntraCode — Tous droits réservés | 
-    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
-    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
+        'https://nvvpvwqcjqujyzvdimix.supabase.co',
+        'sb_publishable_7oQ8rUh7OCE0Uo-DUwSUcw_CKOPnCU4'
+    );
+
     const btn = document.getElementById("menu-btn");
     const menu = document.getElementById("menu");
     btn.addEventListener("click", () => menu.classList.toggle("visible"));
 
-    const mots = [
-        {nom: "Modérion", lien: "dtl_moderion.html"},
-    ];
-    const input = document.getElementById("test_champ");
-    const resultats = document.getElementById("resultats");
-    input.addEventListener("input", function() {
-        let valeur = input.value.toLowerCase();
-        resultats.innerHTML = "";
-        if (valeur === "") return;
-        let filtres = mots.filter(item => item.nom.toLowerCase().startsWith(valeur));
-        if (filtres.length === 0) {
-            resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
-        }
-        filtres.forEach(item => {
-            resultats.innerHTML += `<a href="${item.lien}"><p>${item.nom}</p></a>`;
+    let emailUtilisateur = '';
+
+    function afficherErreur(id, msg) {
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.style.display = 'block';
+    }
+    function afficherSucces(id, msg) {
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.style.display = 'block';
+    }
+    function cacherMessages() {
+        ['msg-erreur','msg-succes','msg-otp-erreur','msg-otp-succes'].forEach(id => {
+            document.getElementById(id).style.display = 'none';
+        });
+    }
+
+    // Navigation entre les cases OTP
+    document.querySelectorAll('.otp-case').forEach((input, index, inputs) => {
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^0-9]/g, '');
+            if (input.value && index < inputs.length - 1) {
+                inputs[index + 1].focus();
+            }
+            // Auto-vérifier si tous les champs sont remplis
+            const code = Array.from(inputs).map(i => i.value).join('');
+            if (code.length === 6) verifierCode();
+        });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value && index > 0) {
+                inputs[index - 1].focus();
+            }
         });
     });
-</script>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="profil-menu.js"></script>
-<script>
-    // Cacher les boutons connexion/inscription si connecté
-    async function verifierConnexion() {
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        if (user) {
-            document.getElementById('btn-login').style.display = 'none';
-            document.getElementById('btn-register').style.display = 'none';
-            document.getElementById('menu-login').style.display = 'none';
-            document.getElementById('menu-register').style.display = 'none';
+    async function login() {
+        cacherMessages();
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+        if (!email || !password) return afficherErreur('msg-erreur', 'Remplis tous les champs.');
+
+        const btnEl = document.getElementById("btn-connexion");
+        btnEl.disabled = true;
+        btnEl.textContent = "Vérification...";
+
+        // Vérifier email + mot de passe
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+        if (error) {
+            afficherErreur('msg-erreur', 'Email ou mot de passe incorrect.');
+            btnEl.disabled = false;
+            btnEl.textContent = "Se connecter";
+            return;
+        }
+
+        // Se déconnecter temporairement et envoyer le code OTP
+        await supabaseClient.auth.signOut();
+        emailUtilisateur = email;
+
+        const { error: otpError } = await supabaseClient.auth.signInWithOtp({ email });
+
+        if (otpError) {
+            afficherErreur('msg-erreur', 'Erreur envoi du code : ' + otpError.message);
+            btnEl.disabled = false;
+            btnEl.textContent = "Se connecter";
+            return;
+        }
+
+        // Afficher la zone OTP
+        document.getElementById('zone-login').style.display = 'none';
+        document.getElementById('zone-otp').style.display = 'block';
+        document.getElementById('otp-subtitle').textContent = 'Code envoyé à ' + email;
+        document.getElementById('c1').focus();
+        btnEl.disabled = false;
+        btnEl.textContent = "Se connecter";
+    }
+
+    async function verifierCode() {
+        cacherMessages();
+        const cases = document.querySelectorAll('.otp-case');
+        const code = Array.from(cases).map(i => i.value).join('');
+
+        if (code.length < 6) return afficherErreur('msg-otp-erreur', 'Entre les 6 chiffres du code.');
+
+        const btnEl = document.getElementById("btn-verifier");
+        btnEl.disabled = true;
+        btnEl.textContent = "Vérification...";
+
+        const { error } = await supabaseClient.auth.verifyOtp({
+            email: emailUtilisateur,
+            token: code,
+            type: 'email'
+        });
+
+        if (error) {
+            afficherErreur('msg-otp-erreur', 'Code incorrect ou expiré.');
+            btnEl.disabled = false;
+            btnEl.textContent = "Vérifier le code";
+            cases.forEach(i => i.value = '');
+            document.getElementById('c1').focus();
+        } else {
+            afficherSucces('msg-otp-succes', 'Connecté ! Redirection...');
+            setTimeout(() => window.location.href = 'dashboard.html', 1000);
         }
     }
-    verifierConnexion();
+
+    async function renvoyerCode() {
+        const btnEl = document.getElementById('btn-renvoyer');
+        btnEl.disabled = true;
+        btnEl.textContent = 'Code envoyé !';
+        await supabaseClient.auth.signInWithOtp({ email: emailUtilisateur });
+        setTimeout(() => {
+            btnEl.disabled = false;
+            btnEl.textContent = 'Renvoyer le code';
+        }, 30000);
+    }
+
+    function retourLogin() {
+        document.getElementById('zone-otp').style.display = 'none';
+        document.getElementById('zone-login').style.display = 'block';
+        cacherMessages();
+    }
+
+    async function loginGoogle() {
+        await supabaseClient.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/dashboard.html" } });
+    }
+    async function loginGitHub() {
+        await supabaseClient.auth.signInWithOAuth({ provider: "github", options: { redirectTo: window.location.origin + "/dashboard.html" } });
+    }
 </script>
 
 </body>
