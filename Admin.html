@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZyntraCode - Admin</title>
+    <link rel="icon" type="image/png" href="logo_zyntracode2.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            padding: 40px 20px 40px 220px;
+        }
+        #menu-btn {
+            position: fixed; top: 15px; left: 15px;
+            background: transparent; border: 2px solid rgb(21, 213, 168);
+            color: rgb(21, 213, 168); padding: 8px 15px;
+            border-radius: 8px; cursor: pointer;
+            font-size: 16px; z-index: 1001; display: none;
+        }
+        #menu {
+            background: #1a1a1a; width: 180px; height: 100vh;
+            position: fixed; top: 0; left: 0; z-index: 1000;
+            box-shadow: 0px 0px 15px rgb(21, 213, 168);
+            padding: 60px 10px 10px 10px; transition: 0.3s; display: block;
+        }
+        #menu a {
+            color: white; display: block; padding: 12px 10px;
+            text-decoration: none; border-radius: 8px; transition: 0.2s;
+        }
+        #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
+
+        /* HEADER */
+        .header {
+            display: flex; align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        .header h1 { color: rgb(21, 213, 168); font-size: 26px; }
+        .badge-admin {
+            background: rgb(21, 213, 168); color: black;
+            padding: 5px 14px; border-radius: 20px;
+            font-size: 13px; font-weight: bold;
+        }
+
+        /* STATS */
+        .stats {
+            display: flex; gap: 15px;
+            flex-wrap: wrap; margin-bottom: 30px;
+        }
+        .stat-card {
+            background: #1a1a1a; border: 1px solid #2a2a2a;
+            border-radius: 12px; padding: 20px 25px;
+            text-align: center; min-width: 130px;
+        }
+        .stat-card .nombre {
+            font-size: 32px; font-weight: bold;
+            color: rgb(21, 213, 168);
+        }
+        .stat-card .label { color: #aaa; font-size: 13px; margin-top: 4px; }
+
+        /* RECHERCHE */
+        .barre-recherche {
+            display: flex; gap: 10px; margin-bottom: 20px;
+        }
+        .barre-recherche input {
+            flex: 1; padding: 10px 15px;
+            background: #1a1a1a; border: 1px solid #2a2a2a;
+            border-radius: 10px; color: white;
+            font-size: 14px; outline: none; transition: 0.2s;
+        }
+        .barre-recherche input:focus { border-color: rgb(21, 213, 168); }
+        .filtre-role {
+            padding: 10px 15px;
+            background: #1a1a1a; border: 1px solid #2a2a2a;
+            border-radius: 10px; color: white;
+            font-size: 14px; outline: none; cursor: pointer;
+        }
+
+        /* TABLE */
+        .table-wrapper {
+            background: #1a1a1a; border: 1px solid #2a2a2a;
+            border-radius: 15px; overflow: hidden;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: #0f0f0f; }
+        th {
+            padding: 14px 20px; text-align: left;
+            color: #aaa; font-size: 12px;
+            text-transform: uppercase; letter-spacing: 1px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #151515;
+            font-size: 14px; vertical-align: middle;
+        }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #161616; }
+
+        .avatar-petit {
+            width: 34px; height: 34px; border-radius: 50%;
+            background: rgb(21, 213, 168); color: black;
+            font-weight: bold; font-size: 14px;
+            display: inline-flex; align-items: center;
+            justify-content: center; margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        /* BADGES RÔLES */
+        .badge {
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 12px; font-weight: bold;
+        }
+        .badge-membre { background: rgba(255,255,255,0.1); color: #aaa; }
+        .badge-premium { background: rgba(255,170,0,0.15); color: #ffaa00; }
+        .badge-admin { background: rgba(21,213,168,0.15); color: rgb(21,213,168); }
+
+        /* SELECT RÔLE */
+        .select-role {
+            background: #0a0a0a; border: 1px solid #2a2a2a;
+            border-radius: 8px; color: white;
+            padding: 5px 10px; font-size: 13px;
+            cursor: pointer; outline: none;
+        }
+        .select-role:focus { border-color: rgb(21, 213, 168); }
+
+        /* BOUTONS */
+        .btn-suppr {
+            background: transparent; color: #ff4d4d;
+            border: 1px solid #ff4d4d; border-radius: 8px;
+            padding: 5px 12px; font-size: 12px;
+            cursor: pointer; transition: 0.2s;
+        }
+        .btn-suppr:hover { background: rgba(255,77,77,0.1); }
+
+        /* ACCÈS REFUSÉ */
+        #acces-refuse {
+            display: none; text-align: center;
+            padding: 100px 20px;
+        }
+        #acces-refuse h2 { color: #ff4d4d; font-size: 28px; margin-bottom: 10px; }
+        #acces-refuse p { color: #aaa; margin-bottom: 20px; }
+        #acces-refuse a {
+            color: rgb(21,213,168); text-decoration: none;
+            border: 1px solid rgb(21,213,168);
+            padding: 10px 20px; border-radius: 10px;
+        }
+
+        #chargement { text-align: center; padding: 60px; color: #aaa; }
+
+        @media (max-width: 768px) {
+            #menu-btn { display: block; }
+            #menu { display: none; }
+            #menu.visible { display: block; }
+            body { padding: 80px 15px 40px 15px; }
+            .stats { gap: 10px; }
+            table { font-size: 12px; }
+            th, td { padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<button id="menu-btn">☰ Menu</button>
+<nav id="menu">
+    <a href="index.html">Accueil</a>
+    <a href="2-Bot_discord.html">Bot Discord</a>
+    <a href="3-contact.html">Contact</a>
+    <a href="admin.html" style="color:rgb(21,213,168)">⚙️ Admin</a>
+</nav>
+
+<!-- ACCÈS REFUSÉ -->
+<div id="acces-refuse">
+    <h2>🚫 Accès refusé</h2>
+    <p>Tu n'as pas les droits pour accéder à cette page.</p>
+    <a href="index.html">Retour à l'accueil</a>
+</div>
+
+<!-- CHARGEMENT -->
+<div id="chargement">Chargement...</div>
+
+<!-- CONTENU ADMIN -->
+<div id="contenu" style="display:none">
+    <div class="header">
+        <h1>⚙️ Panel Admin</h1>
+        <span class="badge-admin">👑 Admin</span>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-card">
+            <div class="nombre" id="stat-total">0</div>
+            <div class="label">Total membres</div>
+        </div>
+        <div class="stat-card">
+            <div class="nombre" id="stat-premium" style="color:#ffaa00">0</div>
+            <div class="label">Premium</div>
+        </div>
+        <div class="stat-card">
+            <div class="nombre" id="stat-admin">0</div>
+            <div class="label">Admins</div>
+        </div>
+        <div class="stat-card">
+            <div class="nombre" id="stat-membre" style="color:#aaa">0</div>
+            <div class="label">Membres</div>
+        </div>
+    </div>
+
+    <!-- RECHERCHE -->
+    <div class="barre-recherche">
+        <input type="text" id="recherche" placeholder="🔎 Rechercher par username ou email..." oninput="filtrerMembres()">
+        <select class="filtre-role" id="filtre-role" onchange="filtrerMembres()">
+            <option value="">Tous les rôles</option>
+            <option value="membre">Membre</option>
+            <option value="premium">Premium</option>
+            <option value="admin">Admin</option>
+        </select>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Utilisateur</th>
+                    <th>Email</th>
+                    <th>Rôle actuel</th>
+                    <th>Changer rôle</th>
+                    <th>Inscrit le</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="liste-membres"></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const { createClient } = supabase;
+    const supabaseClient = createClient(
+        'https://nvvpvwqcjqujyzvdimix.supabase.co',
+        'sb_publishable_7oQ8rUh7OCE0Uo-DUwSUcw_CKOPnCU4'
+    );
+
+    const ADMIN_EMAIL = 'maxanceague5@gmail.com';
+    let tousLesMembres = [];
+
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    btn.addEventListener("click", () => menu.classList.toggle("visible"));
+
+    function formatDate(d) {
+        if (!d) return '—';
+        return new Date(d).toLocaleDateString('fr-CH', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function badgeRole(role) {
+        const classes = { admin: 'badge-admin', premium: 'badge-premium', membre: 'badge-membre' };
+        const emojis = { admin: '👑', premium: '⭐', membre: '👤' };
+        return `<span class="badge ${classes[role] || 'badge-membre'}">${emojis[role] || '👤'} ${role || 'membre'}</span>`;
+    }
+
+    function afficherMembres(membres) {
+        const tbody = document.getElementById('liste-membres');
+        if (membres.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:30px">Aucun membre trouvé</td></tr>';
+            return;
+        }
+        tbody.innerHTML = membres.map(m => `
+            <tr>
+                <td>
+                    <span class="avatar-petit">${(m.username || m.email || '?')[0].toUpperCase()}</span>
+                    ${m.username || '—'}
+                </td>
+                <td style="color:#aaa">${m.email || '—'}</td>
+                <td>${badgeRole(m.role)}</td>
+                <td>
+                    <select class="select-role" onchange="changerRole('${m.id}', this.value)">
+                        <option value="membre" ${m.role === 'membre' ? 'selected' : ''}>👤 Membre</option>
+                        <option value="premium" ${m.role === 'premium' ? 'selected' : ''}>⭐ Premium</option>
+                        <option value="admin" ${m.role === 'admin' ? 'selected' : ''}>👑 Admin</option>
+                    </select>
+                </td>
+                <td style="color:#aaa">${formatDate(m.created_at)}</td>
+                <td>
+                    <button class="btn-suppr" onclick="supprimerMembre('${m.id}', '${m.username || m.email}')">
+                        🗑 Supprimer
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function filtrerMembres() {
+        const recherche = document.getElementById('recherche').value.toLowerCase();
+        const role = document.getElementById('filtre-role').value;
+        let filtres = tousLesMembres.filter(m => {
+            const matchRecherche = !recherche ||
+                (m.username || '').toLowerCase().includes(recherche) ||
+                (m.email || '').toLowerCase().includes(recherche);
+            const matchRole = !role || m.role === role;
+            return matchRecherche && matchRole;
+        });
+        afficherMembres(filtres);
+    }
+
+    async function changerRole(id, nouveauRole) {
+        const { error } = await supabaseClient
+            .from('profiles')
+            .update({ role: nouveauRole })
+            .eq('id', id);
+
+        if (error) {
+            alert('Erreur : ' + error.message);
+        } else {
+            const membre = tousLesMembres.find(m => m.id === id);
+            if (membre) membre.role = nouveauRole;
+            mettreAJourStats();
+            filtrerMembres();
+        }
+    }
+
+    async function supprimerMembre(id, nom) {
+        if (!confirm(`Supprimer le compte de "${nom}" ? Cette action est irréversible.`)) return;
+        const { error } = await supabaseClient
+            .from('profiles')
+            .delete()
+            .eq('id', id);
+
+        if (error) {
+            alert('Erreur : ' + error.message);
+        } else {
+            tousLesMembres = tousLesMembres.filter(m => m.id !== id);
+            mettreAJourStats();
+            filtrerMembres();
+        }
+    }
+
+    function mettreAJourStats() {
+        document.getElementById('stat-total').textContent = tousLesMembres.length;
+        document.getElementById('stat-premium').textContent = tousLesMembres.filter(m => m.role === 'premium').length;
+        document.getElementById('stat-admin').textContent = tousLesMembres.filter(m => m.role === 'admin').length;
+        document.getElementById('stat-membre').textContent = tousLesMembres.filter(m => m.role === 'membre' || !m.role).length;
+    }
+
+    async function init() {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+
+        if (!user || user.email !== ADMIN_EMAIL) {
+            document.getElementById('chargement').style.display = 'none';
+            document.getElementById('acces-refuse').style.display = 'block';
+            return;
+        }
+
+        const { data, error } = await supabaseClient
+            .from('profiles')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+        if (error) {
+            document.getElementById('chargement').textContent = 'Erreur chargement : ' + error.message;
+            return;
+        }
+
+        tousLesMembres = data || [];
+        mettreAJourStats();
+        afficherMembres(tousLesMembres);
+
+        document.getElementById('chargement').style.display = 'none';
+        document.getElementById('contenu').style.display = 'block';
+    }
+
+    init();
+</script>
+
+</body>
+</html>
