@@ -187,46 +187,27 @@
         document.getElementById("modal-overlay").classList.remove("visible");
     }
 
-    async function payer() {
+    function payer() {
         const email = document.getElementById("email-paiement").value.trim();
-        if (!email) { document.getElementById("msg-erreur").textContent = "Entre ton adresse email."; document.getElementById("msg-erreur").style.display = "block"; return; }
-
-        const btnEl = document.getElementById("btn-payer");
-        btnEl.disabled = true;
-        btnEl.textContent = "Création du paiement...";
-
-        try {
-            const response = await fetch(`https://api.payrexx.com/v1.0/Paylink/?instance=${PAYREXX_INSTANCE}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    amount: 50,
-                    currency: "CHF",
-                    purpose: "Modérion - ZyntraCode",
-                    successRedirectUrl: window.location.origin + "/dtl_moderion.html?succes=1&email=" + encodeURIComponent(email),
-                    failedRedirectUrl: window.location.origin + "/dtl_moderion.html?erreur=1",
-                    apiSignature: PAYREXX_API_KEY
-                })
-            });
-            const data = await response.json();
-            if (data && data.data && data.data[0] && data.data[0].link) {
-                window.location.href = data.data[0].link;
-            } else {
-                throw new Error("Lien non reçu");
-            }
-        } catch(err) {
-            document.getElementById("msg-erreur").textContent = "Erreur de paiement. Réessaie.";
+        if (!email) {
+            document.getElementById("msg-erreur").textContent = "Entre ton adresse email.";
             document.getElementById("msg-erreur").style.display = "block";
-            btnEl.disabled = false;
-            btnEl.textContent = "🔒 Payer 0.50 CHF";
+            return;
         }
+        // Sauvegarder l'email pour l'envoyer après paiement
+        localStorage.setItem("email_achat", email);
+        // Rediriger vers PayRexx
+        window.location.href = "https://zyntracode.payrexx.com/fr/?payment=0da409063cd786a19f2325f47f9feb71";
     }
 
     async function verifierRetour() {
         const params = new URLSearchParams(window.location.search);
         if (params.get("succes") === "1") {
-            const email = params.get("email");
-            if (email) await envoyerBotParEmail(email);
+            const email = localStorage.getItem("email_achat");
+            if (email) {
+                await envoyerBotParEmail(email);
+                localStorage.removeItem("email_achat");
+            }
             window.history.replaceState({}, "", "/dtl_moderion.html");
         }
         if (params.get("erreur") === "1") {
