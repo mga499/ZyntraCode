@@ -1,0 +1,21 @@
+{
+    "name": "ZyntraCode",
+    "short_name": "ZyntraCode",
+    "description": "Bots Discord · Sites Web · Solutions Digitales",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0a0a0a",
+    "theme_color": "#15d5a8",
+    "icons": [
+        {
+            "src": "logo_zyntracode2.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "logo_zyntracode2.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
