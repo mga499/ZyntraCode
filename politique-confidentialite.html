@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZyntraCode - Politique de confidentialité</title>
+    <link rel="icon" type="image/png" href="logo_zyntracode2.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            padding: 40px 20px 60px 220px;
+        }
+        #menu-btn {
+            position: fixed; top: 15px; left: 15px;
+            background: transparent; border: 2px solid rgb(21, 213, 168);
+            color: rgb(21, 213, 168); padding: 8px 15px;
+            border-radius: 8px; cursor: pointer;
+            font-size: 16px; z-index: 1001; display: none;
+        }
+        #menu {
+            background: #1a1a1a; width: 180px; height: 100vh;
+            position: fixed; top: 0; left: 0; z-index: 1000;
+            box-shadow: 0px 0px 15px rgb(21, 213, 168);
+            padding: 60px 10px 10px 10px; transition: 0.3s; display: block;
+        }
+        #menu a {
+            color: white; display: block; padding: 12px 10px;
+            text-decoration: none; border-radius: 8px; transition: 0.2s;
+        }
+        #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
+
+        .contenu { max-width: 750px; }
+
+        .titre-page {
+            color: rgb(21, 213, 168);
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .date-maj {
+            color: #555;
+            font-size: 13px;
+            margin-bottom: 40px;
+        }
+
+        .section {
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            color: rgb(21, 213, 168);
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a2a2a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section p {
+            color: #bbb;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+        .section p:last-child { margin-bottom: 0; }
+        .section ul {
+            color: #bbb;
+            font-size: 14px;
+            line-height: 1.8;
+            padding-left: 20px;
+            margin-bottom: 12px;
+        }
+        .section ul li { margin-bottom: 6px; }
+        .section strong { color: white; }
+
+        .highlight {
+            background: rgba(21, 213, 168, 0.08);
+            border: 1px solid rgba(21, 213, 168, 0.2);
+            border-radius: 10px;
+            padding: 15px 20px;
+            color: #bbb;
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 12px;
+        }
+
+        .contact-box {
+            background: rgba(21, 213, 168, 0.05);
+            border: 1px solid rgba(21, 213, 168, 0.3);
+            border-radius: 12px;
+            padding: 20px 25px;
+            margin-top: 10px;
+        }
+        .contact-box p { margin-bottom: 6px; }
+        .contact-box a { color: rgb(21, 213, 168); text-decoration: none; }
+        .contact-box a:hover { text-decoration: underline; }
+
+        .tag {
+            display: inline-block;
+            background: rgba(21, 213, 168, 0.1);
+            color: rgb(21, 213, 168);
+            border-radius: 6px;
+            padding: 2px 10px;
+            font-size: 12px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        @media (max-width: 768px) {
+            #menu-btn { display: block; }
+            #menu { display: none; }
+            #menu.visible { display: block; }
+            body { padding: 80px 15px 60px 15px; }
+        }
+    </style>
+</head>
+<body>
+
+<button id="menu-btn">☰ Menu</button>
+<nav id="menu">
+    <a href="index.html">Accueil</a>
+    <a href="2-Bot_discord.html">Bot Discord</a>
+    <a href="3-contact.html">Contact</a>
+    <a href="login.html">🔐 Se connecter</a>
+    <a href="register.html">✨ S'inscrire</a>
+</nav>
+
+<div class="contenu">
+
+    <h1 class="titre-page">🔒 Politique de confidentialité</h1>
+    <p class="date-maj">Dernière mise à jour : mai 2026 · Applicable en Suisse (LPD) et en Europe (RGPD)</p>
+
+    <!-- INTRO -->
+    <div class="section">
+        <h2>📋 Introduction</h2>
+        <p>Bienvenue sur <strong>ZyntraCode</strong> (zyntracode.ch). Nous attachons une grande importance à la protection de vos données personnelles. Cette politique de confidentialité explique quelles données nous collectons, comment nous les utilisons et quels sont vos droits.</p>
+        <p>En créant un compte ou en utilisant notre site, vous acceptez les pratiques décrites dans cette politique.</p>
+    </div>
+
+    <!-- DONNÉES COLLECTÉES -->
+    <div class="section">
+        <h2>📦 Données que nous collectons</h2>
+        <p>Lors de la création d'un compte, nous collectons :</p>
+        <ul>
+            <li><strong>Adresse email</strong> — pour identifier votre compte et vous envoyer des notifications importantes</li>
+            <li><strong>Nom d'utilisateur (pseudonyme)</strong> — pour personnaliser votre expérience</li>
+            <li><strong>Mot de passe</strong> — stocké de façon chiffrée, jamais en clair</li>
+            <li><strong>Date d'inscription</strong> — générée automatiquement</li>
+            <li><strong>Rôle</strong> — membre, premium ou admin</li>
+        </ul>
+        <p>Nous ne collectons <strong>pas</strong> : nom réel, numéro de téléphone, adresse postale, données bancaires, ni aucune donnée sensible.</p>
+    </div>
+
+    <!-- UTILISATION -->
+    <div class="section">
+        <h2>🎯 Comment nous utilisons vos données</h2>
+        <p>Vos données sont utilisées uniquement pour :</p>
+        <ul>
+            <li>Gérer votre compte et votre connexion</li>
+            <li>Vous envoyer des codes de sécurité (2FA) lors de la connexion</li>
+            <li>Vous contacter en cas de problème avec votre compte</li>
+            <li>Améliorer nos services</li>
+        </ul>
+        <div class="highlight">
+            🚫 Nous ne vendons jamais vos données à des tiers.<br>
+            🚫 Nous n'utilisons pas vos données à des fins publicitaires.<br>
+            🚫 Nous ne partageons pas vos données avec des partenaires commerciaux.
+        </div>
+    </div>
+
+    <!-- STOCKAGE -->
+    <div class="section">
+        <h2>🗄️ Où sont stockées vos données</h2>
+        <p>Vos données sont stockées de manière sécurisée via <strong>Supabase</strong>, une plateforme de base de données conforme aux normes de sécurité internationales.</p>
+        <ul>
+            <li>Les mots de passe sont <strong>chiffrés</strong> (hachage bcrypt) — personne ne peut les lire</li>
+            <li>Les données sont hébergées sur des serveurs sécurisés en <strong>Europe (Irlande)</strong></li>
+            <li>Les connexions sont protégées par <strong>HTTPS/TLS</strong></li>
+        </ul>
+        <p>En savoir plus sur la sécurité de Supabase : <a href="https://supabase.com/security" target="_blank" style="color:rgb(21,213,168)">supabase.com/security</a></p>
+    </div>
+
+    <!-- DURÉE -->
+    <div class="section">
+        <h2>⏱️ Durée de conservation</h2>
+        <p>Vos données sont conservées :</p>
+        <ul>
+            <li><strong>Tant que votre compte est actif</strong> — vos données sont conservées pour le fonctionnement du service</li>
+            <li><strong>Après suppression du compte</strong> — vos données sont supprimées dans un délai de 30 jours</li>
+        </ul>
+    </div>
+
+    <!-- DROITS -->
+    <div class="section">
+        <h2>✅ Vos droits</h2>
+        <p>Conformément à la <strong>loi suisse sur la protection des données (LPD)</strong> et au <strong>Règlement Général sur la Protection des Données (RGPD)</strong>, vous avez le droit de :</p>
+        <ul>
+            <li>🔍 <strong>Accès</strong> — demander quelles données nous avons sur vous</li>
+            <li>✏️ <strong>Rectification</strong> — corriger vos données via la page Paramètres</li>
+            <li>🗑️ <strong>Suppression</strong> — demander la suppression de votre compte et de vos données</li>
+            <li>📤 <strong>Portabilité</strong> — recevoir vos données dans un format lisible</li>
+            <li>🚫 <strong>Opposition</strong> — vous opposer à certains traitements de vos données</li>
+        </ul>
+        <p>Pour exercer ces droits, contactez-nous via la page <a href="3-contact.html" style="color:rgb(21,213,168)">Contact</a>.</p>
+    </div>
+
+    <!-- COOKIES -->
+    <div class="section">
+        <h2>🍪 Cookies et session</h2>
+        <p>Notre site utilise uniquement des cookies <strong>fonctionnels</strong> nécessaires au bon fonctionnement :</p>
+        <ul>
+            <li><strong>Session de connexion</strong> — pour maintenir votre connexion active (localStorage)</li>
+        </ul>
+        <p>Nous n'utilisons <strong>aucun cookie publicitaire</strong> ni outil de tracking tiers (Google Analytics, Facebook Pixel, etc.).</p>
+    </div>
+
+    <!-- MINEURS -->
+    <div class="section">
+        <h2>👦 Mineurs</h2>
+        <p>Notre site est accessible à tous. Cependant, si vous avez moins de <strong>16 ans</strong>, vous devez obtenir l'accord de vos parents ou tuteurs légaux avant de créer un compte.</p>
+        <p>Si nous découvrons qu'un mineur de moins de 16 ans a créé un compte sans autorisation parentale, nous supprimerons le compte dans les plus brefs délais.</p>
+    </div>
+
+    <!-- MODIFICATIONS -->
+    <div class="section">
+        <h2>🔄 Modifications de cette politique</h2>
+        <p>Nous pouvons modifier cette politique à tout moment. En cas de changement important, nous vous en informerons par email ou via une notification sur le site.</p>
+        <p>La date de dernière mise à jour est toujours indiquée en haut de cette page.</p>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="section">
+        <h2>📩 Nous contacter</h2>
+        <p>Pour toute question concernant cette politique ou vos données personnelles :</p>
+        <div class="contact-box">
+            <p>🌐 <strong>Site web :</strong> <a href="https://zyntracode.ch">zyntracode.ch</a></p>
+            <p>📧 <strong>Contact :</strong> <a href="3-contact.html">Page de contact</a></p>
+            <p>📍 <strong>Pays :</strong> Suisse</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    btn.addEventListener("click", () => menu.classList.toggle("visible"));
+</script>
+
+</body>
+</html>
