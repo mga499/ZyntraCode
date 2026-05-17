@@ -197,7 +197,8 @@
 
     <div class="champ">
         <label>Nom d'utilisateur</label>
-        <input type="text" id="username" placeholder="MonPseudo">
+        <input type="text" id="username" placeholder="Gamer_456" oninput="validerUsername(this.value)">
+        <small id="username-hint" style="color:#555; font-size:12px; margin-top:5px; display:block;">Minimum 3 caractères · lettres, chiffres et _ uniquement · pas d'espaces</small>
     </div>
     <div class="champ">
         <label>Adresse email</label>
@@ -264,6 +265,17 @@
         document.getElementById("msg-erreur").style.display = "none";
     }
 
+    function validerUsername(val) {
+        const hint = document.getElementById("username-hint");
+        if (val.length === 0) {
+            hint.style.color = "#555";
+        } else if (val.length < 3 || !/^[a-zA-Z0-9_]+$/.test(val)) {
+            hint.style.color = "#ff4d4d";
+        } else {
+            hint.style.color = "rgb(21,213,168)";
+        }
+    }
+
     async function register() {
         const username = document.getElementById("username").value.trim();
         const email = document.getElementById("email").value.trim();
@@ -271,6 +283,8 @@
         const password2 = document.getElementById("password2").value;
 
         if (!username || !email || !password || !password2) return afficherErreur("Remplis tous les champs.");
+        if (username.length < 3) return afficherErreur("Le pseudo doit faire minimum 3 caractères.");
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) return afficherErreur("Le pseudo ne peut contenir que des lettres, chiffres et _ (pas d'espaces).");
         if (password !== password2) return afficherErreur("Les mots de passe ne correspondent pas.");
         if (password.length < 6) return afficherErreur("Mot de passe trop court (6 caractères minimum).");
 
