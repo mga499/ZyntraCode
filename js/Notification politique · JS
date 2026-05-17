@@ -1,0 +1,122 @@
+// ================================================
+// NOTIFICATION NOUVELLE POLITIQUE DE CONFIDENTIALITÉ
+// Ajoute cette ligne sur toutes tes pages :
+// <script src="notification-politique.js"></script>
+// ================================================
+
+(function() {
+    // Clé unique pour cette version de la politique
+    // Change ce numéro quand tu mets à jour la politique
+    const VERSION_POLITIQUE = 'v1-mai-2026';
+    const CLE_STORAGE = 'politique_acceptee';
+
+    // Si l'utilisateur a déjà vu cette version → ne pas afficher
+    if (localStorage.getItem(CLE_STORAGE) === VERSION_POLITIQUE) return;
+
+    // Injection du CSS
+    const style = document.createElement('style');
+    style.textContent = `
+        #notif-politique {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            background: #1a1a1a;
+            border: 1px solid rgb(21, 213, 168);
+            border-radius: 14px;
+            padding: 18px 20px;
+            max-width: 340px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+            animation: slideIn 0.4s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        #notif-politique .notif-titre {
+            color: rgb(21, 213, 168);
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #notif-politique .notif-texte {
+            color: #aaa;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        #notif-politique .notif-boutons {
+            display: flex;
+            gap: 8px;
+        }
+        #notif-politique .btn-lire {
+            flex: 1;
+            padding: 9px;
+            background: rgb(21, 213, 168);
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: 0.2s;
+        }
+        #notif-politique .btn-lire:hover {
+            background: #12c9a0;
+        }
+        #notif-politique .btn-fermer {
+            padding: 9px 14px;
+            background: transparent;
+            color: #aaa;
+            border: 1px solid #2a2a2a;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        #notif-politique .btn-fermer:hover {
+            border-color: #aaa;
+            color: white;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Injection du HTML
+    const notif = document.createElement('div');
+    notif.id = 'notif-politique';
+    notif.innerHTML = `
+        <div class="notif-titre">🔒 Mise à jour de confidentialité</div>
+        <div class="notif-texte">
+            Nous avons mis à jour notre politique de confidentialité. 
+            Consultez-la pour savoir comment nous protégeons vos données.
+        </div>
+        <div class="notif-boutons">
+            <a href="politique-confidentialite.html" class="btn-lire" onclick="fermerNotif()">
+                Lire la politique
+            </a>
+            <button class="btn-fermer" onclick="fermerNotif()">
+                Fermer
+            </button>
+        </div>
+    `;
+    document.body.appendChild(notif);
+
+    // Fermer la notification
+    window.fermerNotif = function() {
+        localStorage.setItem(CLE_STORAGE, VERSION_POLITIQUE);
+        const el = document.getElementById('notif-politique');
+        if (el) {
+            el.style.animation = 'none';
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = '0.3s';
+            setTimeout(() => el.remove(), 300);
+        }
+    };
+})();
