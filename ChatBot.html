@@ -1,4 +1,84 @@
- <div class="chat-section">
+# 🧠 IA Simple
+CONNAISSANCES = {
+    "salutation": {
+        "mots": ["bonjour", "salut", "hello", "bonsoir", "coucou", "hey"],
+        "reponses": [
+            "Bonjour ! 👋 Comment puis-je t'aider ?",
+            "Salut ! 😊 Qu'est-ce que je peux faire pour toi ?",
+            "Hello ! Je suis l'IA de ZyntraCode, pose moi ta question !"
+        ]
+    },
+    "identite": {
+        "mots": ["qui es tu", "c'est quoi", "tu es quoi", "présente toi"],
+        "reponses": [
+            "Je suis l'IA de ZyntraCode ! 🤖 Je peux répondre à tes questions sur nos services.",
+            "Bonjour ! Je suis l'assistant virtuel de ZyntraCode, créé pour t'aider ! 😊"
+        ]
+    },
+    "bot": {
+        "mots": ["bot", "moderion", "discord", "commande"],
+        "reponses": [
+            "Modérion est notre bot Discord gratuit ! Il gère la modération, les tickets et bien plus. Tu peux l'obtenir sur zyntracode.ch 🤖",
+            "Notre bot Modérion est 100% gratuit ! Il inclut un système de tickets, de modération et d'auto-rôles 💪"
+        ]
+    },
+    "prix": {
+        "mots": ["prix", "coût", "combien", "gratuit", "payant", "tarif"],
+        "reponses": [
+            "Modérion est 100% gratuit ! 🎉 Aucun abonnement nécessaire.",
+            "Nos services sont abordables ! Le bot Modérion est gratuit 💰"
+        ]
+    },
+    "contact": {
+        "mots": ["contact", "email", "joindre", "support"],
+        "reponses": [
+            "Tu peux nous contacter sur zyntracode.ch ou à zyntracode@gmail.com 📩",
+            "Pour nous contacter, va sur zyntracode.ch ! 😊"
+        ]
+    },
+    "site": {
+        "mots": ["site", "web", "zyntracode", "boutique"],
+        "reponses": [
+            "Notre site est zyntracode.ch ! Tu y trouveras tous nos services 🌐",
+            "Visite zyntracode.ch pour découvrir nos services ! 🚀"
+        ]
+    },
+    "remerciement": {
+        "mots": ["merci", "thanks", "super", "cool", "parfait"],
+        "reponses": [
+            "De rien ! 😊 N'hésite pas si t'as d'autres questions !",
+            "Avec plaisir ! 🎉 Je suis là pour t'aider !"
+        ]
+    },
+    "aurevoir": {
+        "mots": ["au revoir", "bye", "ciao", "à bientôt"],
+        "reponses": [
+            "Au revoir ! 👋 N'hésite pas à revenir !",
+            "À bientôt ! 😊 Bonne journée !"
+        ]
+    },
+    "ca_va": {
+        "mots": ["ça va", "tu vas bien", "ca va", "comment tu vas"],
+        "reponses": [
+            "Oui très bien et vous ! Merci de demander ☺️",
+            "Oui et vous ? 😁"
+        ]
+    },
+    "createur": {
+        "mots": ["créateur", "createur", "qui ta fait", "qui ta créé"],
+        "reponses": [
+            "Je ne peux pas te dire le nom du créateur ❌ mais je peux te dire qu'il a 15 ans et qu'il est passionné par le digital ! 🚀"
+        ]
+    },
+    "je_vais_bien": {
+        "mots": ["je vais bien", "je vais bien merci", "oui bien"],
+        "reponses": [
+            "Parfait alors tu peux me poser ta question ou discuter ☺️!"
+        ]
+    }
+}
+
+<div class="chat-section">
             <h2>🧠 Chat IA</h2>
             <div class="chat-box" id="chat-box">
                 <div class="msg-ia"><span>Bonjour {user.get('username', '')} ! Je suis l'IA de ZyntraCode 😊</span></div>
