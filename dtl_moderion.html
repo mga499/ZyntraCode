@@ -6,174 +6,80 @@
     <title>Modérion - ZyntraCode</title>
     <link rel="stylesheet" href="styles_exp-moderion.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #0a0a0a;
-            color: white;
-            font-family: Arial, Helvetica, sans-serif;
-            text-align: center;
-        }
-        /* BOUTON RETOUR */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0a0a0a; color: white; font-family: Arial, Helvetica, sans-serif; text-align: center; }
         #retoure {
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            padding: 8px 15px;
-            background: transparent;
-            border: 2px solid rgb(21, 213, 168);
-            color: rgb(21, 213, 168);
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 16px;
-            z-index: 1001;
-            transition: 0.3s;
+            position: fixed; top: 15px; left: 15px;
+            padding: 8px 15px; background: transparent;
+            border: 2px solid rgb(21, 213, 168); color: rgb(21, 213, 168);
+            border-radius: 8px; text-decoration: none; font-size: 16px;
+            z-index: 1001; transition: 0.3s;
         }
-        #retoure:hover {
-            background: rgb(21, 213, 168);
-            color: black;
-        }
-        /* HERO */
-        .hero {
-            padding: 80px 20px 40px 20px;
-        }
-        #img_moderion {
-            width: 130px;
-            border-radius: 50%;
-            border: 3px solid rgb(21, 213, 168);
-            margin-bottom: 20px;
-            transition: 0.3s;
-        }
-        #img_moderion:hover {
-            box-shadow: 0 0 25px rgb(21, 213, 168);
-        }
-        #txt_moderion {
-            font-size: 48px;
-            color: rgb(21, 213, 168);
-            margin-bottom: 10px;
-        }
-        #in_moderion {
-            color: #aaa;
-            font-size: 16px;
-            font-weight: normal;
-            max-width: 500px;
-            margin: 0 auto 15px auto;
-        }
-        #gtt_moderion {
-            display: inline-block;
-            background: rgb(21, 213, 168);
-            color: black;
-            padding: 6px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 30px;
-        }
-        /* BOUTON AJOUTER */
+        #retoure:hover { background: rgb(21, 213, 168); color: black; }
+        .hero { padding: 80px 20px 40px 20px; }
+        #img_moderion { width: 130px; border-radius: 50%; border: 3px solid rgb(21, 213, 168); margin-bottom: 20px; transition: 0.3s; }
+        #img_moderion:hover { box-shadow: 0 0 25px rgb(21, 213, 168); }
+        #txt_moderion { font-size: 48px; color: rgb(21, 213, 168); margin-bottom: 10px; }
+        #in_moderion { color: #aaa; font-size: 16px; font-weight: normal; max-width: 500px; margin: 0 auto 15px auto; }
+        #gtt_moderion { display: inline-block; background: rgb(21, 213, 168); color: black; padding: 6px 20px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 30px; }
         .btn-ajouter {
-            display: inline-block;
-            padding: 12px 30px;
-            background: rgb(21, 213, 168);
-            color: black;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-            transition: 0.3s;
-            margin-bottom: 60px;
+            display: inline-block; padding: 12px 30px;
+            background: rgb(21, 213, 168); color: black;
+            border-radius: 10px; text-decoration: none;
+            font-weight: bold; font-size: 16px; transition: 0.3s; margin-bottom: 60px;
         }
-        .btn-ajouter:hover {
-            background: transparent;
-            color: rgb(21, 213, 168);
+        .btn-ajouter:hover { background: transparent; color: rgb(21, 213, 168); border: 2px solid rgb(21, 213, 168); }
+        .btn-test {
+            display: inline-block; padding: 12px 30px;
+            background: transparent; color: rgb(21, 213, 168);
             border: 2px solid rgb(21, 213, 168);
+            border-radius: 10px; text-decoration: none;
+            font-weight: bold; font-size: 16px; transition: 0.3s;
+            margin-bottom: 60px; margin-left: 10px; cursor: pointer;
         }
-        /* FONCTIONNALITÉS */
-        .features {
-            padding: 20px 40px 80px 40px;
-        }
-        .features h2 {
-            color: rgb(21, 213, 168);
-            font-size: 32px;
-            margin-bottom: 40px;
-        }
-        .features-grid {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .feature-card {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 12px;
-            padding: 25px;
-            width: 200px;
-            transition: 0.3s;
-        }
-        .feature-card:hover {
-            border-color: rgb(21, 213, 168);
-            box-shadow: 0 0 15px rgba(21, 213, 168, 0.2);
-        }
-        .feature-card .icon {
-            font-size: 35px;
-            margin-bottom: 12px;
-        }
-        .feature-card h4 {
-            color: rgb(21, 213, 168);
-            margin-bottom: 8px;
-        }
-        .feature-card p {
-            color: #aaa;
-            font-size: 13px;
-        }
-        /* COMMANDES */
-        .commandes {
-            padding: 0 40px 80px 40px;
-        }
-        .commandes h2 {
-            color: rgb(21, 213, 168);
-            font-size: 32px;
-            margin-bottom: 30px;
-        }
-        .commande-list {
-            max-width: 600px;
-            margin: 0 auto;
-            text-align: left;
-        }
-        .commande-item {
-            background: #1a1a1a;
-            border-radius: 10px;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .commande-item code {
-            background: #2a2a2a;
-            color: rgb(21, 213, 168);
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 14px;
-            min-width: 140px;
-        }
-        .commande-item p {
-            color: #aaa;
-            font-size: 14px;
-        }
+        .btn-test:hover { background: rgb(21, 213, 168); color: black; }
+        .features { padding: 20px 40px 80px 40px; }
+        .features h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 40px; }
+        .features-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; max-width: 900px; margin: 0 auto; }
+        .feature-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 25px; width: 200px; transition: 0.3s; }
+        .feature-card:hover { border-color: rgb(21, 213, 168); box-shadow: 0 0 15px rgba(21, 213, 168, 0.2); }
+        .feature-card .icon { font-size: 35px; margin-bottom: 12px; }
+        .feature-card h4 { color: rgb(21, 213, 168); margin-bottom: 8px; }
+        .feature-card p { color: #aaa; font-size: 13px; }
+        .commandes { padding: 0 40px 80px 40px; }
+        .commandes h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 30px; }
+        .commande-list { max-width: 600px; margin: 0 auto; text-align: left; }
+        .commande-item { background: #1a1a1a; border-radius: 10px; padding: 15px 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .commande-item code { background: #2a2a2a; color: rgb(21, 213, 168); padding: 5px 10px; border-radius: 6px; font-size: 14px; min-width: 140px; }
+        .commande-item p { color: #aaa; font-size: 14px; }
+
+        /* MODAL PAIEMENT */
+        #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; align-items: center; justify-content: center; }
+        #modal-overlay.visible { display: flex; }
+        #modal { background: #1a1a1a; border: 1px solid rgb(21,213,168); border-radius: 18px; padding: 35px; width: 90%; max-width: 420px; animation: popIn 0.3s ease; }
+        @keyframes popIn { from { opacity:0; transform: scale(0.95); } to { opacity:1; transform: scale(1); } }
+        #modal h2 { color: rgb(21,213,168); font-size: 22px; margin-bottom: 5px; }
+        #modal .modal-sous { color: #aaa; font-size: 13px; margin-bottom: 25px; }
+        #modal .champ { margin-bottom: 18px; }
+        #modal label { display: block; color: #aaa; font-size: 13px; margin-bottom: 6px; }
+        #modal input { width: 100%; padding: 11px 15px; background: #0a0a0a; border: 2px solid #2a2a2a; border-radius: 10px; color: white; font-size: 14px; outline: none; transition: 0.2s; }
+        #modal input:focus { border-color: rgb(21,213,168); }
+        .modal-btns { display: flex; gap: 10px; margin-top: 5px; }
+        .btn-payer { flex: 1; padding: 13px; background: rgb(21,213,168); color: black; border: 2px solid rgb(21,213,168); border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-payer:hover { background: transparent; color: rgb(21,213,168); }
+        .btn-payer:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-annuler { padding: 13px 18px; background: transparent; color: #aaa; border: 1px solid #2a2a2a; border-radius: 10px; font-size: 14px; cursor: pointer; transition: 0.2s; }
+        .btn-annuler:hover { border-color: #aaa; color: white; }
+        .msg { padding: 10px 15px; border-radius: 8px; font-size: 13px; margin-bottom: 15px; display: none; }
+        .msg.erreur { background: rgba(255,77,77,0.1); border: 1px solid #ff4d4d; color: #ff4d4d; }
+        .msg.succes { background: rgba(21,213,168,0.1); border: 1px solid rgb(21,213,168); color: rgb(21,213,168); }
+        .securite { text-align: center; color: #555; font-size: 12px; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<!-- BOUTON RETOUR -->
 <a id="retoure" href="index.html">← Retour</a>
 
-<!-- HERO -->
 <div class="hero">
     <img id="img_moderion" src="image_modérion.png" alt="logo moderion">
     <h1 id="txt_moderion">Modérion</h1>
@@ -181,180 +87,175 @@
     <h5 id="gtt_moderion">✅ Gratuit</h5>
     <br><br>
     <a href="https://discord.com/oauth2/authorize?client_id=1500932045839269968&permissions=8&scope=bot%20applications.commands" class="btn-ajouter" id="btn-obtenir" target="_blank">📩 Obtenir le bot</a>
+    <button class="btn-test" onclick="ouvrirModal()">🧪 Tester le paiement (0.50 CHF)</button>
 </div>
 
-<!-- FONCTIONNALITÉS -->
 <div class="features">
     <h2>⚡ Fonctionnalités</h2>
     <div class="features-grid">
-        <div class="feature-card">
-            <div class="icon">👋</div>
-            <h4>Bienvenue/Départ</h4>
-            <p>Message de bienvenue/Départ avec photo de profil</p>
-        </div>
-        <div class="feature-card">
-            <div class="icon">👀</div>
-            <h4>Anti insulte</h4>
-            <p>Anti insulte avancé </p>
-        </div>
-        <div class="feature-card">
-            <div class="icon">🎫</div>
-            <h4>Tickets</h4>
-            <p>Système de tickets privés pour le support</p>
-        </div>
-        <div class="feature-card">
-            <div class="icon">🎭</div>
-            <h4>Auto-rôles</h4>
-            <p>Rôles donnés automatiquement à l'arrivée</p>
-        </div>
-        <div class="feature-card">
-            <div class="icon">📝</div>
-            <h4>Logs</h4>
-            <p>Logs des tickets fermés dans un salon dédié</p>
-        </div>
-        <div class="feature-card">
-            <div class="icon">🔒</div>
-            <h4>Sécurisé</h4>
-            <p>Système de permissions par rôle</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="icon">🔗</div>
-            <h4>enti lien</h4>
-            <p>protège contre les lien</p>
-        </div>
-
-        <div class="feature-card">
-            <div class="icon">🌐</div>
-            <h4>serveur discord</h4>
-            <p>Génère des serveur personnaliser</p>
-        </div>
+        <div class="feature-card"><div class="icon">👋</div><h4>Bienvenue/Départ</h4><p>Message de bienvenue/Départ avec photo de profil</p></div>
+        <div class="feature-card"><div class="icon">👀</div><h4>Anti insulte</h4><p>Anti insulte avancé</p></div>
+        <div class="feature-card"><div class="icon">🎫</div><h4>Tickets</h4><p>Système de tickets privés pour le support</p></div>
+        <div class="feature-card"><div class="icon">🎭</div><h4>Auto-rôles</h4><p>Rôles donnés automatiquement à l'arrivée</p></div>
+        <div class="feature-card"><div class="icon">📝</div><h4>Logs</h4><p>Logs des tickets fermés dans un salon dédié</p></div>
+        <div class="feature-card"><div class="icon">🔒</div><h4>Sécurisé</h4><p>Système de permissions par rôle</p></div>
+        <div class="feature-card"><div class="icon">🔗</div><h4>Anti lien</h4><p>Protège contre les liens</p></div>
+        <div class="feature-card"><div class="icon">🌐</div><h4>Serveur discord</h4><p>Génère des serveurs personnalisés</p></div>
     </div>
 </div>
 
-<!-- COMMANDES -->
 <div class="commandes">
     <h2>📄 Commandes</h2>
     <div class="commande-list">
-        <div class="commande-item">
-            <code>/setup</code>
-            <p>Configurer les salons bienvenue/départ</p>
-        </div>
-        <div class="commande-item">
-            <code>/ticket</code>
-            <p>Ouvrir un ticket de support</p>
-        </div>
-        <div class="commande-item">
-            <code>/fermer</code>
-            <p>Fermer un ticket</p>
-        </div>
-        <div class="commande-item">
-            <code>/autoroleadd</code>
-            <p>Ajouter un rôle automatique</p>
-        </div>
-        <div class="commande-item">
-            <code>/setlogs</code>
-            <p>Définir le salon de logs</p>
-        </div>
-        <div class="commande-item">
-            <code>/ban</code>
-            <p>Pouvoir ban un utilisateur</p>
-        </div>
-
-        <div class="commande-item">
-            <code>/adminrole</code>
-            <p>Ajouter un rôle à configuré les salon arriver/départ</p>
-        </div>
-
-        <div class="commande-item">
-            <code>/autorolemove</code>
-            <p>Retiré un rôle automatique a l'arriver</p>
-        </div>
-
-        <div class="commande-item">
-            <code>/autoroleview</code>
-            <p>Voir les rôle automatique à l'arriver</p>
-        </div>
-
-        <div class="commande-item">
-            <code>/avertissements</code>
-            <p>Voir les avertissements d'un memebre</p>
-        </div>
-
-        <div class="commande-item">
-            <code>/clearavertissements</code>
-            <p>Effacer les avertissements d'un memebre</p>
-        </div>
-
-        <div class="commande-item">
-            <code>/genserver</code>
-            <p>Généré un serveur discord personnalisé</p>
-        </div>
-
-        <div class="commande-item">
-            <code>/mute</code>
-            <p>Mute un membre</p>
-        </div>
-
-        <div class="commande-item">
-            <code>/removeadminrole</code>
-            <p>Suprimer un rôle autorisé à utilisé /setup</p>
-        </div>
-
-        <div class="commande-item">
-            <code>/setlogs</code>
-            <p>Définir le salon de logs des tickets</p>
-        </div>
-
-        <div class="commande-item">
-            <code>/unmute</code>
-            <p>unmute un membre</p>
-        </div>
-
-        <div class="commande-item">
-            <code>/viewadminrole</code>
-            <p>Voir les rôle à utilisé /setup</p>
-       </div>
-        
-        <div class="commande-item">
-            <code>/help</code>
-            <p>Voir toutes les commandes</p>
-        </div>
+        <div class="commande-item"><code>/setup</code><p>Configurer les salons bienvenue/départ</p></div>
+        <div class="commande-item"><code>/ticket</code><p>Ouvrir un ticket de support</p></div>
+        <div class="commande-item"><code>/fermer</code><p>Fermer un ticket</p></div>
+        <div class="commande-item"><code>/autoroleadd</code><p>Ajouter un rôle automatique</p></div>
+        <div class="commande-item"><code>/setlogs</code><p>Définir le salon de logs</p></div>
+        <div class="commande-item"><code>/ban</code><p>Pouvoir ban un utilisateur</p></div>
+        <div class="commande-item"><code>/adminrole</code><p>Ajouter un rôle à configurer les salons arrivée/départ</p></div>
+        <div class="commande-item"><code>/autorolemove</code><p>Retirer un rôle automatique à l'arrivée</p></div>
+        <div class="commande-item"><code>/autoroleview</code><p>Voir les rôles automatiques à l'arrivée</p></div>
+        <div class="commande-item"><code>/avertissements</code><p>Voir les avertissements d'un membre</p></div>
+        <div class="commande-item"><code>/clearavertissements</code><p>Effacer les avertissements d'un membre</p></div>
+        <div class="commande-item"><code>/genserver</code><p>Générer un serveur Discord personnalisé</p></div>
+        <div class="commande-item"><code>/mute</code><p>Mute un membre</p></div>
+        <div class="commande-item"><code>/removeadminrole</code><p>Supprimer un rôle autorisé à utiliser /setup</p></div>
+        <div class="commande-item"><code>/unmute</code><p>Unmute un membre</p></div>
+        <div class="commande-item"><code>/viewadminrole</code><p>Voir les rôles à utiliser /setup</p></div>
+        <div class="commande-item"><code>/help</code><p>Voir toutes les commandes</p></div>
     </div>
 </div>
 
+<!-- MODAL PAIEMENT -->
+<div id="modal-overlay">
+    <div id="modal">
+        <h2>💳 Paiement sécurisé</h2>
+        <p class="modal-sous">Modérion — 0.50 CHF (test)</p>
+        <div class="msg erreur" id="msg-erreur"></div>
+        <div class="msg succes" id="msg-succes"></div>
+        <div class="champ">
+            <label>Adresse email (pour recevoir le lien)</label>
+            <input type="email" id="email-paiement" placeholder="toi@exemple.com">
+        </div>
+        <div class="modal-btns">
+            <button class="btn-payer" id="btn-payer" onclick="payer()">🔒 Payer 0.50 CHF</button>
+            <button class="btn-annuler" onclick="fermerModal()">Annuler</button>
+        </div>
+        <p class="securite">🔒 Paiement sécurisé via PayRexx · Données chiffrées</p>
+    </div>
+</div>
+
+<div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px;">
+    © 2026 ZyntraCode — Tous droits réservés | 
+    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
+    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a> |
+    <a href="politique-confidentialite.html" style="color: rgb(21, 213, 168); text-decoration: none;">Politique de confidentialité</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="profil-menu.js"></script>
 <script>
+    // ================================================
+    // CONFIG
+    // ================================================
+    const PAYREXX_INSTANCE = "zyntracode";
+    const PAYREXX_API_KEY  = "mEgPbxC15moKq2zLicETJL68ftvOrR";
+    const BOT_INVITE_LINK  = "https://discord.com/oauth2/authorize?client_id=1500932045839269968&permissions=8&scope=bot%20applications.commands";
+
+    // EmailJS — remplace par tes clés
+    const EMAILJS_SERVICE_ID  = "service_xxxxxxx";
+    const EMAILJS_TEMPLATE_ID = "template_xxxxxxx";
+    const EMAILJS_PUBLIC_KEY  = "xxxxxxxxxxxxxxx";
+
+    // Webhook Discord
     document.getElementById("btn-obtenir").addEventListener("click", function() {
         fetch("https://discord.com/api/webhooks/1501803989618921612/L2_Oki2oWGBjqUuzHcdiwaLTOiD5qFXIocygXWcAgoAc5iJJuSVgRe7WZm1X1AihNvLQ", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                content: "🎉 quelle qu'un vien d'inviter **Moderion** sur serveur Disocrd"
-            })
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: "🎉 quelqu'un vient d'inviter **Moderion** sur son serveur Discord" })
         });
     });
+
+    function ouvrirModal() {
+        document.getElementById("modal-overlay").classList.add("visible");
+        document.getElementById("msg-erreur").style.display = "none";
+        document.getElementById("msg-succes").style.display = "none";
+    }
+
+    function fermerModal() {
+        document.getElementById("modal-overlay").classList.remove("visible");
+    }
+
+    async function payer() {
+        const email = document.getElementById("email-paiement").value.trim();
+        if (!email) { document.getElementById("msg-erreur").textContent = "Entre ton adresse email."; document.getElementById("msg-erreur").style.display = "block"; return; }
+
+        const btnEl = document.getElementById("btn-payer");
+        btnEl.disabled = true;
+        btnEl.textContent = "Création du paiement...";
+
+        try {
+            const response = await fetch(`https://api.payrexx.com/v1.0/Paylink/?instance=${PAYREXX_INSTANCE}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    amount: 50,
+                    currency: "CHF",
+                    purpose: "Modérion - ZyntraCode",
+                    successRedirectUrl: window.location.origin + "/dtl_moderion.html?succes=1&email=" + encodeURIComponent(email),
+                    failedRedirectUrl: window.location.origin + "/dtl_moderion.html?erreur=1",
+                    apiSignature: PAYREXX_API_KEY
+                })
+            });
+            const data = await response.json();
+            if (data && data.data && data.data[0] && data.data[0].link) {
+                window.location.href = data.data[0].link;
+            } else {
+                throw new Error("Lien non reçu");
+            }
+        } catch(err) {
+            document.getElementById("msg-erreur").textContent = "Erreur de paiement. Réessaie.";
+            document.getElementById("msg-erreur").style.display = "block";
+            btnEl.disabled = false;
+            btnEl.textContent = "🔒 Payer 0.50 CHF";
+        }
+    }
+
+    async function verifierRetour() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("succes") === "1") {
+            const email = params.get("email");
+            if (email) await envoyerBotParEmail(email);
+            window.history.replaceState({}, "", "/dtl_moderion.html");
+        }
+        if (params.get("erreur") === "1") {
+            alert("Le paiement a échoué. Réessaie.");
+            window.history.replaceState({}, "", "/dtl_moderion.html");
+        }
+    }
+
+    async function envoyerBotParEmail(email) {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
+        document.head.appendChild(script);
+        script.onload = async () => {
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+            try {
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                    to_email: email,
+                    produit: "Modérion",
+                    lien_bot: BOT_INVITE_LINK
+                });
+                alert("✅ Paiement réussi ! Vérifie ton email pour recevoir le lien du bot.");
+            } catch(err) {
+                alert("Paiement reçu mais erreur email. Contacte-nous.");
+            }
+        };
+    }
+
+    verifierRetour();
 </script>
-
-<!-- COPYRIGHT -->
-<div style="
-    text-align: center;
-    padding: 20px;
-    color: #555;
-    font-size: 13px;
-    border-top: 1px solid #1a1a1a;
-    margin-top: 20px;
-    padding-left: 200px;
-">
-    © 2026 ZyntraCode — Tous droits réservés | 
-    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
-    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a>
-    <a href="politique-confidentialite.html" style="color: rgb(21, 213, 168); text-decoration: none;">Politique de confidentialité</a>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/profil-menu.js"></script>
-
 
 </body>
 </html>
