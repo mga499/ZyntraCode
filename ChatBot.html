@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Modérion - Connexion</title>
+    <title>Chatbot</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #0a0a0a; color: white; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
@@ -14,131 +14,136 @@
     </style>
 </head>
 <body>
-    <div class="login-card">
-        <h1>🤖 Modérion</h1>
-        <p>Connecte toi avec Discord pour gérer ton bot</p>
-        <a href="/login" class="btn-login">🎮 Se connecter avec Discord</a>
-    </div>
 
-# 🧠 IA Simple
-CONNAISSANCES = {
-    "salutation": {
-        "mots": ["bonjour", "salut", "hello", "bonsoir", "coucou", "hey"],
-        "reponses": [
-            "Bonjour ! 👋 Comment puis-je t'aider ?",
-            "Salut ! 😊 Qu'est-ce que je peux faire pour toi ?",
-            "Hello ! Je suis l'IA de ZyntraCode, pose moi ta question !"
-        ]
-    },
-    "identite": {
-        "mots": ["qui es tu", "c'est quoi", "tu es quoi", "présente toi"],
-        "reponses": [
-            "Je suis l'IA de ZyntraCode ! 🤖 Je peux répondre à tes questions sur nos services.",
-            "Bonjour ! Je suis l'assistant virtuel de ZyntraCode, créé pour t'aider ! 😊"
-        ]
-    },
-    "bot": {
-        "mots": ["bot", "moderion", "discord", "commande"],
-        "reponses": [
-            "Modérion est notre bot Discord gratuit ! Il gère la modération, les tickets et bien plus. Tu peux l'obtenir sur zyntracode.ch 🤖",
-            "Notre bot Modérion est 100% gratuit ! Il inclut un système de tickets, de modération et d'auto-rôles 💪"
-        ]
-    },
-    "prix": {
-        "mots": ["prix", "coût", "combien", "gratuit", "payant", "tarif"],
-        "reponses": [
-            "Modérion est 100% gratuit ! 🎉 Aucun abonnement nécessaire.",
-            "Nos services sont abordables ! Le bot Modérion est gratuit 💰"
-        ]
-    },
-    "contact": {
-        "mots": ["contact", "email", "joindre", "support"],
-        "reponses": [
-            "Tu peux nous contacter sur zyntracode.ch ou à zyntracode@gmail.com 📩",
-            "Pour nous contacter, va sur zyntracode.ch ! 😊"
-        ]
-    },
-    "site": {
-        "mots": ["site", "web", "zyntracode", "boutique"],
-        "reponses": [
-            "Notre site est zyntracode.ch ! Tu y trouveras tous nos services 🌐",
-            "Visite zyntracode.ch pour découvrir nos services ! 🚀"
-        ]
-    },
-    "remerciement": {
-        "mots": ["merci", "thanks", "super", "cool", "parfait"],
-        "reponses": [
-            "De rien ! 😊 N'hésite pas si t'as d'autres questions !",
-            "Avec plaisir ! 🎉 Je suis là pour t'aider !"
-        ]
-    },
-    "aurevoir": {
-        "mots": ["au revoir", "bye", "ciao", "à bientôt"],
-        "reponses": [
-            "Au revoir ! 👋 N'hésite pas à revenir !",
-            "À bientôt ! 😊 Bonne journée !"
-        ]
-    },
-    "ca_va": {
-        "mots": ["ça va", "tu vas bien", "ca va", "comment tu vas"],
-        "reponses": [
-            "Oui très bien et vous ! Merci de demander ☺️",
-            "Oui et vous ? 😁"
-        ]
-    },
-    "createur": {
-        "mots": ["créateur", "createur", "qui ta fait", "qui ta créé"],
-        "reponses": [
-            "Je ne peux pas te dire le nom du créateur ❌ mais je peux te dire qu'il a 15 ans et qu'il est passionné par le digital ! 🚀"
-        ]
-    },
-    "je_vais_bien": {
-        "mots": ["je vais bien", "je vais bien merci", "oui bien"],
-        "reponses": [
-            "Parfait alors tu peux me poser ta question ou discuter ☺️!"
-        ]
-    }
-}
-
-
-
+<body>
 
 <div class="chat-section">
-            <h2>🧠 Chat IA</h2>
-            <div class="chat-box" id="chat-box">
-                <div class="msg-ia"><span>Bonjour {user.get('username', '')} ! Je suis l'IA de ZyntraCode 😊</span></div>
-            </div>
-            <div class="chat-input">
-                <input type="text" id="chat-input" placeholder="Pose ta question..." onkeypress="if(event.key==='Enter') envoyerMessage()">
-                <button onclick="envoyerMessage()">Envoyer</button>
-            </div>
+
+    <h2>🧠 Chat IA</h2>
+
+    <div class="chat-box" id="chat-box">
+        <div class="msg-ia">
+            <span>
+                Bonjour 👋 Je suis l'IA de ZyntraCode 😊
+            </span>
         </div>
     </div>
-    <script>
-        function envoyerMessage() {{
-            const input = document.getElementById("chat-input");
-            const chatBox = document.getElementById("chat-box");
-            const message = input.value.trim();
-            if (!message) return;
-            chatBox.innerHTML += `<div class="msg-user"><span>${{message}}</span></div>`;
-            input.value = "";
-            chatBox.scrollTop = chatBox.scrollHeight;
-            chatBox.innerHTML += `<div class="msg-ia" id="loading"><span>⏳ En train de réfléchir...</span></div>`;
-            fetch("/api/chat", {{
-                method: "POST",
-                headers: {{"Content-Type": "application/json"}},
-                body: JSON.stringify({{message: message}})
-            }})
-            .then(r => r.json())
-            .then(data => {{
-                document.getElementById("loading").remove();
-                chatBox.innerHTML += `<div class="msg-ia"><span>${{data.reponse}}</span></div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
-            }});
-        }}
-    </script>
+
+    <div class="chat-input">
+        <input
+            type="text"
+            id="chat-input"
+            placeholder="Pose ta question..."
+            onkeypress="if(event.key==='Enter') envoyerMessage()"
+        >
+
+        <button onclick="envoyerMessage()">
+            Envoyer
+        </button>
+    </div>
+
+</div>
+
+<script>
+
+const CONNAISSANCES = {
+
+    salutation: {
+        mots: ["bonjour", "salut", "hello", "bonsoir", "hey"],
+        reponses: [
+            "Bonjour 👋",
+            "Salut 😊",
+            "Hello 😄"
+        ]
+    },
+
+    identite: {
+        mots: ["qui es tu", "c'est quoi", "tu es quoi"],
+        reponses: [
+            "Je suis l'IA de ZyntraCode 🤖"
+        ]
+    },
+
+    bot: {
+        mots: ["bot", "moderion", "discord"],
+        reponses: [
+            "Modérion est notre bot Discord gratuit 🚀"
+        ]
+    },
+
+    prix: {
+        mots: ["prix", "gratuit", "payant"],
+        reponses: [
+            "Modérion est 100% gratuit 🎉"
+        ]
+    },
+
+    contact: {
+        mots: ["contact", "email", "support"],
+        reponses: [
+            "Tu peux nous contacter sur zyntracode.ch 📩"
+        ]
+    }
+
+};
+
+function repondreIA(message){
+
+    message = message.toLowerCase();
+
+    for(const categorie in CONNAISSANCES){
+
+        const data = CONNAISSANCES[categorie];
+
+        for(const mot of data.mots){
+
+            if(message.includes(mot)){
+
+                return data.reponses[
+                    Math.floor(Math.random() * data.reponses.length)
+                ];
+            }
+        }
+    }
+
+    return "Je ne comprends pas 🤔";
+}
+
+function envoyerMessage(){
+
+    const input = document.getElementById("chat-input");
+
+    const chatBox = document.getElementById("chat-box");
+
+    const message = input.value.trim();
+
+    if(!message) return;
+
+    chatBox.innerHTML += `
+        <div class="msg-user">
+            <span>${message}</span>
+        </div>
+    `;
+
+    const reponse = repondreIA(message);
+
+    chatBox.innerHTML += `
+        <div class="msg-ia">
+            <span>${reponse}</span>
+        </div>
+    `;
+
+    input.value = "";
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+</script>
+
 </body>
 </html>
-"""
+    
+</body>
+</html>
 
 
