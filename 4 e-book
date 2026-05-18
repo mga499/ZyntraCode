@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZyntraCode - Bot Discord</title>
+    <link rel="stylesheet" href="7-styles_page_bot.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #0a0a0a;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+        /* BOUTON MENU */
+        #menu-btn {
+            padding: 8px 15px;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            color: rgb(21, 213, 168);
+            background-color: transparent;
+            border: 2px solid rgb(21, 213, 168);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        /* MENU */
+        #menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #1a1a1a;
+            width: 180px;
+            height: 100vh;
+            padding: 60px 10px 10px 10px;
+            box-shadow: 0px 0px 15px rgb(21, 213, 168);
+            z-index: 1000;
+        }
+        #menu a {
+            color: white;
+            display: block;
+            padding: 12px 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+        #menu a:hover {
+            color: rgb(21, 213, 168);
+            background: #2a2a2a;
+        }
+        .hidden {
+            display: none;
+        }
+        /* TITRE */
+        #bot_dsd {
+            font-size: 48px;
+            color: rgb(21, 213, 168);
+            padding: 80px 20px 20px 20px;
+        }
+        /* BARRE DE RECHERCHE */
+        #bar_rhr {
+            padding: 12px 20px;
+            width: 350px;
+            border-radius: 10px;
+            border: 2px solid rgb(21, 213, 168);
+            background: #1a1a1a;
+            color: white;
+            font-size: 16px;
+            outline: none;
+            margin-bottom: 10px;
+        }
+        #bar_rhr:focus {
+            box-shadow: 0px 0px 10px rgb(21, 213, 168);
+        }
+        #resultats {
+            background: #1a1a1a;
+            color: white;
+            width: 350px;
+            margin: 0 auto 30px auto;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        #resultats a {
+            text-decoration: none;
+            color: white;
+        }
+        #resultats p {
+            padding: 10px 15px;
+            margin: 0;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        #resultats p:hover {
+            background: #2a2a2a;
+            color: rgb(21, 213, 168);
+        }
+        /* GRILLE DE BOTS */
+        .bots-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            padding: 20px 40px 80px 40px;
+        }
+        .bot-card {
+            background: #1a1a1a;
+            border: 1px solid rgb(21, 213, 168);
+            border-radius: 15px;
+            padding: 30px;
+            width: 250px;
+            text-align: center;
+            transition: 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+        .bot-card:hover {
+            box-shadow: 0 0 25px rgba(21, 213, 168, 0.4);
+            transform: translateY(-5px);
+        }
+        .bot-card img {
+            width: 100px;
+            border-radius: 50%;
+            border: 3px solid rgb(21, 213, 168);
+            margin-bottom: 15px;
+        }
+        .bot-card h3 {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .bot-card p {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .tag {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .tag-gratuit {
+            background: rgb(21, 213, 168);
+            color: black;
+        }
+        .tag-bientot {
+            background: #333;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+<!-- BOUTON MENU -->
+<button id="menu-btn">☰ Menu</button>
+
+<!-- MENU -->
+<nav id="menu" class="hidden">
+    <a href="index.html">Accueil</a>
+    <a href="2-Bot_discord.html">Bot Discord</a>
+    <a href="3-contact.html">Contact</a>
+</nav>
+
+<!-- TITRE -->
+<h1 id="bot_dsd">🤖 Bot Discord</h1>
+
+<!-- BARRE DE RECHERCHE -->
+<input id="bar_rhr" type="search" placeholder="🔎 Rechercher un bot...">
+<div id="resultats"></div>
+
+<!-- GRILLE DE BOTS -->
+<div class="bots-grid">
+    <a href="dtl_moderion.html" class="bot-card">
+        <img src="image_modérion.png" alt="logo moderion">
+        <h3>Modérion</h3>
+        <p>Bot de modération complet pour votre serveur Discord</p>
+        <span class="tag tag-gratuit">✅ Gratuit</span>
+    </a>
+    <div class="bot-card">
+        <div style="font-size:60px; margin-bottom:15px;">🔜</div>
+        <h3>Bientôt...</h3>
+        <p>De nouveaux bots arrivent prochainement !</p>
+        <span class="tag tag-bientot">🕐 Bientôt disponible</span>
+    </div>
+</div>
+
+<script>
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    btn.addEventListener("click", () => {
+        menu.classList.toggle("hidden");
+    });
+
+    const mots = [
+        {nom: "Modérion", lien: "dtl_moderion.html"},
+    ];
+    const input = document.getElementById("bar_rhr");
+    const resultats = document.getElementById("resultats");
+    input.addEventListener("input", function() {
+        let valeur = input.value.toLowerCase();
+        resultats.innerHTML = "";
+        if (valeur === "") return;
+        let filtres = mots.filter(item =>
+            item.nom.toLowerCase().startsWith(valeur)
+        );
+        if (filtres.length === 0) {
+            resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
+        }
+        filtres.forEach(item => {
+            resultats.innerHTML += `<a href="${item.lien}"><p>${item.nom}</p></a>`;
+        });
+    });
+</script>
+
+<!-- COPYRIGHT -->
+<div style="
+    text-align: center;
+    padding: 20px;
+    color: #555;
+    font-size: 13px;
+    border-top: 1px solid #1a1a1a;
+    margin-top: 20px;
+    padding-left: 200px;
+">
+    © 2026 ZyntraCode — Tous droits réservés | 
+    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
+    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a>
+    <a href="politique-confidentialite.html" style="color: rgb(21, 213, 168); text-decoration: none;">Politique de confidentialité</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/profil-menu.js"></script>
+
+    
+</body>
+</html>
