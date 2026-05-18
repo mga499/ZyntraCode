@@ -84,9 +84,9 @@
     <img id="img_moderion" src="couverture_de_comment_coder_en_python_partie_1.png" alt="Page de couverture comment coder en python partie 1">
     <h1 id="txt_moderion">comment coder en python partie 1</h1>
     <h4 id="in_moderion">E-book pour apprendre a coder avec les base de python</h4>
-    <h5 id="gtt_moderion">4,95</h5>
+    <h5 id="gtt_moderion">4,95 CHF</h5>
     <br><br>
-    <a href="3-contact.html" class="btn-ajouter" id="btn-obtenir">📩 Obtenir le bot</a>
+    <a href="3-contact.html" class="btn-ajouter" id="btn-obtenir">📩 Obtenir le E-book</a>
 </div>
 
 <div class="features">
@@ -119,15 +119,6 @@
     const EMAILJS_TEMPLATE_ID = "template_bb5opqq";
     const EMAILJS_PUBLIC_KEY  = "CIEjPItwnunl99qyE";
 
-    // Webhook Discord
-    document.getElementById("btn-obtenir").addEventListener("click", function() {
-        fetch("https://discord.com/api/webhooks/1501803989618921612/L2_Oki2oWGBjqUuzHcdiwaLTOiD5qFXIocygXWcAgoAc5iJJuSVgRe7WZm1X1AihNvLQ", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ content: "🎉 quelqu'un vient d'inviter **Moderion** sur son serveur Discord" })
-        });
-    });
-
     function ouvrirModal() {
         document.getElementById("modal-overlay").classList.add("visible");
         document.getElementById("msg-erreur").style.display = "none";
@@ -137,19 +128,7 @@
     function fermerModal() {
         document.getElementById("modal-overlay").classList.remove("visible");
     }
-
-    function payer() {
-        const email = document.getElementById("email-paiement").value.trim();
-        if (!email) {
-            document.getElementById("msg-erreur").textContent = "Entre ton adresse email.";
-            document.getElementById("msg-erreur").style.display = "block";
-            return;
-        }
-        // Sauvegarder l'email pour l'envoyer après paiement
-        localStorage.setItem("email_achat", email);
-        // Rediriger vers PayRexx
-        window.location.href = "https://zyntracode.payrexx.com/fr/?payment=0da409063cd786a19f2325f47f9feb71";
-    }
+        
 
     async function verifierRetour() {
         const params = new URLSearchParams(window.location.search);
