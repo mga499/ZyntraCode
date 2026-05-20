@@ -253,10 +253,10 @@
         if (p1 !== p2) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Les mots de passe ne correspondent pas.', 'erreur');
         if (p1.length < 6) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Minimum 6 caractères.', 'erreur');
 
-        // Récupérer l'email de l'utilisateur
+        // Récupérer l'email
         const { data: { user } } = await supabaseClient.auth.getUser();
 
-        // Réauthentifier avec le mot de passe actuel
+        // Se déconnecter et se reconnecter avec le mot de passe actuel
         const { error: authError } = await supabaseClient.auth.signInWithPassword({
             email: user.email,
             password: currentPwd
@@ -264,15 +264,22 @@
 
         if (authError) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Mot de passe actuel incorrect.', 'erreur');
 
-        // Changer le mot de passe
-        const { error } = await supabaseClient.auth.updateUser({ password: p1 });
-        if (error) affMsg('msg-pwd-ok', 'msg-pwd-err', 'Erreur : ' + error.message, 'erreur');
-        else {
-            affMsg('msg-pwd-ok', 'msg-pwd-err', 'Mot de passe changé ✓', 'succes');
-            document.getElementById('current-pwd').value = '';
-            document.getElementById('new-pwd').value = '';
-            document.getElementById('new-pwd2').value = '';
+        // Maintenant changer le mot de passe avec la nouvelle session
+        const { error } = await supabaseClient.auth.updateUser({
+            password: p1,
+            nonce: currentPwd
+        });
+
+        if (error) {
+            // Si nonce échoue, essayer sans
+            const { error: error2 } = await supabaseClient.auth.updateUser({ password: p1 });
+            if (error2) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Erreur : ' + error2.message, 'erreur');
         }
+
+        affMsg('msg-pwd-ok', 'msg-pwd-err', 'Mot de passe changé ✓', 'succes');
+        document.getElementById('current-pwd').value = '';
+        document.getElementById('new-pwd').value = '';
+        document.getElementById('new-pwd2').value = '';
     }
 
     async function supprimerCompte() {
