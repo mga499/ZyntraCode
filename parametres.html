@@ -149,8 +149,8 @@
     <a href="index.html">Accueil</a>
     <a href="2-Bot_discord.html">Bot Discord</a>
     <a href="3-contact.html">Contact</a>
-    <a href="10-e-book.html">E-book</a>
-    <a href="Admin.html"></a>
+    <a href="login.html">🔐 Se connecter</a>
+    <a href="register.html">✨ S'inscrire</a>
 </nav>
 
 <h1>⚙️ Paramètres</h1>
@@ -177,6 +177,10 @@
     <div class="msg erreur" id="msg-pwd-err"></div>
     <div class="msg succes" id="msg-pwd-ok"></div>
     <div class="champ">
+        <label>Mot de passe actuel</label>
+        <input type="password" id="current-pwd" placeholder="••••••••">
+    </div>
+    <div class="champ">
         <label>Nouveau mot de passe</label>
         <input type="password" id="new-pwd" placeholder="••••••••" oninput="verifierForce(this.value)">
         <div class="force-barre">
@@ -198,7 +202,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/profil-menu.js"></script>
+<script src="profil-menu.js"></script>
 <script>
     const btnMenu = document.getElementById("menu-btn");
     const menu = document.getElementById("menu");
@@ -240,15 +244,32 @@
     }
 
     async function changerMotDePasse() {
+        const currentPwd = document.getElementById('current-pwd').value;
         const p1 = document.getElementById('new-pwd').value;
         const p2 = document.getElementById('new-pwd2').value;
+
+        if (!currentPwd) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Entre ton mot de passe actuel.', 'erreur');
         if (!p1) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Entre un nouveau mot de passe.', 'erreur');
         if (p1 !== p2) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Les mots de passe ne correspondent pas.', 'erreur');
         if (p1.length < 6) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Minimum 6 caractères.', 'erreur');
+
+        // Récupérer l'email de l'utilisateur
+        const { data: { user } } = await supabaseClient.auth.getUser();
+
+        // Réauthentifier avec le mot de passe actuel
+        const { error: authError } = await supabaseClient.auth.signInWithPassword({
+            email: user.email,
+            password: currentPwd
+        });
+
+        if (authError) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Mot de passe actuel incorrect.', 'erreur');
+
+        // Changer le mot de passe
         const { error } = await supabaseClient.auth.updateUser({ password: p1 });
         if (error) affMsg('msg-pwd-ok', 'msg-pwd-err', 'Erreur : ' + error.message, 'erreur');
         else {
             affMsg('msg-pwd-ok', 'msg-pwd-err', 'Mot de passe changé ✓', 'succes');
+            document.getElementById('current-pwd').value = '';
             document.getElementById('new-pwd').value = '';
             document.getElementById('new-pwd2').value = '';
         }
