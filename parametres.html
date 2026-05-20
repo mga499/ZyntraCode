@@ -260,7 +260,7 @@
 
         const { data: { user } } = await supabaseClient.auth.getUser();
 
-        // Vérifier le mot de passe actuel en se reconnectant
+        // Vérifier le mot de passe actuel
         const { error } = await supabaseClient.auth.signInWithPassword({
             email: user.email,
             password: currentPwd
@@ -275,6 +275,7 @@
     }
 
     async function changerMotDePasse() {
+        const currentPwd = document.getElementById('current-pwd').value;
         const p1 = document.getElementById('new-pwd').value;
         const p2 = document.getElementById('new-pwd2').value;
 
@@ -282,6 +283,15 @@
         if (p1 !== p2) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Les mots de passe ne correspondent pas.', 'erreur');
         if (p1.length < 6) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Minimum 6 caractères.', 'erreur');
 
+        const { data: { user } } = await supabaseClient.auth.getUser();
+
+        // Se reconnecter juste avant pour avoir une session fraîche
+        await supabaseClient.auth.signInWithPassword({
+            email: user.email,
+            password: currentPwd
+        });
+
+        // Changer immédiatement le mot de passe
         const { error } = await supabaseClient.auth.updateUser({ password: p1 });
 
         if (error) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Erreur : ' + error.message, 'erreur');
@@ -290,7 +300,6 @@
         document.getElementById('new-pwd').value = '';
         document.getElementById('new-pwd2').value = '';
         document.getElementById('current-pwd').value = '';
-        // Remettre à l'étape 1
         setTimeout(() => {
             document.getElementById('etape1').style.display = 'block';
             document.getElementById('etape2').style.display = 'none';
