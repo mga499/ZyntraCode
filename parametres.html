@@ -176,22 +176,33 @@
     <h2>🔒 Changer le mot de passe</h2>
     <div class="msg erreur" id="msg-pwd-err"></div>
     <div class="msg succes" id="msg-pwd-ok"></div>
-    <div class="champ">
-        <label>Mot de passe actuel</label>
-        <input type="password" id="current-pwd" placeholder="••••••••">
-    </div>
-    <div class="champ">
-        <label>Nouveau mot de passe</label>
-        <input type="password" id="new-pwd" placeholder="••••••••" oninput="verifierForce(this.value)">
-        <div class="force-barre">
-            <div id="b1"></div><div id="b2"></div><div id="b3"></div><div id="b4"></div>
+
+    <!-- ÉTAPE 1 : Vérification -->
+    <div id="etape1">
+        <p style="color:#aaa; font-size:13px; margin-bottom:15px;">Entre ton mot de passe actuel pour continuer.</p>
+        <div class="champ">
+            <label>Mot de passe actuel</label>
+            <input type="password" id="current-pwd" placeholder="••••••••">
         </div>
+        <button class="btn" onclick="verifierMotDePasse()">Vérifier</button>
     </div>
-    <div class="champ">
-        <label>Confirmer le mot de passe</label>
-        <input type="password" id="new-pwd2" placeholder="••••••••">
+
+    <!-- ÉTAPE 2 : Nouveau mot de passe (caché au départ) -->
+    <div id="etape2" style="display:none">
+        <p style="color:rgb(21,213,168); font-size:13px; margin-bottom:15px;">✅ Identité vérifiée ! Entre ton nouveau mot de passe.</p>
+        <div class="champ">
+            <label>Nouveau mot de passe</label>
+            <input type="password" id="new-pwd" placeholder="••••••••" oninput="verifierForce(this.value)">
+            <div class="force-barre">
+                <div id="b1"></div><div id="b2"></div><div id="b3"></div><div id="b4"></div>
+            </div>
+        </div>
+        <div class="champ">
+            <label>Confirmer le mot de passe</label>
+            <input type="password" id="new-pwd2" placeholder="••••••••">
+        </div>
+        <button class="btn" onclick="changerMotDePasse()">Changer le mot de passe</button>
     </div>
-    <button class="btn" onclick="changerMotDePasse()">Changer</button>
 </div>
 
 <!-- SUPPRIMER COMPTE -->
@@ -243,43 +254,47 @@
         else affMsg('msg-profil-ok', 'msg-profil-err', 'Profil mis à jour ✓', 'succes');
     }
 
-    async function changerMotDePasse() {
+    async function verifierMotDePasse() {
         const currentPwd = document.getElementById('current-pwd').value;
-        const p1 = document.getElementById('new-pwd').value;
-        const p2 = document.getElementById('new-pwd2').value;
-
         if (!currentPwd) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Entre ton mot de passe actuel.', 'erreur');
-        if (!p1) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Entre un nouveau mot de passe.', 'erreur');
-        if (p1 !== p2) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Les mots de passe ne correspondent pas.', 'erreur');
-        if (p1.length < 6) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Minimum 6 caractères.', 'erreur');
 
-        // Récupérer l'email
         const { data: { user } } = await supabaseClient.auth.getUser();
 
-        // Se déconnecter et se reconnecter avec le mot de passe actuel
-        const { error: authError } = await supabaseClient.auth.signInWithPassword({
+        // Vérifier le mot de passe actuel en se reconnectant
+        const { error } = await supabaseClient.auth.signInWithPassword({
             email: user.email,
             password: currentPwd
         });
 
-        if (authError) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Mot de passe actuel incorrect.', 'erreur');
+        if (error) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Mot de passe actuel incorrect.', 'erreur');
 
-        // Maintenant changer le mot de passe avec la nouvelle session
-        const { error } = await supabaseClient.auth.updateUser({
-            password: p1,
-            nonce: currentPwd
-        });
+        // Mot de passe correct → afficher étape 2
+        document.getElementById('etape1').style.display = 'none';
+        document.getElementById('etape2').style.display = 'block';
+        document.getElementById('msg-pwd-err').style.display = 'none';
+    }
 
-        if (error) {
-            // Si nonce échoue, essayer sans
-            const { error: error2 } = await supabaseClient.auth.updateUser({ password: p1 });
-            if (error2) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Erreur : ' + error2.message, 'erreur');
-        }
+    async function changerMotDePasse() {
+        const p1 = document.getElementById('new-pwd').value;
+        const p2 = document.getElementById('new-pwd2').value;
+
+        if (!p1) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Entre un nouveau mot de passe.', 'erreur');
+        if (p1 !== p2) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Les mots de passe ne correspondent pas.', 'erreur');
+        if (p1.length < 6) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Minimum 6 caractères.', 'erreur');
+
+        const { error } = await supabaseClient.auth.updateUser({ password: p1 });
+
+        if (error) return affMsg('msg-pwd-ok', 'msg-pwd-err', 'Erreur : ' + error.message, 'erreur');
 
         affMsg('msg-pwd-ok', 'msg-pwd-err', 'Mot de passe changé ✓', 'succes');
-        document.getElementById('current-pwd').value = '';
         document.getElementById('new-pwd').value = '';
         document.getElementById('new-pwd2').value = '';
+        document.getElementById('current-pwd').value = '';
+        // Remettre à l'étape 1
+        setTimeout(() => {
+            document.getElementById('etape1').style.display = 'block';
+            document.getElementById('etape2').style.display = 'none';
+        }, 2000);
     }
 
     async function supprimerCompte() {
