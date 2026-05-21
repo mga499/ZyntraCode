@@ -6,11 +6,7 @@
     <title>ZyntraCode - Connexion</title>
     <link rel="icon" type="image/png" href="logo_zyntracode2.png">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #0a0a0a;
             color: white;
@@ -22,8 +18,7 @@
         }
         #menu-btn {
             position: fixed;
-            top: 15px;
-            left: 15px;
+            top: 15px; left: 15px;
             background: transparent;
             border: 2px solid rgb(21, 213, 168);
             color: rgb(21, 213, 168);
@@ -36,160 +31,102 @@
         }
         #menu {
             background: #1a1a1a;
-            width: 180px;
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
+            width: 180px; height: 100vh;
+            position: fixed; top: 0; left: 0;
             z-index: 1000;
             box-shadow: 0px 0px 15px rgb(21, 213, 168);
             padding: 60px 10px 10px 10px;
-            transition: 0.3s;
-            display: block;
+            transition: 0.3s; display: block;
         }
         #menu a {
-            color: white;
-            display: block;
-            padding: 12px 10px;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: 0.2s;
+            color: white; display: block;
+            padding: 12px 10px; text-decoration: none;
+            border-radius: 8px; transition: 0.2s;
         }
-        #menu a:hover {
-            color: rgb(21, 213, 168);
-            background: #2a2a2a;
-        }
+        #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
         .card {
             background: #1a1a1a;
             border: 1px solid #2a2a2a;
             border-radius: 15px;
             padding: 40px;
-            width: 100%;
-            max-width: 420px;
+            width: 100%; max-width: 420px;
             margin-left: 180px;
         }
-        .card h2 {
-            color: rgb(21, 213, 168);
-            font-size: 28px;
-            margin-bottom: 8px;
-            text-align: center;
-        }
-        .sous-titre {
-            color: #aaa;
-            font-size: 14px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .champ {
-            margin-bottom: 20px;
-        }
-        .champ label {
-            display: block;
-            color: #aaa;
-            font-size: 13px;
-            margin-bottom: 6px;
-        }
+        .card h2 { color: rgb(21, 213, 168); font-size: 28px; margin-bottom: 8px; text-align: center; }
+        .sous-titre { color: #aaa; font-size: 14px; text-align: center; margin-bottom: 30px; }
+        .champ { margin-bottom: 20px; }
+        .champ label { display: block; color: #aaa; font-size: 13px; margin-bottom: 6px; }
         .champ input {
-            width: 100%;
-            padding: 12px 15px;
+            width: 100%; padding: 12px 15px;
             background: #0a0a0a;
             border: 2px solid #2a2a2a;
             border-radius: 10px;
-            color: white;
-            font-size: 15px;
-            outline: none;
-            transition: 0.2s;
+            color: white; font-size: 15px;
+            outline: none; transition: 0.2s;
         }
-        .champ input:focus {
-            border-color: rgb(21, 213, 168);
-        }
+        .champ input:focus { border-color: rgb(21, 213, 168); }
         .btn-submit {
-            width: 100%;
-            padding: 13px;
+            width: 100%; padding: 13px;
             background: rgb(21, 213, 168);
             color: black;
             border: 2px solid rgb(21, 213, 168);
             border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 5px;
+            font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: 0.3s; margin-top: 5px;
         }
-        .btn-submit:hover {
-            background: transparent;
-            color: rgb(21, 213, 168);
-        }
-        .btn-submit:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
+        .btn-submit:hover { background: transparent; color: rgb(21, 213, 168); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
         .divider {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 25px 0;
-            color: #555;
-            font-size: 13px;
+            display: flex; align-items: center;
+            gap: 10px; margin: 25px 0;
+            color: #555; font-size: 13px;
         }
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: #2a2a2a;
-        }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #2a2a2a; }
         .btn-social {
-            width: 100%;
-            padding: 11px;
-            background: transparent;
-            color: white;
+            width: 100%; padding: 11px;
+            background: transparent; color: white;
             border: 1px solid #2a2a2a;
-            border-radius: 10px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            border-radius: 10px; font-size: 14px;
+            cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center;
+            justify-content: center; gap: 8px;
             margin-bottom: 10px;
         }
-        .btn-social:hover {
-            border-color: rgb(21, 213, 168);
-            color: rgb(21, 213, 168);
-        }
+        .btn-social:hover { border-color: rgb(21, 213, 168); color: rgb(21, 213, 168); }
         .msg {
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 13px;
-            margin-bottom: 15px;
-            display: none;
+            padding: 10px 15px; border-radius: 8px;
+            font-size: 13px; margin-bottom: 15px;
+            display: none; text-align: center;
+        }
+        .msg.erreur { background: rgba(255,77,77,0.1); border: 1px solid #ff4d4d; color: #ff4d4d; }
+        .msg.succes { background: rgba(21,213,168,0.1); border: 1px solid rgb(21,213,168); color: rgb(21,213,168); }
+        .lien-bas { text-align: center; margin-top: 20px; font-size: 14px; color: #aaa; }
+        .lien-bas a { color: rgb(21, 213, 168); text-decoration: none; }
+        .lien-bas a:hover { text-decoration: underline; }
+        /* Zone OTP */
+        #zone-otp { display: none; }
+        .code-inputs {
+            display: flex; gap: 10px;
+            justify-content: center; margin: 15px 0;
+        }
+        .code-inputs input {
+            width: 48px; height: 56px;
             text-align: center;
+            font-size: 22px; font-weight: bold;
+            background: #0a0a0a;
+            border: 2px solid #2a2a2a;
+            border-radius: 10px; color: white;
+            outline: none; transition: 0.2s;
         }
-        .msg.erreur {
-            background: rgba(255, 77, 77, 0.1);
-            border: 1px solid #ff4d4d;
-            color: #ff4d4d;
+        .code-inputs input:focus { border-color: rgb(21, 213, 168); }
+        .renvoyer {
+            background: transparent; border: none;
+            color: rgb(21, 213, 168); font-size: 13px;
+            cursor: pointer; text-decoration: underline;
+            margin-top: 10px; display: block;
+            width: 100%; text-align: center;
         }
-        .msg.succes {
-            background: rgba(21, 213, 168, 0.1);
-            border: 1px solid rgb(21, 213, 168);
-            color: rgb(21, 213, 168);
-        }
-        .lien-bas {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-            color: #aaa;
-        }
-        .lien-bas a {
-            color: rgb(21, 213, 168);
-            text-decoration: none;
-        }
-        .lien-bas a:hover {
-            text-decoration: underline;
-        }
+        .renvoyer:disabled { opacity: 0.4; cursor: not-allowed; }
         @media (max-width: 768px) {
             #menu-btn { display: block; }
             #menu { display: none; }
@@ -206,53 +143,95 @@
     <a href="index.html">Accueil</a>
     <a href="2-Bot_discord.html">Bot Discord</a>
     <a href="3-contact.html">Contact</a>
+    <a href="login.html">🔐 Se connecter</a>
+    <a href="register.html">✨ S'inscrire</a>
 </nav>
 
 <div class="card">
-    <h2>🔐 Connexion</h2>
-    <p class="sous-titre">Content de te revoir sur ZyntraCode !</p>
 
-    <div class="msg erreur" id="msg-erreur"></div>
-    <div class="msg succes" id="msg-succes"></div>
+    <!-- ÉTAPE 1 : Email + mot de passe -->
+    <div id="zone-login">
+        <h2>🔐 Connexion</h2>
+        <p class="sous-titre">Content de te revoir sur ZyntraCode !</p>
 
-    <div class="champ">
-        <label>Adresse email</label>
-        <input type="email" id="email" placeholder="toi@exemple.com">
+        <div class="msg erreur" id="msg-erreur"></div>
+        <div class="msg succes" id="msg-succes"></div>
+
+        <div class="champ">
+            <label>Adresse email</label>
+            <input type="email" id="email" placeholder="toi@exemple.com">
+        </div>
+        <div class="champ">
+            <label>Mot de passe</label>
+            <input type="password" id="password" placeholder="••••••••">
+        </div>
+
+        <button class="btn-submit" id="btn-connexion" onclick="login()">Se connecter</button>
+
+        <div class="divider">ou</div>
+
+        <button class="btn-social" onclick="loginGoogle()">
+            <svg width="16" height="16" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Continuer avec Google
+        </button>
+
+        <button class="btn-social" onclick="loginGitHub()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+            </svg>
+            Continuer avec GitHub
+        </button>
+
+        <div class="lien-bas">
+            Pas encore de compte ? <a href="register.html">S'inscrire</a>
+        </div>
     </div>
-    <div class="champ">
-        <label>Mot de passe</label>
-        <input type="password" id="password" placeholder="••••••••">
+
+    <!-- ÉTAPE 2 : Code de sécurité -->
+    <div id="zone-otp">
+        <h2>📧 Code de sécurité</h2>
+        <p class="sous-titre" id="otp-subtitle">Un code a été envoyé à ton email</p>
+
+        <div class="msg erreur" id="msg-otp-erreur"></div>
+        <div class="msg succes" id="msg-otp-succes"></div>
+
+        <div class="code-inputs">
+            <input type="text" maxlength="1" class="otp-case" id="c1">
+            <input type="text" maxlength="1" class="otp-case" id="c2">
+            <input type="text" maxlength="1" class="otp-case" id="c3">
+            <input type="text" maxlength="1" class="otp-case" id="c4">
+            <input type="text" maxlength="1" class="otp-case" id="c5">
+            <input type="text" maxlength="1" class="otp-case" id="c6">
+        </div>
+
+        <button class="btn-submit" id="btn-verifier" onclick="verifierCode()">Vérifier le code</button>
+        <button class="renvoyer" id="btn-renvoyer" onclick="renvoyerCode()">Renvoyer le code</button>
+
+        <div class="lien-bas" style="margin-top:15px;">
+            <a href="#" onclick="retourLogin()">← Retour</a>
+        </div>
     </div>
 
-    <button class="btn-submit" id="btn-connexion" onclick="login()">Se connecter</button>
-
-    <div class="divider">ou</div>
-
-    <button class="btn-social" onclick="loginGoogle()">
-        <svg width="16" height="16" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-        </svg>
-        Continuer avec Google
-    </button>
-
-    <button class="btn-social" onclick="loginGitHub()">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-        </svg>
-        Continuer avec GitHub
-    </button>
-
-    <div class="lien-bas">
-        Pas encore de compte ? <a href="register.html">S'inscrire</a>
-    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
-    // Initialisation Supabase
+    // ========================================
+    // REMPLACE CES VALEURS PAR LES TIENNES
+    // ========================================
+    const EMAILJS_SERVICE_ID  = 'service_xxxxxxx';   // ← ton Service ID
+    const EMAILJS_TEMPLATE_ID = 'template_xxxxxxx';  // ← ton Template ID OTP
+    const EMAILJS_PUBLIC_KEY  = 'xxxxxxxxxxxxxxx';   // ← ta Public Key
+    // ========================================
+
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
     const { createClient } = supabase;
     const supabaseClient = createClient(
         'https://nvvpvwqcjqujyzvdimix.supabase.co',
@@ -263,50 +242,191 @@
     const menu = document.getElementById("menu");
     btn.addEventListener("click", () => menu.classList.toggle("visible"));
 
-    function afficherErreur(msg) {
-        const el = document.getElementById("msg-erreur");
-        el.textContent = msg;
-        el.style.display = "block";
-        document.getElementById("msg-succes").style.display = "none";
+    let emailUtilisateur = '';
+    let codeOTP = '';
+    let expirationOTP = null;
+
+    // Navigation entre les cases OTP
+    document.querySelectorAll('.otp-case').forEach((input, index, inputs) => {
+        input.addEventListener('input', () => {
+            input.value = input.value.replace(/[^0-9]/g, '');
+            if (input.value && index < inputs.length - 1) inputs[index + 1].focus();
+            const code = Array.from(inputs).map(i => i.value).join('');
+            if (code.length === 6) verifierCode();
+        });
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace' && !input.value && index > 0) inputs[index - 1].focus();
+        });
+    });
+
+    function genererCode() {
+        return Math.floor(100000 + Math.random() * 900000).toString();
     }
 
-    function afficherSucces(msg) {
-        const el = document.getElementById("msg-succes");
-        el.textContent = msg;
-        el.style.display = "block";
-        document.getElementById("msg-erreur").style.display = "none";
+    function afficherErreur(id, msg) {
+        document.getElementById(id).textContent = msg;
+        document.getElementById(id).style.display = 'block';
+    }
+    function afficherSucces(id, msg) {
+        document.getElementById(id).textContent = msg;
+        document.getElementById(id).style.display = 'block';
+    }
+    function cacherMessages() {
+        ['msg-erreur','msg-succes','msg-otp-erreur','msg-otp-succes'].forEach(id => {
+            document.getElementById(id).style.display = 'none';
+        });
     }
 
     async function login() {
-        const email = document.getElementById("email").value;
+        cacherMessages();
+        const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value;
-        if (!email || !password) return afficherErreur("Remplis tous les champs.");
+        if (!email || !password) return afficherErreur('msg-erreur', 'Remplis tous les champs.');
 
         const btnEl = document.getElementById("btn-connexion");
         btnEl.disabled = true;
-        btnEl.textContent = "Connexion...";
+        btnEl.textContent = "Vérification...";
 
+        // Vérifier email + mot de passe
         const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
         if (error) {
-            afficherErreur("Email ou mot de passe incorrect.");
+            afficherErreur('msg-erreur', 'Email ou mot de passe incorrect.');
             btnEl.disabled = false;
             btnEl.textContent = "Se connecter";
-        } else {
-            afficherSucces("Connecté ! Redirection...");
-            setTimeout(() => window.location.href = "index.html", 1000);
+            return;
         }
+
+        // Se déconnecter temporairement
+        await supabaseClient.auth.signOut();
+        emailUtilisateur = email;
+
+        // Générer et envoyer le code
+        await envoyerCode(email);
+
+        btnEl.disabled = false;
+        btnEl.textContent = "Se connecter";
+    }
+
+    async function envoyerCode(email) {
+        codeOTP = genererCode();
+        expirationOTP = Date.now() + 10 * 60 * 1000; // 10 minutes
+
+        try {
+            await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                to_email: email,
+                code: codeOTP
+            });
+
+            // Afficher la zone OTP
+            document.getElementById('zone-login').style.display = 'none';
+            document.getElementById('zone-otp').style.display = 'block';
+            document.getElementById('otp-subtitle').textContent = 'Code envoyé à ' + email;
+            document.getElementById('c1').focus();
+        } catch (err) {
+            afficherErreur('msg-erreur', 'Erreur envoi email. Vérifie tes clés EmailJS.');
+        }
+    }
+
+    async function verifierCode() {
+        cacherMessages();
+        const cases = document.querySelectorAll('.otp-case');
+        const code = Array.from(cases).map(i => i.value).join('');
+
+        if (code.length < 6) return afficherErreur('msg-otp-erreur', 'Entre les 6 chiffres du code.');
+
+        // Vérifier expiration
+        if (Date.now() > expirationOTP) {
+            afficherErreur('msg-otp-erreur', 'Code expiré. Renvoie un nouveau code.');
+            cases.forEach(i => i.value = '');
+            return;
+        }
+
+        // Vérifier le code
+        if (code !== codeOTP) {
+            afficherErreur('msg-otp-erreur', 'Code incorrect.');
+            cases.forEach(i => i.value = '');
+            document.getElementById('c1').focus();
+            return;
+        }
+
+        // Code correct → reconnexion
+        const btnEl = document.getElementById("btn-verifier");
+        btnEl.disabled = true;
+        btnEl.textContent = "Vérification...";
+
+        const { error } = await supabaseClient.auth.signInWithPassword({
+            email: emailUtilisateur,
+            password: document.getElementById("password") ? document.getElementById("password").value : ''
+        });
+
+        // Redirection directe car le mot de passe est déjà vérifié
+        afficherSucces('msg-otp-succes', 'Connecté ! Redirection...');
+        setTimeout(() => window.location.href = 'index.html', 1000);
+    }
+
+    async function renvoyerCode() {
+        const btnEl = document.getElementById('btn-renvoyer');
+        btnEl.disabled = true;
+        btnEl.textContent = 'Envoi...';
+        await envoyerCode(emailUtilisateur);
+        btnEl.textContent = 'Code renvoyé !';
+        setTimeout(() => {
+            btnEl.disabled = false;
+            btnEl.textContent = 'Renvoyer le code';
+        }, 30000);
+    }
+
+    function retourLogin() {
+        document.getElementById('zone-otp').style.display = 'none';
+        document.getElementById('zone-login').style.display = 'block';
+        cacherMessages();
     }
 
     async function loginGoogle() {
         await supabaseClient.auth.signInWithOAuth({ provider: "google", options: { redirectTo: window.location.origin + "/dashboard.html" } });
     }
-
     async function loginGitHub() {
         await supabaseClient.auth.signInWithOAuth({ provider: "github", options: { redirectTo: window.location.origin + "/dashboard.html" } });
     }
 
     document.addEventListener("keydown", e => { if (e.key === "Enter") login(); });
+
+    function afficherReset() {
+        document.getElementById('modal-reset').style.display = 'flex';
+        // Copier l'email déjà entré si dispo
+        const emailSaisi = document.getElementById('email').value;
+        if (emailSaisi) document.getElementById('reset-email').value = emailSaisi;
+    }
+
+    function fermerReset() {
+        document.getElementById('modal-reset').style.display = 'none';
+        document.getElementById('msg-reset-err').style.display = 'none';
+        document.getElementById('msg-reset-ok').style.display = 'none';
+    }
+
+    async function envoyerReset() {
+        const email = document.getElementById('reset-email').value.trim();
+        if (!email) {
+            document.getElementById('msg-reset-err').textContent = 'Entre ton adresse email.';
+            document.getElementById('msg-reset-err').style.display = 'block';
+            return;
+        }
+
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+            redirectTo: 'https://zyntracode.ch/reset-password.html'
+        });
+
+        if (error) {
+            document.getElementById('msg-reset-err').textContent = 'Erreur : ' + error.message;
+            document.getElementById('msg-reset-err').style.display = 'block';
+        } else {
+            document.getElementById('msg-reset-ok').textContent = 'Email envoyé ! Vérifie ta boîte mail ✓';
+            document.getElementById('msg-reset-ok').style.display = 'block';
+            document.getElementById('msg-reset-err').style.display = 'none';
+            setTimeout(() => fermerReset(), 3000);
+        }
+    }
 </script>
 
 </body>
