@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modérion - ZyntraCode</title>
+    <title>Générateur de mot de passe - ZyntraCode</title>
     <link rel="stylesheet" href="styles_exp-moderion.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -81,68 +81,12 @@
 <a id="retoure" href="index.html">← Retour</a>
 
 <div class="hero">
-    <img id="img_moderion" src="image_modérion.png" alt="logo moderion">
-    <h1 id="txt_moderion">Modérion</h1>
-    <h4 id="in_moderion">Bot de modération complet pour votre serveur Discord. Gratuit et facile à configurer !</h4>
-    <h5 id="gtt_moderion">✅ Gratuit</h5>
+    <img id="img_moderion" src="icone_générateur_motde_passe.png" alt="logo_générateur de mot de passe">
+    <h1 id="txt_moderion">Générateur de mot de passe</h1>
+    <h4 id="in_moderion">il génère des mot de passe très fort in cassable pars brute force ! </h4>
+    <h5 id="gtt_moderion">0,95</h5>
     <br><br>
     <a href="https://discord.com/oauth2/authorize?client_id=1500932045839269968&permissions=8&scope=bot%20applications.commands" class="btn-ajouter" id="btn-obtenir" target="_blank">📩 Obtenir le bot</a>
-</div>
-
-<div class="features">
-    <h2>⚡ Fonctionnalités</h2>
-    <div class="features-grid">
-        <div class="feature-card"><div class="icon">👋</div><h4>Bienvenue/Départ</h4><p>Message de bienvenue/Départ avec photo de profil</p></div>
-        <div class="feature-card"><div class="icon">👀</div><h4>Anti insulte</h4><p>Anti insulte avancé</p></div>
-        <div class="feature-card"><div class="icon">🎫</div><h4>Tickets</h4><p>Système de tickets privés pour le support</p></div>
-        <div class="feature-card"><div class="icon">🎭</div><h4>Auto-rôles</h4><p>Rôles donnés automatiquement à l'arrivée</p></div>
-        <div class="feature-card"><div class="icon">📝</div><h4>Logs</h4><p>Logs des tickets fermés dans un salon dédié</p></div>
-        <div class="feature-card"><div class="icon">🔒</div><h4>Sécurisé</h4><p>Système de permissions par rôle</p></div>
-        <div class="feature-card"><div class="icon">🔗</div><h4>Anti lien</h4><p>Protège contre les liens</p></div>
-        <div class="feature-card"><div class="icon">🌐</div><h4>Serveur discord</h4><p>Génère des serveurs personnalisés</p></div>
-    </div>
-</div>
-
-<div class="commandes">
-    <h2>📄 Commandes</h2>
-    <div class="commande-list">
-        <div class="commande-item"><code>/setup</code><p>Configurer les salons bienvenue/départ</p></div>
-        <div class="commande-item"><code>/ticket</code><p>Ouvrir un ticket de support</p></div>
-        <div class="commande-item"><code>/fermer</code><p>Fermer un ticket</p></div>
-        <div class="commande-item"><code>/autoroleadd</code><p>Ajouter un rôle automatique</p></div>
-        <div class="commande-item"><code>/setlogs</code><p>Définir le salon de logs</p></div>
-        <div class="commande-item"><code>/ban</code><p>Pouvoir ban un utilisateur</p></div>
-        <div class="commande-item"><code>/adminrole</code><p>Ajouter un rôle à configurer les salons arrivée/départ</p></div>
-        <div class="commande-item"><code>/autorolemove</code><p>Retirer un rôle automatique à l'arrivée</p></div>
-        <div class="commande-item"><code>/autoroleview</code><p>Voir les rôles automatiques à l'arrivée</p></div>
-        <div class="commande-item"><code>/avertissements</code><p>Voir les avertissements d'un membre</p></div>
-        <div class="commande-item"><code>/clearavertissements</code><p>Effacer les avertissements d'un membre</p></div>
-        <div class="commande-item"><code>/genserver</code><p>Générer un serveur Discord personnalisé</p></div>
-        <div class="commande-item"><code>/mute</code><p>Mute un membre</p></div>
-        <div class="commande-item"><code>/removeadminrole</code><p>Supprimer un rôle autorisé à utiliser /setup</p></div>
-        <div class="commande-item"><code>/unmute</code><p>Unmute un membre</p></div>
-        <div class="commande-item"><code>/viewadminrole</code><p>Voir les rôles à utiliser /setup</p></div>
-        <div class="commande-item"><code>/help</code><p>Voir toutes les commandes</p></div>
-    </div>
-</div>
-
-<!-- MODAL PAIEMENT -->
-<div id="modal-overlay">
-    <div id="modal">
-        <h2>💳 Paiement sécurisé</h2>
-        <p class="modal-sous">Modérion — 0.50 CHF (test)</p>
-        <div class="msg erreur" id="msg-erreur"></div>
-        <div class="msg succes" id="msg-succes"></div>
-        <div class="champ">
-            <label>Adresse email (pour recevoir le lien)</label>
-            <input type="email" id="email-paiement" placeholder="toi@exemple.com">
-        </div>
-        <div class="modal-btns">
-            <button class="btn-payer" id="btn-payer" onclick="payer()">🔒 Payer 0.50 CHF</button>
-            <button class="btn-annuler" onclick="fermerModal()">Annuler</button>
-        </div>
-        <p class="securite">🔒 Paiement sécurisé via PayRexx · Données chiffrées</p>
-    </div>
 </div>
 
 <div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px;">
@@ -155,26 +99,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="profil-menu.js"></script>
 <script>
-    // ================================================
-    // CONFIG
-    // ================================================
-    const PAYREXX_INSTANCE = "zyntracode";
-    const PAYREXX_API_KEY  = "mEgPbxC15moKq2zLicETJL68ftvOrR";
-    const BOT_INVITE_LINK  = "https://discord.com/oauth2/authorize?client_id=1500932045839269968&permissions=8&scope=bot%20applications.commands";
 
     // EmailJS — remplace par tes clés
     const EMAILJS_SERVICE_ID  = "service_daaxxvg";
     const EMAILJS_TEMPLATE_ID = "template_bb5opqq";
     const EMAILJS_PUBLIC_KEY  = "CIEjPItwnunl99qyE";
-
-    // Webhook Discord
-    document.getElementById("btn-obtenir").addEventListener("click", function() {
-        fetch("https://discord.com/api/webhooks/1501803989618921612/L2_Oki2oWGBjqUuzHcdiwaLTOiD5qFXIocygXWcAgoAc5iJJuSVgRe7WZm1X1AihNvLQ", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ content: "🎉 quelqu'un vient d'inviter **Moderion** sur son serveur Discord" })
-        });
-    });
 
     function ouvrirModal() {
         document.getElementById("modal-overlay").classList.add("visible");
