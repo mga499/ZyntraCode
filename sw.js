@@ -4,7 +4,7 @@
 // ================================================
 
 // Change ce numéro à chaque mise à jour de ton site !
-const VERSION = 'v1.1.20';
+const VERSION = 'v1.1.21';
 const CACHE_NAME = 'zyntracode-' + VERSION;
 
 // Fichiers à mettre en cache
