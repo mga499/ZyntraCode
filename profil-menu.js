@@ -98,6 +98,30 @@ style.textContent = `
         background: rgba(255,77,77,0.1) !important;
         color: #ff4d4d !important;
     }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+        #profil-btn {
+            top: 15px !important;
+            right: 15px !important;
+            padding: 4px 10px 4px 6px !important;
+            gap: 5px !important;
+        }
+        #profil-avatar {
+            width: 22px !important;
+            height: 22px !important;
+            font-size: 11px !important;
+        }
+        #profil-nom {
+            max-width: 55px !important;
+            font-size: 11px !important;
+        }
+        #profil-dropdown {
+            top: 50px !important;
+            right: 15px !important;
+            min-width: 160px !important;
+        }
+    }
 `;
 document.head.appendChild(style);
 
