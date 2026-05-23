@@ -98,30 +98,6 @@ style.textContent = `
         background: rgba(255,77,77,0.1) !important;
         color: #ff4d4d !important;
     }
-
-    /* MOBILE */
-    @media (max-width: 768px) {
-        #profil-btn {
-            top: 15px !important;
-            right: 15px !important;
-            padding: 4px 10px 4px 6px !important;
-            gap: 5px !important;
-        }
-        #profil-avatar {
-            width: 22px !important;
-            height: 22px !important;
-            font-size: 11px !important;
-        }
-        #profil-nom {
-            max-width: 55px !important;
-            font-size: 11px !important;
-        }
-        #profil-dropdown {
-            top: 50px !important;
-            right: 15px !important;
-            min-width: 160px !important;
-        }
-    }
 `;
 document.head.appendChild(style);
 
@@ -153,7 +129,25 @@ async function initProfilMenu() {
 
         document.getElementById('profil-avatar').textContent = initiale;
         document.getElementById('profil-nom').textContent = username;
-        document.getElementById('profil-btn').style.display = 'flex';
+
+        const btn = document.getElementById('profil-btn');
+        const avatar = document.getElementById('profil-avatar');
+        const nom = document.getElementById('profil-nom');
+
+        // Détecter mobile et appliquer styles JS directement
+        const estMobile = window.innerWidth <= 768;
+        if (estMobile) {
+            btn.style.padding = '4px 10px 4px 6px';
+            btn.style.gap = '5px';
+            avatar.style.width = '22px';
+            avatar.style.height = '22px';
+            avatar.style.fontSize = '11px';
+            nom.style.maxWidth = '55px';
+            nom.style.fontSize = '11px';
+            dropdown.style.top = '50px';
+        }
+
+        btn.style.display = 'flex';
     }
 }
 
