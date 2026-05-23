@@ -17,15 +17,28 @@
         }
         #retoure:hover { background: rgb(21, 213, 168); color: black; }
 
-        /* AJOUTE ÇA */
-@media (max-width: 768px) {
-    #retoure {
-        padding: 3px 10px;
-        font-size: 15px;
-        max-width: 80px;
-    }
-}
-  
+        @media (max-width: 768px) {
+            #retoure {
+                padding: 3px 10px;
+                font-size: 15px;
+                max-width: 80px;
+            }
+            #profil-btn {
+                top: 15px !important;
+                right: 15px !important;
+                max-width: 120px !important;
+            }
+            #profil-nom {
+                max-width: 60px !important;
+                font-size: 11px !important;
+            }
+            #profil-avatar {
+                width: 22px !important;
+                height: 22px !important;
+                font-size: 11px !important;
+            }
+        }
+
         .hero { padding: 80px 20px 40px 20px; }
         #img_moderion { width: 130px; border-radius: 50%; border: 3px solid rgb(21, 213, 168); margin-bottom: 20px; transition: 0.3s; }
         #img_moderion:hover { box-shadow: 0 0 25px rgb(21, 213, 168); }
@@ -62,8 +75,6 @@
         .commande-item { background: #1a1a1a; border-radius: 10px; padding: 15px 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
         .commande-item code { background: #2a2a2a; color: rgb(21, 213, 168); padding: 5px 10px; border-radius: 6px; font-size: 14px; min-width: 140px; }
         .commande-item p { color: #aaa; font-size: 14px; }
-
-        /* MODAL PAIEMENT */
         #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; align-items: center; justify-content: center; }
         #modal-overlay.visible { display: flex; }
         #modal { background: #1a1a1a; border: 1px solid rgb(21,213,168); border-radius: 18px; padding: 35px; width: 90%; max-width: 420px; animation: popIn 0.3s ease; }
@@ -109,8 +120,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="profil-menu.js"></script>
 <script>
-
-    // EmailJS — remplace par tes clés
     const EMAILJS_SERVICE_ID  = "service_daaxxvg";
     const EMAILJS_TEMPLATE_ID = "template_bb5opqq";
     const EMAILJS_PUBLIC_KEY  = "CIEjPItwnunl99qyE";
@@ -132,9 +141,7 @@
             document.getElementById("msg-erreur").style.display = "block";
             return;
         }
-        // Sauvegarder l'email pour l'envoyer après paiement
         localStorage.setItem("email_achat", email);
-        // Rediriger vers PayRexx
         window.location.href = "https://zyntracode.payrexx.com/fr/?payment=0da409063cd786a19f2325f47f9feb71";
     }
 
@@ -163,10 +170,10 @@
             try {
                 await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
                     to_email: email,
-                    produit: "Modérion",
-                    lien_bot: BOT_INVITE_LINK
+                    produit: "Générateur de mot de passe",
+                    lien_bot: "Lien de téléchargement envoyé séparément"
                 });
-                alert("✅ Paiement réussi ! Vérifie ton email pour recevoir le lien du bot.");
+                alert("✅ Paiement réussi ! Vérifie ton email pour recevoir le script.");
             } catch(err) {
                 alert("Paiement reçu mais erreur email. Contacte-nous.");
             }
