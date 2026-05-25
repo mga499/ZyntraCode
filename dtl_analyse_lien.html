@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analiseur de lien - ZyntraCode</title>
+    <link rel="stylesheet" href="styles_exp-moderion.css">
+    <link rel="icon" type="image/png" href="logo zyntracode v3.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0a0a0a; color: white; font-family: Arial, Helvetica, sans-serif; text-align: center; }
+        #retoure {
+            position: fixed; top: 15px; left: 15px;
+            padding: 8px 15px; background: transparent;
+            border: 2px solid rgb(21, 213, 168); color: rgb(21, 213, 168);
+            border-radius: 8px; text-decoration: none; font-size: 16px;
+            z-index: 1001; transition: 0.3s;
+        }
+        #retoure:hover { background: rgb(21, 213, 168); color: black; }
+        .hero { padding: 80px 20px 40px 20px; }
+        #img_moderion { width: 130px; border-radius: 50%; border: 3px solid rgb(21, 213, 168); margin-bottom: 20px; transition: 0.3s; }
+        #img_moderion:hover { box-shadow: 0 0 25px rgb(21, 213, 168); }
+        #txt_moderion { font-size: 48px; color: rgb(21, 213, 168); margin-bottom: 10px; }
+        #in_moderion { color: #aaa; font-size: 16px; font-weight: normal; max-width: 500px; margin: 0 auto 15px auto; }
+        #gtt_moderion { display: inline-block; background: rgb(21, 213, 168); color: black; padding: 6px 20px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 30px; }
+        .btn-ajouter {
+            display: inline-block; padding: 12px 30px;
+            background: rgb(21, 213, 168); color: black;
+            border-radius: 10px; text-decoration: none;
+            font-weight: bold; font-size: 16px; transition: 0.3s; margin-bottom: 60px;
+        }
+        .btn-ajouter:hover { background: transparent; color: rgb(21, 213, 168); border: 2px solid rgb(21, 213, 168); }
+        .btn-test {
+            display: inline-block; padding: 12px 30px;
+            background: transparent; color: rgb(21, 213, 168);
+            border: 2px solid rgb(21, 213, 168);
+            border-radius: 10px; text-decoration: none;
+            font-weight: bold; font-size: 16px; transition: 0.3s;
+            margin-bottom: 60px; margin-left: 10px; cursor: pointer;
+        }
+        .btn-test:hover { background: rgb(21, 213, 168); color: black; }
+        .features { padding: 20px 40px 80px 40px; }
+        .features h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 40px; }
+        .features-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; max-width: 900px; margin: 0 auto; }
+        .feature-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 25px; width: 200px; transition: 0.3s; }
+        .feature-card:hover { border-color: rgb(21, 213, 168); box-shadow: 0 0 15px rgba(21, 213, 168, 0.2); }
+        .feature-card .icon { font-size: 35px; margin-bottom: 12px; }
+        .feature-card h4 { color: rgb(21, 213, 168); margin-bottom: 8px; }
+        .feature-card p { color: #aaa; font-size: 13px; }
+        .commandes { padding: 0 40px 80px 40px; }
+        .commandes h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 30px; }
+        .commande-list { max-width: 600px; margin: 0 auto; text-align: left; }
+        .commande-item { background: #1a1a1a; border-radius: 10px; padding: 15px 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
+        .commande-item code { background: #2a2a2a; color: rgb(21, 213, 168); padding: 5px 10px; border-radius: 6px; font-size: 14px; min-width: 140px; }
+        .commande-item p { color: #aaa; font-size: 14px; }
+
+        /* MODAL PAIEMENT */
+        #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; align-items: center; justify-content: center; }
+        #modal-overlay.visible { display: flex; }
+        #modal { background: #1a1a1a; border: 1px solid rgb(21,213,168); border-radius: 18px; padding: 35px; width: 90%; max-width: 420px; animation: popIn 0.3s ease; }
+        @keyframes popIn { from { opacity:0; transform: scale(0.95); } to { opacity:1; transform: scale(1); } }
+        #modal h2 { color: rgb(21,213,168); font-size: 22px; margin-bottom: 5px; }
+        #modal .modal-sous { color: #aaa; font-size: 13px; margin-bottom: 25px; }
+        #modal .champ { margin-bottom: 18px; }
+        #modal label { display: block; color: #aaa; font-size: 13px; margin-bottom: 6px; }
+        #modal input { width: 100%; padding: 11px 15px; background: #0a0a0a; border: 2px solid #2a2a2a; border-radius: 10px; color: white; font-size: 14px; outline: none; transition: 0.2s; }
+        #modal input:focus { border-color: rgb(21,213,168); }
+        .modal-btns { display: flex; gap: 10px; margin-top: 5px; }
+        .btn-payer { flex: 1; padding: 13px; background: rgb(21,213,168); color: black; border: 2px solid rgb(21,213,168); border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-payer:hover { background: transparent; color: rgb(21,213,168); }
+        .btn-payer:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-annuler { padding: 13px 18px; background: transparent; color: #aaa; border: 1px solid #2a2a2a; border-radius: 10px; font-size: 14px; cursor: pointer; transition: 0.2s; }
+        .btn-annuler:hover { border-color: #aaa; color: white; }
+        .msg { padding: 10px 15px; border-radius: 8px; font-size: 13px; margin-bottom: 15px; display: none; }
+        .msg.erreur { background: rgba(255,77,77,0.1); border: 1px solid #ff4d4d; color: #ff4d4d; }
+        .msg.succes { background: rgba(21,213,168,0.1); border: 1px solid rgb(21,213,168); color: rgb(21,213,168); }
+        .securite { text-align: center; color: #555; font-size: 12px; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<a id="retoure" href="index.html">← Retour</a>
+
+<div class="hero">
+    <img id="img_moderion" src="couverture_de_comment_coder_en_python_partie_1.png" alt="Page de couverture comment coder en python partie 1">
+    <h1 id="txt_moderion">Analyseur de lien</h1>
+    <h4 id="in_moderion">il vous permet de vérifier vos lien si il est sûr ou sil est dangeureux</h4>
+    <h5 id="gtt_moderion">1,95 CHF</h5>
+    <br><br>
+    <a href="3-contact.html" class="btn-ajouter" id="btn-obtenir">📩 Obtenir le Script</a>
+</div>
+
+<div class="features">
+    <h2>⚡ Fonctionnalités</h2>
+    <div class="features-grid">
+        <div class="feature-card"><div class="icon">🔄️</div><h4>Analyse vos lien</h4><p>sa voir si votre lien est dangereux</p></div>
+    </div>
+
+<div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px;">
+    © 2026 ZyntraCode — Tous droits réservés | 
+    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
+    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a> |
+    <a href="politique-confidentialite.html" style="color: rgb(21, 213, 168); text-decoration: none;">Politique de confidentialité</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="profil-menu.js"></script>
+<script>
+    // ================================================
+    // CONFIG
+    // ================================================
+    const PAYREXX_INSTANCE = "zyntracode";
+    const PAYREXX_API_KEY  = "mEgPbxC15moKq2zLicETJL68ftvOrR";
+    const BOT_INVITE_LINK  = "https://discord.com/oauth2/authorize?client_id=1500932045839269968&permissions=8&scope=bot%20applications.commands";
+
+    // EmailJS — remplace par tes clés
+    const EMAILJS_SERVICE_ID  = "service_daaxxvg";
+    const EMAILJS_TEMPLATE_ID = "template_bb5opqq";
+    const EMAILJS_PUBLIC_KEY  = "CIEjPItwnunl99qyE";
+
+    function ouvrirModal() {
+        document.getElementById("modal-overlay").classList.add("visible");
+        document.getElementById("msg-erreur").style.display = "none";
+        document.getElementById("msg-succes").style.display = "none";
+    }
+
+    function fermerModal() {
+        document.getElementById("modal-overlay").classList.remove("visible");
+    }
+        
+
+    async function verifierRetour() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("succes") === "1") {
+            const email = localStorage.getItem("email_achat");
+            if (email) {
+                await envoyerBotParEmail(email);
+                localStorage.removeItem("email_achat");
+            }
+            window.history.replaceState({}, "", "/dtl_moderion.html");
+        }
+        if (params.get("erreur") === "1") {
+            alert("Le paiement a échoué. Réessaie.");
+            window.history.replaceState({}, "", "/dtl_moderion.html");
+        }
+    }
+
+    async function envoyerBotParEmail(email) {
+        const script = document.createElement("script");
+        script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
+        document.head.appendChild(script);
+        script.onload = async () => {
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+            try {
+                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                    to_email: email,
+                    produit: "Modérion",
+                    lien_bot: BOT_INVITE_LINK
+                });
+                alert("✅ Paiement réussi ! Vérifie ton email pour recevoir le lien du bot.");
+            } catch(err) {
+                alert("Paiement reçu mais erreur email. Contacte-nous.");
+            }
+        };
+    }
+
+    verifierRetour();
+</script>
+
+<script src="mise-a-jour.js"></script>
+
+</body>
+</html>
