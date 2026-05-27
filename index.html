@@ -21,11 +21,36 @@
             box-shadow: 0px 0px 15px rgb(21, 213, 168);
             padding: 60px 10px 10px 10px; transition: 0.3s; display: block;
         }
-        #menu a {
+        #menu a, .dropdown-trigger {
             color: white; display: block; padding: 12px 10px;
             text-decoration: none; border-radius: 8px; transition: 0.2s;
+            cursor: pointer;
         }
-        #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
+        #menu a:hover, .dropdown-trigger:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
+        
+        /* 🕹️ STYLES DU MENU DÉROULANT DES JEUX */
+        .dropdown {
+            position: relative;
+        }
+        .dropdown-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out; /* Effet d'enroulement fluide */
+            background: #131313;
+            border-radius: 8px;
+            margin-top: 5px;
+            padding-left: 10px;
+        }
+        /* Déroulement automatique au survol de la souris */
+        .dropdown:hover .dropdown-menu {
+            max-height: 100px; /* Ajuster la hauteur selon le nombre de jeux */
+        }
+        .dropdown-menu a {
+            font-size: 14px;
+            padding: 10px;
+            color: #ccc;
+        }
+
         .hero { text-align: center; padding: 100px 20px 50px 200px; }
         .hero h1 { font-size: 60px; color: rgb(21, 213, 168); margin-bottom: 15px; }
         .hero h3 { color: white; font-size: 18px; margin-bottom: 10px; }
@@ -85,13 +110,20 @@
 
 <nav id="menu">
     <a href="index.html">Accueil</a>
-    <a href="2-script.html">script</a>
+    <a href="2-script.html">Script</a>
+    
+    <!-- 🕹️ CATEGORIE JEUX DEROULANTE AUTOMATIQUE -->
+    <div class="dropdown">
+        <span class="dropdown-trigger">🎮 Jeux</span>
+        <div class="dropdown-menu">
+            <a href="morpion.html">❌ Morpion⭕</a>
+        </div>
+    </div>
+    
     <a href="3-contact.html">Contact</a>
     <a href="10-e-book.html">E-book</a>
-    <!-- Ces liens sont cachés si connecté -->
     <a href="login.html" id="menu-login">🔐 Se connecter</a>
     <a href="register.html" id="menu-register">✨ S'inscrire</a>
-    
 </nav>
 
 <div class="hero">
@@ -102,7 +134,6 @@
     <div id="resultats"></div>
     <br>
     <a href="3-contact.html" class="btn-contact">📩 Nous contacter</a>
-    <!-- Ces boutons sont cachés si connecté -->
     <a href="login.html" class="btn-contact" id="btn-login" style="background: transparent; color: rgb(21,213,168); border: 2px solid rgb(21,213,168); margin-left: 10px;">🔐 Se connecter</a>
     <a href="register.html" class="btn-contact" id="btn-register" style="margin-left: 10px;">✨ S'inscrire</a>
 </div>
@@ -162,61 +193,6 @@
         <span class="tag-gratuit">0,95 CHF</span>
     </div>
 </div>
-
-<div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px; padding-left: 200px;">
-    © 2026 ZyntraCode — Tous droits réservés | 
-    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
-    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a>
-    <a href="politique-confidentialite.html" style="color: rgb(21, 213, 168); text-decoration: none;">Politique de confidentialité</a>
-</div>
-
-<script>
-    const btn = document.getElementById("menu-btn");
-    const menu = document.getElementById("menu");
-    btn.addEventListener("click", () => menu.classList.toggle("visible"));
-
-    const mots = [
-        {nom: "Générateur de mot passe", lien: "dtl_Générateur_mot_passe.html"},
-        {nom: "comment coder en python partie 1", lien: "dlt_e-book_comment_coder_en_python_partie_1.html"},
-        {nom: "Analyseur de lien", lien: "dtl_analyse_lien.html"},
-    ];
-    const input = document.getElementById("test_champ");
-    const resultats = document.getElementById("resultats");
-    input.addEventListener("input", function() {
-        let valeur = input.value.toLowerCase();
-        resultats.innerHTML = "";
-        if (valeur === "") return;
-        let filtres = mots.filter(item => item.nom.toLowerCase().startsWith(valeur));
-        if (filtres.length === 0) {
-            resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
-        }
-        filtres.forEach(item => {
-            resultats.innerHTML += `<a href="${item.lien}"><p>${item.nom}</p></a>`;
-        });
-    });
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="profil-menu.js"></script>
-<script>
-    // Cacher les boutons connexion/inscription si connecté
-    async function verifierConnexion() {
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        if (user) {
-            document.getElementById('btn-login').style.display = 'none';
-            document.getElementById('btn-register').style.display = 'none';
-            document.getElementById('menu-login').style.display = 'none';
-            document.getElementById('menu-register').style.display = 'none';
-        }
-    }
-    verifierConnexion();
-</script>
-    
-
-<script src="mise-a-jour.js"></script>
-
-
-<script src="notification-politique.js"></script>
 
 </body>
 </html>
