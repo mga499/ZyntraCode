@@ -21,36 +21,11 @@
             box-shadow: 0px 0px 15px rgb(21, 213, 168);
             padding: 60px 10px 10px 10px; transition: 0.3s; display: block;
         }
-        #menu a, .dropdown-trigger {
+        #menu a {
             color: white; display: block; padding: 12px 10px;
             text-decoration: none; border-radius: 8px; transition: 0.2s;
-            cursor: pointer;
         }
-        #menu a:hover, .dropdown-trigger:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
-        
-        /* 🕹️ STYLES DU MENU DÉROULANT DES JEUX */
-        .dropdown {
-            position: relative;
-        }
-        .dropdown-menu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out; /* Effet d'enroulement fluide */
-            background: #131313;
-            border-radius: 8px;
-            margin-top: 5px;
-            padding-left: 10px;
-        }
-        /* Déroulement automatique au survol de la souris */
-        .dropdown:hover .dropdown-menu {
-            max-height: 100px; /* Ajuster la hauteur selon le nombre de jeux */
-        }
-        .dropdown-menu a {
-            font-size: 14px;
-            padding: 10px;
-            color: #ccc;
-        }
-
+        #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
         .hero { text-align: center; padding: 100px 20px 50px 200px; }
         .hero h1 { font-size: 60px; color: rgb(21, 213, 168); margin-bottom: 15px; }
         .hero h3 { color: white; font-size: 18px; margin-bottom: 10px; }
@@ -110,20 +85,13 @@
 
 <nav id="menu">
     <a href="index.html">Accueil</a>
-    <a href="2-script.html">Script</a>
-    
-    <!-- 🕹️ CATEGORIE JEUX DEROULANTE AUTOMATIQUE -->
-    <div class="dropdown">
-        <span class="dropdown-trigger">🎮 Jeux</span>
-        <div class="dropdown-menu">
-            <a href="morpion.html">❌ Morpion⭕</a>
-        </div>
-    </div>
-    
+    <a href="2-script.html">script</a>
     <a href="3-contact.html">Contact</a>
     <a href="10-e-book.html">E-book</a>
+    <!-- Ces liens sont cachés si connecté -->
     <a href="login.html" id="menu-login">🔐 Se connecter</a>
     <a href="register.html" id="menu-register">✨ S'inscrire</a>
+    
 </nav>
 
 <div class="hero">
@@ -134,6 +102,7 @@
     <div id="resultats"></div>
     <br>
     <a href="3-contact.html" class="btn-contact">📩 Nous contacter</a>
+    <!-- Ces boutons sont cachés si connecté -->
     <a href="login.html" class="btn-contact" id="btn-login" style="background: transparent; color: rgb(21,213,168); border: 2px solid rgb(21,213,168); margin-left: 10px;">🔐 Se connecter</a>
     <a href="register.html" class="btn-contact" id="btn-register" style="margin-left: 10px;">✨ S'inscrire</a>
 </div>
@@ -192,7 +161,6 @@
         <p>Script pour généré des mot de pas très fort</p>
         <span class="tag-gratuit">0,95 CHF</span>
     </div>
-</div>
+</
 
-</body>
-</html>
+j'aimerais un un aut un text jeu et quand la souris passe dessu s déroule un menu qui a morpion dans le menu et quand la souris sanlève du text sa le ranroule
