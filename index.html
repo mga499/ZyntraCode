@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ZyntraCode</title>
     <link rel="stylesheet" href="6-styles_page_boutique.css">
-    <link rel="icon" type="image/png" href="logo zyntracode v3.png">
+    <link rel="icon" type="image/png" href="logo_zyntracode2.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #0a0a0a; color: white; font-family: Arial, Helvetica, sans-serif; }
@@ -85,18 +85,16 @@
 
 <nav id="menu">
     <a href="index.html">Accueil</a>
-    <a href="2-script.html">script</a>
+    <a href="2-Bot_discord.html">Bot Discord</a>
     <a href="3-contact.html">Contact</a>
-    <a href="10-e-book.html">E-book</a>
     <!-- Ces liens sont cachés si connecté -->
     <a href="login.html" id="menu-login">🔐 Se connecter</a>
     <a href="register.html" id="menu-register">✨ S'inscrire</a>
-    
 </nav>
 
 <div class="hero">
     <h1>ZyntraCode</h1>
-    <h3>Script • Sites Web • Solutions Digitales</h3>
+    <h3>Bots Discord • Sites Web • Solutions Digitales</h3>
     <p>Des solutions digitales professionnelles pour propulser votre serveur Discord et votre présence en ligne.</p>
     <input id="test_champ" type="search" placeholder="🔎 Rechercher un produit...">
     <div id="resultats"></div>
@@ -109,9 +107,9 @@
 
 <div class="services">
     <div class="service-card">
-        <div class="icon">💻</div>
-        <h3>Script</h3>
-        <p>Script pour aidé a sécuriser vos comptes ou vos fichier ou votre apareil</p>
+        <div class="icon">🤖</div>
+        <h3>Bots Discord</h3>
+        <p>Des bots personnalisés pour automatiser et améliorer votre serveur Discord.</p>
     </div>
     <div class="service-card">
         <div class="icon">🌐</div>
@@ -152,15 +150,62 @@
 </div>
 
 <div class="featured">
-    <h2>💻 Notre Script vedette</h2>
+    <h2>🤖 Notre bot vedette</h2>
     <div class="bot-card">
-        <a href="dtl_Générateur_mot_passe.html">
-            <img src="icone_générateur_motde_passe.png" id="logo_moderion" alt="logo moderion">
+        <a href="dtl_moderion.html">
+            <img src="image_modérion.png" id="logo_moderion" alt="logo moderion">
         </a>
-        <h3>Générateur de mot de passe</h3>
-        <p>Script pour généré des mot de pas très fort</p>
-        <span class="tag-gratuit">0,95 CHF</span>
+        <h3>Modérion</h3>
+        <p>Bot de modération complet pour votre serveur Discord</p>
+        <span class="tag-gratuit">✅ Gratuit</span>
     </div>
-</
+</div>
 
-j'aimerais un un aut un text jeu et quand la souris passe dessu s déroule un menu qui a morpion dans le menu et quand la souris sanlève du text sa le ranroule
+<div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px; padding-left: 200px;">
+    © 2026 ZyntraCode — Tous droits réservés | 
+    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
+    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a>
+</div>
+
+<script>
+    const btn = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    btn.addEventListener("click", () => menu.classList.toggle("visible"));
+
+    const mots = [
+        {nom: "Modérion", lien: "dtl_moderion.html"},
+    ];
+    const input = document.getElementById("test_champ");
+    const resultats = document.getElementById("resultats");
+    input.addEventListener("input", function() {
+        let valeur = input.value.toLowerCase();
+        resultats.innerHTML = "";
+        if (valeur === "") return;
+        let filtres = mots.filter(item => item.nom.toLowerCase().startsWith(valeur));
+        if (filtres.length === 0) {
+            resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
+        }
+        filtres.forEach(item => {
+            resultats.innerHTML += `<a href="${item.lien}"><p>${item.nom}</p></a>`;
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="profil-menu.js"></script>
+<script>
+    // Cacher les boutons connexion/inscription si connecté
+    async function verifierConnexion() {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (user) {
+            document.getElementById('btn-login').style.display = 'none';
+            document.getElementById('btn-register').style.display = 'none';
+            document.getElementById('menu-login').style.display = 'none';
+            document.getElementById('menu-register').style.display = 'none';
+        }
+    }
+    verifierConnexion();
+</script>
+
+</body>
+</html>
