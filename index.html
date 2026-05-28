@@ -26,6 +26,49 @@
             text-decoration: none; border-radius: 8px; transition: 0.2s;
         }
         #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
+
+        /* MENU JEUX DÉROULANT */
+        .menu-jeux-wrapper {
+            position: relative;
+        }
+        .menu-jeux-titre {
+            color: white;
+            display: block;
+            padding: 12px 10px;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+        .menu-jeux-titre:hover {
+            color: rgb(21, 213, 168);
+            background: #2a2a2a;
+        }
+        .menu-jeux-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #111;
+            border-radius: 8px;
+            margin-top: 2px;
+        }
+        .menu-jeux-wrapper:hover .menu-jeux-dropdown {
+            max-height: 200px;
+        }
+        .menu-jeux-dropdown a {
+            color: #aaa !important;
+            padding: 10px 10px 10px 20px !important;
+            font-size: 13px !important;
+            border-left: 2px solid rgb(21, 213, 168);
+            margin: 2px 5px;
+            border-radius: 0 8px 8px 0 !important;
+        }
+        .menu-jeux-dropdown a:hover {
+            color: rgb(21, 213, 168) !important;
+            background: #1a1a1a !important;
+        }
+
         .hero { text-align: center; padding: 100px 20px 50px 200px; }
         .hero h1 { font-size: 60px; color: rgb(21, 213, 168); margin-bottom: 15px; }
         .hero h3 { color: white; font-size: 18px; margin-bottom: 10px; }
@@ -85,9 +128,18 @@
 
 <nav id="menu">
     <a href="index.html">Accueil</a>
-    <a href="2-script.html">script</a>
+    <a href="2-script.html">Script</a>
     <a href="3-contact.html">Contact</a>
     <a href="10-e-book.html">E-book</a>
+
+    <!-- MENU JEUX DÉROULANT -->
+    <div class="menu-jeux-wrapper">
+        <span class="menu-jeux-titre">🎮 Jeux ▾</span>
+        <div class="menu-jeux-dropdown">
+            <a href="morpion.html">⭕ Morpion</a>
+        </div>
+    </div>
+
     <!-- Ces liens sont cachés si connecté -->
     <a href="login.html" id="menu-login">🔐 Se connecter</a>
     <a href="register.html" id="menu-register">✨ S'inscrire</a>
@@ -101,7 +153,6 @@
     <div id="resultats"></div>
     <br>
     <a href="3-contact.html" class="btn-contact">📩 Nous contacter</a>
-    <!-- Ces boutons sont cachés si connecté -->
     <a href="login.html" class="btn-contact" id="btn-login" style="background: transparent; color: rgb(21,213,168); border: 2px solid rgb(21,213,168); margin-left: 10px;">🔐 Se connecter</a>
     <a href="register.html" class="btn-contact" id="btn-register" style="margin-left: 10px;">✨ S'inscrire</a>
 </div>
@@ -151,7 +202,7 @@
 </div>
 
 <div class="featured">
-    <h2> Notre script vedette</h2>
+    <h2>💻 Notre script vedette</h2>
     <div class="bot-card">
         <a href="dtl_Générateur_mot_passe.html">
             <img src="icone_générateur_motde_passe.png" id="logo_moderion" alt="logo moderion">
@@ -195,7 +246,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="profil-menu.js"></script>
 <script>
-    // Cacher les boutons connexion/inscription si connecté
     async function verifierConnexion() {
         const { data: { user } } = await supabaseClient.auth.getUser();
         if (user) {
