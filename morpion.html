@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpion Spatial Tactique</title>
+    <title>Morpion Spatial Intelligant</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
             text-align: center;
             background-color: #1a1a1a;
             color: white;
-            margin-top: 20px;
+            margin-top: 30px;
         }
         h1 { color: #00ffcc; margin-bottom: 10px; }
-        .menu-options { margin-bottom: 15px; }
+        .menu-modes { margin-bottom: 20px; }
         .btn-mode {
             padding: 10px 20px;
             font-size: 16px;
@@ -30,21 +30,6 @@
             background-color: #00ffcc;
             color: black;
             border-color: #00ffcc;
-        }
-        .select-difficulte {
-            padding: 8px 12px;
-            font-size: 15px;
-            background-color: #333;
-            color: white;
-            border: 2px solid #555;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .affichage-score {
-            font-size: 18px;
-            color: #aaa;
-            margin: 10px 0;
         }
         #statut {
             font-size: 24px;
@@ -90,18 +75,10 @@
 
     <h1>Morpion Tactique</h1>
     
-    <div class="menu-options">
-        <button id="modeSolo" class="btn-mode actif" onclick="changerMode('solo')">Mode Solo (vs Robot)</button>
+    <div class="menu-modes">
+        <button id="modeSolo" class="btn-mode actif" onclick="changerMode('solo')">Mode Solo (vs Robot Malin)</button>
         <button id="modeDuo" class="btn-mode" onclick="changerMode('duo')">Mode Duo (2 Joueurs)</button>
-        
-        <select id="difficulte" class="select-difficulte" onchange="recommencer()">
-            <option value="facile">Difficulté : Facile 🟢</option>
-            <option value="normal">Difficulté : Normal 🟡</option>
-            <option value="difficile" selected>Difficulté : Difficile 🔴</option>
-        </select>
     </div>
-
-    <div class="affichage-score" id="tableauScore">Score : Toi 0 - 0 Robot</div>
 
     <div id="statut">À toi de jouer ! (Tu es les X)</div>
 
@@ -125,25 +102,19 @@
         let partieFinie = false;
         let grille = ["", "", "", "", "", "", "", "", ""]; 
 
-        let scoreHumain = 0;
-        let scoreRobot = 0;
+        // Les 8 lignes gagnantes possibles (Horizontales, Verticales, Diagonales)
+        const combosVictoire = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Lignes
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Colonnes
+            [0, 4, 8], [2, 4, 6]             // Diagonales
+        ];
 
         function changerMode(nouveauMode) {
             modeActuel = nouveauMode;
             document.getElementById("modeSolo").classList.remove("actif");
             document.getElementById("modeDuo").classList.remove("actif");
-            
-            const selectDiff = document.getElementById("difficulte");
-            
-            if (modeActuel === "solo") {
-                document.getElementById("modeSolo").classList.add("actif");
-                selectDiff.style.display = "inline-block";
-                document.getElementById("tableauScore").innerText = `Score : Toi ${scoreHumain} - ${scoreRobot} Robot`;
-            } else {
-                document.getElementById("modeDuo").classList.add("actif");
-                selectDiff.style.display = "none";
-                document.getElementById("tableauScore").innerText = "Mode 2 Joueurs Local";
-            }
+            if (modeActuel === "solo") document.getElementById("modeSolo").classList.add("actif");
+            else document.getElementById("modeDuo").classList.add("actif");
             recommencer();
         }
 
@@ -151,7 +122,11 @@
             if (partieFinie || grille[index] !== "") return;
             if (modeActuel === "solo" && joueurActuel !== "X") return;
 
-            validerCoup(index, joueurActuel, joueurActuel === "X" ? "#00ffcc" : "#ff3366");
+            if (joueurActuel === "X") {
+                validerCoup(index, "X", "#00ffcc");
+            } else {
+                validerCoup(index, "O", "#ff3366");
+            }
 
             if (verifierFinPartie()) return;
 
@@ -169,62 +144,70 @@
         function tourIA() {
             if (partieFinie || modeActuel !== "solo") return;
 
-            let niveau = document.getElementById("difficulte").value;
-            let caseChoisie = null;
+            // --- STRATÉGIE DE L'I.A. INTERACTIVE ---
 
-            if (niveau === "difficile") {
-                caseChoisie = trouverCaseCle("O"); 
-                if (caseChoisie === null) caseChoisie = trouverCaseCle("X"); 
-                if (caseChoisie === null && grille[4] === "") caseChoisie = 4; 
-            } 
-            else if (niveau === "normal") {
-                caseChoisie = trouverCaseCle("X"); 
+            // ÉTAPE 1 : Est-ce que l'I.A. (O) peut gagner tout de suite ?
+            let casePourGagner = trouverCaseCle("O");
+            if (casePourGagner !== null) {
+                validerCoup(casePourGagner, "O", "#ff3366");
+                verifierFinPartie();
+                return;
             }
 
-            if (caseChoisie === null) {
-                let casesVides = [];
-                for (let i = 0; i < 9; i++) {
-                    if (grille[i] === "") casesVides.push(i);
-                }
-                if (casesVides.length > 0) {
-                    let indexAuHasard = Math.floor(Math.random() * casesVides.length);
-                    caseChoisie = casesVides[indexAuHasard];
-                }
+            // ÉTAPE 2 : Est-ce que le joueur (X) est sur le point de gagner ? SI OUI, ON BLOQUE !
+            let caseABloquer = trouverCaseCle("X");
+            if (caseABloquer !== null) {
+                validerCoup(caseABloquer, "O", "#ff3366");
+                verifierFinPartie();
+                joueurActuel = "X";
+                document.getElementById("statut").innerText = "À toi de jouer ! (Tu es les X)";
+                return;
             }
 
-            if (caseChoisie !== null) {
-                validerCoup(caseChoisie, "O", "#ff3366");
-                if (verifierFinPartie()) return;
+            // ÉTAPE 3 : Si rien à bloquer, prendre le centre (case 4) si disponible
+            if (grille[4] === "") {
+                validerCoup(4, "O", "#ff3366");
+                verifierFinPartie();
+                joueurActuel = "X";
+                document.getElementById("statut").innerText = "À toi de jouer !";
+                return;
+            }
+
+            // ÉTAPE 4 : Sinon, prendre une case vide au hasard
+            let casesVides = [];
+            for (let i = 0; i < 9; i++) {
+                if (grille[i] === "") casesVides.push(i);
+            }
+
+            if (casesVides.length > 0) {
+                let indexAuHasard = Math.floor(Math.random() * casesVides.length);
+                validerCoup(casesVides[indexAuHasard], "O", "#ff3366");
+                verifierFinPartie();
             }
 
             joueurActuel = "X";
             document.getElementById("statut").innerText = "À toi de jouer ! (Tu es les X)";
         }
 
-        function testerLigne(a, b, c, symbole) {
-            let cpt = 0;
-            if (grille[a] === symbole) cpt++;
-            if (grille[b] === symbole) cpt++;
-            if (grille[c] === symbole) cpt++;
-            if (cpt === 2) {
-                if (grille[a] === "") return a;
-                if (grille[b] === "") return b;
-                if (grille[c] === "") return c;
-            }
-            return null;
-        }
-
+        // Fonction magique qui cherche s'il manque une seule case pour faire un alignement
         function trouverCaseCle(symbole) {
-            let res = null;
-            res = testerLigne(0, 1, 2, symbole); if (res !== null) return res;
-            res = testerLigne(3, 4, 5, symbole); if (res !== null) return res;
-            res = testerLigne(6, 7, 8, symbole); if (res !== null) return res;
-            res = testerLigne(0, 3, 6, symbole); if (res !== null) return res;
-            res = testerLigne(1, 4, 7, symbole); if (res !== null) return res;
-            res = testerLigne(2, 5, 8, symbole); if (res !== null) return res;
-            res = testerLigne(0, 4, 8, symbole); if (res !== null) return res;
-            res = testerLigne(2, 4, 6, symbole); if (res !== null) return res;
-            return null;
+            for (let combo of combosVictoire) {
+                const [a, b, c] = combo;
+                
+                // On compte combien de fois le symbole apparaît sur cette ligne
+                let compteur = 0;
+                if (grille[a] === symbole) compteur++;
+                if (grille[b] === symbole) compteur++;
+                if (grille[c] === symbole) compteur++;
+
+                // S'il y en a 2, on cherche si la 3ème case de la ligne est totalement vide
+                if (compteur === 2) {
+                    if (grille[a] === "") return a;
+                    if (grille[b] === "") return b;
+                    if (grille[c] === "") return c;
+                }
+            }
+            return null; // Aucun danger ou aucune opportunité trouvée
         }
 
         function validerCoup(index, symbole, couleur) {
@@ -234,23 +217,40 @@
             bouton.style.color = couleur;
         }
 
-        function verifierCombos() {
-            if(grille[0] !== "" && grille[0] === grille[1] && grille[0] === grille[2]) return true;
-            if(grille[3] !== "" && grille[3] === grille[4] && grille[3] === grille[5]) return true;
-            if(grille[6] !== "" && grille[6] === grille[7] && grille[6] === grille[8]) return true;
-            if(grille[0] !== "" && grille[0] === grille[3] && grille[0] === grille[6]) return true;
-            if(grille[1] !== "" && grille[1] === grille[4] && grille[1] === grille[7]) return true;
-            if(grille[2] !== "" && grille[2] === grille[5] && grille[2] === grille[8]) return true;
-            if(grille[0] !== "" && grille[0] === grille[4] && grille[0] === grille[8]) return true;
-            if(grille[2] !== "" && grille[2] === grille[4] && grille[2] === grille[6]) return true;
+        function verifierFinPartie() {
+            // Vérification victoire
+            for (let combo of combosVictoire) {
+                const [a, b, c] = combo;
+                if (grille[a] !== "" && grille[a] === grille[b] && grille[a] === grille[c]) {
+                    if (modeActuel === "solo") {
+                        document.getElementById("statut").innerText = (joueurActuel === "X") ? "Victoire ! Tu as battu le robot ! 🎉" : "Dommage... Le robot a gagné ! 🤖";
+                    } else {
+                        document.getElementById("statut").innerText = `Le joueur ${joueurActuel} a GAGNÉ ! 🏆`;
+                    }
+                    partieFinie = true;
+                    return true;
+                }
+            }
+
+            // Vérification match nul
+            if (!grille.includes("")) {
+                document.getElementById("statut").innerText = "Match nul ! 🤝";
+                partieFinie = true;
+                return true;
+            }
             return false;
         }
 
-        function verifierFinPartie() {
-            if (verifierCombos()) {
-                if (modeActuel === "solo") {
-                    if (joueurActuel === "X") {
-                        scoreHumain++;
-                        document.getElementById("statut").innerText = "Victoire ! Tu as battu le robot ! 🎉";
-                    } else {
-                        scoreRobot++;
+        function recommencer() {
+            joueurActuel = "X";
+            partieFinie = false;
+            grille = ["", "", "", "", "", "", "", "", ""];
+            document.getElementById("statut").innerText = (modeActuel === "solo") ? "À toi de jouer ! (Tu es les X)" : "Tour du joueur : X";
+            for (let i = 0; i < 9; i++) {
+                document.getElementById(`b${i}`).innerText = "";
+            }
+        }
+    </script>
+
+</body>
+</html>
