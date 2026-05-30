@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpion Spatial - 100% Fluide</title>
+    <title>Morpion Spatial - Solo & Duo</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -44,7 +44,6 @@
             cursor: pointer;
         }
 
-        /* Affichage des scores */
         .affichage-score {
             font-size: 18px;
             color: #aaa;
@@ -105,7 +104,6 @@
         </select>
     </div>
 
-    <!-- Tableau des scores -->
     <div class="affichage-score" id="tableauScore">Score : Toi 0 - 0 Robot</div>
 
     <div id="statut">À toi de jouer ! (Tu es les X)</div>
@@ -130,12 +128,8 @@
         let partieFinie = false;
         let grille = ["", "", "", "", "", "", "", "", ""]; 
 
-        // Compteurs de score
         let scoreHumain = 0;
         let scoreRobot = 0;
-
-        const combosVictoire = [, [3, 4, 5], [6, 7, 8], // Horizontales, [1, 4, 7], [2, 5, 8], // Verticales, [2, 4, 6]             // Diagonales
-        ];
 
         function changerMode(nouveauMode) {
             modeActuel = nouveauMode;
@@ -165,6 +159,7 @@
             if (verifierFinPartie()) return;
 
             if (modeActuel === "duo") {
+                // Mode Duo alterné simple
                 joueurActuel = (joueurActuel === "X") ? "O" : "X";
                 document.getElementById("statut").innerText = `Tour du joueur : ${joueurActuel}`;
             } 
@@ -182,12 +177,12 @@
             let caseChoisie = null;
 
             if (niveau === "difficile") {
-                caseChoisie = trouverCaseCle("O"); // Essaye de gagner
-                if (caseChoisie === null) caseChoisie = trouverCaseCle("X"); // Bloque l'humain
-                if (caseChoisie === null && grille[4] === "") caseChoisie = 4; // Centre
+                caseChoisie = trouverCaseCle("O"); 
+                if (caseChoisie === null) caseChoisie = trouverCaseCle("X"); 
+                if (caseChoisie === null && grille[4] === "") caseChoisie = 4; 
             } 
             else if (niveau === "normal") {
-                caseChoisie = trouverCaseCle("X"); // Bloque l'humain uniquement
+                caseChoisie = trouverCaseCle("X"); 
             }
 
             if (caseChoisie === null) {
@@ -210,20 +205,33 @@
             document.getElementById("statut").innerText = "À toi de jouer ! (Tu es les X)";
         }
 
-        function trouverCaseCle(symbole) {
-            for (let combo of combosVictoire) {
-                const [a, b, c] = combo;
-                let compteur = 0;
-                if (grille[a] === symbole) compteur++;
-                if (grille[b] === symbole) compteur++;
-                if (grille[c] === symbole) compteur++;
-
-                if (compteur === 2) {
-                    if (grille[a] === "") return a;
-                    if (grille[b] === "") return b;
-                    if (grille[c] === "") return c;
-                }
+        // Nouvelle logique d'analyse sans liste masquée pour éviter les coupures
+        function testerLigne(a, b, c, symbole) {
+            let cpt = 0;
+            if (grille[a] === symbole) cpt++;
+            if (grille[b] === symbole) cpt++;
+            if (grille[c] === symbole) cpt++;
+            if (cpt === 2) {
+                if (grille[a] === "") return a;
+                if (grille[b] === "") return b;
+                if (grille[c] === "") return c;
             }
+            return null;
+        }
+
+        function trouverCaseCle(symbole) {
+            let res = null;
+            // Test horizontal
+            res = testerLigne(0, 1, 2, symbole); if (res !== null) return res;
+            res = testerLigne(3, 4, 5, symbole); if (res !== null) return res;
+            res = testerLigne(6, 7, 8, symbole); if (res !== null) return res;
+            // Test vertical
+            res = testerLigne(0, 3, 6, symbole); if (res !== null) return res;
+            res = testerLigne(1, 4, 7, symbole); if (res !== null) return res;
+            res = testerLigne(2, 5, 8, symbole); if (res !== null) return res;
+            // Test diagonal
+            res = testerLigne(0, 4, 8, symbole); if (res !== null) return res;
+            res = testerLigne(2, 4, 6, symbole); if (res !== null) return res;
             return null;
         }
 
@@ -234,36 +242,21 @@
             bouton.style.color = couleur;
         }
 
-        function verifierFinPartie() {
-            for (let combo of combosVictoire) {
-                const [a, b, c] = combo;
-                if (grille[a] !== "" && grille[a] === grille[b] && grille[a] === grille[c]) {
-                    if (modeActuel === "solo") {
-                        if (joueurActuel === "X") {
-                            scoreHumain++;
-                            document.getElementById("statut").innerText = "Victoire ! Tu as battu le robot ! 🎉";
-                        } else {
-                            scoreRobot++;
-                            document.getElementById("statut").innerText = "Dommage... Le robot a gagné ! 🤖";
-                        }
-                        document.getElementById("tableauScore").innerText = `Score : Toi ${scoreHumain} - ${scoreRobot} Robot`;
-                    } else {
-                        document.getElementById("statut").innerText = `Le joueur ${joueurActuel} a GAGNÉ ! 🏆`;
-                    }
-                    partieFinie = true;
-                    return true;
-                }
-            }
-
-            if (!grille.includes("")) {
-                document.getElementById("statut").innerText = "Match nul ! 🤝";
-                partieFinie = true;
-                return true;
-            }
+        function verifierCombos() {
+            // Vérification manuelle sécurisée
+            if(grille[0] !== "" && grille[0] === grille[1] && grille[0] === grille[2]) return true;
+            if(grille[3] !== "" && grille[3] === grille[4] && grille[3] === grille[5]) return true;
+            if(grille[6] !== "" && grille[6] === grille[7] && grille[6] === grille[8]) return true;
+            if(grille[0] !== "" && grille[0] === grille[3] && grille[0] === grille[6]) return true;
+            if(grille[1] !== "" && grille[1] === grille[4] && grille[1] === grille[7]) return true;
+            if(grille[2] !== "" && grille[2] === grille[5] && grille[2] === grille[8]) return true;
+            if(grille[0] !== "" && grille[0] === grille[4] && grille[0] === grille[8]) return true;
+            if(grille[2] !== "" && grille[2] === grille[4] && grille[2] === grille[6]) return true;
             return false;
         }
 
-        function recommencerPartie() {
-            joueurActuel = "X";
-            partieFinie = false;
-            grille = ["", "", "", "", "", "", "", "", ""];
+        function verifierFinPartie() {
+            if (verifierCombos()) {
+                if (modeActuel === "solo") {
+                    if (joueurActuel === "X") {
+                        scoreHumain++;
