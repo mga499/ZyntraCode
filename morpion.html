@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpion Spatial Intelligant</title>
+    <title>Morpion Spatial - Difficulté Réglable</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
             text-align: center;
             background-color: #1a1a1a;
             color: white;
-            margin-top: 30px;
+            margin-top: 20px;
         }
-        h1 { color: #00ffcc; margin-bottom: 10px; }
-        .menu-modes { margin-bottom: 20px; }
+        h1 { color: #00ffcc; margin-bottom: 5px; }
+        .menu-options { margin-bottom: 15px; }
+        
         .btn-mode {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 0 10px;
+            padding: 8px 15px;
+            font-size: 15px;
+            margin: 0 5px;
             border: 2px solid #555;
             background-color: #222;
             color: white;
@@ -31,9 +32,24 @@
             color: black;
             border-color: #00ffcc;
         }
+
+        /* Style de la sélection de difficulté */
+        .select-difficulte {
+            padding: 8px 12px;
+            font-size: 15px;
+            background-color: #333;
+            color: white;
+            border: 2px solid #555;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+        .select-difficulte:focus { border-color: #00ffcc; }
+
         #statut {
             font-size: 24px;
-            margin-bottom: 20px;
+            margin: 15px 0;
             font-weight: bold;
             height: 35px;
         }
@@ -58,6 +74,7 @@
             transition: background 0.3s;
         }
         .case:hover { background-color: #444; }
+        
         button#btn-recommencer {
             padding: 10px 20px;
             font-size: 18px;
@@ -75,9 +92,16 @@
 
     <h1>Morpion Tactique</h1>
     
-    <div class="menu-modes">
-        <button id="modeSolo" class="btn-mode actif" onclick="changerMode('solo')">Mode Solo (vs Robot Malin)</button>
+    <div class="menu-options">
+        <button id="modeSolo" class="btn-mode actif" onclick="changerMode('solo')">Mode Solo (vs Robot)</button>
         <button id="modeDuo" class="btn-mode" onclick="changerMode('duo')">Mode Duo (2 Joueurs)</button>
+        
+        <!-- Menu déroulant pour la difficulté -->
+        <select id="difficulte" class="select-difficulte" onchange="recommencer()">
+            <option value="facile">Difficulté : Facile 🟢</option>
+            <option value="normal">Difficulté : Normal 🟡</option>
+            <option value="difficile" selected>Difficulté : Difficile 🔴</option>
+        </select>
     </div>
 
     <div id="statut">À toi de jouer ! (Tu es les X)</div>
@@ -102,19 +126,26 @@
         let partieFinie = false;
         let grille = ["", "", "", "", "", "", "", "", ""]; 
 
-        // Les 8 lignes gagnantes possibles (Horizontales, Verticales, Diagonales)
         const combosVictoire = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Lignes
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Colonnes
-            [0, 4, 8], [2, 4, 6]             // Diagonales
+           ,,, // Lignes
+           ,,, // Colonnes
+           ,             // Diagonales
         ];
 
         function changerMode(nouveauMode) {
             modeActuel = nouveauMode;
             document.getElementById("modeSolo").classList.remove("actif");
             document.getElementById("modeDuo").classList.remove("actif");
-            if (modeActuel === "solo") document.getElementById("modeSolo").classList.add("actif");
-            else document.getElementById("modeDuo").classList.add("actif");
+            
+            const selectDiff = document.getElementById("difficulte");
+            
+            if (modeActuel === "solo") {
+                document.getElementById("modeSolo").classList.add("actif");
+                selectDiff.style.display = "inline-block"; // Affiche la difficulté
+            } else {
+                document.getElementById("modeDuo").classList.add("actif");
+                selectDiff.style.display = "none"; // Cache la difficulté en Duo
+            }
             recommencer();
         }
 
@@ -144,44 +175,41 @@
         function tourIA() {
             if (partieFinie || modeActuel !== "solo") return;
 
-            // --- STRATÉGIE DE L'I.A. INTERACTIVE ---
+            // Récupérer le niveau choisi par l'utilisateur
+            let niveau = document.getElementById("difficulte").value;
+            let caseChoisie = null;
 
-            // ÉTAPE 1 : Est-ce que l'I.A. (O) peut gagner tout de suite ?
-            let casePourGagner = trouverCaseCle("O");
-            if (casePourGagner !== null) {
-                validerCoup(casePourGagner, "O", "#ff3366");
-                verifierFinPartie();
-                return;
+            // --- LOGIQUE MULTI-DIFFICULTÉ ---
+            
+            if (niveau === "difficile") {
+                // Priorité 1 : Gagner tout de suite
+                caseChoisie = trouverCaseCle("O");
+                // Priorité 2 : Bloquer l'adversaire
+                if (caseChoisie === null) caseChoisie = trouverCaseCle("X");
+                // Priorité 3 : Prendre le centre stratégique (case 4)
+                if (caseChoisie === null && grille[4] === "") caseChoisie = 4;
+            } 
+            else if (niveau === "normal") {
+                // Le mode normal essaie uniquement de bloquer les coups du joueur
+                caseChoisie = trouverCaseCle("X");
+            }
+            // (Si niveau est "facile", caseChoisie reste null et passe directement au hasard)
+
+            // Si aucune case tactique n'a été trouvée, on prend une case vide au hasard
+            if (caseChoisie === null) {
+                let casesVides = [];
+                for (let i = 0; i < 9; i++) {
+                    if (grille[i] === "") casesVides.push(i);
+                }
+                if (casesVides.length > 0) {
+                    let indexAuHasard = Math.floor(Math.random() * casesVides.length);
+                    caseChoisie = casesVides[indexAuHasard];
+                }
             }
 
-            // ÉTAPE 2 : Est-ce que le joueur (X) est sur le point de gagner ? SI OUI, ON BLOQUE !
-            let caseABloquer = trouverCaseCle("X");
-            if (caseABloquer !== null) {
-                validerCoup(caseABloquer, "O", "#ff3366");
-                verifierFinPartie();
-                joueurActuel = "X";
-                document.getElementById("statut").innerText = "À toi de jouer ! (Tu es les X)";
-                return;
-            }
-
-            // ÉTAPE 3 : Si rien à bloquer, prendre le centre (case 4) si disponible
-            if (grille[4] === "") {
-                validerCoup(4, "O", "#ff3366");
-                verifierFinPartie();
-                joueurActuel = "X";
-                document.getElementById("statut").innerText = "À toi de jouer !";
-                return;
-            }
-
-            // ÉTAPE 4 : Sinon, prendre une case vide au hasard
-            let casesVides = [];
-            for (let i = 0; i < 9; i++) {
-                if (grille[i] === "") casesVides.push(i);
-            }
-
-            if (casesVides.length > 0) {
-                let indexAuHasard = Math.floor(Math.random() * casesVides.length);
-                validerCoup(casesVides[indexAuHasard], "O", "#ff3366");
+            // Validation du coup du robot
+            if (caseChoisie !== null) {
+                validerCoup(caseChoisie, "O", "#ff3366");
                 verifierFinPartie();
             }
 
@@ -189,25 +217,21 @@
             document.getElementById("statut").innerText = "À toi de jouer ! (Tu es les X)";
         }
 
-        // Fonction magique qui cherche s'il manque une seule case pour faire un alignement
         function trouverCaseCle(symbole) {
             for (let combo of combosVictoire) {
                 const [a, b, c] = combo;
-                
-                // On compte combien de fois le symbole apparaît sur cette ligne
                 let compteur = 0;
                 if (grille[a] === symbole) compteur++;
                 if (grille[b] === symbole) compteur++;
                 if (grille[c] === symbole) compteur++;
 
-                // S'il y en a 2, on cherche si la 3ème case de la ligne est totalement vide
                 if (compteur === 2) {
                     if (grille[a] === "") return a;
                     if (grille[b] === "") return b;
                     if (grille[c] === "") return c;
                 }
             }
-            return null; // Aucun danger ou aucune opportunité trouvée
+            return null;
         }
 
         function validerCoup(index, symbole, couleur) {
@@ -218,7 +242,6 @@
         }
 
         function verifierFinPartie() {
-            // Vérification victoire
             for (let combo of combosVictoire) {
                 const [a, b, c] = combo;
                 if (grille[a] !== "" && grille[a] === grille[b] && grille[a] === grille[c]) {
@@ -232,7 +255,6 @@
                 }
             }
 
-            // Vérification match nul
             if (!grille.includes("")) {
                 document.getElementById("statut").innerText = "Match nul ! 🤝";
                 partieFinie = true;
@@ -246,11 +268,3 @@
             partieFinie = false;
             grille = ["", "", "", "", "", "", "", "", ""];
             document.getElementById("statut").innerText = (modeActuel === "solo") ? "À toi de jouer ! (Tu es les X)" : "Tour du joueur : X";
-            for (let i = 0; i < 9; i++) {
-                document.getElementById(`b${i}`).innerText = "";
-            }
-        }
-    </script>
-
-</body>
-</html>
