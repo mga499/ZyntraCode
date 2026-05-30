@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpion Spatial - Difficulté Réglable</title>
+    <title>Morpion Spatial - 100% Fluide</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -33,7 +33,6 @@
             border-color: #00ffcc;
         }
 
-        /* Style de la sélection de difficulté */
         .select-difficulte {
             padding: 8px 12px;
             font-size: 15px;
@@ -43,9 +42,14 @@
             border-radius: 5px;
             font-weight: bold;
             cursor: pointer;
-            outline: none;
         }
-        .select-difficulte:focus { border-color: #00ffcc; }
+
+        /* Affichage des scores */
+        .affichage-score {
+            font-size: 18px;
+            color: #aaa;
+            margin: 10px 0;
+        }
 
         #statut {
             font-size: 24px;
@@ -71,7 +75,6 @@
             color: white;
             cursor: pointer;
             border-radius: 10px;
-            transition: background 0.3s;
         }
         .case:hover { background-color: #444; }
         
@@ -85,7 +88,6 @@
             cursor: pointer;
             font-weight: bold;
         }
-        button#btn-recommencer:hover { background-color: #dddddd; }
     </style>
 </head>
 <body>
@@ -96,13 +98,15 @@
         <button id="modeSolo" class="btn-mode actif" onclick="changerMode('solo')">Mode Solo (vs Robot)</button>
         <button id="modeDuo" class="btn-mode" onclick="changerMode('duo')">Mode Duo (2 Joueurs)</button>
         
-        <!-- Menu déroulant pour la difficulté -->
-        <select id="difficulte" class="select-difficulte" onchange="recommencer()">
+        <select id="difficulte" class="select-difficulte" onchange="recommencerPartie()">
             <option value="facile">Difficulté : Facile 🟢</option>
             <option value="normal">Difficulté : Normal 🟡</option>
             <option value="difficile" selected>Difficulté : Difficile 🔴</option>
         </select>
     </div>
+
+    <!-- Tableau des scores -->
+    <div class="affichage-score" id="tableauScore">Score : Toi 0 - 0 Robot</div>
 
     <div id="statut">À toi de jouer ! (Tu es les X)</div>
 
@@ -118,7 +122,7 @@
         <button class="case" id="b8" onclick="jouerCase(8)"></button>
     </div>
 
-    <button id="btn-recommencer" onclick="recommencer()">Réinitialiser</button>
+    <button id="btn-recommencer" onclick="recommencerPartie()">Réinitialiser</button>
 
     <script>
         let modeActuel = "solo";
@@ -126,10 +130,11 @@
         let partieFinie = false;
         let grille = ["", "", "", "", "", "", "", "", ""]; 
 
-        const combosVictoire = [
-           ,,, // Lignes
-           ,,, // Colonnes
-           ,             // Diagonales
+        // Compteurs de score
+        let scoreHumain = 0;
+        let scoreRobot = 0;
+
+        const combosVictoire = [, [3, 4, 5], [6, 7, 8], // Horizontales, [1, 4, 7], [2, 5, 8], // Verticales, [2, 4, 6]             // Diagonales
         ];
 
         function changerMode(nouveauMode) {
@@ -141,23 +146,21 @@
             
             if (modeActuel === "solo") {
                 document.getElementById("modeSolo").classList.add("actif");
-                selectDiff.style.display = "inline-block"; // Affiche la difficulté
+                selectDiff.style.display = "inline-block";
+                document.getElementById("tableauScore").innerText = `Score : Toi ${scoreHumain} - ${scoreRobot} Robot`;
             } else {
                 document.getElementById("modeDuo").classList.add("actif");
-                selectDiff.style.display = "none"; // Cache la difficulté en Duo
+                selectDiff.style.display = "none";
+                document.getElementById("tableauScore").innerText = "Mode 2 Joueurs Local";
             }
-            recommencer();
+            recommencerPartie();
         }
 
         function jouerCase(index) {
             if (partieFinie || grille[index] !== "") return;
             if (modeActuel === "solo" && joueurActuel !== "X") return;
 
-            if (joueurActuel === "X") {
-                validerCoup(index, "X", "#00ffcc");
-            } else {
-                validerCoup(index, "O", "#ff3366");
-            }
+            validerCoup(index, joueurActuel, joueurActuel === "X" ? "#00ffcc" : "#ff3366");
 
             if (verifierFinPartie()) return;
 
@@ -175,27 +178,18 @@
         function tourIA() {
             if (partieFinie || modeActuel !== "solo") return;
 
-            // Récupérer le niveau choisi par l'utilisateur
             let niveau = document.getElementById("difficulte").value;
             let caseChoisie = null;
 
-            // --- LOGIQUE MULTI-DIFFICULTÉ ---
-            
             if (niveau === "difficile") {
-                // Priorité 1 : Gagner tout de suite
-                caseChoisie = trouverCaseCle("O");
-                // Priorité 2 : Bloquer l'adversaire
-                if (caseChoisie === null) caseChoisie = trouverCaseCle("X");
-                // Priorité 3 : Prendre le centre stratégique (case 4)
-                if (caseChoisie === null && grille[4] === "") caseChoisie = 4;
+                caseChoisie = trouverCaseCle("O"); // Essaye de gagner
+                if (caseChoisie === null) caseChoisie = trouverCaseCle("X"); // Bloque l'humain
+                if (caseChoisie === null && grille[4] === "") caseChoisie = 4; // Centre
             } 
             else if (niveau === "normal") {
-                // Le mode normal essaie uniquement de bloquer les coups du joueur
-                caseChoisie = trouverCaseCle("X");
+                caseChoisie = trouverCaseCle("X"); // Bloque l'humain uniquement
             }
-            // (Si niveau est "facile", caseChoisie reste null et passe directement au hasard)
 
-            // Si aucune case tactique n'a été trouvée, on prend une case vide au hasard
             if (caseChoisie === null) {
                 let casesVides = [];
                 for (let i = 0; i < 9; i++) {
@@ -207,10 +201,9 @@
                 }
             }
 
-            // Validation du coup du robot
             if (caseChoisie !== null) {
                 validerCoup(caseChoisie, "O", "#ff3366");
-                verifierFinPartie();
+                if (verifierFinPartie()) return;
             }
 
             joueurActuel = "X";
@@ -246,7 +239,14 @@
                 const [a, b, c] = combo;
                 if (grille[a] !== "" && grille[a] === grille[b] && grille[a] === grille[c]) {
                     if (modeActuel === "solo") {
-                        document.getElementById("statut").innerText = (joueurActuel === "X") ? "Victoire ! Tu as battu le robot ! 🎉" : "Dommage... Le robot a gagné ! 🤖";
+                        if (joueurActuel === "X") {
+                            scoreHumain++;
+                            document.getElementById("statut").innerText = "Victoire ! Tu as battu le robot ! 🎉";
+                        } else {
+                            scoreRobot++;
+                            document.getElementById("statut").innerText = "Dommage... Le robot a gagné ! 🤖";
+                        }
+                        document.getElementById("tableauScore").innerText = `Score : Toi ${scoreHumain} - ${scoreRobot} Robot`;
                     } else {
                         document.getElementById("statut").innerText = `Le joueur ${joueurActuel} a GAGNÉ ! 🏆`;
                     }
@@ -263,8 +263,7 @@
             return false;
         }
 
-        function recommencer() {
+        function recommencerPartie() {
             joueurActuel = "X";
             partieFinie = false;
             grille = ["", "", "", "", "", "", "", "", ""];
-            document.getElementById("statut").innerText = (modeActuel === "solo") ? "À toi de jouer ! (Tu es les X)" : "Tour du joueur : X";
