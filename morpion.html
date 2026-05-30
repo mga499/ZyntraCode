@@ -115,7 +115,8 @@
         let partieActive = true;
         let etatJeu = ["", "", "", "", "", "", "", "", ""];
 
-        const conditionsVictoire = [, [3, 4, 5], [6, 7, 8], // Lignes, [1, 4, 7], [2, 5, 8], // Colonnes, [2, 4, 6]             // Diagonales
+        // Toutes les combinaisons de victoires (Lignes, Colonnes, Diagonales)
+        const conditionsVictoire = [, [3, 4, 5], [6, 7, 8], // Les 3 Lignes horizontales, [1, 4, 7], [2, 5, 8], // Les 3 Colonnes verticales, [2, 4, 6]             // Les 2 Diagonales
         ];
 
         const cases = document.querySelectorAll('.case');
