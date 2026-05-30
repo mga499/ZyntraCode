@@ -3,185 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZyntraCode - Morpion</title>
+    <title>Morpion Spatial Intelligant</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            background-color: #0a0a0a; 
-            color: white; 
-            font-family: Arial, sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            height: 100vh; 
-        }
-        h1 { 
-            color: rgb(21, 213, 168); 
-            font-size: 36px; 
-            margin-bottom: 10px; 
-            text-shadow: 0 0 10px rgba(21, 213, 168, 0.3);
-        }
-        #statut { font-size: 18px; margin-bottom: 20px; color: #aaa; }
-        
-        /* La Grille du Morpion */
-        .grille { 
-            display: grid; 
-            grid-template-columns: repeat(3, 100px); 
-            grid-template-rows: repeat(3, 100px); 
-            gap: 10px; 
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
             background-color: #1a1a1a;
-            padding: 10px;
-            border-radius: 15px;
-            box-shadow: 0px 0px 15px rgba(21, 213, 168, 0.4);
-        }
-        
-        /* Les Cases */
-        .case { 
-            background-color: #0a0a0a; 
-            border: 2px solid #2a2a2a; 
-            border-radius: 10px;
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 40px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: 0.2s;
-        }
-        .case:hover { 
-            border-color: rgb(21, 213, 168); 
-            background-color: #151515;
-        }
-        .case.X { color: rgb(21, 213, 168); text-shadow: 0 0 10px rgba(21, 213, 168, 0.5); }
-        .case.O { color: #ff4a4a; text-shadow: 0 0 10px rgba(255, 74, 74, 0.5); }
-        
-        /* Bouton Rejouer / Retour */
-        .btn {
-            margin-top: 25px; 
-            padding: 10px 25px; 
-            background: rgb(21, 213, 168); 
-            color: black; 
-            border: none;
-            border-radius: 8px; 
-            font-weight: bold; 
-            font-size: 16px; 
-            cursor: pointer; 
-            transition: 0.3s;
-            text-decoration: none;
-        }
-        .btn:hover { 
-            background: transparent; 
-            color: rgb(21, 213, 168); 
-            border: 2px solid rgb(21, 213, 168); 
-        }
-        .btn-retour {
-            background: transparent;
-            color: #aaa;
-            border: 1px solid #2a2a2a;
-            margin-left: 10px;
-        }
-        .btn-retour:hover {
             color: white;
-            border-color: white;
+            margin-top: 30px;
         }
+        h1 { color: #00ffcc; margin-bottom: 10px; }
+        .menu-modes { margin-bottom: 20px; }
+        .btn-mode {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 0 10px;
+            border: 2px solid #555;
+            background-color: #222;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-mode.actif {
+            background-color: #00ffcc;
+            color: black;
+            border-color: #00ffcc;
+        }
+        #statut {
+            font-size: 24px;
+            margin-bottom: 20px;
+            font-weight: bold;
+            height: 35px;
+        }
+        .grille {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .case {
+            width: 100px;
+            height: 100px;
+            background-color: #333;
+            border: 2px solid #555;
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+        .case:hover { background-color: #444; }
+        button#btn-recommencer {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #ffffff;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button#btn-recommencer:hover { background-color: #dddddd; }
     </style>
 </head>
 <body>
 
-    <h1>🎮 Morpion</h1>
-    <div id="statut">C'est au tour du joueur X</div>
+    <h1>Morpion Tactique</h1>
+    
+    <div class="menu-modes">
+        <button id="modeSolo" class="btn-mode actif" onclick="changerMode('solo')">Mode Solo (vs Robot Malin)</button>
+        <button id="modeDuo" class="btn-mode" onclick="changerMode('duo')">Mode Duo (2 Joueurs)</button>
+    </div>
+
+    <div id="statut">À toi de jouer ! (Tu es les X)</div>
 
     <div class="grille">
-        <div class="case" data-index="0"></div>
-        <div class="case" data-index="1"></div>
-        <div class="case" data-index="2"></div>
-        <div class="case" data-index="3"></div>
-        <div class="case" data-index="4"></div>
-        <div class="case" data-index="5"></div>
-        <div class="case" data-index="6"></div>
-        <div class="case" data-index="7"></div>
-        <div class="case" data-index="8"></div>
+        <button class="case" id="b0" onclick="jouerCase(0)"></button>
+        <button class="case" id="b1" onclick="jouerCase(1)"></button>
+        <button class="case" id="b2" onclick="jouerCase(2)"></button>
+        <button class="case" id="b3" onclick="jouerCase(3)"></button>
+        <button class="case" id="b4" onclick="jouerCase(4)"></button>
+        <button class="case" id="b5" onclick="jouerCase(5)"></button>
+        <button class="case" id="b6" onclick="jouerCase(6)"></button>
+        <button class="case" id="b7" onclick="jouerCase(7)"></button>
+        <button class="case" id="b8" onclick="jouerCase(8)"></button>
     </div>
 
-    <div>
-        <button class="btn" onclick="reinitialiser()">🔄 Rejouer</button>
-        <a href="index.html" class="btn btn-retour">🏠 Boutique</a>
-    </div>
+    <button id="btn-recommencer" onclick="recommencer()">Réinitialiser</button>
 
-    <!-- LOGIQUE DU JEU (JAVASCRIPT) -->
     <script>
-        let joueurActuel = "X";
-        let partieActive = true;
-        let etatJeu = ["", "", "", "", "", "", "", "", ""];
+        let modeActuel = "solo";
+        let joueurActuel = "X"; 
+        let partieFinie = false;
+        let grille = ["", "", "", "", "", "", "", "", ""]; 
 
-        // Toutes les combinaisons de victoires (Lignes, Colonnes, Diagonales)
-        const conditionsVictoire = [, [3, 4, 5], [6, 7, 8], // Les 3 Lignes horizontales, [1, 4, 7], [2, 5, 8], // Les 3 Colonnes verticales, [2, 4, 6]             // Les 2 Diagonales
+        // Les 8 lignes gagnantes possibles (Horizontales, Verticales, Diagonales)
+        const combosVictoire = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Lignes
+            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Colonnes
+            [0, 4, 8], [2, 4, 6]             // Diagonales
         ];
 
-        const cases = document.querySelectorAll('.case');
-        const statut = document.getElementById('statut');
-
-        cases.forEach(cellule => cellule.addEventListener('click', clicCase));
-
-        function clicCase(evenement) {
-            const caseCliquee = evenement.target;
-            const indexClique = parseInt(caseCliquee.getAttribute('data-index'));
-
-            if (etatJeu[indexClique] !== "" || !partieActive) return;
-
-            etatJeu[indexClique] = joueurActuel;
-            caseCliquee.innerHTML = joueurActuel;
-            caseCliquee.classList.add(joueurActuel);
-
-            verifierResultat();
+        function changerMode(nouveauMode) {
+            modeActuel = nouveauMode;
+            document.getElementById("modeSolo").classList.remove("actif");
+            document.getElementById("modeDuo").classList.remove("actif");
+            if (modeActuel === "solo") document.getElementById("modeSolo").classList.add("actif");
+            else document.getElementById("modeDuo").classList.add("actif");
+            recommencer();
         }
 
-        function verifierResultat() {
-            let victoire = false;
+        function jouerCase(index) {
+            if (partieFinie || grille[index] !== "") return;
+            if (modeActuel === "solo" && joueurActuel !== "X") return;
 
-            for (let i = 0; i < conditionsVictoire.length; i++) {
-                const condition = conditionsVictoire[i];
-                let a = etatJeu[condition[0]];
-                let b = etatJeu[condition[1]];
-                let c = etatJeu[condition[2]];
+            if (joueurActuel === "X") {
+                validerCoup(index, "X", "#00ffcc");
+            } else {
+                validerCoup(index, "O", "#ff3366");
+            }
 
-                if (a === '' || b === '' || c === '') continue;
-                if (a === b && b === c) {
-                    victoire = true;
-                    break;
+            if (verifierFinPartie()) return;
+
+            if (modeActuel === "duo") {
+                joueurActuel = (joueurActuel === "X") ? "O" : "X";
+                document.getElementById("statut").innerText = `Tour du joueur : ${joueurActuel}`;
+            } 
+            else if (modeActuel === "solo") {
+                joueurActuel = "O";
+                document.getElementById("statut").innerText = "Le robot réfléchit...";
+                setTimeout(tourIA, 400); 
+            }
+        }
+
+        function tourIA() {
+            if (partieFinie || modeActuel !== "solo") return;
+
+            // --- STRATÉGIE DE L'I.A. INTERACTIVE ---
+
+            // ÉTAPE 1 : Est-ce que l'I.A. (O) peut gagner tout de suite ?
+            let casePourGagner = trouverCaseCle("O");
+            if (casePourGagner !== null) {
+                validerCoup(casePourGagner, "O", "#ff3366");
+                verifierFinPartie();
+                return;
+            }
+
+            // ÉTAPE 2 : Est-ce que le joueur (X) est sur le point de gagner ? SI OUI, ON BLOQUE !
+            let caseABloquer = trouverCaseCle("X");
+            if (caseABloquer !== null) {
+                validerCoup(caseABloquer, "O", "#ff3366");
+                verifierFinPartie();
+                joueurActuel = "X";
+                document.getElementById("statut").innerText = "À toi de jouer ! (Tu es les X)";
+                return;
+            }
+
+            // ÉTAPE 3 : Si rien à bloquer, prendre le centre (case 4) si disponible
+            if (grille[4] === "") {
+                validerCoup(4, "O", "#ff3366");
+                verifierFinPartie();
+                joueurActuel = "X";
+                document.getElementById("statut").innerText = "À toi de jouer !";
+                return;
+            }
+
+            // ÉTAPE 4 : Sinon, prendre une case vide au hasard
+            let casesVides = [];
+            for (let i = 0; i < 9; i++) {
+                if (grille[i] === "") casesVides.push(i);
+            }
+
+            if (casesVides.length > 0) {
+                let indexAuHasard = Math.floor(Math.random() * casesVides.length);
+                validerCoup(casesVides[indexAuHasard], "O", "#ff3366");
+                verifierFinPartie();
+            }
+
+            joueurActuel = "X";
+            document.getElementById("statut").innerText = "À toi de jouer ! (Tu es les X)";
+        }
+
+        // Fonction magique qui cherche s'il manque une seule case pour faire un alignement
+        function trouverCaseCle(symbole) {
+            for (let combo of combosVictoire) {
+                const [a, b, c] = combo;
+                
+                // On compte combien de fois le symbole apparaît sur cette ligne
+                let compteur = 0;
+                if (grille[a] === symbole) compteur++;
+                if (grille[b] === symbole) compteur++;
+                if (grille[c] === symbole) compteur++;
+
+                // S'il y en a 2, on cherche si la 3ème case de la ligne est totalement vide
+                if (compteur === 2) {
+                    if (grille[a] === "") return a;
+                    if (grille[b] === "") return b;
+                    if (grille[c] === "") return c;
+                }
+            }
+            return null; // Aucun danger ou aucune opportunité trouvée
+        }
+
+        function validerCoup(index, symbole, couleur) {
+            grille[index] = symbole;
+            const bouton = document.getElementById(`b${index}`);
+            bouton.innerText = symbole;
+            bouton.style.color = couleur;
+        }
+
+        function verifierFinPartie() {
+            // Vérification victoire
+            for (let combo of combosVictoire) {
+                const [a, b, c] = combo;
+                if (grille[a] !== "" && grille[a] === grille[b] && grille[a] === grille[c]) {
+                    if (modeActuel === "solo") {
+                        document.getElementById("statut").innerText = (joueurActuel === "X") ? "Victoire ! Tu as battu le robot ! 🎉" : "Dommage... Le robot a gagné ! 🤖";
+                    } else {
+                        document.getElementById("statut").innerText = `Le joueur ${joueurActuel} a GAGNÉ ! 🏆`;
+                    }
+                    partieFinie = true;
+                    return true;
                 }
             }
 
-            if (victoire) {
-                statut.innerHTML = `🎉 Le joueur ${joueurActuel} a gagné !`;
-                statut.style.color = joueurActuel === "X" ? "rgb(21, 213, 168)" : "#ff4a4a";
-                partieActive = false;
-                return;
+            // Vérification match nul
+            if (!grille.includes("")) {
+                document.getElementById("statut").innerText = "Match nul ! 🤝";
+                partieFinie = true;
+                return true;
             }
-
-            if (!etatJeu.includes("")) {
-                statut.innerHTML = "🤝 Match nul !";
-                statut.style.color = "#aaa";
-                partieActive = false;
-                return;
-            }
-
-            joueurActuel = joueurActuel === "X" ? "O" : "X";
-            statut.innerHTML = `C'est au tour du joueur ${joueurActuel}`;
+            return false;
         }
 
-        function reinitialiser() {
+        function recommencer() {
             joueurActuel = "X";
-            partieActive = true;
-            etatJeu = ["", "", "", "", "", "", "", "", ""];
-            statut.innerHTML = "C'est au tour du joueur X";
-            statut.style.color = "#aaa";
-            cases.forEach(cellule => {
-                cellule.innerHTML = "";
-                cellule.classList.remove("X", "O");
-            });
+            partieFinie = false;
+            grille = ["", "", "", "", "", "", "", "", ""];
+            document.getElementById("statut").innerText = (modeActuel === "solo") ? "À toi de jouer ! (Tu es les X)" : "Tour du joueur : X";
+            for (let i = 0; i < 9; i++) {
+                document.getElementById(`b${i}`).innerText = "";
+            }
         }
     </script>
+
 </body>
 </html>
