@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZyntraCode RPG</title>
+    <link rel="icon" type="image/png" href="logo_zyntracode2.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a; color: white;
+            font-family: Arial, sans-serif;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            min-height: 100vh; overflow: hidden;
+        }
+
+        /* ÉCRAN CONNEXION */
+        #ecran-connexion {
+            text-align: center; background: #1a1a1a;
+            border: 1px solid rgb(21,213,168); border-radius: 15px;
+            padding: 40px; max-width: 400px; width: 90%;
+        }
+        #ecran-connexion h1 { color: rgb(21,213,168); font-size: 28px; margin-bottom: 10px; }
+        #ecran-connexion p { color: #aaa; font-size: 14px; margin-bottom: 25px; }
+        .btn-jeu {
+            width: 100%; padding: 12px; background: rgb(21,213,168); color: black;
+            border: 2px solid rgb(21,213,168); border-radius: 10px;
+            font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-bottom: 10px;
+        }
+        .btn-jeu:hover { background: transparent; color: rgb(21,213,168); }
+        .btn-jeu.ghost { background: transparent; color: #aaa; border-color: #2a2a2a; }
+        .btn-jeu.ghost:hover { border-color: #aaa; color: white; }
+
+        /* JEU */
+        #conteneur-jeu { display: none; position: relative; }
+
+        /* HUD */
+        #hud {
+            display: flex; align-items: center; gap: 15px;
+            padding: 8px 12px; background: #1a1a1a;
+            border: 1px solid #2a2a2a; border-radius: 10px;
+            margin-bottom: 8px; width: 640px;
+        }
+        #hud .hud-nom { color: rgb(21,213,168); font-weight: bold; font-size: 13px; }
+        #hud .hud-niveau { color: #ffaa00; font-size: 11px; }
+        .barre-vie { flex: 1; height: 10px; background: #2a2a2a; border-radius: 5px; overflow: hidden; }
+        .barre-vie-remplie { height: 100%; background: #ff4d4d; border-radius: 5px; transition: width 0.3s; }
+        .barre-xp { flex: 1; height: 6px; background: #2a2a2a; border-radius: 3px; overflow: hidden; }
+        .barre-xp-remplie { height: 100%; background: rgb(21,213,168); border-radius: 3px; transition: width 0.3s; }
+        #hud .hud-stats { color: #aaa; font-size: 11px; line-height: 1.6; }
+        #hud-score { color: #ffaa00; font-size: 12px; font-weight: bold; }
+        .btn-petit {
+            padding: 5px 10px; background: transparent; color: #aaa;
+            border: 1px solid #2a2a2a; border-radius: 6px;
+            font-size: 11px; cursor: pointer; transition: 0.2s; white-space: nowrap;
+        }
+        .btn-petit:hover { border-color: rgb(21,213,168); color: rgb(21,213,168); }
+
+        /* CANVAS */
+        #canvas { border: 2px solid rgb(21,213,168); border-radius: 8px; display: block; }
+
+        /* MESSAGE */
+        #message-jeu {
+            position: absolute; top: 55px; left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85); border: 1px solid rgb(21,213,168);
+            border-radius: 8px; padding: 6px 18px; font-size: 13px;
+            color: rgb(21,213,168); display: none; white-space: nowrap; z-index: 10;
+        }
+
+        /* CONTROLES */
+        #controles {
+            display: flex; gap: 8px; margin-top: 8px;
+            width: 640px; justify-content: space-between; align-items: center;
+        }
+        #controles .info { color: #555; font-size: 11px; }
+
+        /* INVENTAIRE */
+        #inventaire-panel {
+            display: none; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: #1a1a1a; border: 1px solid rgb(21,213,168);
+            border-radius: 15px; padding: 20px; min-width: 380px;
+            z-index: 100;
+        }
+        #inventaire-panel h2 { color: rgb(21,213,168); font-size: 18px; margin-bottom: 15px; text-align: center; }
+        .inv-sections { display: flex; gap: 15px; }
+        .inv-section { flex: 1; }
+        .inv-section h3 { color: #aaa; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; }
+        .inv-items { display: flex; flex-direction: column; gap: 5px; }
+        .inv-item {
+            background: #0a0a0a; border: 1px solid #2a2a2a;
+            border-radius: 8px; padding: 8px 12px;
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; transition: 0.2s; font-size: 13px;
+        }
+        .inv-item:hover { border-color: rgb(21,213,168); }
+        .inv-item.equipe { border-color: rgb(21,213,168); background: rgba(21,213,168,0.05); }
+        .inv-item .item-nom { color: white; }
+        .inv-item .item-stats { color: #aaa; font-size: 11px; }
+        .inv-item .item-btn {
+            padding: 3px 8px; background: rgb(21,213,168); color: black;
+            border: none; border-radius: 5px; font-size: 11px; cursor: pointer;
+        }
+        .inv-item .item-btn.use { background: #ff6b6b; }
+        .inv-vide { color: #555; font-size: 12px; text-align: center; padding: 10px; }
+        .inv-close {
+            width: 100%; margin-top: 15px; padding: 8px;
+            background: transparent; color: #aaa; border: 1px solid #2a2a2a;
+            border-radius: 8px; cursor: pointer; font-size: 13px; transition: 0.2s;
+        }
+        .inv-close:hover { border-color: #aaa; color: white; }
+
+        /* DPAD MOBILE */
+        #dpad { display: none; flex-direction: column; align-items: center; gap: 4px; margin-top: 12px; }
+        .dpad-btn {
+            width: 50px; height: 50px; background: #1a1a1a; border: 2px solid #2a2a2a;
+            border-radius: 10px; color: white; font-size: 18px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; user-select: none;
+        }
+        .dpad-btn:active { background: rgba(21,213,168,0.2); border-color: rgb(21,213,168); }
+        .dpad-row { display: flex; gap: 4px; }
+
+        @media (max-width: 700px) {
+            #hud, #controles { width: 340px; }
+            #dpad { display: flex; }
+            #inventaire-panel { min-width: 320px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ÉCRAN CONNEXION -->
+<div id="ecran-connexion">
+    <h1>⚔️ ZyntraCode RPG</h1>
+    <p>Connecte-toi pour sauvegarder ta progression et ton inventaire !</p>
+    <button class="btn-jeu" onclick="window.location.href='login.html'">🔐 Se connecter</button>
+    <button class="btn-jeu ghost" onclick="jouerSansCompte()">🎮 Jouer sans compte</button>
+    <p style="color:#555;font-size:12px;margin-top:10px;">Sans compte, la progression ne sera pas sauvegardée.</p>
+</div>
+
+<!-- JEU -->
+<div id="conteneur-jeu">
+    <div id="hud">
+        <div>
+            <div class="hud-nom" id="hud-nom">Héros</div>
+            <div class="hud-niveau" id="hud-niveau">⭐ Niv. 1</div>
+        </div>
+        <div style="flex:1">
+            <div style="color:#aaa;font-size:10px;margin-bottom:2px;">❤️ <span id="hud-vie-txt">100/100</span></div>
+            <div class="barre-vie"><div class="barre-vie-remplie" id="barre-vie" style="width:100%"></div></div>
+            <div style="color:#aaa;font-size:10px;margin:3px 0 1px;">✨ XP</div>
+            <div class="barre-xp"><div class="barre-xp-remplie" id="barre-xp" style="width:0%"></div></div>
+        </div>
+        <div>
+            <div class="hud-stats" id="hud-stats">⚔️ 10 🛡️ 5</div>
+            <div id="hud-score">🏆 0</div>
+            <div id="hud-score">🗝️ 0</div>
+        </div>
+        <button class="btn-petit" onclick="toggleInventaire()">🎒 Inv.</button>
+        <button class="btn-petit" onclick="sauvegarder()">💾</button>
+    </div>
+
+    <div style="position:relative;">
+        <canvas id="canvas" width="640" height="480"></canvas>
+        <div id="message-jeu"></div>
+        <!-- INVENTAIRE -->
+        <div id="inventaire-panel">
+            <h2>🎒 Inventaire</h2>
+            <div class="inv-sections">
+                <div class="inv-section">
+                    <h3>⚔️ Équipements</h3>
+                    <div class="inv-items" id="inv-equipements"></div>
+                </div>
+                <div class="inv-section">
+                    <h3>🧪 Consommables</h3>
+                    <div class="inv-items" id="inv-consommables"></div>
+                </div>
+            </div>
+            <button class="inv-close" onclick="toggleInventaire()">Fermer</button>
+        </div>
+    </div>
+
+    <div id="controles">
+        <div class="info">🎮 Flèches/WASD = bouger · Espace = attaquer · I = inventaire</div>
+        <button class="btn-petit" onclick="window.location.href='index.html'">🏠 Accueil</button>
+    </div>
+
+    <div id="dpad">
+        <div class="dpad-row">
+            <div class="dpad-btn" ontouchstart="touchDir('haut')" ontouchend="touchStop()">▲</div>
+        </div>
+        <div class="dpad-row">
+            <div class="dpad-btn" ontouchstart="touchDir('gauche')" ontouchend="touchStop()">◀</div>
+            <div class="dpad-btn" ontouchstart="attaquer()">⚔️</div>
+            <div class="dpad-btn" ontouchstart="touchDir('droite')" ontouchend="touchStop()">▶</div>
+        </div>
+        <div class="dpad-row">
+            <div class="dpad-btn" ontouchstart="touchDir('bas')" ontouchend="touchStop()">▼</div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const { createClient } = supabase;
+const supabaseClient = createClient(
+    'https://nvvpvwqcjqujyzvdimix.supabase.co',
+    'sb_publishable_7oQ8rUh7OCE0Uo-DUwSUcw_CKOPnCU4'
+);
+
+// ============================================
+// DÉFINITION DES OBJETS
+// ============================================
+const OBJETS = {
+    // Armes
+    epee_bois:     { id:'epee_bois',     nom:'Épée en bois',     emoji:'🪵', type:'arme',    attaque:5,  defense:0,  prix:0,   desc:'+5 ⚔️' },
+    epee_fer:      { id:'epee_fer',      nom:'Épée en fer',      emoji:'⚔️', type:'arme',    attaque:15, defense:0,  prix:0,   desc:'+15 ⚔️' },
+    epee_magique:  { id:'epee_magique',  nom:'Épée magique',     emoji:'🗡️', type:'arme',    attaque:30, defense:0,  prix:0,   desc:'+30 ⚔️' },
+    // Armures
+    armure_cuir:   { id:'armure_cuir',   nom:'Armure en cuir',   emoji:'🥋', type:'armure',  attaque:0,  defense:8,  prix:0,   desc:'+8 🛡️' },
+    armure_fer:    { id:'armure_fer',    nom:'Armure en fer',    emoji:'🛡️', type:'armure',  attaque:0,  defense:20, prix:0,   desc:'+20 🛡️' },
+    // Boucliers
+    bouclier:      { id:'bouclier',      nom:'Bouclier',         emoji:'🔰', type:'bouclier',attaque:0,  defense:10, prix:0,   desc:'+10 🛡️' },
+    // Consommables
+    potion_vie:    { id:'potion_vie',    nom:'Potion de vie',    emoji:'🧪', type:'potion',  vie:50,     prix:0,     desc:'+50 ❤️' },
+    grande_potion: { id:'grande_potion', nom:'Grande potion',    emoji:'💊', type:'potion',  vie:100,    prix:0,     desc:'+100 ❤️' },
+    elixir:        { id:'elixir',        nom:'Élixir de force',  emoji:'⚗️', type:'elixir',  attaque:10, prix:0,     desc:'+10 ⚔️ permanent' },
+};
+
+// ============================================
+// CARTE
+// ============================================
+const HERBE=0,MUR=1,EAU=2,ARBRE=3,COFFRE=4,MAISON=5,CLEE=6;
+const COLS=20, LIGNES=15;
+
+const carte = [
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,6,0,0,0,0,3,0,0,0,0,0,0,3,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,4,0,0,0,0,1,0,1,0,0,0,0,0,4,0,0,1],
+    [1,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1],
+    [1,3,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,3,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,2,2,2,0,0,4,0,0,2,2,2,0,0,0,0,1],
+    [1,0,0,0,2,2,2,0,0,0,0,0,2,2,2,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,5,0,0,1],
+    [1,3,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,3,1],
+    [1,0,0,4,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,3,0,0,0,0,0,0,0,3,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
+// Coffres avec loot
+const coffres = [
+    { x:3,  y:3,  ouvert:false, loot: OBJETS.epee_fer },
+    { x:16, y:3,  ouvert:false, loot: OBJETS.potion_vie },
+    { x:9,  y:7,  ouvert:false, loot: OBJETS.armure_cuir },
+    { x:3,  y:11, ouvert:false, loot: OBJETS.grande_potion },
+    { x:15, y:11, ouvert:false, loot: OBJETS.bouclier },
+];
+
+// Monstres
+let monstres = [
+    { x:8,  y:2,  vie:30, vieMax:30, attaque:5,  xp:20, score:40,  nom:'👾', loot: OBJETS.potion_vie, actif:true },
+    { x:15, y:5,  vie:30, vieMax:30, attaque:5,  xp:20, score:40,  nom:'👾', loot: null, actif:true },
+    { x:5,  y:10, vie:60, vieMax:60, attaque:10, xp:40, score:80,  nom:'💀', loot: OBJETS.elixir, actif:true },
+    { x:14, y:10, vie:60, vieMax:60, attaque:10, xp:40, score:80,  nom:'💀', loot: OBJETS.epee_magique, actif:true },
+    { x:10, y:7,  vie:100,vieMax:100,attaque:15, xp:80, score:160, nom:'👤', loot: OBJETS.armure_fer, actif:true },
+    { x:10, y:7, vie:50,vieMax:50, attaque:10, xp:50, score:100, nom:'🎃', loot:OBJETS.epee_fer, actif:true}
+];
+
+// Joueur
+let joueur = {
+    x:3, y:3,
+    vie:100, vieMax:100,
+    attaque:10, defense:5,
+    niveau:1, xp:0, xpMax:100,
+    score:0, nom:'Héros',
+    invincible:false,
+    inventaire: [],
+    equipement: { arme:null, armure:null, bouclier:null },
+    bonusEquip: { attaque:0, defense:0 }
+};
+
+// ============================================
+// ÉTAT
+// ============================================
+const touches = {};
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let dernierMouvement = 0;
+let messageTimer = 0;
+let gameLoop = null;
+let inventaireOuvert = false;
+let utilisateur = null;
+
+const COULEURS = {
+    [HERBE]:'#1a3a1a', [MUR]:'#2a2a2a', [EAU]:'#0a2a4a', [ARBRE]:'#0a2a0a', [COFFRE]:'#4a3a0a',[CLEE]:'#FFFF00'
+};
+const EMOJIS = { [ARBRE]:'🌲', [EAU]:'💧', [COFFRE]:'📦', [MAISON]:'🛖',[CLEE]:'🗝️' };
+
+// ============================================
+// INIT
+// ============================================
+async function init() {
+    const { data:{ user } } = await supabaseClient.auth.getUser();
+    if (user) { utilisateur = user; await chargerProgression(); demarrerJeu(); }
+    else document.getElementById('ecran-connexion').style.display = 'block';
+}
+
+function jouerSansCompte() {
+    document.getElementById('ecran-connexion').style.display = 'none';
+    demarrerJeu();
+}
+
+function demarrerJeu() {
+    document.getElementById('ecran-connexion').style.display = 'none';
+    document.getElementById('conteneur-jeu').style.display = 'block';
+    mettreAJourHUD();
+
+    if (window.innerWidth <= 700) {
+        document.getElementById('dpad').style.display = 'flex';
+        canvas.width = 340; canvas.height = 255;
+    }
+
+    document.addEventListener('keydown', e => {
+        touches[e.key] = true;
+        if (e.key === ' ') { e.preventDefault(); attaquer(); }
+        if (e.key === 'i' || e.key === 'I') toggleInventaire();
+        if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault();
+    });
+    document.addEventListener('keyup', e => { touches[e.key] = false; });
+
+    if (utilisateur) setInterval(sauvegarder, 30000);
+    gameLoop = setInterval(update, 150);
+    render();
+}
+
+// ============================================
+// SAUVEGARDE
+// ============================================
+async function chargerProgression() {
+    try {
+        const { data } = await supabaseClient.from('personnages').select('*').eq('id', utilisateur.id).single();
+        if (data) {
+            joueur.vie = data.vie || 100;
+            joueur.vieMax = data.vie || 100;
+            joueur.attaque = data.attaque || 10;
+            joueur.defense = data.defense || 5;
+            joueur.niveau = data.niveau || 1;
+            joueur.xp = data.xp || 0;
+            joueur.xpMax = joueur.niveau * 100;
+            joueur.x = Math.round(data.position_x) || 3;
+            joueur.y = Math.round(data.position_y) || 3;
+            joueur.nom = data.username || utilisateur.email.split('@')[0];
+            joueur.inventaire = data.inventaire || [];
+            joueur.equipement = data.equipement || { arme:null, armure:null, bouclier:null };
+            recalculerBonus();
+        } else {
+            joueur.nom = utilisateur.email.split('@')[0];
+            await supabaseClient.from('personnages').insert({
+                id: utilisateur.id, username: joueur.nom,
+                niveau:1, xp:0, vie:100, attaque:10, defense:5,
+                position_x:3, position_y:3, inventaire:[], equipement:{}
+            });
+        }
+    } catch(e) { joueur.nom = utilisateur?.email?.split('@')[0] || 'Héros'; }
+}
+
+async function sauvegarder() {
+    if (!utilisateur) return;
+    try {
+        await supabaseClient.from('personnages').upsert({
+            id: utilisateur.id, username: joueur.nom,
+            niveau: joueur.niveau, xp: joueur.xp,
+            vie: joueur.vie, attaque: joueur.attaque, defense: joueur.defense,
+            position_x: joueur.x, position_y: joueur.y,
+            inventaire: joueur.inventaire, equipement: joueur.equipement,
+            updated_at: new Date().toISOString()
+        });
+        afficherMessage('💾 Sauvegardé !');
+    } catch(e) {}
+}
+
+// ============================================
+// INVENTAIRE
+// ============================================
+function ajouterObjet(objet) {
+    if (!objet) return;
+    joueur.inventaire.push({ ...objet, uid: Date.now() + Math.random() });
+    afficherMessage(`📦 Obtenu : ${objet.emoji} ${objet.nom} !`);
+    mettreAJourInventaireUI();
+}
+
+function equiperObjet(uid) {
+    const idx = joueur.inventaire.findIndex(o => o.uid === uid);
+    if (idx === -1) return;
+    const objet = joueur.inventaire[idx];
+
+    if (objet.type === 'arme') {
+        // Déséquiper l'ancien
+        if (joueur.equipement.arme) joueur.inventaire.push({...OBJETS[joueur.equipement.arme], uid: Date.now()});
+        joueur.equipement.arme = objet.id;
+    } else if (objet.type === 'armure') {
+        if (joueur.equipement.armure) joueur.inventaire.push({...OBJETS[joueur.equipement.armure], uid: Date.now()});
+        joueur.equipement.armure = objet.id;
+    } else if (objet.type === 'bouclier') {
+        if (joueur.equipement.bouclier) joueur.inventaire.push({...OBJETS[joueur.equipement.bouclier], uid: Date.now()});
+        joueur.equipement.bouclier = objet.id;
+    }
+
+    joueur.inventaire.splice(idx, 1);
+    recalculerBonus();
+    afficherMessage(`✅ ${objet.emoji} ${objet.nom} équipé !`);
+    mettreAJourHUD();
+    mettreAJourInventaireUI();
+}
+
+function utiliserObjet(uid) {
+    const idx = joueur.inventaire.findIndex(o => o.uid === uid);
+    if (idx === -1) return;
+    const objet = joueur.inventaire[idx];
+
+    if (objet.type === 'potion') {
+        joueur.vie = Math.min(joueur.vieMax, joueur.vie + objet.vie);
+        afficherMessage(`🧪 +${objet.vie} ❤️`);
+    } else if (objet.type === 'elixir') {
+        joueur.attaque += objet.attaque;
+        afficherMessage(`⚗️ +${objet.attaque} ⚔️ permanent !`);
+    }
+
+    joueur.inventaire.splice(idx, 1);
+    mettreAJourHUD();
+    mettreAJourInventaireUI();
+}
+
+function desequiper(slot) {
+    const id = joueur.equipement[slot];
+    if (!id) return;
+    joueur.inventaire.push({...OBJETS[id], uid: Date.now()});
+    joueur.equipement[slot] = null;
+    recalculerBonus();
+    mettreAJourHUD();
+    mettreAJourInventaireUI();
+    afficherMessage('🔄 Déséquipé !');
+}
+
+function recalculerBonus() {
+    joueur.bonusEquip = { attaque:0, defense:0 };
+    ['arme','armure','bouclier'].forEach(slot => {
+        const id = joueur.equipement[slot];
+        if (id && OBJETS[id]) {
+            joueur.bonusEquip.attaque += OBJETS[id].attaque || 0;
+            joueur.bonusEquip.defense += OBJETS[id].defense || 0;
+        }
+    });
+}
+
+function toggleInventaire() {
+    inventaireOuvert = !inventaireOuvert;
+    document.getElementById('inventaire-panel').style.display = inventaireOuvert ? 'block' : 'none';
+    if (inventaireOuvert) mettreAJourInventaireUI();
+}
+
+function mettreAJourInventaireUI() {
+    // Équipements
+    const divEquip = document.getElementById('inv-equipements');
+    divEquip.innerHTML = '';
+
+    // Slots équipés
+    const slots = [
+        { slot:'arme', label:'⚔️ Arme' },
+        { slot:'armure', label:'🛡️ Armure' },
+        { slot:'bouclier', label:'🔰 Bouclier' }
+    ];
+    slots.forEach(({ slot, label }) => {
+        const id = joueur.equipement[slot];
+        if (id && OBJETS[id]) {
+            const obj = OBJETS[id];
+            divEquip.innerHTML += `
+                <div class="inv-item equipe">
+                    <div>
+                        <div class="item-nom">${obj.emoji} ${obj.nom}</div>
+                        <div class="item-stats">${label} · ${obj.desc}</div>
+                    </div>
+                    <button class="item-btn use" onclick="desequiper('${slot}')">Retirer</button>
+                </div>`;
+        }
+    });
+
+    // Équipements dans l'inventaire
+    const equips = joueur.inventaire.filter(o => ['arme','armure','bouclier'].includes(o.type));
+    equips.forEach(obj => {
+        divEquip.innerHTML += `
+            <div class="inv-item">
+                <div>
+                    <div class="item-nom">${obj.emoji} ${obj.nom}</div>
+                    <div class="item-stats">${obj.desc}</div>
+                </div>
+                <button class="item-btn" onclick="equiperObjet(${obj.uid})">Équiper</button>
+            </div>`;
+    });
+
+    if (!equips.length && !slots.some(s => joueur.equipement[s.slot])) {
+        divEquip.innerHTML = '<div class="inv-vide">Aucun équipement</div>';
+    }
+
+    // Consommables
+    const divConso = document.getElementById('inv-consommables');
+    divConso.innerHTML = '';
+    const consos = joueur.inventaire.filter(o => ['potion','elixir'].includes(o.type));
+    consos.forEach(obj => {
+        divConso.innerHTML += `
+            <div class="inv-item">
+                <div>
+                    <div class="item-nom">${obj.emoji} ${obj.nom}</div>
+                    <div class="item-stats">${obj.desc}</div>
+                </div>
+                <button class="item-btn" onclick="utiliserObjet(${obj.uid})">Utiliser</button>
+            </div>`;
+    });
+    if (!consos.length) divConso.innerHTML = '<div class="inv-vide">Aucun consommable</div>';
+}
+
+// ============================================
+// LOGIQUE JEU
+// ============================================
+function update() {
+    if (inventaireOuvert) return;
+    const now = Date.now();
+    if (now - dernierMouvement < 150) return;
+
+    let dx=0, dy=0;
+    if (touches['ArrowUp']    || touches['w'] || touches['W']) dy=-1;
+    if (touches['ArrowDown']  || touches['s'] || touches['S']) dy=1;
+    if (touches['ArrowLeft']  || touches['a'] || touches['A']) dx=-1;
+    if (touches['ArrowRight'] || touches['d'] || touches['D']) dx=1;
+    if  (touches['f'] || touches['F']) attaquer()
+
+    if (dx||dy) { deplacer(dx,dy); dernierMouvement=now; }
+
+    // IA monstres
+    monstres.forEach(m => {
+        if (!m.actif) return;
+        if (Math.random() < 0.3) {
+            const dirs = [{dx:1,dy:0},{dx:-1,dy:0},{dx:0,dy:1},{dx:0,dy:-1}];
+            const d = dirs[Math.floor(Math.random()*dirs.length)];
+            const nx=m.x+d.dx, ny=m.y+d.dy;
+            if (estLibre(nx,ny) && !(nx===joueur.x&&ny===joueur.y)) { m.x=nx; m.y=ny; }
+
+            if (Math.abs(m.x-joueur.x)<=1 && Math.abs(m.y-joueur.y)<=1 && !joueur.invincible) {
+                const degats = Math.max(1, m.attaque - (joueur.defense + joueur.bonusEquip.defense));
+                joueur.vie = Math.max(0, joueur.vie - degats);
+                joueur.invincible = true;
+                setTimeout(() => joueur.invincible=false, 1000);
+                afficherMessage(`💔 -${degats} vie !`);
+                mettreAJourHUD();
+                if (joueur.vie <= 0) mourir();
+            }
+        }
+    });
+
+    if (messageTimer > 0 && --messageTimer === 0)
+        document.getElementById('message-jeu').style.display = 'none';
+
+    render();
+}
+
+function deplacer(dx, dy) {
+    const nx=joueur.x+dx, ny=joueur.y+dy;
+    if (!estLibre(nx,ny)) return;
+    joueur.x=nx; joueur.y=ny;
+
+    // Coffres
+    coffres.forEach(c => {
+        if (c.x===nx && c.y===ny && !c.ouvert) {
+            c.ouvert = true;
+            carte[c.y][c.x] = HERBE;
+            if (c.loot) ajouterObjet(c.loot);
+            else afficherMessage('📦 Coffre vide...');
+            joueur.score += 50;
+            mettreAJourHUD();
+        }
+    });
+}
+
+function attaquer() {
+    if (inventaireOuvert) return;
+    let touche = false;
+    monstres.forEach(m => {
+        if (!m.actif) return;
+        if (Math.abs(m.x-joueur.x)<=1 && Math.abs(m.y-joueur.y)<=1) {
+            const degats = Math.max(1, (joueur.attaque + joueur.bonusEquip.attaque) - 2);
+            m.vie -= degats;
+            afficherMessage(`⚔️ -${degats} sur ${m.nom} !`);
+            touche = true;
+            if (m.vie <= 0) {
+                m.actif = false;
+                joueur.xp += m.xp;
+                joueur.score += m.score;
+                if (m.loot) ajouterObjet(m.loot);
+                afficherMessage(`✨ +${m.xp} XP ! ${m.nom} vaincu !`);
+                verifierNiveau();
+                mettreAJourHUD();
+            }
+        }
+    });
+    if (!touche) afficherMessage('⚔️ Pas d\'ennemi à portée !');
+}
+
+function verifierNiveau() {
+    if (joueur.xp >= joueur.xpMax) {
+        joueur.xp -= joueur.xpMax;
+        joueur.niveau++;
+        joueur.xpMax = joueur.niveau * 100;
+        joueur.vieMax += 20; joueur.vie = joueur.vieMax;
+        joueur.attaque += 3; joueur.defense += 2;
+        afficherMessage(`🎉 NIVEAU ${joueur.niveau} ! Stats améliorées !`);
+        mettreAJourHUD();
+    }
+}
+
+function mourir() {
+    joueur.vie = Math.floor(joueur.vieMax * 0.5);
+    joueur.x=3; joueur.y=3;
+    afficherMessage('💀 Tu es mort ! Retour au début...');
+    mettreAJourHUD();
+}
+
+function estLibre(x, y) {
+    if (x<0||x>=COLS||y<0||y>=LIGNES) return false;
+    if ([MUR,EAU,ARBRE].includes(carte[y][x])) return false;
+    if (monstres.some(m=>m.actif&&m.x===x&&m.y===y)) return false;
+    return true;
+}
+
+// ============================================
+// RENDU
+// ============================================
+function render() {
+    const W=canvas.width, H=canvas.height;
+    const TC = Math.floor(W/COLS);
+    ctx.clearRect(0,0,W,H);
+
+    const camX = Math.max(0, Math.min(COLS-Math.floor(W/TC), joueur.x-Math.floor(W/TC/2)));
+    const camY = Math.max(0, Math.min(LIGNES-Math.floor(H/TC), joueur.y-Math.floor(H/TC/2)));
+
+    for (let y=camY; y<Math.min(LIGNES,camY+Math.ceil(H/TC)+1); y++) {
+        for (let x=camX; x<Math.min(COLS,camX+Math.ceil(W/TC)+1); x++) {
+            const tile=carte[y][x];
+            const px=(x-camX)*TC, py=(y-camY)*TC;
+            ctx.fillStyle = COULEURS[tile]||'#1a3a1a';
+            ctx.fillRect(px,py,TC,TC);
+            ctx.strokeStyle='rgba(255,255,255,0.03)';
+            ctx.strokeRect(px,py,TC,TC);
+            const em = EMOJIS[tile];
+            if (em) {
+                ctx.font=`${TC*0.7}px serif`;
+                ctx.textAlign='center'; ctx.textBaseline='middle';
+                ctx.fillText(em, px+TC/2, py+TC/2);
+            }
+        }
+    }
+
+    // Monstres
+    monstres.forEach(m => {
+        if (!m.actif) return;
+        const px=(m.x-camX)*TC, py=(m.y-camY)*TC;
+        if (px<-TC||px>W||py<-TC||py>H) return;
+        ctx.font=`${TC*0.8}px serif`;
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText(m.nom, px+TC/2, py+TC/2);
+        const pct=m.vie/m.vieMax;
+        ctx.fillStyle='#ff4d4d';
+        ctx.fillRect(px+2, py-5, (TC-4)*pct, 3);
+    });
+
+    // Joueur
+    const pjx=(joueur.x-camX)*TC, pjy=(joueur.y-camY)*TC;
+    if (!joueur.invincible || Math.floor(Date.now()/100)%2===0) {
+        ctx.fillStyle='rgba(21,213,168,0.15)';
+        ctx.beginPath();
+        ctx.ellipse(pjx+TC/2, pjy+TC-4, TC/3, 5, 0, 0, Math.PI*2);
+        ctx.fill();
+        ctx.font=`${TC*0.85}px serif`;
+        ctx.textAlign='center'; ctx.textBaseline='middle';
+        ctx.fillText('🧙', pjx+TC/2, pjy+TC/2);
+    }
+
+    // Indicateur équipement
+    const arme = joueur.equipement.arme ? OBJETS[joueur.equipement.arme] : null;
+    if (arme) {
+        ctx.font=`${TC*0.5}px serif`;
+        ctx.fillText(arme.emoji, pjx+TC-2, pjy+4);
+    }
+
+    ctx.fillStyle='rgb(21,213,168)';
+    ctx.font=`bold ${TC*0.32}px Arial`;
+    ctx.textAlign='center';
+    ctx.fillText(joueur.nom, pjx+TC/2, pjy-3);
+}
+
+// ============================================
+// HUD
+// ============================================
+function mettreAJourHUD() {
+    const attTot = joueur.attaque + joueur.bonusEquip.attaque;
+    const defTot = joueur.defense + joueur.bonusEquip.defense;
+    document.getElementById('hud-nom').textContent = joueur.nom;
+    document.getElementById('hud-niveau').textContent = `⭐ Niv. ${joueur.niveau}`;
+    document.getElementById('hud-vie-txt').textContent = `${joueur.vie}/${joueur.vieMax}`;
+    document.getElementById('hud-stats').textContent = `⚔️ ${attTot} 🛡️ ${defTot}`;
+    document.getElementById('hud-score').textContent = `🏆 ${joueur.score}`;
+    document.getElementById('barre-vie').style.width = `${(joueur.vie/joueur.vieMax)*100}%`;
+    document.getElementById('barre-xp').style.width = `${(joueur.xp/joueur.xpMax)*100}%`;
+}
+
+function afficherMessage(msg) {
+    const el=document.getElementById('message-jeu');
+    el.textContent=msg; el.style.display='block'; messageTimer=15;
+}
+
+// Mobile
+function touchDir(dir) {
+    touches['ArrowUp']=touches['ArrowDown']=touches['ArrowLeft']=touches['ArrowRight']=false;
+    if(dir==='haut') touches['ArrowUp']=true;
+    if(dir==='bas') touches['ArrowDown']=true;
+    if(dir==='gauche') touches['ArrowLeft']=true;
+    if(dir==='droite') touches['ArrowRight']=true;
+}
+function touchStop() {
+    touches['ArrowUp']=touches['ArrowDown']=touches['ArrowLeft']=touches['ArrowRight']=false;
+}
+
+init();
+</script>
+</body>
+</html>
