@@ -161,8 +161,11 @@
         .dpad-row { display: flex; gap: 4px; }
 
         @media (max-width: 700px) {
-            #hud, #controles { width: 340px; }
+            body { min-height: 100vh; }
+            #hud, #controles { width: 100%; max-width: 100%; }
             #dpad { display: flex; }
+            #conteneur-jeu { width: 100%; }
+            #canvas { width: 100%; height: auto; max-height: 60vh; border: none; }
             #inventaire-panel {
                 top: auto; bottom: 0; right: 0; left: 0;
                 width: 100%; height: 72vh;
@@ -171,6 +174,9 @@
                 transform: translateY(110%);
             }
             #inventaire-panel.ouvert { transform: translateY(0); }
+            #message-jeu { font-size: 12px; padding: 4px 12px; }
+            #controles { flex-direction: column; gap: 8px; }
+            #controles .info { font-size: 10px; text-align: center; }
         }
     </style>
 </head>
@@ -428,7 +434,9 @@ function demarrerJeu() {
 
     if (window.innerWidth <= 700) {
         document.getElementById('dpad').style.display = 'flex';
-        canvas.width = 340; canvas.height = 255;
+        // Mobile : agrandir le canvas pour mieux voir
+        canvas.width = window.innerWidth - 20; // Presque fullscreen
+        canvas.height = window.innerHeight - 280; // Laisser place au HUD et contrôles
     }
 
     document.addEventListener('keydown', e => {
@@ -1079,14 +1087,20 @@ function render() {
     const W=canvas.width, H=canvas.height;
     const COLS_LOCAL = getCols();
     const LIGNES_LOCAL = getLignes();
-    const TC = Math.floor(W/COLS_LOCAL);
+    
+    // Sur mobile : afficher moins de tiles mais plus grands
+    const isMobile = window.innerWidth <= 700;
+    const viewCols = isMobile ? 8 : Math.floor(W / 32);  // 8 tiles sur mobile, reste adaptatif
+    const viewRows = isMobile ? 8 : Math.floor(H / 32);
+    const TC = Math.floor(W / viewCols);
+    
     ctx.clearRect(0,0,W,H);
 
-    const camX = Math.max(0, Math.min(COLS_LOCAL-Math.floor(W/TC), joueur.x-Math.floor(W/TC/2)));
-    const camY = Math.max(0, Math.min(LIGNES_LOCAL-Math.floor(H/TC), joueur.y-Math.floor(H/TC/2)));
+    const camX = Math.max(0, Math.min(COLS_LOCAL-viewCols, joueur.x-Math.floor(viewCols/2)));
+    const camY = Math.max(0, Math.min(LIGNES_LOCAL-viewRows, joueur.y-Math.floor(viewRows/2)));
 
-    for (let y=camY; y<Math.min(LIGNES_LOCAL,camY+Math.ceil(H/TC)+1); y++) {
-        for (let x=camX; x<Math.min(COLS_LOCAL,camX+Math.ceil(W/TC)+1); x++) {
+    for (let y=camY; y<Math.min(LIGNES_LOCAL,camY+viewRows+1); y++) {
+        for (let x=camX; x<Math.min(COLS_LOCAL,camX+viewCols+1); x++) {
             const tile=carte[y][x];
             const px=(x-camX)*TC, py=(y-camY)*TC;
             ctx.fillStyle = COULEURS[tile]||'#1a3a1a';
