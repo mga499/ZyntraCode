@@ -77,8 +77,6 @@
         #controles .info { color: #555; font-size: 11px; }
 
         /* ======== INVENTAIRE DRAWER ======== */
-
-        /* Overlay sombre derrière le drawer */
         #inv-overlay {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.6); z-index: 90;
@@ -87,7 +85,6 @@
         }
         #inv-overlay.actif { display: block; }
 
-        /* Drawer principal — glisse depuis la droite */
         #inventaire-panel {
             position: fixed; top: 0; right: 0; height: 100vh;
             width: 300px; background: #111;
@@ -98,7 +95,6 @@
         }
         #inventaire-panel.ouvert { transform: translateX(0); }
 
-        /* Header du drawer */
         .inv-header {
             display: flex; align-items: center; justify-content: space-between;
             padding: 16px 20px; border-bottom: 1px solid #222; flex-shrink: 0;
@@ -111,7 +107,6 @@
         }
         .inv-btn-close:hover { color: white; }
 
-        /* Onglets */
         .inv-tabs {
             display: flex; border-bottom: 1px solid #222; flex-shrink: 0;
         }
@@ -123,7 +118,6 @@
         .inv-tab.actif { color: rgb(21,213,168); border-bottom-color: rgb(21,213,168); }
         .inv-tab:hover:not(.actif) { color: #aaa; }
 
-        /* Zone scrollable */
         .inv-body {
             flex: 1; overflow-y: auto; padding: 12px 14px;
         }
@@ -131,11 +125,9 @@
         .inv-body::-webkit-scrollbar-track { background: #0a0a0a; }
         .inv-body::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 2px; }
 
-        /* Sections onglets */
         .inv-section-content { display: none; flex-direction: column; gap: 8px; }
         .inv-section-content.actif { display: flex; }
 
-        /* Items */
         .inv-item {
             background: #0a0a0a; border: 1px solid #1e1e1e;
             border-radius: 10px; padding: 10px 12px;
@@ -171,8 +163,6 @@
         @media (max-width: 700px) {
             #hud, #controles { width: 340px; }
             #dpad { display: flex; }
-
-            /* Sur mobile : drawer depuis le bas */
             #inventaire-panel {
                 top: auto; bottom: 0; right: 0; left: 0;
                 width: 100%; height: 72vh;
@@ -211,7 +201,7 @@
         <div>
             <div class="hud-stats" id="hud-stats">⚔️ 10 🛡️ 5</div>
             <div id="hud-score">🏆 0</div>
-            <div id="hud-score">🗝️ 0</div>
+            <div id="hud-cle" style="color: #ffaa00; font-size: 12px; font-weight: bold;">🗝️ Non</div>
         </div>
         <button class="btn-petit" onclick="toggleInventaire()">🎒 Inv.</button>
         <button class="btn-petit" onclick="sauvegarder()">💾</button>
@@ -242,7 +232,7 @@
     </div>
 </div>
 
-<!-- OVERLAY + DRAWER INVENTAIRE (hors du canvas, dans le body) -->
+<!-- OVERLAY + DRAWER INVENTAIRE -->
 <div id="inv-overlay" onclick="toggleInventaire()"></div>
 <div id="inventaire-panel">
     <div class="inv-header">
@@ -280,17 +270,18 @@ const OBJETS = {
     potion_vie:    { id:'potion_vie',    nom:'Potion de vie',    emoji:'🧪', type:'potion',  vie:50,     prix:0,     desc:'+50 ❤️' },
     grande_potion: { id:'grande_potion', nom:'Grande potion',    emoji:'💊', type:'potion',  vie:100,    prix:0,     desc:'+100 ❤️' },
     elixir:        { id:'elixir',        nom:'Élixir de force',  emoji:'⚗️', type:'elixir',  attaque:10, prix:0,     desc:'+10 ⚔️ permanent' },
+    cle:           { id:'cle',           nom:'Clé d\'or',        emoji:'🗝️', type:'cle',     prix:0,     desc:'Ouvre les portes secrètes' },
 };
 
 // ============================================
-// CARTE
+// CARTES
 // ============================================
-const HERBE=0,MUR=1,EAU=2,ARBRE=3,COFFRE=4,MAISON=5,CLEE=6,PORTE=7;
+const HERBE=0,MUR=1,EAU=2,ARBRE=3,COFFRE=4,MAISON=5,CLEE=6,PORTE=7,PORTE_N2=8;
 const COLS=20, LIGNES=15;
 
 const carteExterieur = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [1,6,0,0,0,0,3,0,0,0,0,0,0,3,0,0,0,0,0,1],
+    [1,6,0,0,0,0,3,0,0,0,0,0,0,3,0,0,0,0,8,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
     [1,0,0,4,0,0,0,0,1,0,1,0,0,0,0,0,4,0,0,1],
     [1,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1],
@@ -319,8 +310,27 @@ const carteInterieurMaison = [
     [1,1,1,1,1,1,1,1,1,1],
 ];
 
+const carteNiveau2 = [
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,3,0,0,0,0,0,3,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,4,0,0,0,0,1,0,0,1,0,0,0,0,0,0,4,1],
+    [1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,4,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,3,0,0,0,0,0,0,0,3,0,7,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+];
+
 let carte = carteExterieur;
-let localisationActuelle = 'exterieur'; // 'exterieur' ou 'maison'
+let localisationActuelle = 'exterieur'; // 'exterieur', 'maison' ou 'niveau2'
+let cleObtenue = false;
 
 const coffres = [
     { x:3,  y:3,  ouvert:false, loot: OBJETS.epee_fer },
@@ -337,6 +347,15 @@ const coffresInterieur = [
     { x:5,  y:5,  ouvert:false, loot: OBJETS.epee_magique },
 ];
 
+const coffresNiveau2 = [
+    { x:3,  y:2,  ouvert:false, loot: OBJETS.epee_magique },
+    { x:17, y:2,  ouvert:false, loot: OBJETS.armure_fer },
+    { x:3,  y:7,  ouvert:false, loot: OBJETS.grande_potion },
+    { x:16, y:7,  ouvert:false, loot: OBJETS.grande_potion },
+    { x:3,  y:11, ouvert:false, loot: OBJETS.elixir },
+    { x:15, y:11, ouvert:false, loot: OBJETS.epee_magique },
+];
+
 let monstres = [
     { x:8,  y:2,  vie:30, vieMax:30, attaque:5,  xp:20, score:40,  nom:'👾', loot: OBJETS.potion_vie, actif:true },
     { x:15, y:5,  vie:30, vieMax:30, attaque:5,  xp:20, score:40,  nom:'👾', loot: null, actif:true },
@@ -347,6 +366,15 @@ let monstres = [
 ];
 
 let monstresInterieur = [];
+
+let monstresNiveau2 = [
+    { x:8,  y:2,  vie:40, vieMax:40, attaque:6,  xp:30, score:60,  nom:'👾', loot: OBJETS.potion_vie, actif:true },
+    { x:15, y:2,  vie:40, vieMax:40, attaque:6,  xp:30, score:60,  nom:'👾', loot: null, actif:true },
+    { x:5,  y:5,  vie:70, vieMax:70, attaque:11, xp:50, score:100, nom:'💀', loot: OBJETS.elixir, actif:true },
+    { x:14, y:5,  vie:70, vieMax:70, attaque:11, xp:50, score:100, nom:'💀', loot: OBJETS.potion_vie, actif:true },
+    { x:10, y:10, vie:90, vieMax:90, attaque:12, xp:60, score:120, nom:'👤', loot: OBJETS.armure_fer, actif:true },
+    { x:8,  y:8,  vie:50, vieMax:50, attaque:7,  xp:35, score:70,  nom:'🎃', loot: OBJETS.epee_fer, actif:true }
+];
 
 let joueur = {
     x:3, y:3,
@@ -373,9 +401,9 @@ let inventaireOuvert = false;
 let utilisateur = null;
 
 const COULEURS = {
-    [HERBE]:'#1a3a1a', [MUR]:'#2a2a2a', [EAU]:'#0a2a4a', [ARBRE]:'#0a2a0a', [COFFRE]:'#4a3a0a', [CLEE]:'#FFFF00', [PORTE]:'#8b4513'
+    [HERBE]:'#1a3a1a', [MUR]:'#2a2a2a', [EAU]:'#0a2a4a', [ARBRE]:'#0a2a0a', [COFFRE]:'#4a3a0a', [CLEE]:'#FFFF00', [PORTE]:'#8b4513', [PORTE_N2]:'#6a0dad'
 };
-const EMOJIS = { [ARBRE]:'🌲', [EAU]:'💧', [COFFRE]:'📦', [MAISON]:'🛖', [CLEE]:'🗝️', [PORTE]:'🚪' };
+const EMOJIS = { [ARBRE]:'🌲', [EAU]:'💧', [COFFRE]:'📦', [MAISON]:'🛖', [CLEE]:'🗝️', [PORTE]:'🚪', [PORTE_N2]:'🕌' };
 
 // ============================================
 // INIT
@@ -467,6 +495,10 @@ function ajouterObjet(objet) {
     if (!objet) return;
     joueur.inventaire.push({ ...objet, uid: Date.now() + Math.random() });
     afficherMessage(`📦 Obtenu : ${objet.emoji} ${objet.nom} !`);
+    if (objet.type === 'cle') {
+        cleObtenue = true;
+        mettreAJourHUD();
+    }
     mettreAJourInventaireUI();
 }
 
@@ -590,7 +622,7 @@ function mettreAJourInventaireUI() {
 
     const divConso = document.getElementById('inv-consommables');
     divConso.innerHTML = '';
-    const consos = joueur.inventaire.filter(o => ['potion','elixir'].includes(o.type));
+    const consos = joueur.inventaire.filter(o => ['potion','elixir','cle'].includes(o.type));
     consos.forEach(obj => {
         divConso.innerHTML += `
             <div class="inv-item">
@@ -598,7 +630,7 @@ function mettreAJourInventaireUI() {
                     <div class="item-nom">${obj.emoji} ${obj.nom}</div>
                     <div class="item-stats">${obj.desc}</div>
                 </div>
-                <button class="item-btn use" onclick="utiliserObjet(${obj.uid})">Utiliser</button>
+                ${obj.type !== 'cle' ? `<button class="item-btn use" onclick="utiliserObjet(${obj.uid})">Utiliser</button>` : ''}
             </div>`;
     });
     if (!consos.length) divConso.innerHTML = '<div class="inv-vide">Aucun consommable</div>';
@@ -650,22 +682,40 @@ function update() {
 function deplacer(dx, dy) {
     const nx=joueur.x+dx, ny=joueur.y+dy;
     
-    // Vérifier si on marche sur la maison (extérieur)
+    // Maison
     if (localisationActuelle === 'exterieur' && carteExterieur[ny][nx] === MAISON) {
         entrerMaison();
         return;
     }
-    
-    // Vérifier si on marche sur la porte (intérieur)
     if (localisationActuelle === 'maison' && carteInterieurMaison[ny][nx] === PORTE) {
         sortirMaison();
+        return;
+    }
+    
+    // Niveau 2 (besoin de clé)
+    if (localisationActuelle === 'exterieur' && carteExterieur[ny][nx] === PORTE_N2) {
+        if (cleObtenue) {
+            entrerNiveau2();
+        } else {
+            afficherMessage('🔒 Tu as besoin d\'une clé pour entrer ici !');
+        }
+        return;
+    }
+    if (localisationActuelle === 'niveau2' && carteNiveau2[ny][nx] === PORTE) {
+        sortirNiveau2();
         return;
     }
     
     if (!estLibre(nx,ny)) return;
     joueur.x=nx; joueur.y=ny;
 
-    // Gérer les coffres selon la localisation
+    // Ramasser la clé
+    if (localisationActuelle === 'exterieur' && carteExterieur[ny][nx] === CLEE && !cleObtenue) {
+        ajouterObjet(OBJETS.cle);
+        carteExterieur[ny][nx] = HERBE;
+    }
+
+    // Coffres
     if (localisationActuelle === 'exterieur') {
         coffres.forEach(c => {
             if (c.x===nx && c.y===ny && !c.ouvert) {
@@ -688,6 +738,17 @@ function deplacer(dx, dy) {
                 mettreAJourHUD();
             }
         });
+    } else if (localisationActuelle === 'niveau2') {
+        coffresNiveau2.forEach(c => {
+            if (c.x===nx && c.y===ny && !c.ouvert) {
+                c.ouvert = true;
+                carte[c.y][c.x] = HERBE;
+                if (c.loot) ajouterObjet(c.loot);
+                else afficherMessage('📦 Coffre vide...');
+                joueur.score += 50;
+                mettreAJourHUD();
+            }
+        });
     }
 }
 
@@ -697,7 +758,6 @@ function entrerMaison() {
     joueur.x = 2;
     joueur.y = 8;
     afficherMessage('🏠 Vous entrez dans la maison...');
-    // Réinitialiser les monstres pour la maison
     monstres = JSON.parse(JSON.stringify(monstresInterieur));
 }
 
@@ -707,7 +767,31 @@ function sortirMaison() {
     joueur.x = 16;
     joueur.y = 9;
     afficherMessage('🌳 Vous sortez de la maison...');
-    // Réinitialiser les monstres pour l'extérieur
+    monstres = [
+        { x:8,  y:2,  vie:30, vieMax:30, attaque:5,  xp:20, score:40,  nom:'👾', loot: OBJETS.potion_vie, actif:true },
+        { x:15, y:5,  vie:30, vieMax:30, attaque:5,  xp:20, score:40,  nom:'👾', loot: null, actif:true },
+        { x:5,  y:10, vie:60, vieMax:60, attaque:10, xp:40, score:80,  nom:'💀', loot: OBJETS.elixir, actif:true },
+        { x:14, y:10, vie:60, vieMax:60, attaque:10, xp:40, score:80,  nom:'💀', loot: OBJETS.epee_magique, actif:true },
+        { x:10, y:7,  vie:100,vieMax:100,attaque:15, xp:80, score:160, nom:'👤', loot: OBJETS.armure_fer, actif:true },
+        { x:10, y:7,  vie:50, vieMax:50, attaque:10, xp:50, score:100, nom:'🎃', loot: OBJETS.epee_fer, actif:true }
+    ];
+}
+
+function entrerNiveau2() {
+    localisationActuelle = 'niveau2';
+    carte = carteNiveau2;
+    joueur.x = 2;
+    joueur.y = 13;
+    afficherMessage('🕌 Bienvenue au niveau 2 ! Monstres plus forts...');
+    monstres = JSON.parse(JSON.stringify(monstresNiveau2));
+}
+
+function sortirNiveau2() {
+    localisationActuelle = 'exterieur';
+    carte = carteExterieur;
+    joueur.x = 18;
+    joueur.y = 1;
+    afficherMessage('🌳 Vous êtes revenu au niveau 1...');
     monstres = [
         { x:8,  y:2,  vie:30, vieMax:30, attaque:5,  xp:20, score:40,  nom:'👾', loot: OBJETS.potion_vie, actif:true },
         { x:15, y:5,  vie:30, vieMax:30, attaque:5,  xp:20, score:40,  nom:'👾', loot: null, actif:true },
@@ -778,9 +862,6 @@ function estLibre(x, y) {
     return true;
 }
 
-// ============================================
-// RENDU
-// ============================================
 function render() {
     const W=canvas.width, H=canvas.height;
     const COLS_LOCAL = getCols();
@@ -843,9 +924,6 @@ function render() {
     ctx.fillText(joueur.nom, pjx+TC/2, pjy-3);
 }
 
-// ============================================
-// HUD
-// ============================================
 function mettreAJourHUD() {
     const attTot = joueur.attaque + joueur.bonusEquip.attaque;
     const defTot = joueur.defense + joueur.bonusEquip.defense;
@@ -854,6 +932,7 @@ function mettreAJourHUD() {
     document.getElementById('hud-vie-txt').textContent = `${joueur.vie}/${joueur.vieMax}`;
     document.getElementById('hud-stats').textContent = `⚔️ ${attTot} 🛡️ ${defTot}`;
     document.getElementById('hud-score').textContent = `🏆 ${joueur.score}`;
+    document.getElementById('hud-cle').textContent = `🗝️ ${cleObtenue ? 'Oui' : 'Non'}`;
     document.getElementById('barre-vie').style.width = `${(joueur.vie/joueur.vieMax)*100}%`;
     document.getElementById('barre-xp').style.width = `${(joueur.xp/joueur.xpMax)*100}%`;
 }
