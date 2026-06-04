@@ -486,23 +486,17 @@ async function chargerProgression() {
 async function sauvegarder() {
     if (!utilisateur) return;
     try {
-        // Convertir l'équipement en format sérialisable (juste les IDs)
-        const equipementAuSave = {};
-        ['arme','armure','bouclier'].forEach(slot => {
-            const obj = joueur.equipement[slot];
-            equipementAuSave[slot] = obj ? { id: obj.id, nom: obj.nom } : null;
-        });
-
         await supabaseClient.from('personnages').upsert({
             id: utilisateur.id, username: joueur.nom,
             niveau: joueur.niveau, xp: joueur.xp,
             vie: joueur.vie, attaque: joueur.attaque, defense: joueur.defense,
             position_x: joueur.x, position_y: joueur.y,
-            inventaire: joueur.inventaire, equipement: equipementAuSave,
+            inventaire: JSON.stringify(joueur.inventaire), // Sauvegarder en JSON
+            equipement: JSON.stringify(joueur.equipement), // Sauvegarder l'équipement complet
             updated_at: new Date().toISOString()
         });
         afficherMessage('💾 Sauvegardé !');
-    } catch(e) { console.error(e); }
+    } catch(e) { console.error('Erreur sauvegarde:', e); }
 }
 
 // ============================================
