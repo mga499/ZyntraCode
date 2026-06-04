@@ -562,7 +562,11 @@ function fusionnerObjets(uid1, uid2) {
     const obj1 = joueur.inventaire[idx1];
     const obj2 = joueur.inventaire[idx2];
 
-    if (obj1.id !== obj2.id) {
+    // Vérifier que c'est le même objet (par id ou par nom)
+    const cle1 = obj1.id || obj1.nom;
+    const cle2 = obj2.id || obj2.nom;
+    
+    if (cle1 !== cle2) {
         afficherMessage('❌ Tu peux fusionner que les objets identiques !');
         return;
     }
@@ -578,7 +582,9 @@ function fusionnerObjets(uid1, uid2) {
     if (nouvelObjet.vie) nouvelObjet.vie *= 2;
     
     // Mettre à jour la description
-    nouvelObjet.desc = `${nouvelObjet.desc.replace(/\d+/, m => m * 2)} (Fusionné!)`;
+    if (nouvelObjet.desc) {
+        nouvelObjet.desc = nouvelObjet.desc.replace(/\d+/, m => m * 2) + ' (Fusionné!)';
+    }
 
     // Supprimer les deux objets d'origine et ajouter le nouveau
     joueur.inventaire.splice(Math.max(idx1, idx2), 1);
@@ -586,6 +592,8 @@ function fusionnerObjets(uid1, uid2) {
     joueur.inventaire.push(nouvelObjet);
 
     afficherMessage(`✨ Fusion réussie ! ${nouvelObjet.nom} créé !`);
+    recalculerBonus();
+    mettreAJourHUD();
     mettreAJourInventaireUI();
 }
 
@@ -673,6 +681,44 @@ function mettreAJourInventaireUI() {
             </div>`;
     });
     if (!consos.length) divConso.innerHTML = '<div class="inv-vide">Aucun consommable</div>';
+
+    // ==================== FUSION ====================
+    const divFusion = document.getElementById('inv-fusion');
+    divFusion.innerHTML = '';
+
+    // Grouper les objets par ID pour détecter les doublons
+    const groupes = {};
+    joueur.inventaire.forEach(obj => {
+        const key = obj.id || obj.nom; // Utiliser id ou nom comme clé
+        if (!groupes[key]) groupes[key] = [];
+        groupes[key].push(obj);
+    });
+
+    // Trouver les objets fusionnables (au moins 2 identiques)
+    const fusionnables = Object.entries(groupes).filter(([id, objets]) => objets.length >= 2);
+
+    if (fusionnables.length === 0) {
+        divFusion.innerHTML = '<div class="inv-vide">Trouve 2 objets identiques pour fusionner !</div>';
+        return;
+    }
+
+    fusionnables.forEach(([id, objets]) => {
+        const obj = objets[0];
+        divFusion.innerHTML += `<div style="color:#aaa;font-size:12px;margin:10px 0 8px;font-weight:bold;">🔗 ${obj.emoji} ${obj.nom} (${objets.length})</div>`;
+        
+        for (let i = 0; i < objets.length - 1; i++) {
+            const o1 = objets[i];
+            const o2 = objets[i + 1];
+            divFusion.innerHTML += `
+                <div class="inv-item">
+                    <div style="flex:1">
+                        <div class="item-nom">⚗️ Fusionner</div>
+                        <div class="item-stats">${o1.emoji} ${o1.nom} x2</div>
+                    </div>
+                    <button class="item-btn" style="background: #ff9800; color: white;" onclick="fusionnerObjets(${o1.uid}, ${o2.uid})">Fusionner</button>
+                </div>`;
+        }
+    });
 }
 
 // ============================================
