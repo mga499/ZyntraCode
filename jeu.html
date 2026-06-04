@@ -285,10 +285,10 @@ const OBJETS = {
 // ============================================
 // CARTE
 // ============================================
-const HERBE=0,MUR=1,EAU=2,ARBRE=3,COFFRE=4,MAISON=5,CLEE=6;
+const HERBE=0,MUR=1,EAU=2,ARBRE=3,COFFRE=4,MAISON=5,CLEE=6,PORTE=7;
 const COLS=20, LIGNES=15;
 
-const carte = [
+const carteExterieur = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
     [1,6,0,0,0,0,3,0,0,0,0,0,0,3,0,0,0,0,0,1],
     [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
@@ -306,12 +306,35 @@ const carte = [
     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
 ];
 
+const carteInterieurMaison = [
+    [1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,4,0,0,0,0,0,4,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,4,4,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,7,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1],
+];
+
+let carte = carteExterieur;
+let localisationActuelle = 'exterieur'; // 'exterieur' ou 'maison'
+
 const coffres = [
     { x:3,  y:3,  ouvert:false, loot: OBJETS.epee_fer },
     { x:16, y:3,  ouvert:false, loot: OBJETS.potion_vie },
     { x:9,  y:7,  ouvert:false, loot: OBJETS.armure_cuir },
     { x:3,  y:11, ouvert:false, loot: OBJETS.grande_potion },
     { x:15, y:11, ouvert:false, loot: OBJETS.bouclier },
+];
+
+const coffresInterieur = [
+    { x:2,  y:2,  ouvert:false, loot: OBJETS.potion_vie },
+    { x:8,  y:2,  ouvert:false, loot: OBJETS.grande_potion },
+    { x:4,  y:5,  ouvert:false, loot: OBJETS.elixir },
+    { x:5,  y:5,  ouvert:false, loot: OBJETS.epee_magique },
 ];
 
 let monstres = [
@@ -321,6 +344,12 @@ let monstres = [
     { x:14, y:10, vie:60, vieMax:60, attaque:10, xp:40, score:80,  nom:'💀', loot: OBJETS.epee_magique, actif:true },
     { x:10, y:7,  vie:100,vieMax:100,attaque:15, xp:80, score:160, nom:'👤', loot: OBJETS.armure_fer, actif:true },
     { x:10, y:7,  vie:50, vieMax:50, attaque:10, xp:50, score:100, nom:'🎃', loot: OBJETS.epee_fer, actif:true }
+];
+
+let monstresInterieur = [
+    { x:4,  y:3,  vie:20, vieMax:20, attaque:3,  xp:10, score:20,  nom:'🧟', loot: OBJETS.potion_vie, actif:true },
+    { x:6,  y:6,  vie:20, vieMax:20, attaque:3,  xp:10, score:20,  nom:'🧟', loot: null, actif:true },
+    { x:2,  y:6,  vie:35, vieMax:35, attaque:6,  xp:25, score:50,  nom:'👹', loot: OBJETS.armure_cuir, actif:true },
 ];
 
 let joueur = {
@@ -348,9 +377,9 @@ let inventaireOuvert = false;
 let utilisateur = null;
 
 const COULEURS = {
-    [HERBE]:'#1a3a1a', [MUR]:'#2a2a2a', [EAU]:'#0a2a4a', [ARBRE]:'#0a2a0a', [COFFRE]:'#4a3a0a', [CLEE]:'#FFFF00'
+    [HERBE]:'#1a3a1a', [MUR]:'#2a2a2a', [EAU]:'#0a2a4a', [ARBRE]:'#0a2a0a', [COFFRE]:'#4a3a0a', [CLEE]:'#FFFF00', [PORTE]:'#8b4513'
 };
-const EMOJIS = { [ARBRE]:'🌲', [EAU]:'💧', [COFFRE]:'📦', [MAISON]:'🛖', [CLEE]:'🗝️' };
+const EMOJIS = { [ARBRE]:'🌲', [EAU]:'💧', [COFFRE]:'📦', [MAISON]:'🛖', [CLEE]:'🗝️', [PORTE]:'🚪' };
 
 // ============================================
 // INIT
@@ -624,19 +653,73 @@ function update() {
 
 function deplacer(dx, dy) {
     const nx=joueur.x+dx, ny=joueur.y+dy;
+    
+    // Vérifier si on marche sur la maison (extérieur)
+    if (localisationActuelle === 'exterieur' && carteExterieur[ny][nx] === MAISON) {
+        entrerMaison();
+        return;
+    }
+    
+    // Vérifier si on marche sur la porte (intérieur)
+    if (localisationActuelle === 'maison' && carteInterieurMaison[ny][nx] === PORTE) {
+        sortirMaison();
+        return;
+    }
+    
     if (!estLibre(nx,ny)) return;
     joueur.x=nx; joueur.y=ny;
 
-    coffres.forEach(c => {
-        if (c.x===nx && c.y===ny && !c.ouvert) {
-            c.ouvert = true;
-            carte[c.y][c.x] = HERBE;
-            if (c.loot) ajouterObjet(c.loot);
-            else afficherMessage('📦 Coffre vide...');
-            joueur.score += 50;
-            mettreAJourHUD();
-        }
-    });
+    // Gérer les coffres selon la localisation
+    if (localisationActuelle === 'exterieur') {
+        coffres.forEach(c => {
+            if (c.x===nx && c.y===ny && !c.ouvert) {
+                c.ouvert = true;
+                carte[c.y][c.x] = HERBE;
+                if (c.loot) ajouterObjet(c.loot);
+                else afficherMessage('📦 Coffre vide...');
+                joueur.score += 50;
+                mettreAJourHUD();
+            }
+        });
+    } else if (localisationActuelle === 'maison') {
+        coffresInterieur.forEach(c => {
+            if (c.x===nx && c.y===ny && !c.ouvert) {
+                c.ouvert = true;
+                carte[c.y][c.x] = HERBE;
+                if (c.loot) ajouterObjet(c.loot);
+                else afficherMessage('📦 Coffre vide...');
+                joueur.score += 50;
+                mettreAJourHUD();
+            }
+        });
+    }
+}
+
+function entrerMaison() {
+    localisationActuelle = 'maison';
+    carte = carteInterieurMaison;
+    joueur.x = 2;
+    joueur.y = 8;
+    afficherMessage('🏠 Vous entrez dans la maison...');
+    // Réinitialiser les monstres pour la maison
+    monstres = JSON.parse(JSON.stringify(monstresInterieur));
+}
+
+function sortirMaison() {
+    localisationActuelle = 'exterieur';
+    carte = carteExterieur;
+    joueur.x = 16;
+    joueur.y = 9;
+    afficherMessage('🌳 Vous sortez de la maison...');
+    // Réinitialiser les monstres pour l'extérieur
+    monstres = [
+        { x:8,  y:2,  vie:30, vieMax:30, attaque:5,  xp:20, score:40,  nom:'👾', loot: OBJETS.potion_vie, actif:true },
+        { x:15, y:5,  vie:30, vieMax:30, attaque:5,  xp:20, score:40,  nom:'👾', loot: null, actif:true },
+        { x:5,  y:10, vie:60, vieMax:60, attaque:10, xp:40, score:80,  nom:'💀', loot: OBJETS.elixir, actif:true },
+        { x:14, y:10, vie:60, vieMax:60, attaque:10, xp:40, score:80,  nom:'💀', loot: OBJETS.epee_magique, actif:true },
+        { x:10, y:7,  vie:100,vieMax:100,attaque:15, xp:80, score:160, nom:'👤', loot: OBJETS.armure_fer, actif:true },
+        { x:10, y:7,  vie:50, vieMax:50, attaque:10, xp:50, score:100, nom:'🎃', loot: OBJETS.epee_fer, actif:true }
+    ];
 }
 
 function attaquer() {
@@ -682,8 +765,18 @@ function mourir() {
     mettreAJourHUD();
 }
 
+function getCols() {
+    return localisationActuelle === 'maison' ? 10 : 20;
+}
+
+function getLignes() {
+    return localisationActuelle === 'maison' ? 10 : 15;
+}
+
 function estLibre(x, y) {
-    if (x<0||x>=COLS||y<0||y>=LIGNES) return false;
+    const cols = getCols();
+    const lignes = getLignes();
+    if (x<0||x>=cols||y<0||y>=lignes) return false;
     if ([MUR,EAU,ARBRE].includes(carte[y][x])) return false;
     if (monstres.some(m=>m.actif&&m.x===x&&m.y===y)) return false;
     return true;
@@ -694,14 +787,16 @@ function estLibre(x, y) {
 // ============================================
 function render() {
     const W=canvas.width, H=canvas.height;
-    const TC = Math.floor(W/COLS);
+    const COLS_LOCAL = getCols();
+    const LIGNES_LOCAL = getLignes();
+    const TC = Math.floor(W/COLS_LOCAL);
     ctx.clearRect(0,0,W,H);
 
-    const camX = Math.max(0, Math.min(COLS-Math.floor(W/TC), joueur.x-Math.floor(W/TC/2)));
-    const camY = Math.max(0, Math.min(LIGNES-Math.floor(H/TC), joueur.y-Math.floor(H/TC/2)));
+    const camX = Math.max(0, Math.min(COLS_LOCAL-Math.floor(W/TC), joueur.x-Math.floor(W/TC/2)));
+    const camY = Math.max(0, Math.min(LIGNES_LOCAL-Math.floor(H/TC), joueur.y-Math.floor(H/TC/2)));
 
-    for (let y=camY; y<Math.min(LIGNES,camY+Math.ceil(H/TC)+1); y++) {
-        for (let x=camX; x<Math.min(COLS,camX+Math.ceil(W/TC)+1); x++) {
+    for (let y=camY; y<Math.min(LIGNES_LOCAL,camY+Math.ceil(H/TC)+1); y++) {
+        for (let x=camX; x<Math.min(COLS_LOCAL,camX+Math.ceil(W/TC)+1); x++) {
             const tile=carte[y][x];
             const px=(x-camX)*TC, py=(y-camY)*TC;
             ctx.fillStyle = COULEURS[tile]||'#1a3a1a';
