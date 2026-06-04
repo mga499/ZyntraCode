@@ -462,41 +462,46 @@ async function chargerProgression() {
             joueur.y = Math.round(data.position_y) || 3;
             joueur.nom = data.username || utilisateur.email.split('@')[0];
             joueur.inventaire = data.inventaire || [];
-            
-            // Reconstruire les objets équipés à partir des IDs sauvegardés
-            const equipSave = data.equipement || { arme:null, armure:null, bouclier:null };
-            joueur.equipement = {
-                arme: equipSave.arme && OBJETS[equipSave.arme.id] ? { ...OBJETS[equipSave.arme.id], ...equipSave.arme } : null,
-                armure: equipSave.armure && OBJETS[equipSave.armure.id] ? { ...OBJETS[equipSave.armure.id], ...equipSave.armure } : null,
-                bouclier: equipSave.bouclier && OBJETS[equipSave.bouclier.id] ? { ...OBJETS[equipSave.bouclier.id], ...equipSave.bouclier } : null
-            };
-            
+            joueur.equipement = data.equipement || { arme:null, armure:null, bouclier:null };
             recalculerBonus();
         } else {
             joueur.nom = utilisateur.email.split('@')[0];
             await supabaseClient.from('personnages').insert({
-                id: utilisateur.id, username: joueur.nom,
+                id: utilisateur.id, 
+                username: joueur.nom,
                 niveau:1, xp:0, vie:100, attaque:10, defense:5,
-                position_x:3, position_y:3, inventaire:[], equipement:{}
+                position_x:3, position_y:3, 
+                inventaire:[], 
+                equipement:{ arme:null, armure:null, bouclier:null }
             });
         }
-    } catch(e) { joueur.nom = utilisateur?.email?.split('@')[0] || 'Héros'; }
+    } catch(e) { 
+        console.error('Erreur chargement:', e);
+        joueur.nom = utilisateur?.email?.split('@')[0] || 'Héros'; 
+    }
 }
 
 async function sauvegarder() {
     if (!utilisateur) return;
     try {
         await supabaseClient.from('personnages').upsert({
-            id: utilisateur.id, username: joueur.nom,
-            niveau: joueur.niveau, xp: joueur.xp,
-            vie: joueur.vie, attaque: joueur.attaque, defense: joueur.defense,
-            position_x: joueur.x, position_y: joueur.y,
-            inventaire: JSON.stringify(joueur.inventaire), // Sauvegarder en JSON
-            equipement: JSON.stringify(joueur.equipement), // Sauvegarder l'équipement complet
+            id: utilisateur.id, 
+            username: joueur.nom,
+            niveau: joueur.niveau, 
+            xp: joueur.xp,
+            vie: joueur.vie, 
+            attaque: joueur.attaque, 
+            defense: joueur.defense,
+            position_x: joueur.x, 
+            position_y: joueur.y,
+            inventaire: joueur.inventaire,
+            equipement: joueur.equipement,
             updated_at: new Date().toISOString()
         });
         afficherMessage('💾 Sauvegardé !');
-    } catch(e) { console.error('Erreur sauvegarde:', e); }
+    } catch(e) { 
+        console.error('Erreur sauvegarde:', e); 
+    }
 }
 
 // ============================================
@@ -511,6 +516,7 @@ function ajouterObjet(objet) {
         mettreAJourHUD();
     }
     mettreAJourInventaireUI();
+    sauvegarder(); // Sauvegarder après obtenir un objet
 }
 
 function equiperObjet(uid) {
