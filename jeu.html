@@ -554,26 +554,24 @@ function supprimerObjet(uid) {
     mettreAJourInventaireUI();
 }
 
-function fusionnerObjets(uid1, uid2, equipe1, slot1, equipe2, slot2) {
+function fusionnerObjets(uid1Str, uid2Str, equipe1, slot1, equipe2, slot2) {
     let idx1, idx2;
     let obj1, obj2;
 
     // Récupérer obj1
     if (equipe1) {
-        obj1 = { ...OBJETS[joueur.equipement[slot1]], uid: uid1 };
-        idx1 = -1;
+        obj1 = { ...OBJETS[joueur.equipement[slot1]], uid: uid1Str };
     } else {
-        idx1 = joueur.inventaire.findIndex(o => o.uid === uid1);
+        idx1 = joueur.inventaire.findIndex(o => o.uid == uid1Str);
         if (idx1 === -1) return;
         obj1 = joueur.inventaire[idx1];
     }
 
     // Récupérer obj2
     if (equipe2) {
-        obj2 = { ...OBJETS[joueur.equipement[slot2]], uid: uid2 };
-        idx2 = -1;
+        obj2 = { ...OBJETS[joueur.equipement[slot2]], uid: uid2Str };
     } else {
-        idx2 = joueur.inventaire.findIndex(o => o.uid === uid2);
+        idx2 = joueur.inventaire.findIndex(o => o.uid == uid2Str);
         if (idx2 === -1) return;
         obj2 = joueur.inventaire[idx2];
     }
@@ -713,16 +711,16 @@ function mettreAJourInventaireUI() {
     const divFusion = document.getElementById('inv-fusion');
     divFusion.innerHTML = '';
 
-    // Grouper tous les objets (inventaire + équipés)
+    // Grouper tous les objets (inventaire + équipés avec ID stable)
     const tousLesObjets = [...joueur.inventaire];
     
-    // Ajouter les objets équipés
+    // Ajouter les objets équipés avec ID stable
     ['arme','armure','bouclier'].forEach(slot => {
         const id = joueur.equipement[slot];
         if (id && OBJETS[id]) {
             tousLesObjets.push({
                 ...OBJETS[id],
-                uid: Date.now() + Math.random(),
+                uid: `equip_${slot}`, // ID stable pour équipés
                 equipe: true,
                 slot: slot
             });
@@ -755,13 +753,20 @@ function mettreAJourInventaireUI() {
             const label1 = o1.equipe ? `📌 ${o1.nom}` : o1.nom;
             const label2 = o2.equipe ? `📌 ${o2.nom}` : o2.nom;
             
+            const uid1 = o1.uid;
+            const uid2 = o2.uid;
+            const eq1 = o1.equipe ? 'true' : 'false';
+            const eq2 = o2.equipe ? 'true' : 'false';
+            const slot1 = o1.slot || '';
+            const slot2 = o2.slot || '';
+            
             divFusion.innerHTML += `
                 <div class="inv-item">
                     <div style="flex:1">
                         <div class="item-nom">⚗️ Fusionner</div>
-                        <div class="item-stats">${o1.emoji} ${label1} x2</div>
+                        <div class="item-stats">${o1.emoji} ${label1} + ${o2.emoji} ${label2}</div>
                     </div>
-                    <button class="item-btn" style="background: #ff9800; color: white;" onclick="fusionnerObjets(${o1.uid}, ${o2.uid}, ${o1.equipe}, '${o1.slot}', ${o2.equipe}, '${o2.slot}')">Fusionner</button>
+                    <button class="item-btn" style="background: #ff9800; color: white;" onclick="fusionnerObjets('${uid1}', '${uid2}', ${eq1}, '${slot1}', ${eq2}, '${slot2}')">Fusionner</button>
                 </div>`;
         }
     });
