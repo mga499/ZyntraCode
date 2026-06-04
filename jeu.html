@@ -554,15 +554,31 @@ function supprimerObjet(uid) {
     mettreAJourInventaireUI();
 }
 
-function fusionnerObjets(uid1, uid2) {
-    const idx1 = joueur.inventaire.findIndex(o => o.uid === uid1);
-    const idx2 = joueur.inventaire.findIndex(o => o.uid === uid2);
-    if (idx1 === -1 || idx2 === -1) return;
+function fusionnerObjets(uid1, uid2, equipe1, slot1, equipe2, slot2) {
+    let idx1, idx2;
+    let obj1, obj2;
 
-    const obj1 = joueur.inventaire[idx1];
-    const obj2 = joueur.inventaire[idx2];
+    // Récupérer obj1
+    if (equipe1) {
+        obj1 = { ...OBJETS[joueur.equipement[slot1]], uid: uid1 };
+        idx1 = -1;
+    } else {
+        idx1 = joueur.inventaire.findIndex(o => o.uid === uid1);
+        if (idx1 === -1) return;
+        obj1 = joueur.inventaire[idx1];
+    }
 
-    // Vérifier que c'est le même objet (par id ou par nom)
+    // Récupérer obj2
+    if (equipe2) {
+        obj2 = { ...OBJETS[joueur.equipement[slot2]], uid: uid2 };
+        idx2 = -1;
+    } else {
+        idx2 = joueur.inventaire.findIndex(o => o.uid === uid2);
+        if (idx2 === -1) return;
+        obj2 = joueur.inventaire[idx2];
+    }
+
+    // Vérifier que c'est le même objet
     const cle1 = obj1.id || obj1.nom;
     const cle2 = obj2.id || obj2.nom;
     
@@ -586,9 +602,20 @@ function fusionnerObjets(uid1, uid2) {
         nouvelObjet.desc = nouvelObjet.desc.replace(/\d+/, m => m * 2) + ' (Fusionné!)';
     }
 
-    // Supprimer les deux objets d'origine et ajouter le nouveau
-    joueur.inventaire.splice(Math.max(idx1, idx2), 1);
-    joueur.inventaire.splice(Math.min(idx1, idx2), 1);
+    // Supprimer les deux objets d'origine
+    if (equipe1) {
+        joueur.equipement[slot1] = null;
+    } else {
+        joueur.inventaire.splice(idx1, 1);
+    }
+
+    if (equipe2) {
+        joueur.equipement[slot2] = null;
+    } else {
+        joueur.inventaire.splice(idx2, 1);
+    }
+
+    // Ajouter le nouvel objet à l'inventaire
     joueur.inventaire.push(nouvelObjet);
 
     afficherMessage(`✨ Fusion réussie ! ${nouvelObjet.nom} créé !`);
@@ -686,10 +713,26 @@ function mettreAJourInventaireUI() {
     const divFusion = document.getElementById('inv-fusion');
     divFusion.innerHTML = '';
 
-    // Grouper les objets par ID pour détecter les doublons
+    // Grouper tous les objets (inventaire + équipés)
+    const tousLesObjets = [...joueur.inventaire];
+    
+    // Ajouter les objets équipés
+    ['arme','armure','bouclier'].forEach(slot => {
+        const id = joueur.equipement[slot];
+        if (id && OBJETS[id]) {
+            tousLesObjets.push({
+                ...OBJETS[id],
+                uid: Date.now() + Math.random(),
+                equipe: true,
+                slot: slot
+            });
+        }
+    });
+
+    // Grouper par ID ou nom
     const groupes = {};
-    joueur.inventaire.forEach(obj => {
-        const key = obj.id || obj.nom; // Utiliser id ou nom comme clé
+    tousLesObjets.forEach(obj => {
+        const key = obj.id || obj.nom;
         if (!groupes[key]) groupes[key] = [];
         groupes[key].push(obj);
     });
@@ -709,13 +752,16 @@ function mettreAJourInventaireUI() {
         for (let i = 0; i < objets.length - 1; i++) {
             const o1 = objets[i];
             const o2 = objets[i + 1];
+            const label1 = o1.equipe ? `📌 ${o1.nom}` : o1.nom;
+            const label2 = o2.equipe ? `📌 ${o2.nom}` : o2.nom;
+            
             divFusion.innerHTML += `
                 <div class="inv-item">
                     <div style="flex:1">
                         <div class="item-nom">⚗️ Fusionner</div>
-                        <div class="item-stats">${o1.emoji} ${o1.nom} x2</div>
+                        <div class="item-stats">${o1.emoji} ${label1} x2</div>
                     </div>
-                    <button class="item-btn" style="background: #ff9800; color: white;" onclick="fusionnerObjets(${o1.uid}, ${o2.uid})">Fusionner</button>
+                    <button class="item-btn" style="background: #ff9800; color: white;" onclick="fusionnerObjets(${o1.uid}, ${o2.uid}, ${o1.equipe}, '${o1.slot}', ${o2.equipe}, '${o2.slot}')">Fusionner</button>
                 </div>`;
         }
     });
