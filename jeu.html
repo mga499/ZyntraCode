@@ -449,6 +449,32 @@ function demarrerJeu() {
 // ============================================
 async function chargerProgression() {
     try {
+        // D'abord, essayer de charger depuis localStorage
+        const localData = localStorage.getItem('zyntracode_joueur');
+        if (localData) {
+            const saved = JSON.parse(localData);
+            joueur.nom = saved.nom || 'Héros';
+            joueur.vie = saved.vie || 100;
+            joueur.vieMax = saved.vieMax || 100;
+            joueur.attaque = saved.attaque || 10;
+            joueur.defense = saved.defense || 5;
+            joueur.niveau = saved.niveau || 1;
+            joueur.xp = saved.xp || 0;
+            joueur.xpMax = saved.xpMax || 100;
+            joueur.score = saved.score || 0;
+            joueur.x = saved.x || 3;
+            joueur.y = saved.y || 3;
+            joueur.inventaire = saved.inventaire || [];
+            joueur.equipement = saved.equipement || { arme:null, armure:null, bouclier:null };
+            cleObtenue = saved.cleObtenue || false;
+            localisationActuelle = saved.localisationActuelle || 'exterieur';
+            recalculerBonus();
+            return; // Charger depuis localStorage suffit
+        }
+
+        // Si pas de localStorage, charger depuis Supabase
+        if (!utilisateur) return;
+        
         const { data } = await supabaseClient.from('personnages').select('*').eq('id', utilisateur.id).single();
         if (data) {
             joueur.vie = data.vie || 100;
@@ -482,22 +508,43 @@ async function chargerProgression() {
 }
 
 async function sauvegarder() {
-    if (!utilisateur) return;
     try {
-        await supabaseClient.from('personnages').upsert({
-            id: utilisateur.id, 
-            username: joueur.nom,
-            niveau: joueur.niveau, 
-            xp: joueur.xp,
-            vie: joueur.vie, 
-            attaque: joueur.attaque, 
+        // Sauvegarder en localStorage comme fallback
+        localStorage.setItem('zyntracode_joueur', JSON.stringify({
+            nom: joueur.nom,
+            vie: joueur.vie,
+            vieMax: joueur.vieMax,
+            attaque: joueur.attaque,
             defense: joueur.defense,
-            position_x: joueur.x, 
-            position_y: joueur.y,
+            niveau: joueur.niveau,
+            xp: joueur.xp,
+            xpMax: joueur.xpMax,
+            score: joueur.score,
+            x: joueur.x,
+            y: joueur.y,
             inventaire: joueur.inventaire,
             equipement: joueur.equipement,
-            updated_at: new Date().toISOString()
-        });
+            cleObtenue: cleObtenue,
+            localisationActuelle: localisationActuelle
+        }));
+
+        // Si connecté, sauvegarder aussi sur Supabase
+        if (utilisateur) {
+            await supabaseClient.from('personnages').upsert({
+                id: utilisateur.id, 
+                username: joueur.nom,
+                niveau: joueur.niveau, 
+                xp: joueur.xp,
+                vie: joueur.vie, 
+                attaque: joueur.attaque, 
+                defense: joueur.defense,
+                position_x: joueur.x, 
+                position_y: joueur.y,
+                inventaire: joueur.inventaire,
+                equipement: joueur.equipement,
+                updated_at: new Date().toISOString()
+            });
+        }
         afficherMessage('💾 Sauvegardé !');
     } catch(e) { 
         console.error('Erreur sauvegarde:', e); 
