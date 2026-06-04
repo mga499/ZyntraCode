@@ -242,10 +242,12 @@
     <div class="inv-tabs">
         <button class="inv-tab actif" id="tab-equip" onclick="changerOnglet('equip')">⚔️ Équipements</button>
         <button class="inv-tab" id="tab-conso" onclick="changerOnglet('conso')">🧪 Consommables</button>
+        <button class="inv-tab" id="tab-fusion" onclick="changerOnglet('fusion')">⚗️ Fusion</button>
     </div>
     <div class="inv-body">
         <div class="inv-section-content actif" id="inv-equipements"></div>
         <div class="inv-section-content" id="inv-consommables"></div>
+        <div class="inv-section-content" id="inv-fusion"></div>
     </div>
 </div>
 
@@ -543,15 +545,48 @@ function utiliserObjet(uid) {
     mettreAJourInventaireUI();
 }
 
-function desequiper(slot) {
-    const id = joueur.equipement[slot];
-    if (!id) return;
-    joueur.inventaire.push({...OBJETS[id], uid: Date.now()});
-    joueur.equipement[slot] = null;
-    recalculerBonus();
-    mettreAJourHUD();
+function supprimerObjet(uid) {
+    const idx = joueur.inventaire.findIndex(o => o.uid === uid);
+    if (idx === -1) return;
+    const objet = joueur.inventaire[idx];
+    joueur.inventaire.splice(idx, 1);
+    afficherMessage(`🗑️ ${objet.emoji} ${objet.nom} supprimé !`);
     mettreAJourInventaireUI();
-    afficherMessage('🔄 Déséquipé !');
+}
+
+function fusionnerObjets(uid1, uid2) {
+    const idx1 = joueur.inventaire.findIndex(o => o.uid === uid1);
+    const idx2 = joueur.inventaire.findIndex(o => o.uid === uid2);
+    if (idx1 === -1 || idx2 === -1) return;
+
+    const obj1 = joueur.inventaire[idx1];
+    const obj2 = joueur.inventaire[idx2];
+
+    if (obj1.id !== obj2.id) {
+        afficherMessage('❌ Tu peux fusionner que les objets identiques !');
+        return;
+    }
+
+    // Créer le nouvel objet fusionné
+    const nouvelObjet = { ...obj1 };
+    nouvelObjet.uid = Date.now() + Math.random();
+    nouvelObjet.nom = `${obj1.emoji} ${obj1.nom} v2`;
+    
+    // Doubler les stats
+    if (nouvelObjet.attaque) nouvelObjet.attaque *= 2;
+    if (nouvelObjet.defense) nouvelObjet.defense *= 2;
+    if (nouvelObjet.vie) nouvelObjet.vie *= 2;
+    
+    // Mettre à jour la description
+    nouvelObjet.desc = `${nouvelObjet.desc.replace(/\d+/, m => m * 2)} (Fusionné!)`;
+
+    // Supprimer les deux objets d'origine et ajouter le nouveau
+    joueur.inventaire.splice(Math.max(idx1, idx2), 1);
+    joueur.inventaire.splice(Math.min(idx1, idx2), 1);
+    joueur.inventaire.push(nouvelObjet);
+
+    afficherMessage(`✨ Fusion réussie ! ${nouvelObjet.nom} créé !`);
+    mettreAJourInventaireUI();
 }
 
 function recalculerBonus() {
@@ -568,8 +603,10 @@ function recalculerBonus() {
 function changerOnglet(tab) {
     document.getElementById('inv-equipements').classList.toggle('actif', tab === 'equip');
     document.getElementById('inv-consommables').classList.toggle('actif', tab === 'conso');
+    document.getElementById('inv-fusion').classList.toggle('actif', tab === 'fusion');
     document.getElementById('tab-equip').classList.toggle('actif', tab === 'equip');
     document.getElementById('tab-conso').classList.toggle('actif', tab === 'conso');
+    document.getElementById('tab-fusion').classList.toggle('actif', tab === 'fusion');
 }
 
 function toggleInventaire() {
@@ -608,11 +645,12 @@ function mettreAJourInventaireUI() {
     equips.forEach(obj => {
         divEquip.innerHTML += `
             <div class="inv-item">
-                <div>
+                <div style="flex:1">
                     <div class="item-nom">${obj.emoji} ${obj.nom}</div>
                     <div class="item-stats">${obj.desc}</div>
                 </div>
                 <button class="item-btn" onclick="equiperObjet(${obj.uid})">Équiper</button>
+                <button class="item-btn remove" onclick="supprimerObjet(${obj.uid})">🗑️</button>
             </div>`;
     });
 
@@ -626,11 +664,12 @@ function mettreAJourInventaireUI() {
     consos.forEach(obj => {
         divConso.innerHTML += `
             <div class="inv-item">
-                <div>
+                <div style="flex:1">
                     <div class="item-nom">${obj.emoji} ${obj.nom}</div>
                     <div class="item-stats">${obj.desc}</div>
                 </div>
                 ${obj.type !== 'cle' ? `<button class="item-btn use" onclick="utiliserObjet(${obj.uid})">Utiliser</button>` : ''}
+                <button class="item-btn remove" onclick="supprimerObjet(${obj.uid})">🗑️</button>
             </div>`;
     });
     if (!consos.length) divConso.innerHTML = '<div class="inv-vide">Aucun consommable</div>';
