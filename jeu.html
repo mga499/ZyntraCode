@@ -151,32 +151,34 @@
         .inv-vide { color: #444; font-size: 12px; text-align: center; padding: 24px 0; }
 
         /* DPAD MOBILE */
-        #dpad { display: none; flex-direction: column; align-items: center; gap: 4px; margin-top: 12px; }
+        #dpad { display: none; flex-direction: column; align-items: center; gap: 6px; margin-top: 6px; }
         .dpad-btn {
-            width: 50px; height: 50px; background: #1a1a1a; border: 2px solid #2a2a2a;
-            border-radius: 10px; color: white; font-size: 18px; cursor: pointer;
+            width: 70px; height: 70px; background: #1a1a1a; border: 2px solid #2a2a2a;
+            border-radius: 12px; color: white; font-size: 24px; cursor: pointer;
             display: flex; align-items: center; justify-content: center; user-select: none;
+            transition: all 0.1s;
         }
-        .dpad-btn:active { background: rgba(21,213,168,0.2); border-color: rgb(21,213,168); }
-        .dpad-row { display: flex; gap: 4px; }
+        .dpad-btn:active { background: rgba(21,213,168,0.3); border-color: rgb(21,213,168); transform: scale(0.95); }
+        .dpad-row { display: flex; gap: 6px; }
 
         @media (max-width: 700px) {
-            body { min-height: 100vh; }
-            #hud, #controles { width: 100%; max-width: 100%; }
-            #dpad { display: flex; }
-            #conteneur-jeu { width: 100%; }
-            #canvas { width: 100%; height: auto; max-height: 60vh; border: none; }
+            body { min-height: 100vh; display: flex; flex-direction: column; }
+            #ecran-connexion { width: 90%; max-width: 90%; }
+            #conteneur-jeu { width: 100%; flex: 1; display: flex; flex-direction: column; padding: 0 10px; }
+            #hud { width: 100%; margin-bottom: 6px; padding: 6px 8px; }
+            #canvas { width: 100%; height: 40vh; border: 1px solid rgb(21,213,168); }
+            #controles { width: 100%; flex-direction: column; gap: 6px; margin-top: 6px; }
+            #controles .info { font-size: 10px; text-align: center; }
+            #dpad { display: flex; margin-top: 4px; margin-bottom: 4px; }
             #inventaire-panel {
                 top: auto; bottom: 0; right: 0; left: 0;
-                width: 100%; height: 72vh;
+                width: 100%; height: 70vh;
                 border-left: none; border-top: 1px solid rgb(21,213,168);
                 border-radius: 16px 16px 0 0;
                 transform: translateY(110%);
             }
             #inventaire-panel.ouvert { transform: translateY(0); }
             #message-jeu { font-size: 12px; padding: 4px 12px; }
-            #controles { flex-direction: column; gap: 8px; }
-            #controles .info { font-size: 10px; text-align: center; }
         }
     </style>
 </head>
