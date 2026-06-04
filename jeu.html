@@ -540,6 +540,7 @@ function equiperObjet(uid) {
     afficherMessage(`✅ ${objet.emoji} ${objet.nom} équipé !`);
     mettreAJourHUD();
     mettreAJourInventaireUI();
+    sauvegarder();
 }
 
 function desequiper(slot) {
@@ -551,6 +552,7 @@ function desequiper(slot) {
     mettreAJourHUD();
     mettreAJourInventaireUI();
     afficherMessage('🔄 Déséquipé !');
+    sauvegarder();
 }
 
 function utiliserObjet(uid) {
@@ -569,6 +571,7 @@ function utiliserObjet(uid) {
     joueur.inventaire.splice(idx, 1);
     mettreAJourHUD();
     mettreAJourInventaireUI();
+    sauvegarder();
 }
 
 function supprimerObjet(uid) {
@@ -578,6 +581,7 @@ function supprimerObjet(uid) {
     joueur.inventaire.splice(idx, 1);
     afficherMessage(`🗑️ ${objet.emoji} ${objet.nom} supprimé !`);
     mettreAJourInventaireUI();
+    sauvegarder();
 }
 
 function fusionnerObjets(uid1Str, uid2Str, equipe1, slot1, equipe2, slot2) {
@@ -646,6 +650,7 @@ function fusionnerObjets(uid1Str, uid2Str, equipe1, slot1, equipe2, slot2) {
     recalculerBonus();
     mettreAJourHUD();
     mettreAJourInventaireUI();
+    sauvegarder(); // Sauvegarder immédiatement
 }
 
 function recalculerBonus() {
