@@ -462,7 +462,15 @@ async function chargerProgression() {
             joueur.y = Math.round(data.position_y) || 3;
             joueur.nom = data.username || utilisateur.email.split('@')[0];
             joueur.inventaire = data.inventaire || [];
-            joueur.equipement = data.equipement || { arme:null, armure:null, bouclier:null };
+            
+            // Reconstruire les objets équipés à partir des IDs sauvegardés
+            const equipSave = data.equipement || { arme:null, armure:null, bouclier:null };
+            joueur.equipement = {
+                arme: equipSave.arme && OBJETS[equipSave.arme.id] ? { ...OBJETS[equipSave.arme.id], ...equipSave.arme } : null,
+                armure: equipSave.armure && OBJETS[equipSave.armure.id] ? { ...OBJETS[equipSave.armure.id], ...equipSave.armure } : null,
+                bouclier: equipSave.bouclier && OBJETS[equipSave.bouclier.id] ? { ...OBJETS[equipSave.bouclier.id], ...equipSave.bouclier } : null
+            };
+            
             recalculerBonus();
         } else {
             joueur.nom = utilisateur.email.split('@')[0];
@@ -478,16 +486,23 @@ async function chargerProgression() {
 async function sauvegarder() {
     if (!utilisateur) return;
     try {
+        // Convertir l'équipement en format sérialisable (juste les IDs)
+        const equipementAuSave = {};
+        ['arme','armure','bouclier'].forEach(slot => {
+            const obj = joueur.equipement[slot];
+            equipementAuSave[slot] = obj ? { id: obj.id, nom: obj.nom } : null;
+        });
+
         await supabaseClient.from('personnages').upsert({
             id: utilisateur.id, username: joueur.nom,
             niveau: joueur.niveau, xp: joueur.xp,
             vie: joueur.vie, attaque: joueur.attaque, defense: joueur.defense,
             position_x: joueur.x, position_y: joueur.y,
-            inventaire: joueur.inventaire, equipement: joueur.equipement,
+            inventaire: joueur.inventaire, equipement: equipementAuSave,
             updated_at: new Date().toISOString()
         });
         afficherMessage('💾 Sauvegardé !');
-    } catch(e) {}
+    } catch(e) { console.error(e); }
 }
 
 // ============================================
@@ -510,14 +525,14 @@ function equiperObjet(uid) {
     const objet = joueur.inventaire[idx];
 
     if (objet.type === 'arme') {
-        if (joueur.equipement.arme) joueur.inventaire.push({...OBJETS[joueur.equipement.arme], uid: Date.now()});
-        joueur.equipement.arme = objet.id;
+        if (joueur.equipement.arme) joueur.inventaire.push({...joueur.equipement.arme, uid: Date.now()});
+        joueur.equipement.arme = { ...objet }; // Stocker l'objet entier
     } else if (objet.type === 'armure') {
-        if (joueur.equipement.armure) joueur.inventaire.push({...OBJETS[joueur.equipement.armure], uid: Date.now()});
-        joueur.equipement.armure = objet.id;
+        if (joueur.equipement.armure) joueur.inventaire.push({...joueur.equipement.armure, uid: Date.now()});
+        joueur.equipement.armure = { ...objet };
     } else if (objet.type === 'bouclier') {
-        if (joueur.equipement.bouclier) joueur.inventaire.push({...OBJETS[joueur.equipement.bouclier], uid: Date.now()});
-        joueur.equipement.bouclier = objet.id;
+        if (joueur.equipement.bouclier) joueur.inventaire.push({...joueur.equipement.bouclier, uid: Date.now()});
+        joueur.equipement.bouclier = { ...objet };
     }
 
     joueur.inventaire.splice(idx, 1);
@@ -525,6 +540,17 @@ function equiperObjet(uid) {
     afficherMessage(`✅ ${objet.emoji} ${objet.nom} équipé !`);
     mettreAJourHUD();
     mettreAJourInventaireUI();
+}
+
+function desequiper(slot) {
+    const obj = joueur.equipement[slot];
+    if (!obj) return;
+    joueur.inventaire.push({...obj, uid: Date.now() + Math.random()});
+    joueur.equipement[slot] = null;
+    recalculerBonus();
+    mettreAJourHUD();
+    mettreAJourInventaireUI();
+    afficherMessage('🔄 Déséquipé !');
 }
 
 function utiliserObjet(uid) {
@@ -560,7 +586,7 @@ function fusionnerObjets(uid1Str, uid2Str, equipe1, slot1, equipe2, slot2) {
 
     // Récupérer obj1
     if (equipe1) {
-        obj1 = { ...OBJETS[joueur.equipement[slot1]], uid: uid1Str };
+        obj1 = { ...joueur.equipement[slot1], uid: uid1Str }; // Maintenant c'est l'objet complet
     } else {
         idx1 = joueur.inventaire.findIndex(o => o.uid == uid1Str);
         if (idx1 === -1) return;
@@ -569,7 +595,7 @@ function fusionnerObjets(uid1Str, uid2Str, equipe1, slot1, equipe2, slot2) {
 
     // Récupérer obj2
     if (equipe2) {
-        obj2 = { ...OBJETS[joueur.equipement[slot2]], uid: uid2Str };
+        obj2 = { ...joueur.equipement[slot2], uid: uid2Str };
     } else {
         idx2 = joueur.inventaire.findIndex(o => o.uid == uid2Str);
         if (idx2 === -1) return;
@@ -625,10 +651,10 @@ function fusionnerObjets(uid1Str, uid2Str, equipe1, slot1, equipe2, slot2) {
 function recalculerBonus() {
     joueur.bonusEquip = { attaque:0, defense:0 };
     ['arme','armure','bouclier'].forEach(slot => {
-        const id = joueur.equipement[slot];
-        if (id && OBJETS[id]) {
-            joueur.bonusEquip.attaque += OBJETS[id].attaque || 0;
-            joueur.bonusEquip.defense += OBJETS[id].defense || 0;
+        const obj = joueur.equipement[slot];
+        if (obj) {
+            joueur.bonusEquip.attaque += obj.attaque || 0;
+            joueur.bonusEquip.defense += obj.defense || 0;
         }
     });
 }
@@ -660,9 +686,8 @@ function mettreAJourInventaireUI() {
     ];
 
     slots.forEach(({ slot, label }) => {
-        const id = joueur.equipement[slot];
-        if (id && OBJETS[id]) {
-            const obj = OBJETS[id];
+        const obj = joueur.equipement[slot];
+        if (obj) {
             divEquip.innerHTML += `
                 <div class="inv-item equipe">
                     <div>
@@ -716,10 +741,10 @@ function mettreAJourInventaireUI() {
     
     // Ajouter les objets équipés avec ID stable
     ['arme','armure','bouclier'].forEach(slot => {
-        const id = joueur.equipement[slot];
-        if (id && OBJETS[id]) {
+        const obj = joueur.equipement[slot];
+        if (obj) {
             tousLesObjets.push({
-                ...OBJETS[id],
+                ...obj,
                 uid: `equip_${slot}`, // ID stable pour équipés
                 equipe: true,
                 slot: slot
@@ -1048,7 +1073,7 @@ function render() {
         ctx.fillText('🧙', pjx+TC/2, pjy+TC/2);
     }
 
-    const arme = joueur.equipement.arme ? OBJETS[joueur.equipement.arme] : null;
+    const arme = joueur.equipement.arme || null;
     if (arme) {
         ctx.font=`${TC*0.5}px serif`;
         ctx.fillText(arme.emoji, pjx+TC-2, pjy+4);
