@@ -161,7 +161,7 @@
         .dpad-row { display: flex; gap: 4px; }
 
         @media (max-width: 700px) {
-            #hud, #controles { width: 340px; }
+            #hud, #controles { width: 100%; max-width: 100vw; }
             #dpad { display: flex; }
             #inventaire-panel {
                 top: auto; bottom: 0; right: 0; left: 0;
@@ -454,8 +454,16 @@ function demarrerJeu() {
 
     if (window.innerWidth <= 700) {
         document.getElementById('dpad').style.display = 'flex';
-        // FIX: canvas 320x240 pour tuile entière de 32px sur mobile (320/10=32 maison, 320/20=16 ext)
-        canvas.width = 320; canvas.height = 240;
+        // Taille de tuile fixe 32px sur mobile — la caméra suit le joueur
+        // On calcule le canvas pour afficher ~10 tuiles en largeur et ~9 en hauteur
+        const TC_MOBILE = 32;
+        const tilesX = Math.floor((window.innerWidth - 16) / TC_MOBILE); // -16 pour les marges
+        const tilesY = 9; // hauteur fixe
+        canvas.width  = tilesX * TC_MOBILE;
+        canvas.height = tilesY * TC_MOBILE;
+        // Mettre à jour le HUD et controles à la même largeur
+        document.getElementById('hud').style.width      = canvas.width + 'px';
+        document.getElementById('controles').style.width = canvas.width + 'px';
     }
 
     document.addEventListener('keydown', e => {
@@ -1030,7 +1038,10 @@ function render() {
     const W = canvas.width, H = canvas.height;
     const COLS_LOCAL   = getCols();
     const LIGNES_LOCAL = getLignes();
-    const TC = Math.floor(W / COLS_LOCAL);
+    // Sur mobile : tuile fixe 32px (la caméra suit le joueur, on n'affiche pas toute la carte)
+    // Sur desktop : on cale la carte entière dans le canvas
+    const isMobile = window.innerWidth <= 700;
+    const TC = isMobile ? 32 : Math.floor(W / COLS_LOCAL);
     ctx.clearRect(0, 0, W, H);
 
     const camX = Math.max(0, Math.min(COLS_LOCAL   - Math.floor(W/TC), joueur.x - Math.floor(W/TC/2)));
