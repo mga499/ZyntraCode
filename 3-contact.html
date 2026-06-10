@@ -8,172 +8,46 @@
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <link rel="icon" type="image/png" href="logo zyntracode v3.png">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #0a0a0a;
-            color: white;
-            font-family: Arial, Helvetica, sans-serif;
-            text-align: center;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background-color: #0a0a0a; color: white; font-family: Arial, Helvetica, sans-serif; text-align: center; }
         #menu-btn {
-            padding: 8px 15px;
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 1001;
-            color: rgb(21, 213, 168);
-            background-color: transparent;
-            border: 2px solid rgb(21, 213, 168);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            display: none;
+            padding: 8px 15px; position: fixed; top: 15px; left: 15px; z-index: 1001;
+            color: rgb(21, 213, 168); background-color: transparent;
+            border: 2px solid rgb(21, 213, 168); border-radius: 8px; cursor: pointer; font-size: 16px; display: none;
         }
         #menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: #1a1a1a;
-            width: 180px;
-            height: 100vh;
-            padding: 60px 10px 10px 10px;
-            box-shadow: 0px 0px 15px rgb(21, 213, 168);
-            z-index: 1000;
-            display: block;
+            position: fixed; top: 0; left: 0; background: #1a1a1a; width: 180px; height: 100vh;
+            padding: 60px 10px 10px 10px; box-shadow: 0px 0px 15px rgb(21, 213, 168); z-index: 1000; display: block;
         }
-        #menu a {
-            color: white;
-            display: block;
-            padding: 12px 10px;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-        #menu a:hover {
-            color: rgb(21, 213, 168);
-            background: #2a2a2a;
-        }
-        #tte_p {
-            font-size: 48px;
-            color: rgb(21, 213, 168);
-            padding: 80px 20px 40px 20px;
-        }
-        /* FORMULAIRE */
+        #menu a { color: white; display: block; padding: 12px 10px; text-decoration: none; border-radius: 8px; transition: 0.2s; }
+        #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
+        #tte_p { font-size: 48px; color: rgb(21, 213, 168); padding: 80px 20px 40px 20px; }
         .contact-card {
-            background: #1a1a1a;
-            border: 1px solid rgb(21, 213, 168);
-            border-radius: 15px;
-            padding: 40px;
-            max-width: 500px;
-            margin: 0 auto 30px auto;
-            text-align: left;
+            background: #1a1a1a; border: 1px solid rgb(21, 213, 168); border-radius: 15px;
+            padding: 40px; max-width: 500px; margin: 0 auto 30px auto; text-align: left;
         }
-        .contact-card p {
-            color: #aaa;
-            margin-bottom: 30px;
-            font-size: 16px;
-            text-align: center;
+        .contact-card p { color: #aaa; margin-bottom: 30px; font-size: 16px; text-align: center; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; color: rgb(21, 213, 168); margin-bottom: 8px; font-size: 14px; font-weight: bold; }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px 15px; background: #2a2a2a; border: 1px solid #3a3a3a;
+            border-radius: 8px; color: white; font-size: 14px; font-family: Arial, sans-serif; outline: none; transition: 0.2s;
         }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            color: rgb(21, 213, 168);
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: bold;
-        }
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            background: #2a2a2a;
-            border: 1px solid #3a3a3a;
-            border-radius: 8px;
-            color: white;
-            font-size: 14px;
-            font-family: Arial, sans-serif;
-            outline: none;
-            transition: 0.2s;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus {
-            border-color: rgb(21, 213, 168);
-            box-shadow: 0 0 10px rgba(21, 213, 168, 0.2);
-        }
-        .form-group textarea {
-            height: 120px;
-            resize: vertical;
-        }
+        .form-group input:focus, .form-group textarea:focus { border-color: rgb(21, 213, 168); box-shadow: 0 0 10px rgba(21, 213, 168, 0.2); }
+        .form-group textarea { height: 120px; resize: vertical; }
         .btn-envoyer {
-            width: 100%;
-            padding: 14px;
-            background: rgb(21, 213, 168);
-            color: black;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.3s;
+            width: 100%; padding: 14px; background: rgb(21, 213, 168); color: black;
+            border: none; border-radius: 10px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.3s;
         }
-        .btn-envoyer:hover {
-            background: transparent;
-            color: rgb(21, 213, 168);
-            border: 2px solid rgb(21, 213, 168);
-        }
-        /* MESSAGE SUCCÈS/ERREUR */
-        #message-status {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            display: none;
-            text-align: center;
-            font-weight: bold;
-        }
-        .succes {
-            background: rgba(21, 213, 168, 0.2);
-            color: rgb(21, 213, 168);
-            border: 1px solid rgb(21, 213, 168);
-        }
-        .erreur {
-            background: rgba(255, 50, 50, 0.2);
-            color: #ff5555;
-            border: 1px solid #ff5555;
-        }
-        .info-cards {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            padding: 0 20px 80px 20px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        .info-card {
-            background: #1a1a1a;
-            border-radius: 12px;
-            padding: 20px;
-            flex: 1;
-            min-width: 150px;
-        }
-        .info-card .icon {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
-        .info-card h4 {
-            color: rgb(21, 213, 168);
-            margin-bottom: 8px;
-        }
-        .info-card p {
-            color: #aaa;
-            font-size: 13px;
-        }
+        .btn-envoyer:hover { background: transparent; color: rgb(21, 213, 168); border: 2px solid rgb(21, 213, 168); }
+        #message-status { margin-top: 15px; padding: 10px; border-radius: 8px; display: none; text-align: center; font-weight: bold; }
+        .succes { background: rgba(21, 213, 168, 0.2); color: rgb(21, 213, 168); border: 1px solid rgb(21, 213, 168); }
+        .erreur { background: rgba(255, 50, 50, 0.2); color: #ff5555; border: 1px solid #ff5555; }
+        .info-cards { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; padding: 0 20px 80px 20px; max-width: 600px; margin: 0 auto; }
+        .info-card { background: #1a1a1a; border-radius: 12px; padding: 20px; flex: 1; min-width: 150px; }
+        .info-card .icon { font-size: 30px; margin-bottom: 10px; }
+        .info-card h4 { color: rgb(21, 213, 168); margin-bottom: 8px; }
+        .info-card p { color: #aaa; font-size: 13px; }
         @media (max-width: 768px) {
             #menu-btn { display: block; }
             #menu { display: none; position: fixed; z-index: 1000; }
@@ -184,10 +58,8 @@
 </head>
 <body>
 
-<!-- BOUTON MENU -->
 <button id="menu-btn">☰ Menu</button>
 
-<!-- MENU -->
 <nav id="menu">
     <a href="index.html">Accueil</a>
     <a href="2-script.html">script</a>
@@ -195,10 +67,8 @@
     <a href="10-e-book.html">E-book</a>
 </nav>
 
-<!-- TITRE -->
 <h1 id="tte_p">📩 Contact</h1>
 
-<!-- FORMULAIRE -->
 <div class="contact-card">
     <p>Une question ? Un projet ? N'hésitez pas à nous contacter, nous répondons rapidement !</p>
 
@@ -219,7 +89,6 @@
     <div id="message-status"></div>
 </div>
 
-<!-- INFOS -->
 <div class="info-cards">
     <div class="info-card">
         <div class="icon">⚡</div>
@@ -239,15 +108,11 @@
 </div>
 
 <script>
-    // Menu
     const btn = document.getElementById("menu-btn");
     const menu = document.getElementById("menu");
-    btn.addEventListener("click", () => {
-        menu.classList.toggle("visible");
-    });
+    btn.addEventListener("click", () => menu.classList.toggle("visible"));
 
-    // EmailJS
-    emailjs.init("CIEjPItwnunl99qyE"); // ← Remplace par ta Public Key
+    emailjs.init("CIEjPItwnunl99qyE");
 
     function envoyerEmail() {
         const nom = document.getElementById("nom").value;
@@ -273,33 +138,24 @@
             document.getElementById("nom").value = "";
             document.getElementById("email").value = "";
             document.getElementById("message").value = "";
-        }).catch(() => {
-            status.textContent = "❌ Erreur lors de l'envoi, réessaie !";
+        }).catch((err) => {
+            status.textContent = "❌ Erreur : " + JSON.stringify(err);
             status.className = "erreur";
             status.style.display = "block";
         });
     }
 </script>
 
-<!-- COPYRIGHT -->
-<div style="
-    text-align: center;
-    padding: 20px;
-    color: #555;
-    font-size: 13px;
-    border-top: 1px solid #1a1a1a;
-    margin-top: 20px;
-    padding-left: 200px;
-">
+<div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px; padding-left: 200px;">
     © 2026 ZyntraCode — Tous droits réservés | 
     <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
     <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a>
     <a href="politique-confidentialite.html" style="color: rgb(21, 213, 168); text-decoration: none;">Politique de confidentialité</a>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/profil-menu.js"></script>
 <script src="mise-a-jour.js"></script>
 
-    
 </body>
 </html>
