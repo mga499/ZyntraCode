@@ -1694,7 +1694,16 @@ function cancelMp(){
 // ── Guest render loop (Realtime) ──
 function guestRenderLoop(ts){
   if(!gs.running)return;
-  updateManaUI();buildHandUI();
+  if(!gs.lastFrame)gs.lastFrame=ts;
+  const dt=Math.min((ts-gs.lastFrame)/1000,0.1);gs.lastFrame=ts;
+  // Mana regen for guest
+  gs.manaTick+=dt;
+  if(gs.manaTick>=1){
+    gs.mana=Math.min(MAX_MANA,gs.mana+MANA_REGEN);
+    gs.manaTick=0;
+    updateManaUI();
+    buildHandUI(); // only rebuild once per second, not every frame
+  }
   animId=requestAnimationFrame(guestRenderLoop);
 }
 
@@ -1702,6 +1711,14 @@ function guestRenderLoop(ts){
 let guestPollTick=0;
 async function guestPollLoop(ts){
   if(!gs.running)return;
+  if(!gs.lastFrame)gs.lastFrame=ts;
+  const dt=Math.min((ts-gs.lastFrame)/1000,0.1);gs.lastFrame=ts;
+  // Mana regen
+  gs.manaTick+=dt;
+  if(gs.manaTick>=1){
+    gs.mana=Math.min(MAX_MANA,gs.mana+MANA_REGEN);
+    gs.manaTick=0;updateManaUI();buildHandUI();
+  }
   guestPollTick++;
   if(guestPollTick%18===0){ // every ~300ms at 60fps
     try{
