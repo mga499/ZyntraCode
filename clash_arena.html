@@ -1725,7 +1725,17 @@ async function guestPollLoop(ts){
       const r=await fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${mpRoomId}&select=game_state`,
         {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
       const d=await r.json();
-      if(d[0]?.game_state) renderGuestState(d[0].game_state);
+      if(d[0]?.game_state){
+        if(d[0].game_state.ended){
+          // Host ended the game → show result (flip winner for guest perspective)
+          gs.running=false;if(animId)cancelAnimationFrame(animId);
+          document.body.classList.remove('selecting');
+          const w=d[0].game_state.winner==='player'?'enemy':d[0].game_state.winner==='enemy'?'player':null;
+          endMpGame(w);
+          return;
+        }
+        renderGuestState(d[0].game_state);
+      }
     }catch(e){}
   }
   animId=requestAnimationFrame(guestPollLoop);
@@ -1782,19 +1792,25 @@ function renderGuestState(state){
     el.innerHTML=`<div class="troop-hp-bar"><div class="troop-hp-fill" style="width:${Math.max(0,t.hp/t.maxHp*100)}%"></div></div><span>${t.emoji}</span>`;
     arena.appendChild(el);
   });
-  // Update tower HPs (flipped)
+  // Update tower HPs (flipped) + sync gs.towers for result screen
   if(state.towers){
     const pt=state.towers.enemy,et=state.towers.player;
     if(pt){
+      gs.towers.player.left.hp=pt.left;gs.towers.player.right.hp=pt.right;gs.towers.player.king.hp=pt.king;
       document.getElementById('ptl-hp').textContent=Math.max(0,pt.left);document.getElementById('ptl-bar').style.width=Math.max(0,pt.left/TWR_HP*100)+'%';
       document.getElementById('ptr-hp').textContent=Math.max(0,pt.right);document.getElementById('ptr-bar').style.width=Math.max(0,pt.right/TWR_HP*100)+'%';
       document.getElementById('pk-hp').textContent=Math.max(0,pt.king);document.getElementById('pk-bar').style.width=Math.max(0,pt.king/KING_HP*100)+'%';
     }
     if(et){
+      gs.towers.enemy.left.hp=et.left;gs.towers.enemy.right.hp=et.right;gs.towers.enemy.king.hp=et.king;
       document.getElementById('etl-hp').textContent=Math.max(0,et.left);document.getElementById('etl-bar').style.width=Math.max(0,et.left/TWR_HP*100)+'%';
       document.getElementById('etr-hp').textContent=Math.max(0,et.right);document.getElementById('etr-bar').style.width=Math.max(0,et.right/TWR_HP*100)+'%';
       document.getElementById('ek-hp').textContent=Math.max(0,et.king);document.getElementById('ek-bar').style.width=Math.max(0,et.king/KING_HP*100)+'%';
     }
+    // Sync destroyed count for result screen
+    gs.destroyed.player=[gs.towers.player.left,gs.towers.player.right,gs.towers.player.king].filter(t=>t.hp<=0).length;
+    gs.destroyed.enemy =[gs.towers.enemy.left, gs.towers.enemy.right, gs.towers.enemy.king ].filter(t=>t.hp<=0).length;
+    updateScore();
   }
   if(state.timeLeft!==undefined){gs.timeLeft=state.timeLeft;updateTimer();}
   // Check for tower death icons
@@ -1810,15 +1826,20 @@ function renderGuestState(state){
 
 // ── End multiplayer ──
 function endMpGame(winner){
-  if(mpChannel){mpChannel.unsubscribe();mpChannel=null;}
+  // Host: notify guest BEFORE closing the channel
   if(mpMode==='host'&&mpChannel){
     mpChannel.send({type:'broadcast',event:'end',payload:{winner}});
   }
+  // Small delay to let the message go out, then clean up
+  const cleanup=()=>{
+    if(mpChannel){mpChannel.unsubscribe();mpChannel=null;}
+  };
+  setTimeout(cleanup,500);
   // Clean up room
   if(mpRoomId){
     fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${mpRoomId}`,{
       method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({status:'finished'})
+      body:JSON.stringify({status:'finished',game_state:{ended:true,winner}})
     }).catch(()=>{});
   }
   mpMode=null;mpRoomId=null;mpOpponent=null;
