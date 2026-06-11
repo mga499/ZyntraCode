@@ -1752,14 +1752,16 @@ function hostBroadcast(){
 // ── Guest: render received state ──
 function renderGuestState(state){
   if(!state)return;
-  // Update troops
-  document.querySelectorAll('.troop').forEach(e=>e.remove());
   const arena=document.getElementById('arena');
+  const aH=arena.offsetHeight||390;
+  // Update troops (flip Y: guest sees mirrored arena)
+  document.querySelectorAll('.troop').forEach(e=>e.remove());
   state.troops.forEach(t=>{
-    const displayOwner=t.owner==='player'?'enemy':'player'; // flip for guest
+    const displayOwner=t.owner==='player'?'enemy':'player'; // flip owner for guest
+    const flippedY=aH - t.y - 34; // mirror vertically (34 = troop height)
     const el=document.createElement('div');
     el.className='troop '+displayOwner+'-troop';
-    el.style.left=t.x+'px';el.style.top=t.y+'px';
+    el.style.left=t.x+'px';el.style.top=flippedY+'px';
     el.innerHTML=`<div class="troop-hp-bar"><div class="troop-hp-fill" style="width:${Math.max(0,t.hp/t.maxHp*100)}%"></div></div><span>${t.emoji}</span>`;
     arena.appendChild(el);
   });
