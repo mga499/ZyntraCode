@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clash Arena</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Exo+2:wght@400;600;700&display=swap');
+:root {
+  --bg:#0d0620;--panel:#120930;--card-bg:#1a0e3a;
+  --gold:#FFD700;--gold-dim:#b8960c;
+  --red:#c0392b;--red-light:#e74c3c;
+  --blue:#1565C0;--blue-light:#2196F3;
+  --green:#27ae60;--purple:#7B1FA2;--mana:#3498db;
+  --text:#f0e6ff;--text-dim:rgba(240,230,255,0.55);
+  --border:rgba(255,215,0,0.18);--nav-h:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);font-family:'Exo 2',sans-serif;color:var(--text);
+  min-height:100vh;max-width:440px;margin:0 auto;
+  display:flex;flex-direction:column;
+  background-image:radial-gradient(ellipse at 50% 0%,rgba(123,31,162,.2) 0%,transparent 55%),
+    radial-gradient(ellipse at 20% 80%,rgba(21,101,192,.12) 0%,transparent 50%);
+  overflow-x:hidden;
+}
+/* HEADER */
+#app-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px 10px;border-bottom:1px solid var(--border);
+  background:rgba(13,6,32,.92);position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(8px);
+}
+#app-logo{font-family:'Cinzel',serif;font-size:1.15rem;color:var(--gold);letter-spacing:3px;text-shadow:0 0 16px rgba(255,215,0,.5)}
+#header-trophies{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);
+  border-radius:20px;padding:4px 12px;
+  font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold);
+}
+/* PAGES */
+.page{display:none;flex-direction:column;flex:1;overflow-y:auto;padding-bottom:calc(var(--nav-h) + 8px)}
+.page.active{display:flex}
+/* NAV */
+#nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:min(440px,100vw);height:var(--nav-h);
+  background:rgba(13,6,32,.97);border-top:1px solid var(--border);
+  display:flex;align-items:stretch;z-index:50;backdrop-filter:blur(10px);
+}
+.nav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  cursor:pointer;border:none;background:none;color:var(--text-dim);
+  font-family:'Exo 2',sans-serif;font-size:.58rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;transition:color .2s;position:relative;
+}
+.nav-icon{font-size:1.4rem;transition:transform .2s}
+.nav-btn.active{color:var(--gold)}
+.nav-btn.active .nav-icon{transform:scale(1.15)}
+.nav-btn.active::after{
+  content:'';position:absolute;bottom:0;left:20%;right:20%;height:3px;
+  background:var(--gold);border-radius:2px 2px 0 0;box-shadow:0 0 10px rgba(255,215,0,.6);
+}
+/* HOME */
+.home-hero{
+  margin:16px;background:linear-gradient(135deg,#1a0a2e,#2a1040);
+  border:1px solid var(--border);border-radius:16px;padding:20px;
+  display:flex;align-items:center;gap:14px;position:relative;overflow:hidden;
+}
+.home-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(255,215,0,.08),transparent 60%)}
+.hero-avatar{font-size:3.5rem;line-height:1;filter:drop-shadow(0 0 12px rgba(255,215,0,.4))}
+.hero-info{flex:1}
+.hero-name{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin-bottom:4px}
+.hero-arena-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(123,31,162,.3);border:1px solid rgba(123,31,162,.5);
+  border-radius:20px;padding:3px 10px;font-size:.68rem;color:#d7a8ff;margin-bottom:6px;
+}
+.hero-xp-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.hero-xp-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--gold));border-radius:3px;width:68%}
+.hero-xp-label{font-size:.6rem;color:var(--text-dim);margin-top:3px}
+.home-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:0 16px 16px}
+.stat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px 8px;text-align:center}
+.stat-icon{font-size:1.4rem;margin-bottom:4px}
+.stat-value{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold)}
+.stat-label{font-size:.58rem;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.section-title{font-family:'Cinzel',serif;font-size:.75rem;color:var(--text-dim);letter-spacing:3px;text-transform:uppercase;padding:0 16px 8px}
+.home-btn-battle{
+  margin:4px 16px 16px;width:calc(100% - 32px);padding:16px;
+  font-family:'Cinzel',serif;font-size:1rem;letter-spacing:4px;text-transform:uppercase;
+  background:linear-gradient(135deg,#b8960c,#FFD700,#e6b800);
+  color:#0d0620;border:none;border-radius:12px;cursor:pointer;font-weight:900;
+  box-shadow:0 4px 24px rgba(255,215,0,.4),inset 0 1px 0 rgba(255,255,255,.3);
+  transition:transform .15s,box-shadow .15s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.home-btn-battle:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,215,0,.6)}
+.home-btn-battle:active{transform:translateY(0)}
+.recent-section{padding:0 16px}
+.recent-row{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:8px;
+}
+.recent-icon{font-size:1.4rem}
+.recent-info{flex:1}
+.recent-desc{font-size:.75rem;font-weight:600}
+.recent-sub{font-size:.62rem;color:var(--text-dim);margin-top:2px}
+.recent-result{font-family:'Cinzel',serif;font-size:.8rem}
+.result-win{color:var(--green)}.result-loss{color:var(--red-light)}.result-draw{color:var(--text-dim)}
+/* ARENAS */
+.arenas-grid{padding:14px 14px 0;display:flex;flex-direction:column;gap:12px}
+.arena-card{border-radius:14px;overflow:hidden;border:1px solid var(--border);position:relative;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.arena-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.arena-card.locked{filter:grayscale(.7);opacity:.6;cursor:not-allowed}
+.arena-card.current{border-color:var(--gold);box-shadow:0 0 20px rgba(255,215,0,.25)}
+.arena-bg{height:110px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.arena-emoji{font-size:3.5rem;z-index:2;position:relative;filter:drop-shadow(0 4px 12px rgba(0,0,0,.6))}
+.arena-body{padding:12px 14px;background:var(--card-bg)}
+.arena-row{display:flex;align-items:center;justify-content:space-between}
+.arena-name{font-family:'Cinzel',serif;font-size:.95rem;color:var(--gold)}
+.arena-trophy{display:flex;align-items:center;gap:4px;font-size:.72rem;color:var(--text-dim)}
+.arena-desc{font-size:.68rem;color:var(--text-dim);margin-top:4px}
+.arena-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:.6rem;letter-spacing:1px;text-transform:uppercase;margin-top:8px}
+.badge-current{background:rgba(255,215,0,.15);color:var(--gold);border:1px solid rgba(255,215,0,.4)}
+.badge-locked{background:rgba(255,255,255,.06);color:var(--text-dim);border:1px solid rgba(255,255,255,.1)}
+.badge-unlocked{background:rgba(39,174,96,.15);color:#2ecc71;border:1px solid rgba(39,174,96,.3)}
+/* DECK */
+.deck-header{padding:14px 16px 8px;display:flex;align-items:center;justify-content:space-between}
+.deck-title{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold)}
+.deck-mana-avg{display:flex;align-items:center;gap:5px;background:rgba(52,152,219,.15);border:1px solid rgba(52,152,219,.3);border-radius:20px;padding:4px 10px;font-size:.7rem;color:var(--mana)}
+.deck-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 14px}
+.deck-card{
+  background:linear-gradient(145deg,#1a0e3a,#221450);
+  border:2px solid var(--border);border-radius:14px;
+  padding:14px 12px;display:flex;align-items:center;gap:12px;
+  cursor:pointer;transition:border-color .15s,transform .15s;position:relative;
+}
+.deck-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.dc-emoji{font-size:2.2rem}
+.dc-info{flex:1;min-width:0}
+.dc-name{font-size:.75rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dc-stats{font-size:.62rem;color:var(--text-dim);margin-top:3px}
+.dc-cost{
+  position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;
+  background:var(--mana);font-family:'Cinzel',serif;font-size:.75rem;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;
+  box-shadow:0 0 8px rgba(52,152,219,.7);
+}
+.dc-rarity{font-size:.55rem;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.rarity-common{color:#95a5a6}.rarity-rare{color:#3498db}.rarity-epic{color:#9b59b6}.rarity-legendary{color:var(--gold)}
+.deck-all-title{padding:4px 16px 8px;font-family:'Cinzel',serif;font-size:.72rem;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
+.all-cards-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 14px 14px}
+.mini-card{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:10px;
+  padding:8px 4px;text-align:center;cursor:pointer;
+  transition:border-color .15s,transform .15s;position:relative;user-select:none;
+}
+.mini-card:hover{border-color:rgba(255,215,0,.5);transform:scale(1.04)}
+.mini-card.in-deck{border-color:var(--gold);background:rgba(255,215,0,.08)}
+.mini-emoji{font-size:1.6rem;line-height:1.2}
+.mini-name{font-size:.5rem;font-weight:700;color:var(--gold);margin-top:3px}
+.mini-cost{
+  position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;
+  background:var(--mana);font-size:.6rem;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;
+}
+/* BATTLE PAGE */
+#page-battle{padding-bottom:calc(var(--nav-h) + 4px);background:var(--bg);align-items:center}
+#battle-top{width:100%;display:flex;align-items:center;justify-content:space-between;padding:8px 12px 4px}
+#battle-top h2{font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold);letter-spacing:2px}
+/* ARENA */
+#arena{
+  width:calc(100% - 16px);max-width:420px;height:390px;
+  background:linear-gradient(180deg,#0d0e2f 0%,#1a0a2e 50%,#0e1f0e 100%);
+  border:1.5px solid rgba(255,215,0,.2);border-radius:12px;
+  position:relative;overflow:hidden;
+}
+#arena::after{
+  content:'';position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:26px;
+  background:linear-gradient(90deg,transparent,rgba(52,152,219,.3) 20%,rgba(52,152,219,.45) 50%,rgba(52,152,219,.3) 80%,transparent);
+  border-top:1px solid rgba(52,152,219,.5);border-bottom:1px solid rgba(52,152,219,.5);
+}
+#arena::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;
+}
+/* TOWERS */
+.tower{position:absolute;width:58px;text-align:center;cursor:default;z-index:5}
+.tower-icon{font-size:1.9rem;line-height:1;filter:drop-shadow(0 0 7px rgba(255,255,255,.3))}
+.tower.damaged .tower-icon{animation:shake .3s}
+.tower-hp{font-size:.6rem;font-weight:700;margin-top:1px;letter-spacing:1px}
+.tower-bar{width:48px;height:4px;background:rgba(255,255,255,.12);border-radius:2px;margin:2px auto 0;overflow:hidden}
+.tower-bar-fill{height:100%;border-radius:2px;transition:width .4s ease}
+#etower-left{top:14px;left:18px}#etower-right{top:14px;right:18px}#eking{top:20px;left:50%;transform:translateX(-50%)}
+.enemy-tower .tower-icon{filter:drop-shadow(0 0 7px rgba(231,76,60,.8))}
+.enemy-tower .tower-bar-fill{background:var(--red-light)}
+#ptower-left{bottom:14px;left:18px}#ptower-right{bottom:14px;right:18px}#pking{bottom:20px;left:50%;transform:translateX(-50%)}
+.player-tower .tower-icon{filter:drop-shadow(0 0 7px rgba(33,150,243,.8))}
+.player-tower .tower-bar-fill{background:var(--blue-light)}
+/* TROOPS */
+.troop{
+  position:absolute;width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-size:1.2rem;
+  z-index:8;pointer-events:none;border:2px solid rgba(255,255,255,.35);
+}
+.troop.player-troop{background:radial-gradient(circle,rgba(33,150,243,.65),rgba(21,101,192,.9));box-shadow:0 0 10px rgba(33,150,243,.5)}
+.troop.enemy-troop{background:radial-gradient(circle,rgba(231,76,60,.65),rgba(192,57,43,.9));box-shadow:0 0 10px rgba(231,76,60,.5)}
+.troop-hp-bar{position:absolute;top:-7px;left:0;width:34px;height:4px;background:rgba(0,0,0,.5);border-radius:2px}
+.troop-hp-fill{height:100%;border-radius:2px;background:var(--green);transition:width .2s}
+.projectile{position:absolute;width:12px;height:12px;border-radius:50%;z-index:9;pointer-events:none;font-size:.75rem;display:flex;align-items:center;justify-content:center}
+.dmg-popup{position:absolute;font-family:'Cinzel',serif;font-size:.9rem;font-weight:900;pointer-events:none;z-index:20;animation:floatUp .8s ease-out forwards}
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-38px) scale(1.3)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+/* DEPLOY ZONES */
+.deploy-zone{
+  position:absolute;opacity:0;transition:opacity .2s;pointer-events:none;
+  border:2px dashed rgba(255,215,0,.4);background:rgba(255,215,0,.05);z-index:6;
+  display:flex;align-items:center;justify-content:center;font-size:.62rem;color:rgba(255,215,0,.6);letter-spacing:2px;
+}
+#deploy-zone-left{top:50%;bottom:0;left:0;width:50%;border-radius:0 0 0 10px}
+#deploy-zone-right{top:50%;bottom:0;left:50%;width:50%;border-radius:0 0 10px 0}
+body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
+/* MANA */
+#mana-section{width:calc(100% - 16px);max-width:420px;display:flex;align-items:center;gap:7px;padding:6px 0 2px}
+#mana-label{font-size:.65rem;font-weight:700;color:var(--mana);letter-spacing:2px;min-width:46px}
+#mana-track{flex:1;display:flex;gap:2px}
+.mana-gem{flex:1;height:13px;border-radius:3px;background:rgba(52,152,219,.12);border:1px solid rgba(52,152,219,.25);transition:background .2s,box-shadow .2s}
+.mana-gem.filled{background:var(--mana);box-shadow:0 0 7px rgba(52,152,219,.7)}
+#mana-count{font-family:'Cinzel',serif;font-size:.85rem;color:var(--mana);min-width:20px;text-align:right}
+/* HAND */
+#hand{width:calc(100% - 16px);max-width:420px;display:flex;gap:7px;justify-content:center;padding:4px 0}
+.card{
+  width:88px;background:linear-gradient(145deg,#1e1235,#2a1850);
+  border:2px solid rgba(255,215,0,.22);border-radius:10px;padding:7px 5px;
+  text-align:center;cursor:pointer;
+  transition:transform .15s,box-shadow .15s,border-color .15s;
+  position:relative;user-select:none;flex-shrink:0;
+}
+.card:hover:not(.disabled){transform:translateY(-7px) scale(1.04);box-shadow:0 7px 22px rgba(255,215,0,.3);border-color:var(--gold)}
+.card.selected{transform:translateY(-11px) scale(1.07);box-shadow:0 12px 28px rgba(255,215,0,.55);border-color:var(--gold)}
+.card.disabled{opacity:.42;cursor:not-allowed;filter:grayscale(.5)}
+.card-emoji{font-size:1.9rem;line-height:1.2}
+.card-name{font-size:.58rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-top:2px}
+.card-stats{font-size:.58rem;color:rgba(240,230,255,.65);margin-top:2px}
+.card-cost{
+  position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;
+  background:var(--mana);font-family:'Cinzel',serif;font-size:.7rem;font-weight:900;
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  box-shadow:0 0 9px rgba(52,152,219,.8);border:1px solid rgba(255,255,255,.35);
+}
+.card-rarity{position:absolute;bottom:3px;left:0;right:0;font-size:.44rem;letter-spacing:2px;text-transform:uppercase;opacity:.55}
+/* BOTTOM UI */
+#bottom-ui{width:calc(100% - 16px);max-width:420px;display:flex;align-items:center;justify-content:space-between;padding:4px 0 0}
+#timer-display{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);text-shadow:0 0 10px rgba(255,215,0,.5);min-width:65px}
+#status-msg{font-size:.65rem;color:var(--text-dim);flex:1;text-align:center;letter-spacing:1px}
+#score-display{font-family:'Cinzel',serif;font-size:.78rem;color:var(--gold);text-align:right;min-width:65px}
+#instruction{font-size:.62rem;color:rgba(240,230,255,.35);letter-spacing:1px;text-align:center;padding:2px 0 0}
+/* OVERLAY */
+#overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.9);
+  display:flex;align-items:center;justify-content:center;
+  z-index:200;flex-direction:column;gap:14px;
+}
+#overlay.hidden{display:none}
+#overlay h2{font-family:'Cinzel',serif;font-size:2rem;letter-spacing:5px;text-transform:uppercase}
+#overlay p{font-size:.85rem;color:var(--text-dim);letter-spacing:2px}
+.ov-btn{
+  margin-top:6px;padding:13px 38px;font-family:'Cinzel',serif;
+  font-size:.95rem;letter-spacing:3px;text-transform:uppercase;
+  background:linear-gradient(135deg,#b8960c,#FFD700,#b8960c);
+  color:#0d0620;border:none;border-radius:8px;cursor:pointer;
+  font-weight:700;box-shadow:0 4px 20px rgba(255,215,0,.5);transition:transform .15s;
+}
+.ov-btn:hover{transform:scale(1.05)}
+/* TOAST */
+#toast{
+  position:fixed;bottom:calc(var(--nav-h) + 12px);left:50%;transform:translateX(-50%);
+  background:rgba(26,14,58,.96);border:1px solid var(--border);
+  border-radius:20px;padding:8px 20px;font-size:.75rem;color:var(--text);
+  z-index:300;pointer-events:none;opacity:0;transition:opacity .25s;white-space:nowrap;
+}
+#toast.show{opacity:1}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,215,0,.2);border-radius:2px}
+
+/* ── RESULT SCREEN ── */
+#result-screen{
+  position:fixed;inset:0;z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  overflow-y:auto;padding:24px 20px calc(var(--nav-h)+24px);
+  background:rgba(10,4,24,.97);
+  opacity:0;pointer-events:none;
+  transition:opacity .4s ease;
+}
+#result-screen.show{opacity:1;pointer-events:all}
+.rs-header{text-align:center;margin-bottom:24px}
+.rs-result-icon{font-size:4rem;line-height:1;animation:popIn .5s .1s both}
+@keyframes popIn{0%{transform:scale(0) rotate(-20deg);opacity:0}70%{transform:scale(1.15) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.rs-title{
+  font-family:'Cinzel',serif;font-size:2rem;letter-spacing:5px;
+  text-transform:uppercase;margin:10px 0 4px;
+  animation:slideDown .4s .25s both;
+}
+@keyframes slideDown{from{transform:translateY(-16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.rs-sub{font-size:.8rem;color:var(--text-dim);letter-spacing:2px;animation:slideDown .4s .35s both}
+
+.rs-trophies{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);
+  border-radius:16px;padding:12px 24px;margin-bottom:20px;
+  animation:slideDown .4s .4s both;
+}
+.rs-trophy-icon{font-size:1.6rem}
+.rs-trophy-change{font-family:'Cinzel',serif;font-size:1.4rem}
+.rs-trophy-label{font-size:.65rem;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase}
+
+.rs-section-title{
+  font-family:'Cinzel',serif;font-size:.65rem;color:var(--text-dim);
+  letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;
+  align-self:flex-start;width:100%;
+}
+.rs-stats-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;
+  width:100%;margin-bottom:20px;animation:slideDown .4s .45s both;
+}
+.rs-stat{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:12px;padding:14px 8px;text-align:center;
+}
+.rs-stat-icon{font-size:1.3rem;margin-bottom:4px}
+.rs-stat-val{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold)}
+.rs-stat-lbl{font-size:.56rem;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+
+.rs-towers{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  width:100%;margin-bottom:20px;animation:slideDown .4s .5s both;
+}
+.rs-tower-box{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:12px;padding:12px 10px;text-align:center;
+}
+.rs-tower-box.winner-side{border-color:var(--gold);background:rgba(255,215,0,.07)}
+.rs-tower-label{font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.rs-tower-label.blue{color:var(--blue-light)}.rs-tower-label.red{color:var(--red-light)}
+.rs-tower-icons{font-size:1.5rem;margin-bottom:4px}
+.rs-tower-count{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold)}
+.rs-tower-sub{font-size:.58rem;color:var(--text-dim);margin-top:2px}
+
+.rs-countdown{
+  width:100%;text-align:center;animation:slideDown .4s .6s both;
+  margin-top:4px;
+}
+.rs-countdown-bar-wrap{
+  width:100%;height:5px;background:rgba(255,255,255,.08);
+  border-radius:3px;overflow:hidden;margin-bottom:8px;
+}
+.rs-countdown-bar{
+  height:100%;background:var(--gold);border-radius:3px;
+  width:100%;transition:width .1s linear;
+  box-shadow:0 0 8px rgba(255,215,0,.5);
+}
+.rs-countdown-text{font-size:.68rem;color:var(--text-dim);letter-spacing:2px}
+.rs-countdown-text span{color:var(--gold);font-family:'Cinzel',serif}
+</style>
+</head>
+<body>
+
+<header id="app-header">
+  <div id="app-logo">⚔ CLASH ARENA</div>
+  <div id="header-trophies"><span>🏆</span><span id="trophy-count">0</span></div>
+</header>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="home-hero">
+    <div class="hero-avatar">🧙</div>
+    <div class="hero-info">
+      <div class="hero-name">Joueur 1</div>
+      <div class="hero-arena-badge" id="hero-arena-badge">⚔ Arène 1 — Goblin Stadium</div>
+      <div class="hero-xp-bar"><div class="hero-xp-fill"></div></div>
+      <div class="hero-xp-label">1 360 / 2 000 XP</div>
+    </div>
+  </div>
+  <div class="home-stats">
+    <div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-value" id="stat-trophies">0</div><div class="stat-label">Trophées</div></div>
+    <div class="stat-card"><div class="stat-icon">⚔️</div><div class="stat-value" id="stat-wins">0</div><div class="stat-label">Victoires</div></div>
+    <div class="stat-card"><div class="stat-icon">💀</div><div class="stat-value" id="stat-losses">0</div><div class="stat-label">Défaites</div></div>
+  </div>
+  <button class="home-btn-battle" onclick="goToBattle()"><span>⚔️</span> COMBATTRE <span>⚔️</span></button>
+  <p class="section-title">Historique récent</p>
+  <div class="recent-section" id="recent-list">
+    <div class="recent-row">
+      <div class="recent-icon">🏰</div>
+      <div class="recent-info"><div class="recent-desc">Arène 4 — Épée &amp; Bouclier</div><div class="recent-sub">Début de partie</div></div>
+      <div class="recent-result result-draw">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- ARENAS -->
+<div class="page" id="page-arenas">
+  <div class="arenas-grid" id="arenas-grid"></div>
+</div>
+
+<!-- DECK -->
+<div class="page" id="page-deck">
+  <div class="deck-header">
+    <div class="deck-title">Mon Deck</div>
+    <div class="deck-mana-avg">💧 Moy. <span id="avg-mana">4.0</span></div>
+  </div>
+  <div class="deck-grid" id="deck-grid"></div>
+  <p class="deck-all-title">Toutes les cartes</p>
+  <div class="all-cards-grid" id="all-cards-grid"></div>
+</div>
+
+<!-- BATTLE -->
+<div class="page" id="page-battle">
+  <div id="battle-top">
+    <h2>⚔ COMBAT</h2>
+    <div id="timer-display">3:00</div>
+    <div id="score-display">0 – 0</div>
+  </div>
+  <div id="arena">
+    <div class="deploy-zone" id="deploy-zone-left" data-lane="left">GAUCHE</div>
+    <div class="deploy-zone" id="deploy-zone-right" data-lane="right">DROITE</div>
+    <div class="tower enemy-tower" id="etower-left"><div class="tower-icon">🏰</div><div class="tower-hp" id="etl-hp">1400</div><div class="tower-bar"><div class="tower-bar-fill" id="etl-bar" style="width:100%"></div></div></div>
+    <div class="tower enemy-tower" id="etower-right"><div class="tower-icon">🏰</div><div class="tower-hp" id="etr-hp">1400</div><div class="tower-bar"><div class="tower-bar-fill" id="etr-bar" style="width:100%"></div></div></div>
+    <div class="tower enemy-tower" id="eking"><div class="tower-icon">👑</div><div class="tower-hp" id="ek-hp">3000</div><div class="tower-bar"><div class="tower-bar-fill" id="ek-bar" style="width:100%"></div></div></div>
+    <div class="tower player-tower" id="ptower-left"><div class="tower-icon">🏯</div><div class="tower-hp" id="ptl-hp">1400</div><div class="tower-bar"><div class="tower-bar-fill" id="ptl-bar" style="width:100%"></div></div></div>
+    <div class="tower player-tower" id="ptower-right"><div class="tower-icon">🏯</div><div class="tower-hp" id="ptr-hp">1400</div><div class="tower-bar"><div class="tower-bar-fill" id="ptr-bar" style="width:100%"></div></div></div>
+    <div class="tower player-tower" id="pking"><div class="tower-icon">🛡️</div><div class="tower-hp" id="pk-hp">3000</div><div class="tower-bar"><div class="tower-bar-fill" id="pk-bar" style="width:100%"></div></div></div>
+  </div>
+  <div id="mana-section"><div id="mana-label">MANA</div><div id="mana-track"></div><div id="mana-count">0</div></div>
+  <div id="hand"></div>
+  <div id="bottom-ui"><div></div><div id="status-msg">Sélectionne une carte</div><div></div></div>
+  <div id="instruction">Clique une carte → puis une zone pour déployer</div>
+</div>
+
+<!-- OVERLAY (pre-battle only) -->
+<div id="overlay" class="hidden">
+  <h2 id="ov-title" style="color:var(--gold)">⚔ Clash Arena ⚔</h2>
+  <p id="ov-sub">Détruis les tours ennemies !</p>
+  <button class="ov-btn" id="btn-start">LANCER</button>
+</div>
+
+<!-- RESULT SCREEN (post-battle) -->
+<div id="result-screen">
+  <div class="rs-header">
+    <div class="rs-result-icon" id="rs-icon">🏆</div>
+    <div class="rs-title" id="rs-title">VICTOIRE !</div>
+    <div class="rs-sub"  id="rs-sub">Tu as détruit la tour du Roi !</div>
+  </div>
+  <div class="rs-trophies">
+    <div class="rs-trophy-icon">🏆</div>
+    <div>
+      <div class="rs-trophy-change" id="rs-trophy-change">+30</div>
+      <div class="rs-trophy-label">Trophées</div>
+    </div>
+    <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--text-dim);margin-left:6px">→ <span id="rs-trophy-total">510</span></div>
+  </div>
+  <div class="rs-section-title">Stats de la partie</div>
+  <div class="rs-stats-grid">
+    <div class="rs-stat"><div class="rs-stat-icon">⚔️</div><div class="rs-stat-val" id="rs-towers-destroyed">0</div><div class="rs-stat-lbl">Tours détruites</div></div>
+    <div class="rs-stat"><div class="rs-stat-icon">🛡️</div><div class="rs-stat-val" id="rs-towers-lost">0</div><div class="rs-stat-lbl">Tours perdues</div></div>
+    <div class="rs-stat"><div class="rs-stat-icon">⏱️</div><div class="rs-stat-val" id="rs-duration">3:00</div><div class="rs-stat-lbl">Durée</div></div>
+  </div>
+  <div class="rs-section-title">Tours</div>
+  <div class="rs-towers">
+    <div class="rs-tower-box" id="rs-player-box">
+      <div class="rs-tower-label blue">🛡️ Toi</div>
+      <div class="rs-tower-icons" id="rs-player-towers">🏯🏯🛡️</div>
+      <div class="rs-tower-count" id="rs-player-alive"></div>
+      <div class="rs-tower-sub">tours survivantes</div>
+    </div>
+    <div class="rs-tower-box" id="rs-enemy-box">
+      <div class="rs-tower-label red">👑 Ennemi</div>
+      <div class="rs-tower-icons" id="rs-enemy-towers">🏰🏰👑</div>
+      <div class="rs-tower-count" id="rs-enemy-alive"></div>
+      <div class="rs-tower-sub">tours survivantes</div>
+    </div>
+  </div>
+  <div class="rs-countdown">
+    <div class="rs-countdown-bar-wrap"><div class="rs-countdown-bar" id="rs-bar"></div></div>
+    <div class="rs-countdown-text">Retour à l'accueil dans <span id="rs-countdown">5</span>s…</div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<nav id="nav">
+  <button class="nav-btn active" data-page="home"   onclick="showPage('home',this)"><span class="nav-icon">🏠</span>Accueil</button>
+  <button class="nav-btn"        data-page="arenas" onclick="showPage('arenas',this)"><span class="nav-icon">🗺️</span>Arènes</button>
+  <button class="nav-btn"        data-page="deck"   onclick="showPage('deck',this)"><span class="nav-icon">🃏</span>Deck</button>
+  <button class="nav-btn"        data-page="battle" onclick="showPage('battle',this)"><span class="nav-icon">⚔️</span>Combat</button>
+</nav>
+
+<script>
+// ══ NAVIGATION ══
+function showPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  if(name==='deck') buildDeckPage();
+  if(name==='arenas') buildArenaPage();
+}
+function goToBattle(){
+  const btn=document.querySelector('.nav-btn[data-page="battle"]');
+  showPage('battle',btn);
+  if(!gs.running) showOverlay('start');
+}
+function toast(msg,dur=2200){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),dur);
+}
+
+// ══ DATA ══
+const ALL_CARDS=[
+  {id:'knight', name:'Chevalier',emoji:'⚔️',cost:3,hp:600, atk:100,spd:1.4,range:'melee', rarity:'common',   targets:'troop|tower'},
+  {id:'archer', name:'Archère',  emoji:'🏹',cost:3,hp:280, atk:60, spd:1.2,range:'ranged',rarity:'common',   targets:'troop|tower'},
+  {id:'giant',  name:'Géant',    emoji:'🧌',cost:5,hp:2000,atk:140,spd:0.7,range:'melee', rarity:'rare',     targets:'tower'},
+  {id:'wizard', name:'Mage',     emoji:'🧙',cost:5,hp:400, atk:200,spd:1.8,range:'ranged',rarity:'epic',     targets:'troop|tower'},
+  {id:'goblin', name:'Gobelin',  emoji:'👺',cost:2,hp:180, atk:80, spd:2.0,range:'melee', rarity:'common',   targets:'troop|tower'},
+  {id:'dragon', name:'Dragon',   emoji:'🐉',cost:4,hp:800, atk:180,spd:1.5,range:'ranged',rarity:'legendary',targets:'troop|tower'},
+  {id:'pekka',  name:'P.E.K.K.A',emoji:'🤖',cost:7,hp:3000,atk:300,spd:0.9,range:'melee',rarity:'epic',     targets:'troop|tower'},
+  {id:'balloon',name:'Ballon',   emoji:'🎈',cost:5,hp:900, atk:250,spd:0.8,range:'melee', rarity:'rare',     targets:'tower'},
+  {id:'witch',  name:'Sorcière', emoji:'🧟',cost:5,hp:360, atk:150,spd:1.3,range:'ranged',rarity:'epic',     targets:'troop|tower'},
+  {id:'minion', name:'Minion',   emoji:'😈',cost:3,hp:220, atk:90, spd:1.6,range:'ranged',rarity:'common',   targets:'troop|tower'},
+  {id:'hog',    name:'Hog Rider',emoji:'🐗',cost:4,hp:700, atk:160,spd:1.8,range:'melee', rarity:'rare',     targets:'tower'},
+  {id:'bomb',   name:'Boule de Feu',emoji:'💣',cost:4,hp:1,atk:350,spd:0.5,range:'ranged',rarity:'rare',    targets:'troop|tower'},
+];
+const ARENAS=[
+  {id:1,name:'Goblin Stadium',    emoji:'🌿',trophies:0,   desc:"L'arène des débutants. Des gobelins partout !",   color:'#1b5e20'},
+  {id:2,name:'Bone Pit',          emoji:'💀',trophies:200, desc:'Les os craquent sous tes pas. Survie requise.',   color:'#4a148c'},
+  {id:3,name:'Barbarian Bowl',    emoji:'⚔️',trophies:300, desc:'Les barbares rugissent. Montre ta force !',       color:'#bf360c'},
+  {id:4,name:'Épée & Bouclier',   emoji:'🛡️',trophies:400, desc:'Trophées entre 400 et 600.',                     color:'#1565c0'},
+  {id:5,name:'Spell Valley',      emoji:'🔮',trophies:600, desc:'La magie domine ici. Sorts et contre-sorts.',    color:'#6a1b9a'},
+  {id:6,name:"Builder's Workshop",emoji:'🔧',trophies:800, desc:'Machines de guerre et constructions ingénieuses.',color:'#e65100'},
+  {id:7,name:'Royal Arena',       emoji:'👑',trophies:1100,desc:'Seuls les meilleurs combattants entrent ici.',   color:'#f57f17'},
+  {id:8,name:'Legendary Arena',   emoji:'🌟',trophies:4000,desc:"L'Olympe des légendes. Peu y arrivent.",         color:'#880e4f'},
+];
+
+function getCurrentArena(){
+  // Highest arena the player has unlocked
+  let cur=ARENAS[0];
+  for(const a of ARENAS){ if(player.trophies>=a.trophies) cur=a; }
+  return cur;
+}
+let player={trophies:0,wins:0,losses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+
+// ══ LOCALSTORAGE ══
+function saveProgress(){
+  localStorage.setItem('clashArena',JSON.stringify({
+    trophies:player.trophies,wins:player.wins,losses:player.losses,deck:player.deck
+  }));
+}
+function loadProgress(){
+  try{
+    const raw=localStorage.getItem('clashArena');
+    if(!raw)return;
+    const data=JSON.parse(raw);
+    if(typeof data.trophies==='number') player.trophies=data.trophies;
+    if(typeof data.wins==='number')     player.wins=data.wins;
+    if(typeof data.losses==='number')   player.losses=data.losses;
+    if(Array.isArray(data.deck)&&data.deck.length>=4) player.deck=data.deck;
+  }catch(e){}
+}
+loadProgress();
+// Sync UI after load
+function syncUI(){
+  const cur=getCurrentArena();
+  document.getElementById('trophy-count').textContent=player.trophies;
+  document.getElementById('stat-trophies').textContent=player.trophies;
+  document.getElementById('stat-wins').textContent=player.wins;
+  document.getElementById('stat-losses').textContent=player.losses;
+  document.getElementById('hero-arena-badge').textContent=`${cur.emoji} Arène ${cur.id} — ${cur.name}`;
+}
+syncUI();
+
+// ══ ARENAS PAGE ══
+function buildArenaPage(){
+  const grid=document.getElementById('arenas-grid');grid.innerHTML='';
+  const curArena=getCurrentArena();
+  ARENAS.forEach(a=>{
+    const unlocked=player.trophies>=a.trophies;
+    const current=a.id===curArena.id;
+    const div=document.createElement('div');
+    div.className='arena-card'+(current?' current':'')+(unlocked?'':' locked');
+    const badge=current
+      ?'<span class="arena-badge badge-current">✦ Ton arène</span>'
+      :unlocked
+        ?'<span class="arena-badge badge-unlocked">✓ Débloquée</span>'
+        :`<span class="arena-badge badge-locked">🔒 ${a.trophies} trophées</span>`;
+    div.innerHTML=`<div class="arena-bg" style="background:linear-gradient(135deg,${a.color}dd,${a.color}44)"><div class="arena-emoji">${a.emoji}</div></div><div class="arena-body"><div class="arena-row"><div class="arena-name">Arène ${a.id} — ${a.name}</div><div class="arena-trophy">🏆 ${a.trophies}+</div></div><div class="arena-desc">${a.desc}</div>${badge}</div>`;
+    grid.appendChild(div);
+  });
+}
+
+// ══ DECK PAGE ══
+function buildDeckPage(){buildDeckGrid();buildAllCardsGrid();updateAvgMana();}
+function buildDeckGrid(){
+  const grid=document.getElementById('deck-grid');grid.innerHTML='';
+  player.deck.forEach(id=>{
+    const c=ALL_CARDS.find(x=>x.id===id);if(!c)return;
+    const div=document.createElement('div');div.className='deck-card';
+    div.innerHTML=`<div class="dc-cost">${c.cost}</div><div class="dc-emoji">${c.emoji}</div><div class="dc-info"><div class="dc-name">${c.name}</div><div class="dc-stats">❤️${c.hp} ⚔️${c.atk}</div><div class="dc-rarity rarity-${c.rarity}">${c.rarity}</div></div>`;
+    div.title=`Retirer ${c.name}`;
+    div.addEventListener('click',()=>{player.deck=player.deck.filter(x=>x!==id);saveProgress();buildDeckPage();toast(`${c.emoji} ${c.name} retiré`);});
+    grid.appendChild(div);
+  });
+  for(let i=player.deck.length;i<8;i++){
+    const div=document.createElement('div');div.className='deck-card';
+    div.style.cssText='opacity:.3;justify-content:center';
+    div.innerHTML='<div style="font-size:1.8rem;color:var(--text-dim)">＋</div>';
+    grid.appendChild(div);
+  }
+}
+function buildAllCardsGrid(){
+  const grid=document.getElementById('all-cards-grid');grid.innerHTML='';
+  ALL_CARDS.forEach(c=>{
+    const inDeck=player.deck.includes(c.id);
+    const div=document.createElement('div');div.className='mini-card'+(inDeck?' in-deck':'');
+    div.innerHTML=`<div class="mini-cost">${c.cost}</div><div class="mini-emoji">${c.emoji}</div><div class="mini-name">${c.name}</div>`;
+    div.addEventListener('click',()=>{
+      if(player.deck.includes(c.id)){player.deck=player.deck.filter(x=>x!==c.id);toast(`${c.emoji} retiré`);}
+      else if(player.deck.length>=8){toast('⚠️ Deck plein ! Retire une carte.');}
+      else{player.deck.push(c.id);toast(`${c.emoji} ${c.name} ajouté`);}
+      saveProgress();
+      buildDeckPage();
+    });
+    grid.appendChild(div);
+  });
+}
+function updateAvgMana(){
+  if(!player.deck.length){document.getElementById('avg-mana').textContent='—';return;}
+  const avg=player.deck.reduce((s,id)=>{const c=ALL_CARDS.find(x=>x.id===id);return s+(c?c.cost:0);},0)/player.deck.length;
+  document.getElementById('avg-mana').textContent=avg.toFixed(1);
+}
+
+// ══ GAME ENGINE ══
+const MAX_MANA=10,GAME_DUR=180,MANA_REGEN=1,TWR_HP=1400,KING_HP=3000;
+let gs={},animId=null;
+
+const TPOS={
+  player:{left:{x:30,y:355},right:{x:315,y:355},king:{x:172,y:360}},
+  enemy: {left:{x:30,y:44}, right:{x:315,y:44}, king:{x:172,y:36}},
+};
+const THPIDS={player:{left:'ptl',right:'ptr',king:'pk'},enemy:{left:'etl',right:'etr',king:'ek'}};
+const TDOMIDS={player:{left:'ptower-left',right:'ptower-right',king:'pking'},enemy:{left:'etower-left',right:'etower-right',king:'eking'}};
+
+function initGame(){
+  document.querySelectorAll('.troop,.dmg-popup,.projectile').forEach(e=>e.remove());
+  const deck=player.deck.length>=4?player.deck.map(id=>ALL_CARDS.find(c=>c.id===id)).filter(Boolean):ALL_CARDS.slice(0,4);
+  gs={
+    mana:5,timeLeft:GAME_DUR,running:false,selectedCard:null,
+    hand:deck.slice(0,4),deckCards:deck,deckIdx:4%deck.length,troops:[],
+    towers:{player:{left:{hp:TWR_HP},right:{hp:TWR_HP},king:{hp:KING_HP}},enemy:{left:{hp:TWR_HP},right:{hp:TWR_HP},king:{hp:KING_HP}}},
+    destroyed:{player:0,enemy:0},lastFrame:null,manaTick:0,aiTick:0,tid:0,
+  };
+  buildManaUI();buildHandUI();updateManaUI();updateTimer();updateScore();resetTowers();
+  document.getElementById('timer-display').style.color='var(--gold)';
+}
+function resetTowers(){
+  const icons={player:{left:'🏯',right:'🏯',king:'🛡️'},enemy:{left:'🏰',right:'🏰',king:'👑'}};
+  ['player','enemy'].forEach(s=>['left','right','king'].forEach(w=>{
+    updateTowerUI(s,w);
+    document.getElementById(TDOMIDS[s][w]).querySelector('.tower-icon').textContent=icons[s][w];
+  }));
+}
+function buildManaUI(){
+  const t=document.getElementById('mana-track');t.innerHTML='';
+  for(let i=0;i<MAX_MANA;i++){const g=document.createElement('div');g.className='mana-gem';g.id='gem-'+i;t.appendChild(g);}
+}
+function updateManaUI(){
+  for(let i=0;i<MAX_MANA;i++){const g=document.getElementById('gem-'+i);if(g)g.classList.toggle('filled',i<Math.floor(gs.mana));}
+  document.getElementById('mana-count').textContent=Math.floor(gs.mana);
+}
+function buildHandUI(){
+  const h=document.getElementById('hand');h.innerHTML='';
+  gs.hand.forEach((card,idx)=>{
+    const el=document.createElement('div');
+    el.className='card'+(gs.mana<card.cost?' disabled':'')+(gs.selectedCard===idx?' selected':'');
+    el.innerHTML=`<div class="card-cost">${card.cost}</div><div class="card-emoji">${card.emoji}</div><div class="card-name">${card.name}</div><div class="card-stats">❤️${card.hp} ⚔️${card.atk}</div><div class="card-rarity rarity-${card.rarity}">${card.rarity}</div>`;
+    el.addEventListener('click',()=>onCard(idx));h.appendChild(el);
+  });
+}
+function onCard(idx){
+  if(!gs.running)return;
+  const c=gs.hand[idx];
+  if(gs.mana<c.cost){setStatus('⚡ Pas assez de mana !');return;}
+  if(gs.selectedCard===idx){gs.selectedCard=null;document.body.classList.remove('selecting');setStatus('Sélectionne une carte');}
+  else{gs.selectedCard=idx;document.body.classList.add('selecting');setStatus(`Déploie ${c.emoji} ${c.name}`);}
+  buildHandUI();
+}
+document.querySelectorAll('.deploy-zone').forEach(z=>z.addEventListener('click',()=>deployCard(z.dataset.lane)));
+function deployCard(lane){
+  if(gs.selectedCard===null||!gs.running)return;
+  const c=gs.hand[gs.selectedCard];if(gs.mana<c.cost)return;
+  gs.mana-=c.cost;
+  const next=gs.deckCards[gs.deckIdx%gs.deckCards.length];gs.deckIdx++;
+  gs.hand[gs.selectedCard]=next;gs.selectedCard=null;
+  document.body.classList.remove('selecting');
+  spawnTroop(c,'player',lane);updateManaUI();buildHandUI();setStatus('Sélectionne une carte');
+}
+function updateTowerUI(s,w){
+  const hp=gs.towers[s][w].hp,max=w==='king'?KING_HP:TWR_HP;
+  const pfx=THPIDS[s][w];
+  document.getElementById(pfx+'-hp').textContent=Math.max(0,hp);
+  document.getElementById(pfx+'-bar').style.width=Math.max(0,hp/max*100)+'%';
+}
+function damageTower(s,w,dmg){
+  const t=gs.towers[s][w];if(t.hp<=0)return;
+  t.hp=Math.max(0,t.hp-dmg);updateTowerUI(s,w);
+  const dom=document.getElementById(TDOMIDS[s][w]);
+  dom.classList.add('damaged');setTimeout(()=>dom.classList.remove('damaged'),350);
+  const p=TPOS[s][w];showDmg(p.x+14,p.y-10,dmg,s==='enemy'?'#e74c3c':'#3498db');
+  if(t.hp<=0){dom.querySelector('.tower-icon').textContent='💀';gs.destroyed[s]++;updateScore();if(w==='king')endGame(s==='enemy'?'player':'enemy');}
+}
+function spawnTroop(card,owner,lane){
+  const arena=document.getElementById('arena');
+  const aW=arena.offsetWidth,aH=arena.offsetHeight;
+  const id=++gs.tid;
+  const el=document.createElement('div');el.className='troop '+owner+'-troop';el.id='troop-'+id;
+  el.innerHTML=`<div class="troop-hp-bar"><div class="troop-hp-fill" id="thp-${id}" style="width:100%"></div></div><span>${card.emoji}</span>`;
+  const x=lane==='left'?15+Math.random()*(aW/2-55):aW/2+15+Math.random()*(aW/2-55);
+  const y=owner==='player'?aH-78:55;
+  el.style.left=x+'px';el.style.top=y+'px';arena.appendChild(el);
+  const tr={id,el,card,owner,lane,hp:card.hp,maxHp:card.hp,x,y,cd:0};
+  gs.troops.push(tr);return tr;
+}
+function gameLoop(ts){
+  if(!gs.running)return;
+  if(!gs.lastFrame)gs.lastFrame=ts;
+  const dt=Math.min((ts-gs.lastFrame)/1000,0.1);gs.lastFrame=ts;
+  gs.manaTick+=dt;
+  if(gs.manaTick>=1){gs.mana=Math.min(MAX_MANA,gs.mana+MANA_REGEN);gs.manaTick=0;updateManaUI();buildHandUI();}
+  gs.timeLeft-=dt;updateTimer();if(gs.timeLeft<=0){endGame(null);return;}
+  gs.aiTick+=dt;if(gs.aiTick>=4+Math.random()*3){aiPlay();gs.aiTick=0;}
+  updateTroops(dt);animId=requestAnimationFrame(gameLoop);
+}
+function updateTroops(dt){
+  const aH=document.getElementById('arena').offsetHeight;
+  for(let i=gs.troops.length-1;i>=0;i--){
+    const t=gs.troops[i];
+    if(t.hp<=0){t.el.remove();gs.troops.splice(i,1);continue;}
+    t.cd=Math.max(0,t.cd-dt);
+    const tgt=findTarget(t);
+    if(tgt){
+      const dist=Math.hypot(t.x-tgt.x,t.y-tgt.y);
+      const range=t.card.range==='ranged'?115:38;
+      if(dist<=range){if(t.cd<=0){doAttack(t,tgt);t.cd=1/t.card.spd;}}
+      else moveTo(t,tgt,dt);
+    }else{
+      const dir=t.owner==='player'?-1:1;
+      t.y=Math.max(10,Math.min(aH-10,t.y+dir*58*dt));
+    }
+    t.el.style.left=t.x+'px';t.el.style.top=t.y+'px';
+  }
+}
+function findTarget(tr){
+  const eS=tr.owner==='player'?'enemy':'player';
+  if(tr.card.targets.includes('troop')){
+    const enemies=gs.troops.filter(t=>t.owner!==tr.owner&&t.hp>0);
+    if(enemies.length){
+      let best=null,bd=Infinity;
+      enemies.forEach(e=>{const d=Math.hypot(tr.x-e.x,tr.y-e.y);if(d<bd){bd=d;best=e;}});
+      if(best)return{type:'troop',ref:best,x:best.x,y:best.y};
+    }
+  }
+  const lanes=tr.lane==='left'?['left','right','king']:['right','left','king'];
+  for(const w of lanes){if(gs.towers[eS][w].hp>0){const p=TPOS[eS][w];return{type:'tower',side:eS,which:w,x:p.x,y:p.y};}}
+  return null;
+}
+function moveTo(tr,tgt,dt){
+  const dx=tgt.x-tr.x,dy=tgt.y-tr.y,d=Math.hypot(dx,dy);if(d<1)return;
+  const spd=55*tr.card.spd;tr.x+=dx/d*spd*dt;tr.y+=dy/d*spd*dt;
+}
+function doAttack(attacker,target){
+  const dmg=Math.max(5,attacker.card.atk+Math.floor(Math.random()*20)-10);
+  if(target.type==='troop'){
+    const t=target.ref;t.hp-=dmg;
+    const f=document.getElementById('thp-'+t.id);if(f)f.style.width=Math.max(0,t.hp/t.maxHp*100)+'%';
+    showDmg(t.x,t.y-14,dmg,attacker.owner==='player'?'#e74c3c':'#3498db');
+  }else damageTower(target.side,target.which,dmg);
+  if(attacker.card.range==='ranged')spawnProj(attacker.x,attacker.y,target.x,target.y);
+}
+function spawnProj(x1,y1,x2,y2){
+  const arena=document.getElementById('arena');
+  const el=document.createElement('div');el.className='projectile';
+  el.style.left=x1+'px';el.style.top=y1+'px';el.textContent='✨';arena.appendChild(el);
+  const s=performance.now();
+  (function step(ts){const p=Math.min((ts-s)/280,1);el.style.left=(x1+(x2-x1)*p)+'px';el.style.top=(y1+(y2-y1)*p)+'px';if(p<1)requestAnimationFrame(step);else el.remove();})(s);
+}
+function showDmg(x,y,dmg,col){
+  const el=document.createElement('div');el.className='dmg-popup';
+  el.style.cssText=`left:${x}px;top:${y}px;color:${col||'#fff'}`;
+  el.textContent=`-${dmg}`;document.getElementById('arena').appendChild(el);
+  setTimeout(()=>el.remove(),850);
+}
+function aiPlay(){
+  const c=ALL_CARDS[Math.floor(Math.random()*ALL_CARDS.length)];
+  spawnTroop(c,'enemy',Math.random()<.5?'left':'right');
+}
+function updateTimer(){
+  const m=Math.floor(gs.timeLeft/60),s=Math.floor(gs.timeLeft%60);
+  document.getElementById('timer-display').textContent=`${m}:${s.toString().padStart(2,'0')}`;
+  if(gs.timeLeft<=60)document.getElementById('timer-display').style.color='#e74c3c';
+}
+function updateScore(){document.getElementById('score-display').textContent=`${gs.destroyed.player} – ${gs.destroyed.enemy}`;}
+function setStatus(m){document.getElementById('status-msg').textContent=m;}
+
+let rsTimer=null;
+
+function showOverlay(type){
+  const ov=document.getElementById('overlay');ov.classList.remove('hidden');
+  const btn=document.getElementById('btn-start');btn.onclick=null;
+  document.getElementById('ov-title').textContent='⚔ Prêt au combat ?';
+  document.getElementById('ov-title').style.color='var(--gold)';
+  document.getElementById('ov-sub').textContent='Déploie tes troupes, détruis les tours !';
+  btn.textContent='LANCER';btn.onclick=startGame;
+}
+
+function showResultScreen(winner){
+  // Compute result
+  const pd=gs.destroyed.player, ed=gs.destroyed.enemy;
+  let icon,title,sub,col,trophyDelta;
+  if(winner==='player'){icon='🏆';title='VICTOIRE !';sub='Tu as détruit la tour du Roi !';col='#FFD700';trophyDelta=+30;}
+  else if(winner==='enemy'){icon='💀';title='DÉFAITE';sub="L'ennemi a détruit ta tour !";col='#e74c3c';trophyDelta=-15;}
+  else if(ed>pd){icon='🏆';title='VICTOIRE !';sub=`Plus de tours détruites (${ed}–${pd})`;col='#FFD700';trophyDelta=+20;}
+  else if(pd>ed){icon='💀';title='DÉFAITE';sub=`L'ennemi avait plus de tours (${pd}–${ed})`;col='#e74c3c';trophyDelta=-10;}
+  else{icon='🤝';title='ÉGALITÉ';sub='Aucun vainqueur cette fois';col='#95a5a6';trophyDelta=0;}
+
+  // Update player data
+  if(trophyDelta>0) player.wins++;
+  else if(trophyDelta<0) player.losses++;
+  player.trophies=Math.max(0,player.trophies+trophyDelta);
+
+  // Update home stats
+  document.getElementById('stat-wins').textContent=player.wins;
+  document.getElementById('stat-losses').textContent=player.losses;
+  document.getElementById('stat-trophies').textContent=player.trophies;
+  document.getElementById('trophy-count').textContent=player.trophies;
+  addHistory(icon,winner);
+  saveProgress();
+  syncUI();
+
+  // Fill result screen
+  document.getElementById('rs-icon').textContent=icon;
+  document.getElementById('rs-title').textContent=title;
+  document.getElementById('rs-title').style.color=col;
+  document.getElementById('rs-sub').textContent=sub;
+
+  const sign=trophyDelta>=0?'+':'';
+  document.getElementById('rs-trophy-change').textContent=sign+trophyDelta;
+  document.getElementById('rs-trophy-change').style.color=trophyDelta>0?'#2ecc71':trophyDelta<0?'#e74c3c':'#95a5a6';
+  document.getElementById('rs-trophy-total').textContent=player.trophies;
+
+  // Destroyed/lost towers
+  document.getElementById('rs-towers-destroyed').textContent=ed;
+  document.getElementById('rs-towers-lost').textContent=pd;
+
+  // Duration
+  const elapsed=GAME_DUR-gs.timeLeft;
+  const dm=Math.floor(elapsed/60),ds=Math.floor(elapsed%60);
+  document.getElementById('rs-duration').textContent=`${dm}:${ds.toString().padStart(2,'0')}`;
+
+  // Tower survivor icons
+  const pt=gs.towers.player, et=gs.towers.enemy;
+  const pIcons=(pt.left.hp>0?'🏯':'💀')+(pt.right.hp>0?'🏯':'💀')+(pt.king.hp>0?'🛡️':'💀');
+  const eIcons=(et.left.hp>0?'🏰':'💀')+(et.right.hp>0?'🏰':'💀')+(et.king.hp>0?'👑':'💀');
+  document.getElementById('rs-player-towers').textContent=pIcons;
+  document.getElementById('rs-enemy-towers').textContent=eIcons;
+
+  const pAlive=[pt.left,pt.right,pt.king].filter(t=>t.hp>0).length;
+  const eAlive=[et.left,et.right,et.king].filter(t=>t.hp>0).length;
+  document.getElementById('rs-player-alive').textContent=pAlive+'/3';
+  document.getElementById('rs-enemy-alive').textContent=eAlive+'/3';
+
+  // Highlight winner side
+  document.getElementById('rs-player-box').classList.toggle('winner-side',trophyDelta>0);
+  document.getElementById('rs-enemy-box').classList.toggle('winner-side',trophyDelta<0);
+
+  // Show result screen
+  const rs=document.getElementById('result-screen');
+  rs.classList.add('show');
+  rs.scrollTop=0;
+
+  // Countdown 5s → home
+  let secs=5;
+  document.getElementById('rs-countdown').textContent=secs;
+  document.getElementById('rs-bar').style.width='100%';
+  clearInterval(rsTimer);
+  const total=5000,step=50;let elapsed2=0;
+  rsTimer=setInterval(()=>{
+    elapsed2+=step;
+    const pct=Math.max(0,100-(elapsed2/total*100));
+    document.getElementById('rs-bar').style.width=pct+'%';
+    const remaining=Math.ceil((total-elapsed2)/1000);
+    document.getElementById('rs-countdown').textContent=remaining;
+    if(elapsed2>=total){
+      clearInterval(rsTimer);
+      rs.classList.remove('show');
+      setTimeout(()=>goHome(),400);
+    }
+  },step);
+}
+
+function goHome(){
+  const btn=document.querySelector('.nav-btn[data-page="home"]');
+  showPage('home',btn);
+}
+
+function addHistory(icon,winner){
+  const cls=winner==='player'?'result-win':winner==='enemy'?'result-loss':'result-draw';
+  const row=document.createElement('div');row.className='recent-row';
+  row.innerHTML=`<div class="recent-icon">🏰</div><div class="recent-info"><div class="recent-desc">Arène 4</div><div class="recent-sub">Partie terminée</div></div><div class="recent-result ${cls}">${icon}</div>`;
+  const list=document.getElementById('recent-list');
+  list.prepend(row);if(list.children.length>5)list.lastChild.remove();
+}
+
+function startGame(){
+  document.getElementById('overlay').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('show');
+  document.body.classList.remove('selecting');
+  clearInterval(rsTimer);
+  initGame();gs.running=true;animId=requestAnimationFrame(gameLoop);
+}
+function endGame(winner){
+  gs.running=false;if(animId)cancelAnimationFrame(animId);
+  document.body.classList.remove('selecting');
+  showResultScreen(winner);
+}
+document.getElementById('btn-start').addEventListener('click',startGame);
+
+// INIT
+buildManaUI();buildArenaPage();buildDeckPage();
+</script>
+</body>
+</html>
