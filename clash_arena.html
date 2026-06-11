@@ -49,12 +49,12 @@ body{
   display:flex;align-items:stretch;z-index:50;backdrop-filter:blur(10px);
 }
 .nav-btn{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
   cursor:pointer;border:none;background:none;color:var(--text-dim);
-  font-family:'Exo 2',sans-serif;font-size:.58rem;font-weight:700;
-  letter-spacing:1px;text-transform:uppercase;transition:color .2s;position:relative;
+  font-family:'Exo 2',sans-serif;font-size:.48rem;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;transition:color .2s;position:relative;
 }
-.nav-icon{font-size:1.4rem;transition:transform .2s}
+.nav-icon{font-size:1.2rem;transition:transform .2s}
 .nav-btn.active{color:var(--gold)}
 .nav-btn.active .nav-icon{transform:scale(1.15)}
 .nav-btn.active::after{
@@ -364,6 +364,80 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
 }
 .rs-countdown-text{font-size:.68rem;color:var(--text-dim);letter-spacing:2px}
 .rs-countdown-text span{color:var(--gold);font-family:'Cinzel',serif}
+/* ── SETTINGS PAGE ── */
+.settings-section{padding:16px 16px 0}
+.settings-block{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:14px;padding:18px 16px;margin-bottom:14px;
+}
+.settings-block-title{
+  font-family:'Cinzel',serif;font-size:.7rem;color:var(--text-dim);
+  letter-spacing:3px;text-transform:uppercase;margin-bottom:14px;
+}
+.settings-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.settings-row:last-child{margin-bottom:0}
+.settings-label{font-size:.8rem;font-weight:600}
+.settings-sub{font-size:.62rem;color:var(--text-dim);margin-top:2px}
+.pseudo-input{
+  flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,215,0,.25);
+  border-radius:8px;padding:9px 12px;color:var(--text);font-family:'Exo 2',sans-serif;
+  font-size:.85rem;outline:none;transition:border-color .2s;max-width:180px;
+}
+.pseudo-input:focus{border-color:var(--gold)}
+.settings-btn{
+  padding:9px 18px;font-family:'Cinzel',serif;font-size:.72rem;letter-spacing:2px;
+  text-transform:uppercase;background:linear-gradient(135deg,#b8960c,#FFD700);
+  color:#0d0620;border:none;border-radius:8px;cursor:pointer;font-weight:700;
+  transition:transform .15s,box-shadow .15s;white-space:nowrap;
+}
+.settings-btn:hover{transform:scale(1.04);box-shadow:0 4px 14px rgba(255,215,0,.4)}
+.settings-btn.danger{background:linear-gradient(135deg,#922,#e74c3c);color:#fff}
+.settings-stat-row{
+  display:flex;justify-content:space-between;
+  font-size:.78rem;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.05);
+}
+.settings-stat-row:last-child{border-bottom:none}
+.settings-stat-row span:last-child{font-family:'Cinzel',serif;color:var(--gold)}
+
+/* ── LEADERBOARD PAGE ── */
+.lb-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between}
+.lb-title{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold)}
+.lb-refresh{
+  padding:6px 14px;font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:2px;
+  background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);
+  color:var(--gold);border-radius:20px;cursor:pointer;transition:background .2s;
+}
+.lb-refresh:hover{background:rgba(255,215,0,.2)}
+.lb-list{padding:0 14px 14px;display:flex;flex-direction:column;gap:8px}
+.lb-row{
+  background:var(--card-bg);border:1px solid var(--border);
+  border-radius:12px;padding:12px 14px;
+  display:flex;align-items:center;gap:12px;
+  transition:border-color .15s;
+}
+.lb-row.me{border-color:var(--gold);background:rgba(255,215,0,.07)}
+.lb-rank{
+  font-family:'Cinzel',serif;font-size:1rem;min-width:30px;text-align:center;
+}
+.lb-rank.gold{color:#FFD700}.lb-rank.silver{color:#b0b8c8}.lb-rank.bronze{color:#cd7f32}
+.lb-info{flex:1}
+.lb-name{font-size:.8rem;font-weight:700}
+.lb-name.me-name{color:var(--gold)}
+.lb-arena{font-size:.6rem;color:var(--text-dim);margin-top:2px}
+.lb-score{text-align:right}
+.lb-trophies{font-family:'Cinzel',serif;font-size:1rem;color:var(--gold)}
+.lb-wins{font-size:.6rem;color:var(--text-dim);margin-top:2px}
+.lb-empty{text-align:center;padding:40px 20px;color:var(--text-dim);font-size:.8rem}
+.lb-loading{text-align:center;padding:40px;color:var(--text-dim);font-size:.8rem;letter-spacing:2px}
+.lb-supabase-note{
+  margin:0 14px 14px;padding:12px 14px;
+  background:rgba(52,152,219,.08);border:1px solid rgba(52,152,219,.2);
+  border-radius:10px;font-size:.65rem;color:rgba(52,152,219,.8);line-height:1.6;
+}
+.lb-supabase-note code{
+  background:rgba(52,152,219,.15);padding:1px 6px;border-radius:4px;
+  font-family:monospace;font-size:.7rem;
+}
 </style>
 </head>
 <body>
@@ -378,7 +452,7 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   <div class="home-hero">
     <div class="hero-avatar">🧙</div>
     <div class="hero-info">
-      <div class="hero-name">Joueur 1</div>
+      <div class="hero-name" id="hero-name">Joueur</div>
       <div class="hero-arena-badge" id="hero-arena-badge">⚔ Arène 1 — Goblin Stadium</div>
       <div class="hero-xp-bar"><div class="hero-xp-fill"></div></div>
       <div class="hero-xp-label">1 360 / 2 000 XP</div>
@@ -439,6 +513,62 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   <div id="instruction">Clique une carte → puis une zone pour déployer</div>
 </div>
 
+<!-- SETTINGS -->
+<div class="page" id="page-settings">
+  <div class="settings-section">
+
+    <div class="settings-block">
+      <div class="settings-block-title">Profil</div>
+      <div class="settings-row">
+        <div><div class="settings-label">Pseudo</div><div class="settings-sub">Visible dans le classement</div></div>
+        <input class="pseudo-input" id="pseudo-input" type="text" maxlength="16" placeholder="Ton pseudo…">
+      </div>
+      <div style="display:flex;justify-content:flex-end">
+        <button class="settings-btn" onclick="savePseudo()">SAUVEGARDER</button>
+      </div>
+    </div>
+
+    <div class="settings-block">
+      <div class="settings-block-title">Mes statistiques</div>
+      <div class="settings-stat-row"><span>🏆 Trophées</span><span id="cfg-trophies">0</span></div>
+      <div class="settings-stat-row"><span>⚔️ Victoires</span><span id="cfg-wins">0</span></div>
+      <div class="settings-stat-row"><span>💀 Défaites</span><span id="cfg-losses">0</span></div>
+      <div class="settings-stat-row"><span>🃏 Cartes dans le deck</span><span id="cfg-deck">8</span></div>
+    </div>
+
+    <div class="settings-block">
+      <div class="settings-block-title">Classement</div>
+      <div class="settings-row">
+        <div><div class="settings-label">Publier mon score</div><div class="settings-sub">Envoie tes trophées dans le classement mondial</div></div>
+        <button class="settings-btn" onclick="publishScore()">PUBLIER</button>
+      </div>
+    </div>
+
+    <div class="settings-block">
+      <div class="settings-block-title">Danger</div>
+      <div class="settings-row">
+        <div><div class="settings-label">Réinitialiser</div><div class="settings-sub">Efface toute ta progression</div></div>
+        <button class="settings-btn danger" onclick="resetProgress()">RESET</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div class="page" id="page-leaderboard">
+  <div class="lb-header">
+    <div class="lb-title">🌍 Classement Mondial</div>
+    <button class="lb-refresh" onclick="loadLeaderboard()">↻ Actualiser</button>
+  </div>
+  <div class="lb-supabase-note" id="lb-config-note">
+    ⚙️ Configure Supabase : remplace <code>SUPABASE_URL</code> et <code>SUPABASE_KEY</code> dans le code, puis crée la table <code>clash_leaderboard</code>.
+  </div>
+  <div class="lb-list" id="lb-list">
+    <div class="lb-loading">Chargement…</div>
+  </div>
+</div>
+
 <!-- OVERLAY (pre-battle only) -->
 <div id="overlay" class="hidden">
   <h2 id="ov-title" style="color:var(--gold)">⚔ Clash Arena ⚔</h2>
@@ -491,10 +621,12 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
 <div id="toast"></div>
 
 <nav id="nav">
-  <button class="nav-btn active" data-page="home"   onclick="showPage('home',this)"><span class="nav-icon">🏠</span>Accueil</button>
-  <button class="nav-btn"        data-page="arenas" onclick="showPage('arenas',this)"><span class="nav-icon">🗺️</span>Arènes</button>
-  <button class="nav-btn"        data-page="deck"   onclick="showPage('deck',this)"><span class="nav-icon">🃏</span>Deck</button>
-  <button class="nav-btn"        data-page="battle" onclick="showPage('battle',this)"><span class="nav-icon">⚔️</span>Combat</button>
+  <button class="nav-btn active" data-page="home"        onclick="showPage('home',this)"><span class="nav-icon">🏠</span>Accueil</button>
+  <button class="nav-btn"        data-page="arenas"      onclick="showPage('arenas',this)"><span class="nav-icon">🗺️</span>Arènes</button>
+  <button class="nav-btn"        data-page="deck"        onclick="showPage('deck',this)"><span class="nav-icon">🃏</span>Deck</button>
+  <button class="nav-btn"        data-page="leaderboard" onclick="showPage('leaderboard',this)"><span class="nav-icon">🌍</span>Classement</button>
+  <button class="nav-btn"        data-page="settings"    onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span>Réglages</button>
+  <button class="nav-btn"        data-page="battle"      onclick="showPage('battle',this)"><span class="nav-icon">⚔️</span>Combat</button>
 </nav>
 
 <script>
@@ -504,8 +636,10 @@ function showPage(name,btn){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   if(btn) btn.classList.add('active');
-  if(name==='deck') buildDeckPage();
-  if(name==='arenas') buildArenaPage();
+  if(name==='deck')        buildDeckPage();
+  if(name==='arenas')      buildArenaPage();
+  if(name==='settings')    buildSettingsPage();
+  if(name==='leaderboard') loadLeaderboard();
 }
 function goToBattle(){
   const btn=document.querySelector('.nav-btn[data-page="battle"]');
@@ -550,12 +684,12 @@ function getCurrentArena(){
   for(const a of ARENAS){ if(player.trophies>=a.trophies) cur=a; }
   return cur;
 }
-let player={trophies:0,wins:0,losses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+let player={pseudo:'Joueur',trophies:0,wins:0,losses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
 
 // ══ LOCALSTORAGE ══
 function saveProgress(){
   localStorage.setItem('clashArena',JSON.stringify({
-    trophies:player.trophies,wins:player.wins,losses:player.losses,deck:player.deck
+    pseudo:player.pseudo,trophies:player.trophies,wins:player.wins,losses:player.losses,deck:player.deck
   }));
 }
 function loadProgress(){
@@ -563,9 +697,10 @@ function loadProgress(){
     const raw=localStorage.getItem('clashArena');
     if(!raw)return;
     const data=JSON.parse(raw);
-    if(typeof data.trophies==='number') player.trophies=data.trophies;
-    if(typeof data.wins==='number')     player.wins=data.wins;
-    if(typeof data.losses==='number')   player.losses=data.losses;
+    if(data.pseudo)                             player.pseudo=data.pseudo;
+    if(typeof data.trophies==='number')         player.trophies=data.trophies;
+    if(typeof data.wins==='number')             player.wins=data.wins;
+    if(typeof data.losses==='number')           player.losses=data.losses;
     if(Array.isArray(data.deck)&&data.deck.length>=4) player.deck=data.deck;
   }catch(e){}
 }
@@ -578,6 +713,8 @@ function syncUI(){
   document.getElementById('stat-wins').textContent=player.wins;
   document.getElementById('stat-losses').textContent=player.losses;
   document.getElementById('hero-arena-badge').textContent=`${cur.emoji} Arène ${cur.id} — ${cur.name}`;
+  const nameEl=document.getElementById('hero-name');
+  if(nameEl) nameEl.textContent=player.pseudo||'Joueur';
 }
 syncUI();
 
@@ -935,6 +1072,144 @@ function endGame(winner){
   showResultScreen(winner);
 }
 document.getElementById('btn-start').addEventListener('click',startGame);
+
+// ══ SUPABASE CONFIG ══
+// Remplace ces valeurs par les tiennes (Supabase dashboard → Settings → API)
+const SUPABASE_URL = 'https://nvvpvwqcjqujyzvdimix.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_7oQ8rUh7OCE0Uo-DUwSUcw_CKOPnCU4';
+// Table SQL à créer dans Supabase:
+// CREATE TABLE clash_leaderboard (
+//   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+//   pseudo text NOT NULL,
+//   trophies integer NOT NULL,
+//   wins integer DEFAULT 0,
+//   losses integer DEFAULT 0,
+//   updated_at timestamptz DEFAULT now()
+// );
+// ALTER TABLE clash_leaderboard ENABLE ROW LEVEL SECURITY;
+// CREATE POLICY "public read" ON clash_leaderboard FOR SELECT USING (true);
+// CREATE POLICY "public insert" ON clash_leaderboard FOR INSERT WITH CHECK (true);
+// CREATE POLICY "public update" ON clash_leaderboard FOR UPDATE USING (true);
+
+const SUPABASE_READY = SUPABASE_URL !== 'https://TON-PROJET.supabase.co';
+
+// ══ SETTINGS PAGE ══
+function buildSettingsPage(){
+  document.getElementById('pseudo-input').value = player.pseudo||'';
+  document.getElementById('cfg-trophies').textContent = player.trophies;
+  document.getElementById('cfg-wins').textContent     = player.wins;
+  document.getElementById('cfg-losses').textContent   = player.losses;
+  document.getElementById('cfg-deck').textContent     = player.deck.length+'/8';
+}
+
+function savePseudo(){
+  const val = document.getElementById('pseudo-input').value.trim();
+  if(!val){ toast('⚠️ Entre un pseudo d\'abord !'); return; }
+  player.pseudo = val;
+  saveProgress();
+  syncUI();
+  toast(`✅ Pseudo sauvegardé : ${val}`);
+}
+
+function resetProgress(){
+  if(!confirm('Réinitialiser toute ta progression ?')) return;
+  player = {pseudo:player.pseudo||'Joueur',trophies:0,wins:0,losses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+  saveProgress();
+  syncUI();
+  buildSettingsPage();
+  toast('🗑️ Progression réinitialisée');
+}
+
+// ══ LEADERBOARD ══
+async function publishScore(){
+  if(!SUPABASE_READY){ toast('⚙️ Configure d\'abord Supabase dans le code !'); return; }
+  const pseudo = player.pseudo||'Joueur';
+  if(pseudo==='Joueur'){ toast('⚠️ Change ton pseudo dans Réglages d\'abord !'); return; }
+  try {
+    // Upsert: update if pseudo exists, insert otherwise
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?pseudo=eq.${encodeURIComponent(pseudo)}`, {
+      method:'GET', headers:{ 'apikey':SUPABASE_KEY, 'Authorization':'Bearer '+SUPABASE_KEY }
+    });
+    const existing = await res.json();
+    if(existing.length>0){
+      await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?pseudo=eq.${encodeURIComponent(pseudo)}`, {
+        method:'PATCH',
+        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body: JSON.stringify({trophies:player.trophies,wins:player.wins,losses:player.losses,updated_at:new Date().toISOString()})
+      });
+    } else {
+      await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard`, {
+        method:'POST',
+        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body: JSON.stringify({pseudo,trophies:player.trophies,wins:player.wins,losses:player.losses})
+      });
+    }
+    toast('🌍 Score publié dans le classement !');
+    loadLeaderboard();
+  } catch(e){ toast('❌ Erreur de connexion Supabase'); }
+}
+
+async function loadLeaderboard(){
+  const list = document.getElementById('lb-list');
+  const note = document.getElementById('lb-config-note');
+  note.style.display = SUPABASE_READY ? 'none' : 'block';
+
+  if(!SUPABASE_READY){
+    list.innerHTML = renderMockLeaderboard();
+    return;
+  }
+
+  list.innerHTML = '<div class="lb-loading">⏳ Chargement…</div>';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?order=trophies.desc&limit=50`, {
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    });
+    const data = await res.json();
+    if(!data.length){ list.innerHTML='<div class="lb-empty">🏜️ Aucun joueur encore. Sois le premier !</div>'; return; }
+    list.innerHTML = data.map((row,i) => renderLbRow(row, i+1)).join('');
+  } catch(e){
+    list.innerHTML = '<div class="lb-empty">❌ Impossible de charger le classement.</div>';
+  }
+}
+
+function renderLbRow(row, rank){
+  const isMe = row.pseudo === (player.pseudo||'');
+  const rankIcon = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':rank;
+  const rankClass = rank===1?'gold':rank===2?'silver':rank===3?'bronze':'';
+  const cur = getCurrentArenaForTrophies(row.trophies);
+  return `<div class="lb-row${isMe?' me':''}">
+    <div class="lb-rank ${rankClass}">${rankIcon}</div>
+    <div class="lb-info">
+      <div class="lb-name${isMe?' me-name':''}">${escHtml(row.pseudo)}${isMe?' 👈':''}</div>
+      <div class="lb-arena">${cur.emoji} Arène ${cur.id} — ${cur.name}</div>
+    </div>
+    <div class="lb-score">
+      <div class="lb-trophies">🏆 ${row.trophies}</div>
+      <div class="lb-wins">⚔️ ${row.wins||0}V / 💀${row.losses||0}D</div>
+    </div>
+  </div>`;
+}
+
+function renderMockLeaderboard(){
+  const mock=[
+    {pseudo:'DragonSlayer',trophies:1850,wins:42,losses:11},
+    {pseudo:'ArenaKing',   trophies:1420,wins:35,losses:18},
+    {pseudo:'GoblinBoss',  trophies:980, wins:28,losses:22},
+    {pseudo:'WizardPro',   trophies:640, wins:19,losses:15},
+    {pseudo:'KnightX',     trophies:410, wins:12,losses:9},
+  ];
+  // Insert player in mock
+  const me={pseudo:player.pseudo||'Toi',trophies:player.trophies,wins:player.wins,losses:player.losses,_isMe:true};
+  const all=[...mock,me].sort((a,b)=>b.trophies-a.trophies);
+  return all.map((r,i)=>renderLbRow(r,i+1)).join('');
+}
+
+function getCurrentArenaForTrophies(trophies){
+  let cur=ARENAS[0];
+  for(const a of ARENAS){ if(trophies>=a.trophies) cur=a; }
+  return cur;
+}
+function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 // INIT
 buildManaUI();buildArenaPage();buildDeckPage();
