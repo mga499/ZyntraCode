@@ -958,6 +958,14 @@ function deployCard(lane){
   const next=gs.deckCards[gs.deckIdx%gs.deckCards.length];gs.deckIdx++;
   gs.hand[gs.selectedCard]=next;gs.selectedCard=null;
   document.body.classList.remove('selecting');
+  if(mpMode==='guest'){
+    // Multiplayer guest: send move to host instead of spawning locally
+    updateManaUI();buildHandUI();setStatus('Sélectionne une carte');
+    if(mpChannel){
+      mpChannel.send({type:'broadcast',event:'deploy',payload:{cardId:c.id,lane}});
+    }
+    return;
+  }
   spawnTroop(c,'player',lane);updateManaUI();buildHandUI();setStatus('Sélectionne une carte');
 }
 function updateTowerUI(s,w){
@@ -993,7 +1001,13 @@ function gameLoop(ts){
   gs.manaTick+=dt;
   if(gs.manaTick>=1){gs.mana=Math.min(MAX_MANA,gs.mana+MANA_REGEN);gs.manaTick=0;updateManaUI();buildHandUI();}
   gs.timeLeft-=dt;updateTimer();if(gs.timeLeft<=0){endGame(null);return;}
-  gs.aiTick+=dt;if(gs.aiTick>=4+Math.random()*3){aiPlay();gs.aiTick=0;}
+  if(mpMode==='host'){
+    // Multiplayer: no AI, broadcast state to guest
+    mpBroadcastTick+=dt;
+    if(mpBroadcastTick>=0.15){hostBroadcast();mpBroadcastTick=0;}
+  } else {
+    gs.aiTick+=dt;if(gs.aiTick>=4+Math.random()*3){aiPlay();gs.aiTick=0;}
+  }
   updateTroops(dt);animId=requestAnimationFrame(gameLoop);
 }
 function updateTroops(dt){
@@ -1186,7 +1200,8 @@ function startGame(){
 function endGame(winner){
   gs.running=false;if(animId)cancelAnimationFrame(animId);
   document.body.classList.remove('selecting');
-  showResultScreen(winner);
+  if(mpMode==='host'||mpMode==='guest') endMpGame(winner);
+  else showResultScreen(winner);
 }
 document.getElementById('btn-start').addEventListener('click',startGame);
 
@@ -1699,33 +1714,6 @@ async function guestPollLoop(ts){
   animId=requestAnimationFrame(guestPollLoop);
 }
 
-// ── Guest deploy (override deployCard for guest) ──
-const _origDeployCard=deployCard;
-function deployCard(lane){
-  if(mpMode==='guest'){
-    if(gs.selectedCard===null||!gs.running)return;
-    const card=gs.hand[gs.selectedCard];
-    if(gs.mana<card.cost)return;
-    gs.mana-=card.cost;
-    const next=gs.deckCards[gs.deckIdx%gs.deckCards.length];gs.deckIdx++;
-    gs.hand[gs.selectedCard]=next;gs.selectedCard=null;
-    document.body.classList.remove('selecting');
-    updateManaUI();buildHandUI();setStatus('Sélectionne une carte');
-    // Send to host
-    if(mpChannel){
-      mpChannel.send({type:'broadcast',event:'deploy',payload:{cardId:card.id,lane}});
-    } else {
-      // Polling fallback: insert move
-      fetch(`${SUPABASE_URL}/rest/v1/rpc/append_guest_move`,{
-        method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
-        body:JSON.stringify({room_id:mpRoomId,card_id:card.id,lane})
-      }).catch(()=>{});
-    }
-    return;
-  }
-  _origDeployCard(lane);
-}
-
 // ── Host: broadcast state every 150ms ──
 let mpBroadcastTick=0;
 function hostBroadcast(){
@@ -1817,38 +1805,6 @@ function endMpGame(winner){
   mpMode=null;mpRoomId=null;mpOpponent=null;
   hideMpBanner();
   showResultScreen(winner);
-}
-
-// ── Patch gameLoop for multiplayer ──
-const _origGameLoop=gameLoop;
-function gameLoop(ts){
-  if(!gs.running)return;
-  if(!gs.lastFrame)gs.lastFrame=ts;
-  const dt=Math.min((ts-gs.lastFrame)/1000,0.1);gs.lastFrame=ts;
-  gs.manaTick+=dt;
-  if(gs.manaTick>=1){gs.mana=Math.min(MAX_MANA,gs.mana+MANA_REGEN);gs.manaTick=0;updateManaUI();buildHandUI();}
-  gs.timeLeft-=dt;updateTimer();if(gs.timeLeft<=0){
-    if(mpMode==='host') endMpGame(null);
-    else endGame(null);
-    return;
-  }
-  if(mpMode==='host'){
-    // No AI, troops come from guest deploys
-    mpBroadcastTick+=dt;
-    if(mpBroadcastTick>=0.15){hostBroadcast();mpBroadcastTick=0;}
-  } else {
-    gs.aiTick+=dt;if(gs.aiTick>=4+Math.random()*3){aiPlay();gs.aiTick=0;}
-  }
-  updateTroops(dt);animId=requestAnimationFrame(gameLoop);
-}
-
-// ── Patch endGame for multiplayer ──
-const _origEndGame=endGame;
-function endGame(winner){
-  gs.running=false;if(animId)cancelAnimationFrame(animId);
-  document.body.classList.remove('selecting');
-  if(mpMode==='host'||mpMode==='guest') endMpGame(winner);
-  else showResultScreen(winner);
 }
 
 // INIT
