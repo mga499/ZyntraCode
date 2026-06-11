@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clash Arena</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Exo+2:wght@400;600;700&display=swap');
 :root {
@@ -438,6 +439,92 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   background:rgba(52,152,219,.15);padding:1px 6px;border-radius:4px;
   font-family:monospace;font-size:.7rem;
 }
+/* ── FRIENDS PAGE ── */
+.friends-search{padding:14px 14px 0;display:flex;gap:8px}
+.friends-search input{
+  flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,215,0,.25);
+  border-radius:10px;padding:10px 14px;color:var(--text);font-family:'Exo 2',sans-serif;
+  font-size:.85rem;outline:none;transition:border-color .2s;
+}
+.friends-search input:focus{border-color:var(--gold)}
+.friends-search button{
+  padding:10px 16px;background:linear-gradient(135deg,#b8960c,#FFD700);
+  color:#0d0620;border:none;border-radius:10px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:1px;
+  white-space:nowrap;transition:transform .15s;
+}
+.friends-search button:hover{transform:scale(1.04)}
+.friends-tabs{display:flex;gap:0;margin:12px 14px 0;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.ftab{
+  flex:1;padding:9px;text-align:center;font-size:.65rem;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;cursor:pointer;background:var(--card-bg);color:var(--text-dim);
+  transition:background .2s,color .2s;position:relative;border:none;font-family:'Exo 2',sans-serif;
+}
+.ftab.active{background:rgba(255,215,0,.12);color:var(--gold)}
+.ftab-badge{
+  position:absolute;top:4px;right:6px;min-width:16px;height:16px;
+  background:var(--red-light);border-radius:8px;font-size:.55rem;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;padding:0 3px;
+}
+.friends-list{padding:10px 14px;display:flex;flex-direction:column;gap:8px}
+.friend-row{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:12px;
+  padding:12px 14px;display:flex;align-items:center;gap:10px;
+}
+.friend-avatar{font-size:1.8rem}
+.friend-info{flex:1}
+.friend-name{font-size:.8rem;font-weight:700}
+.friend-meta{font-size:.62rem;color:var(--text-dim);margin-top:2px}
+.friend-actions{display:flex;gap:6px}
+.ftn{
+  padding:7px 12px;border:none;border-radius:8px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;letter-spacing:1px;
+  transition:transform .15s,opacity .2s;text-transform:uppercase;
+}
+.ftn:hover{transform:scale(1.05)}
+.ftn.accept{background:var(--green);color:#fff}
+.ftn.decline{background:rgba(255,255,255,.1);color:var(--text-dim)}
+.ftn.challenge{background:linear-gradient(135deg,#b8960c,#FFD700);color:#0d0620}
+.ftn.remove{background:rgba(231,76,60,.2);color:var(--red-light);border:1px solid rgba(231,76,60,.3)}
+.friends-empty{text-align:center;padding:30px 20px;color:var(--text-dim);font-size:.78rem;line-height:1.7}
+
+/* ── CHALLENGE MODAL ── */
+#challenge-modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:300;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+#challenge-modal.show{opacity:1;pointer-events:all}
+.chal-box{
+  background:var(--panel);border:1px solid var(--gold);border-radius:16px;
+  padding:24px 28px;max-width:340px;width:90%;text-align:center;
+  box-shadow:0 0 40px rgba(255,215,0,.2);
+}
+.chal-icon{font-size:3rem;margin-bottom:8px}
+.chal-title{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);letter-spacing:3px;margin-bottom:6px}
+.chal-sub{font-size:.78rem;color:var(--text-dim);margin-bottom:16px;line-height:1.6}
+.chal-actions{display:flex;gap:10px;justify-content:center}
+.chal-actions button{padding:10px 22px;border:none;border-radius:10px;cursor:pointer;font-family:'Cinzel',serif;font-size:.75rem;font-weight:700;letter-spacing:2px}
+.chal-accept{background:linear-gradient(135deg,#b8960c,#FFD700);color:#0d0620}
+.chal-decline{background:rgba(255,255,255,.1);color:var(--text-dim)}
+
+/* ── MULTIPLAYER BANNER ── */
+#mp-banner{
+  width:calc(100% - 16px);max-width:420px;
+  background:linear-gradient(135deg,rgba(123,31,162,.4),rgba(21,101,192,.4));
+  border:1px solid rgba(123,31,162,.5);border-radius:10px;
+  padding:8px 14px;margin-bottom:4px;
+  display:none;align-items:center;justify-content:space-between;
+  font-size:.68rem;color:#d7a8ff;
+}
+#mp-banner.show{display:flex}
+#mp-banner strong{color:var(--gold);font-family:'Cinzel',serif}
+.mp-waiting{animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* NAV scrollable */
+#nav{overflow-x:auto;overflow-y:hidden;scrollbar-width:none}
+#nav::-webkit-scrollbar{display:none}
 </style>
 </head>
 <body>
@@ -490,8 +577,36 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   <div class="all-cards-grid" id="all-cards-grid"></div>
 </div>
 
+<!-- FRIENDS -->
+<div class="page" id="page-friends">
+  <div class="friends-search">
+    <input id="friend-search-input" type="text" maxlength="16" placeholder="Chercher un joueur par pseudo…" onkeydown="if(event.key==='Enter')searchAndAdd()">
+    <button onclick="searchAndAdd()">CHERCHER</button>
+  </div>
+  <div class="friends-tabs">
+    <button class="ftab active" id="ftab-friends" onclick="switchFTab('friends')">Amis<span class="ftab-badge" id="ftab-badge-friends" style="display:none"></span></button>
+    <button class="ftab" id="ftab-pending" onclick="switchFTab('pending')">En attente<span class="ftab-badge" id="ftab-badge-pending" style="display:none"></span></button>
+    <button class="ftab" id="ftab-requests" onclick="switchFTab('requests')">Reçues<span class="ftab-badge" id="ftab-badge-requests" style="display:none"></span></button>
+  </div>
+  <div class="friends-list" id="friends-list"></div>
+</div>
+
+<!-- CHALLENGE MODAL -->
+<div id="challenge-modal">
+  <div class="chal-box">
+    <div class="chal-icon">⚔️</div>
+    <div class="chal-title" id="chal-title">DÉFI !</div>
+    <div class="chal-sub" id="chal-sub">Un ami te défie en combat !</div>
+    <div class="chal-actions">
+      <button class="chal-accept" id="chal-accept-btn">ACCEPTER</button>
+      <button class="chal-decline" onclick="declineChallenge()">REFUSER</button>
+    </div>
+  </div>
+</div>
+
 <!-- BATTLE -->
 <div class="page" id="page-battle">
+  <div id="mp-banner"><span>⚔️ Combat contre <strong id="mp-opponent-name">—</strong></span><span class="mp-waiting" id="mp-status-txt">En attente…</span></div>
   <div id="battle-top">
     <h2>⚔ COMBAT</h2>
     <div id="timer-display">3:00</div>
@@ -624,6 +739,7 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   <button class="nav-btn active" data-page="home"        onclick="showPage('home',this)"><span class="nav-icon">🏠</span>Accueil</button>
   <button class="nav-btn"        data-page="arenas"      onclick="showPage('arenas',this)"><span class="nav-icon">🗺️</span>Arènes</button>
   <button class="nav-btn"        data-page="deck"        onclick="showPage('deck',this)"><span class="nav-icon">🃏</span>Deck</button>
+  <button class="nav-btn"        data-page="friends"     onclick="showPage('friends',this)" id="nav-friends"><span class="nav-icon">👥</span>Amis<span id="nav-friends-badge" style="position:absolute;top:6px;right:8px;background:#e74c3c;color:#fff;border-radius:8px;font-size:.5rem;padding:1px 4px;display:none"></span></button>
   <button class="nav-btn"        data-page="leaderboard" onclick="showPage('leaderboard',this)"><span class="nav-icon">🌍</span>Classement</button>
   <button class="nav-btn"        data-page="settings"    onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span>Réglages</button>
   <button class="nav-btn"        data-page="battle"      onclick="showPage('battle',this)"><span class="nav-icon">⚔️</span>Combat</button>
@@ -640,6 +756,7 @@ function showPage(name,btn){
   if(name==='arenas')      buildArenaPage();
   if(name==='settings')    buildSettingsPage();
   if(name==='leaderboard') loadLeaderboard();
+  if(name==='friends')     loadFriendsPage();
 }
 function goToBattle(){
   const btn=document.querySelector('.nav-btn[data-page="battle"]');
@@ -1211,8 +1328,535 @@ function getCurrentArenaForTrophies(trophies){
 }
 function escHtml(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+// ══ SUPABASE CLIENT ══
+let sb = null;
+function initSB(){
+  if(typeof supabase==='undefined'||!SUPABASE_READY)return;
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+}
+// SQL à exécuter dans Supabase → SQL Editor :
+// CREATE TABLE clash_friends (
+//   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+//   from_pseudo text NOT NULL, to_pseudo text NOT NULL,
+//   status text DEFAULT 'pending',
+//   created_at timestamptz DEFAULT now(),
+//   UNIQUE(from_pseudo, to_pseudo)
+// );
+// ALTER TABLE clash_friends ENABLE ROW LEVEL SECURITY;
+// CREATE POLICY "all" ON clash_friends FOR ALL USING(true) WITH CHECK(true);
+// CREATE TABLE clash_rooms (
+//   id text PRIMARY KEY,
+//   host_pseudo text NOT NULL, guest_pseudo text,
+//   status text DEFAULT 'waiting',
+//   game_state jsonb, guest_moves jsonb DEFAULT '[]'::jsonb,
+//   created_at timestamptz DEFAULT now()
+// );
+// ALTER TABLE clash_rooms ENABLE ROW LEVEL SECURITY;
+// CREATE POLICY "all" ON clash_rooms FOR ALL USING(true) WITH CHECK(true);
+
+// ══ FRIENDS STATE ══
+let friendsTab = 'friends';
+let currentChallenge = null;
+let mpChannel = null;
+let mpMode = null; // null | 'host' | 'guest'
+let mpRoomId = null;
+let mpOpponent = null;
+let pollTimer = null;
+
+// ══ FRIENDS TABS ══
+function switchFTab(tab){
+  friendsTab=tab;
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('ftab-'+tab).classList.add('active');
+  renderFriendsList();
+}
+
+// ══ SEARCH + ADD ══
+async function searchAndAdd(){
+  if(!SUPABASE_READY){toast('⚙️ Configure Supabase d\'abord');return;}
+  const pseudo=document.getElementById('friend-search-input').value.trim();
+  if(!pseudo){toast('⚠️ Entre un pseudo');return;}
+  if(pseudo===(player.pseudo||'Joueur')){toast('😅 C\'est ton propre pseudo !');return;}
+  // Check player exists in leaderboard
+  try{
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?pseudo=eq.${encodeURIComponent(pseudo)}&select=pseudo`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    const data=await r.json();
+    if(!data.length){toast(`❌ Joueur "${pseudo}" introuvable`);return;}
+    // Check if already friends/pending
+    const r2=await fetch(`${SUPABASE_URL}/rest/v1/clash_friends?or=(from_pseudo.eq.${encodeURIComponent(player.pseudo)},to_pseudo.eq.${encodeURIComponent(player.pseudo)})&or=(from_pseudo.eq.${encodeURIComponent(pseudo)},to_pseudo.eq.${encodeURIComponent(pseudo)})`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    // Simple insert
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/clash_friends`,{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({from_pseudo:player.pseudo||'Joueur',to_pseudo:pseudo,status:'pending'})
+    });
+    if(res.ok){toast(`✅ Demande envoyée à ${pseudo} !`);document.getElementById('friend-search-input').value='';}
+    else{toast('❌ Déjà demandé ou déjà ami');}
+  }catch(e){toast('❌ Erreur réseau');}
+}
+
+// ══ LOAD FRIENDS PAGE ══
+async function loadFriendsPage(){
+  if(!SUPABASE_READY){
+    document.getElementById('friends-list').innerHTML='<div class="friends-empty">⚙️ Configure Supabase pour utiliser les amis.<br>Va dans Réglages pour publier ton score d\'abord.</div>';
+    return;
+  }
+  if(!(player.pseudo&&player.pseudo!=='Joueur')){
+    document.getElementById('friends-list').innerHTML='<div class="friends-empty">👤 Change ton pseudo dans Réglages<br>avant d\'utiliser les amis !</div>';
+    return;
+  }
+  document.getElementById('friends-list').innerHTML='<div class="friends-empty">⏳ Chargement…</div>';
+  try{
+    const me=player.pseudo;
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/clash_friends?or=(from_pseudo.eq.${encodeURIComponent(me)},to_pseudo.eq.${encodeURIComponent(me)})`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    const rows=await r.json();
+    window._friendsData={
+      friends: rows.filter(x=>x.status==='accepted'),
+      pending: rows.filter(x=>x.status==='pending'&&x.from_pseudo===me),
+      requests:rows.filter(x=>x.status==='pending'&&x.to_pseudo===me),
+    };
+    updateFriendsBadges();
+    renderFriendsList();
+  }catch(e){document.getElementById('friends-list').innerHTML='<div class="friends-empty">❌ Erreur de chargement</div>';}
+}
+
+function updateFriendsBadges(){
+  const fd=window._friendsData||{friends:[],pending:[],requests:[]};
+  const reqCount=fd.requests.length;
+  const badge=document.getElementById('nav-friends-badge');
+  const reqBadge=document.getElementById('ftab-badge-requests');
+  badge.style.display=reqCount>0?'':'none';
+  badge.textContent=reqCount;
+  reqBadge.style.display=reqCount>0?'flex':'none';
+  reqBadge.textContent=reqCount;
+}
+
+function renderFriendsList(){
+  const fd=window._friendsData||{friends:[],pending:[],requests:[]};
+  const list=document.getElementById('friends-list');
+  const me=player.pseudo;
+  let rows=[];
+  if(friendsTab==='friends') rows=fd.friends;
+  else if(friendsTab==='pending') rows=fd.pending;
+  else rows=fd.requests;
+
+  if(!rows.length){
+    const msgs={
+      friends:'👥 Aucun ami pour l\'instant.<br>Cherche un joueur par pseudo !',
+      pending:'⏳ Aucune demande en attente.',
+      requests:'📬 Aucune demande reçue.'
+    };
+    list.innerHTML=`<div class="friends-empty">${msgs[friendsTab]}</div>`;return;
+  }
+  list.innerHTML=rows.map(row=>{
+    const other=row.from_pseudo===me?row.to_pseudo:row.from_pseudo;
+    const cur=getCurrentArenaForTrophies(0);
+    if(friendsTab==='friends'){
+      return `<div class="friend-row">
+        <div class="friend-avatar">🧙</div>
+        <div class="friend-info"><div class="friend-name">${escHtml(other)}</div><div class="friend-meta">Ami ⚔️</div></div>
+        <div class="friend-actions">
+          <button class="ftn challenge" onclick="challengeFriend('${escHtml(other)}')">⚔️ Défier</button>
+          <button class="ftn remove" onclick="removeFriend('${row.id}')">✕</button>
+        </div>
+      </div>`;
+    } else if(friendsTab==='pending'){
+      return `<div class="friend-row">
+        <div class="friend-avatar">🧙</div>
+        <div class="friend-info"><div class="friend-name">${escHtml(other)}</div><div class="friend-meta">Demande envoyée…</div></div>
+        <div class="friend-actions"><button class="ftn remove" onclick="removeFriend('${row.id}')">Annuler</button></div>
+      </div>`;
+    } else {
+      return `<div class="friend-row">
+        <div class="friend-avatar">🧙</div>
+        <div class="friend-info"><div class="friend-name">${escHtml(other)}</div><div class="friend-meta">Veut être ton ami</div></div>
+        <div class="friend-actions">
+          <button class="ftn accept" onclick="acceptFriend('${row.id}')">✓ Accepter</button>
+          <button class="ftn decline" onclick="removeFriend('${row.id}')">✕</button>
+        </div>
+      </div>`;
+    }
+  }).join('');
+}
+
+async function acceptFriend(id){
+  await fetch(`${SUPABASE_URL}/rest/v1/clash_friends?id=eq.${id}`,{
+    method:'PATCH',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({status:'accepted'})
+  });
+  toast('✅ Ami accepté !');loadFriendsPage();
+}
+async function removeFriend(id){
+  await fetch(`${SUPABASE_URL}/rest/v1/clash_friends?id=eq.${id}`,{
+    method:'DELETE',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+  });
+  loadFriendsPage();
+}
+
+// ══ CHALLENGE (DÉFI) ══
+async function challengeFriend(pseudo){
+  if(!SUPABASE_READY)return;
+  const roomId='room_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+  try{
+    await fetch(`${SUPABASE_URL}/rest/v1/clash_rooms`,{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({id:roomId,host_pseudo:player.pseudo,guest_pseudo:pseudo,status:'waiting',guest_moves:'[]'})
+    });
+    toast(`⚔️ Défi envoyé à ${pseudo} !`);
+    // Host starts waiting
+    startMultiplayerHost(pseudo,roomId);
+  }catch(e){toast('❌ Erreur lors du défi');}
+}
+
+// Poll for incoming challenges every 5s
+async function pollChallenges(){
+  if(!SUPABASE_READY||!(player.pseudo&&player.pseudo!=='Joueur'))return;
+  try{
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?guest_pseudo=eq.${encodeURIComponent(player.pseudo)}&status=eq.waiting&select=id,host_pseudo`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    const rooms=await r.json();
+    if(rooms.length>0&&!mpMode){
+      const room=rooms[0];
+      showChallengeModal(room.host_pseudo,room.id);
+    }
+    // Also refresh friends badge
+    if(document.getElementById('page-friends').classList.contains('active')) loadFriendsPage();
+    else{
+      // just update badge
+      try{
+        const me=player.pseudo;
+        const r2=await fetch(`${SUPABASE_URL}/rest/v1/clash_friends?to_pseudo=eq.${encodeURIComponent(me)}&status=eq.pending`,
+          {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+        const reqs=await r2.json();
+        const badge=document.getElementById('nav-friends-badge');
+        badge.style.display=reqs.length>0?'':'none';badge.textContent=reqs.length;
+      }catch(e){}
+    }
+  }catch(e){}
+}
+
+function showChallengeModal(hostPseudo,roomId){
+  currentChallenge={hostPseudo,roomId};
+  document.getElementById('chal-title').textContent=`DÉFI DE ${hostPseudo.toUpperCase()} !`;
+  document.getElementById('chal-sub').textContent=`${hostPseudo} te défie en combat. Acceptes-tu ?`;
+  document.getElementById('chal-accept-btn').onclick=()=>acceptChallengeModal();
+  document.getElementById('challenge-modal').classList.add('show');
+}
+async function acceptChallengeModal(){
+  document.getElementById('challenge-modal').classList.remove('show');
+  if(!currentChallenge)return;
+  const {hostPseudo,roomId}=currentChallenge;
+  // Update room status
+  await fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${roomId}`,{
+    method:'PATCH',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({status:'accepted'})
+  });
+  startMultiplayerGuest(hostPseudo,roomId);
+}
+function declineChallenge(){
+  document.getElementById('challenge-modal').classList.remove('show');
+  if(currentChallenge){
+    fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${currentChallenge.roomId}`,{
+      method:'PATCH',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({status:'declined'})
+    });
+  }
+  currentChallenge=null;
+  toast('❌ Défi refusé');
+}
+
+// ══ MULTIPLAYER ══
+function showMpBanner(opponent,statusTxt){
+  const b=document.getElementById('mp-banner');
+  document.getElementById('mp-opponent-name').textContent=opponent;
+  document.getElementById('mp-status-txt').textContent=statusTxt;
+  document.getElementById('mp-status-txt').style.animation=statusTxt==='En attente…'?'pulse 1.5s infinite':'none';
+  b.classList.add('show');
+}
+function hideMpBanner(){document.getElementById('mp-banner').classList.remove('show');}
+
+async function startMultiplayerHost(guestPseudo,roomId){
+  mpMode='host';mpRoomId=roomId;mpOpponent=guestPseudo;
+  const btn=document.querySelector('.nav-btn[data-page="battle"]');
+  showPage('battle',btn);
+  showMpBanner(guestPseudo,'En attente de '+guestPseudo+'…');
+  // Show overlay waiting
+  document.getElementById('overlay').classList.remove('hidden');
+  document.getElementById('ov-title').textContent='⏳ En attente…';
+  document.getElementById('ov-title').style.color='var(--gold)';
+  document.getElementById('ov-sub').textContent=`Attente que ${guestPseudo} accepte le défi…`;
+  document.getElementById('btn-start').textContent='ANNULER';
+  document.getElementById('btn-start').onclick=cancelMp;
+  // Poll for guest acceptance
+  const waitInterval=setInterval(async()=>{
+    try{
+      const r=await fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${roomId}&select=status`,
+        {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+      const d=await r.json();
+      if(!d.length||(d[0].status==='declined')){clearInterval(waitInterval);cancelMp();toast('❌ Défi refusé');return;}
+      if(d[0].status==='accepted'){clearInterval(waitInterval);launchMpGame();}
+    }catch(e){}
+  },2000);
+  window._mpWaitInterval=waitInterval;
+}
+
+function startMultiplayerGuest(hostPseudo,roomId){
+  mpMode='guest';mpRoomId=roomId;mpOpponent=hostPseudo;
+  const btn=document.querySelector('.nav-btn[data-page="battle"]');
+  showPage('battle',btn);
+  showMpBanner(hostPseudo,'Combat multijoueur en cours');
+  launchMpGame();
+}
+
+function launchMpGame(){
+  document.getElementById('overlay').classList.add('hidden');
+  document.body.classList.remove('selecting');
+  if(window._mpWaitInterval)clearInterval(window._mpWaitInterval);
+  initGame();
+  gs.running=true;
+  gs.mpMode=mpMode; // 'host' or 'guest'
+  gs.mpRoomId=mpRoomId;
+  if(mpMode==='host') showMpBanner(mpOpponent,'Combat vs '+mpOpponent);
+  // Subscribe to Supabase Realtime
+  if(sb){
+    mpChannel=sb.channel('game:'+mpRoomId);
+    mpChannel.on('broadcast',{event:'deploy'},(msg)=>{
+      // Guest deployed a troop → host spawns as enemy
+      if(mpMode==='host'){
+        const c=ALL_CARDS.find(x=>x.id===msg.payload.cardId);
+        if(c) spawnTroop(c,'enemy',msg.payload.lane);
+      }
+    });
+    mpChannel.on('broadcast',{event:'state'},(msg)=>{
+      // Host sent game state → guest renders
+      if(mpMode==='guest') renderGuestState(msg.payload);
+    });
+    mpChannel.on('broadcast',{event:'end'},(msg)=>{
+      if(mpMode==='guest'){
+        gs.running=false;if(animId)cancelAnimationFrame(animId);
+        document.body.classList.remove('selecting');
+        // Flip winner for guest perspective
+        const w=msg.payload.winner==='player'?'enemy':msg.payload.winner==='enemy'?'player':null;
+        endMpGame(w);
+      }
+    });
+    mpChannel.subscribe((status)=>{
+      if(status==='SUBSCRIBED'&&mpMode==='host'){
+        animId=requestAnimationFrame(gameLoop);
+      } else if(status==='SUBSCRIBED'&&mpMode==='guest'){
+        animId=requestAnimationFrame(guestRenderLoop);
+      }
+    });
+  } else {
+    // Fallback: polling for guest, direct start for host
+    animId=requestAnimationFrame(mpMode==='host'?gameLoop:guestPollLoop);
+  }
+}
+
+function cancelMp(){
+  if(window._mpWaitInterval)clearInterval(window._mpWaitInterval);
+  if(mpRoomId){
+    fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${mpRoomId}`,{
+      method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({status:'cancelled'})
+    });
+  }
+  mpMode=null;mpRoomId=null;mpOpponent=null;
+  hideMpBanner();
+  document.getElementById('overlay').classList.add('hidden');
+  const btn=document.querySelector('.nav-btn[data-page="home"]');
+  showPage('home',btn);
+}
+
+// ── Guest render loop (Realtime) ──
+function guestRenderLoop(ts){
+  if(!gs.running)return;
+  updateManaUI();buildHandUI();
+  animId=requestAnimationFrame(guestRenderLoop);
+}
+
+// ── Guest polling fallback (no Realtime) ──
+let guestPollTick=0;
+async function guestPollLoop(ts){
+  if(!gs.running)return;
+  guestPollTick++;
+  if(guestPollTick%18===0){ // every ~300ms at 60fps
+    try{
+      const r=await fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${mpRoomId}&select=game_state`,
+        {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+      const d=await r.json();
+      if(d[0]?.game_state) renderGuestState(d[0].game_state);
+    }catch(e){}
+  }
+  animId=requestAnimationFrame(guestPollLoop);
+}
+
+// ── Guest deploy (override deployCard for guest) ──
+const _origDeployCard=deployCard;
+function deployCard(lane){
+  if(mpMode==='guest'){
+    if(gs.selectedCard===null||!gs.running)return;
+    const card=gs.hand[gs.selectedCard];
+    if(gs.mana<card.cost)return;
+    gs.mana-=card.cost;
+    const next=gs.deckCards[gs.deckIdx%gs.deckCards.length];gs.deckIdx++;
+    gs.hand[gs.selectedCard]=next;gs.selectedCard=null;
+    document.body.classList.remove('selecting');
+    updateManaUI();buildHandUI();setStatus('Sélectionne une carte');
+    // Send to host
+    if(mpChannel){
+      mpChannel.send({type:'broadcast',event:'deploy',payload:{cardId:card.id,lane}});
+    } else {
+      // Polling fallback: insert move
+      fetch(`${SUPABASE_URL}/rest/v1/rpc/append_guest_move`,{
+        method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},
+        body:JSON.stringify({room_id:mpRoomId,card_id:card.id,lane})
+      }).catch(()=>{});
+    }
+    return;
+  }
+  _origDeployCard(lane);
+}
+
+// ── Host: broadcast state every 150ms ──
+let mpBroadcastTick=0;
+function hostBroadcast(){
+  if(!gs.running||mpMode!=='host')return;
+  const state={
+    troops:gs.troops.map(t=>({id:t.id,x:t.x,y:t.y,hp:t.hp,maxHp:t.maxHp,owner:t.owner,emoji:t.card.emoji})),
+    towers:{
+      player:{left:gs.towers.player.left.hp,right:gs.towers.player.right.hp,king:gs.towers.player.king.hp},
+      enemy: {left:gs.towers.enemy.left.hp, right:gs.towers.enemy.right.hp, king:gs.towers.enemy.king.hp}
+    },
+    timeLeft:gs.timeLeft
+  };
+  if(mpChannel) mpChannel.send({type:'broadcast',event:'state',payload:state});
+  else {
+    // Polling fallback: update DB
+    fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${mpRoomId}`,{
+      method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({game_state:state})
+    }).catch(()=>{});
+    // Also check for guest moves
+    fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${mpRoomId}&select=guest_moves`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}})
+    .then(r=>r.json()).then(d=>{
+      const moves=d[0]?.guest_moves||[];
+      if(moves.length){
+        moves.forEach(m=>{const c=ALL_CARDS.find(x=>x.id===m.card_id);if(c)spawnTroop(c,'enemy',m.lane);});
+        fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${mpRoomId}`,{
+          method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+          body:JSON.stringify({guest_moves:'[]'})
+        }).catch(()=>{});
+      }
+    }).catch(()=>{});
+  }
+}
+
+// ── Guest: render received state ──
+function renderGuestState(state){
+  if(!state)return;
+  // Update troops
+  document.querySelectorAll('.troop').forEach(e=>e.remove());
+  const arena=document.getElementById('arena');
+  state.troops.forEach(t=>{
+    const displayOwner=t.owner==='player'?'enemy':'player'; // flip for guest
+    const el=document.createElement('div');
+    el.className='troop '+displayOwner+'-troop';
+    el.style.left=t.x+'px';el.style.top=t.y+'px';
+    el.innerHTML=`<div class="troop-hp-bar"><div class="troop-hp-fill" style="width:${Math.max(0,t.hp/t.maxHp*100)}%"></div></div><span>${t.emoji}</span>`;
+    arena.appendChild(el);
+  });
+  // Update tower HPs (flipped)
+  if(state.towers){
+    const pt=state.towers.enemy,et=state.towers.player;
+    if(pt){
+      document.getElementById('ptl-hp').textContent=Math.max(0,pt.left);document.getElementById('ptl-bar').style.width=Math.max(0,pt.left/TWR_HP*100)+'%';
+      document.getElementById('ptr-hp').textContent=Math.max(0,pt.right);document.getElementById('ptr-bar').style.width=Math.max(0,pt.right/TWR_HP*100)+'%';
+      document.getElementById('pk-hp').textContent=Math.max(0,pt.king);document.getElementById('pk-bar').style.width=Math.max(0,pt.king/KING_HP*100)+'%';
+    }
+    if(et){
+      document.getElementById('etl-hp').textContent=Math.max(0,et.left);document.getElementById('etl-bar').style.width=Math.max(0,et.left/TWR_HP*100)+'%';
+      document.getElementById('etr-hp').textContent=Math.max(0,et.right);document.getElementById('etr-bar').style.width=Math.max(0,et.right/TWR_HP*100)+'%';
+      document.getElementById('ek-hp').textContent=Math.max(0,et.king);document.getElementById('ek-bar').style.width=Math.max(0,et.king/KING_HP*100)+'%';
+    }
+  }
+  if(state.timeLeft!==undefined){gs.timeLeft=state.timeLeft;updateTimer();}
+  // Check for tower death icons
+  ['ptl','ptr','pk','etl','etr','ek'].forEach(pfx=>{
+    const hp=parseInt(document.getElementById(pfx+'-hp').textContent);
+    const domMap={ptl:'ptower-left',ptr:'ptower-right',pk:'pking',etl:'etower-left',etr:'etower-right',ek:'eking'};
+    const icons={ptl:'🏯',ptr:'🏯',pk:'🛡️',etl:'🏰',etr:'🏰',ek:'👑'};
+    if(hp<=0) document.getElementById(domMap[pfx]).querySelector('.tower-icon').textContent='💀';
+    else if(document.getElementById(domMap[pfx]).querySelector('.tower-icon').textContent==='💀' && hp>0)
+      document.getElementById(domMap[pfx]).querySelector('.tower-icon').textContent=icons[pfx];
+  });
+}
+
+// ── End multiplayer ──
+function endMpGame(winner){
+  if(mpChannel){mpChannel.unsubscribe();mpChannel=null;}
+  if(mpMode==='host'&&mpChannel){
+    mpChannel.send({type:'broadcast',event:'end',payload:{winner}});
+  }
+  // Clean up room
+  if(mpRoomId){
+    fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${mpRoomId}`,{
+      method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({status:'finished'})
+    }).catch(()=>{});
+  }
+  mpMode=null;mpRoomId=null;mpOpponent=null;
+  hideMpBanner();
+  showResultScreen(winner);
+}
+
+// ── Patch gameLoop for multiplayer ──
+const _origGameLoop=gameLoop;
+function gameLoop(ts){
+  if(!gs.running)return;
+  if(!gs.lastFrame)gs.lastFrame=ts;
+  const dt=Math.min((ts-gs.lastFrame)/1000,0.1);gs.lastFrame=ts;
+  gs.manaTick+=dt;
+  if(gs.manaTick>=1){gs.mana=Math.min(MAX_MANA,gs.mana+MANA_REGEN);gs.manaTick=0;updateManaUI();buildHandUI();}
+  gs.timeLeft-=dt;updateTimer();if(gs.timeLeft<=0){
+    if(mpMode==='host') endMpGame(null);
+    else endGame(null);
+    return;
+  }
+  if(mpMode==='host'){
+    // No AI, troops come from guest deploys
+    mpBroadcastTick+=dt;
+    if(mpBroadcastTick>=0.15){hostBroadcast();mpBroadcastTick=0;}
+  } else {
+    gs.aiTick+=dt;if(gs.aiTick>=4+Math.random()*3){aiPlay();gs.aiTick=0;}
+  }
+  updateTroops(dt);animId=requestAnimationFrame(gameLoop);
+}
+
+// ── Patch endGame for multiplayer ──
+const _origEndGame=endGame;
+function endGame(winner){
+  gs.running=false;if(animId)cancelAnimationFrame(animId);
+  document.body.classList.remove('selecting');
+  if(mpMode==='host'||mpMode==='guest') endMpGame(winner);
+  else showResultScreen(winner);
+}
+
 // INIT
 buildManaUI();buildArenaPage();buildDeckPage();
+initSB();
+// Poll for challenges + friend requests every 5s
+setInterval(pollChallenges,5000);
+pollChallenges();
 </script>
 </body>
 </html>
