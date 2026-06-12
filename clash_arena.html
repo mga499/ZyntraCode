@@ -86,7 +86,16 @@ body{
   border-radius:20px;padding:3px 10px;font-size:.68rem;color:#d7a8ff;margin-bottom:6px;
 }
 .hero-xp-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
-.hero-xp-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--gold));border-radius:3px;width:68%}
+.hero-xp-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--gold));border-radius:3px;width:0%;transition:width .5s ease}
+.hero-level-badge{
+  position:absolute;bottom:-4px;right:-6px;
+  min-width:24px;height:24px;border-radius:12px;padding:0 5px;
+  background:linear-gradient(135deg,#7B1FA2,#b8960c);
+  border:2px solid var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:.72rem;font-weight:900;color:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.4);
+}
 .hero-xp-label{font-size:.6rem;color:var(--text-dim);margin-top:3px}
 .home-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin:0 16px 16px}
 .stat-card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:14px 8px;text-align:center}
@@ -870,13 +879,16 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
 <!-- HOME -->
 <div class="page active" id="page-home">
   <div class="home-hero">
-    <div class="hero-avatar">🧙</div>
+    <div style="position:relative">
+      <div class="hero-avatar">🧙</div>
+      <div class="hero-level-badge" id="hero-level-badge">1</div>
+    </div>
     <div class="hero-info">
       <div class="hero-name" id="hero-name">Joueur</div>
       <div><span class="hero-league-badge" id="hero-league-badge" style="display:none"></span></div>
       <div class="hero-arena-badge" id="hero-arena-badge">⚔ Arène 1 — Goblin Stadium</div>
-      <div class="hero-xp-bar"><div class="hero-xp-fill"></div></div>
-      <div class="hero-xp-label">1 360 / 2 000 XP</div>
+      <div class="hero-xp-bar"><div class="hero-xp-fill" id="hero-xp-fill"></div></div>
+      <div class="hero-xp-label" id="hero-xp-label">0 / 100 XP</div>
     </div>
   </div>
   <div class="home-stats">
@@ -1310,7 +1322,23 @@ function buildLeaguesPage(){
   });
 }
 
-let player={pseudo:'Joueur',trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+let player={pseudo:'Joueur',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+
+// ══ LEVEL SYSTEM ══
+// XP needed to reach next level (level N → N+1)
+function xpForLevel(lvl){ return 100 + (lvl-1)*80; } // L1→2:100, L2→3:180, L3→4:260...
+function getLevelProgress(){
+  const need=xpForLevel(player.level);
+  return {current:player.xp, need, pct:Math.min(100,player.xp/need*100)};
+}
+// Tower stats scale with player level
+function towerHpForLevel(lvl,isKing){
+  const base=isKing?3000:1400;
+  return Math.round(base*(1+(lvl-1)*0.08)); // +8% HP per level
+}
+function towerDmgMultiplier(lvl){
+  return 1+(lvl-1)*0.06; // +6% tower damage per level
+}
 
 // ══ CHEST CONSTANTS (defined early — used by syncUI/buildChestSlots) ══
 const CHEST_TYPES={
@@ -1330,7 +1358,7 @@ const SHOP_CHESTS=[
 // ══ LOCALSTORAGE ══
 function saveProgress(){
   localStorage.setItem('clashArena',JSON.stringify({
-    pseudo:player.pseudo,trophies:player.trophies,wins:player.wins,losses:player.losses,
+    pseudo:player.pseudo,level:player.level,xp:player.xp,trophies:player.trophies,wins:player.wins,losses:player.losses,
     gold:player.gold,gems:player.gems,chests:player.chests,deck:player.deck
   }));
 }
@@ -1340,6 +1368,8 @@ function loadProgress(){
     if(!raw)return;
     const data=JSON.parse(raw);
     if(data.pseudo)                             player.pseudo=data.pseudo;
+    if(typeof data.level==='number')            player.level=data.level;
+    if(typeof data.xp==='number')               player.xp=data.xp;
     if(typeof data.trophies==='number')         player.trophies=data.trophies;
     if(typeof data.wins==='number')             player.wins=data.wins;
     if(typeof data.losses==='number')           player.losses=data.losses;
@@ -1373,6 +1403,14 @@ function syncUI(){
   // Currency
   document.getElementById('gold-count').textContent=player.gold;
   document.getElementById('gems-count').textContent=player.gems;
+  // Level + XP
+  const lvlBadge=document.getElementById('hero-level-badge');
+  if(lvlBadge) lvlBadge.textContent=player.level;
+  const prog=getLevelProgress();
+  const xpFill=document.getElementById('hero-xp-fill');
+  const xpLabel=document.getElementById('hero-xp-label');
+  if(xpFill) xpFill.style.width=prog.pct+'%';
+  if(xpLabel) xpLabel.textContent=`${prog.current} / ${prog.need} XP`;
   // Chests
   buildChestSlots();
 }
@@ -1452,10 +1490,21 @@ const TDOMIDS={player:{left:'ptower-left',right:'ptower-right',king:'pking'},ene
 function initGame(){
   document.querySelectorAll('.troop,.dmg-popup,.projectile').forEach(e=>e.remove());
   const deck=player.deck.length>=4?player.deck.map(id=>ALL_CARDS.find(c=>c.id===id)).filter(Boolean):ALL_CARDS.slice(0,4);
+  // Enemy level adapts to player: same as player ±1 (solo). In MP, both use their own player level via towers.
+  const enemyLevel=mpMode?player.level:Math.max(1,player.level+(Math.random()<0.5?0:1));
+  gs.playerLevel=player.level;
+  gs.enemyLevel=enemyLevel;
+  // Tower HP scaled by level
+  const pTwr=towerHpForLevel(player.level,false), pKing=towerHpForLevel(player.level,true);
+  const eTwr=towerHpForLevel(enemyLevel,false),   eKing=towerHpForLevel(enemyLevel,true);
   gs={
     mana:5,timeLeft:GAME_DUR,running:false,selectedCard:null,
     hand:deck.slice(0,4),deckCards:deck,deckIdx:4%deck.length,troops:[],
-    towers:{player:{left:{hp:TWR_HP},right:{hp:TWR_HP},king:{hp:KING_HP}},enemy:{left:{hp:TWR_HP},right:{hp:TWR_HP},king:{hp:KING_HP}}},
+    playerLevel:player.level,enemyLevel:enemyLevel,
+    towers:{
+      player:{left:{hp:pTwr,max:pTwr},right:{hp:pTwr,max:pTwr},king:{hp:pKing,max:pKing}},
+      enemy: {left:{hp:eTwr,max:eTwr},right:{hp:eTwr,max:eTwr},king:{hp:eKing,max:eKing}}
+    },
     destroyed:{player:0,enemy:0},lastFrame:null,manaTick:0,aiTick:0,tid:0,
   };
   buildManaUI();buildHandUI();updateManaUI();updateTimer();updateScore();resetTowers();
@@ -1515,7 +1564,8 @@ function deployCard(lane){
   spawnTroop(c,'player',lane);updateManaUI();buildHandUI();setStatus('Sélectionne une carte');
 }
 function updateTowerUI(s,w){
-  const hp=gs.towers[s][w].hp,max=w==='king'?KING_HP:TWR_HP;
+  const t=gs.towers[s][w];
+  const hp=t.hp,max=t.max||(w==='king'?KING_HP:TWR_HP);
   const pfx=THPIDS[s][w];
   document.getElementById(pfx+'-hp').textContent=Math.max(0,hp);
   document.getElementById(pfx+'-bar').style.width=Math.max(0,hp/max*100)+'%';
@@ -1555,7 +1605,40 @@ function gameLoop(ts){
   } else {
     gs.aiTick+=dt;if(gs.aiTick>=4+Math.random()*3){aiPlay();gs.aiTick=0;}
   }
-  updateTroops(dt);animId=requestAnimationFrame(gameLoop);
+  updateTroops(dt);
+  updateTowerDefense(dt);
+  animId=requestAnimationFrame(gameLoop);
+}
+
+// Towers shoot at nearby enemy troops, damage scaled by level
+function updateTowerDefense(dt){
+  if(!gs.towerCd) gs.towerCd={};
+  ['player','enemy'].forEach(side=>{
+    const lvl=side==='player'?gs.playerLevel:gs.enemyLevel;
+    const dmgMult=towerDmgMultiplier(lvl||1);
+    ['left','right','king'].forEach(w=>{
+      const tower=gs.towers[side][w];
+      if(tower.hp<=0)return;
+      const key=side+'-'+w;
+      gs.towerCd[key]=Math.max(0,(gs.towerCd[key]||0)-dt);
+      // Find nearest enemy troop in range
+      const pos=TPOS[side][w];
+      const range=w==='king'?130:110;
+      const enemyTroops=gs.troops.filter(t=>t.owner!==side&&t.hp>0);
+      let target=null,bd=range;
+      enemyTroops.forEach(t=>{const d=Math.hypot(pos.x-t.x,pos.y-t.y);if(d<bd){bd=d;target=t;}});
+      if(target&&gs.towerCd[key]<=0){
+        const baseDmg=w==='king'?50:40;
+        const dmg=Math.round(baseDmg*dmgMult);
+        target.hp-=dmg;
+        const f=document.getElementById('thp-'+target.id);
+        if(f)f.style.width=Math.max(0,target.hp/target.maxHp*100)+'%';
+        showDmg(target.x,target.y-14,dmg,side==='player'?'#3498db':'#e74c3c');
+        spawnProj(pos.x,pos.y,target.x,target.y);
+        gs.towerCd[key]=0.9; // tower fires every 0.9s
+      }
+    });
+  });
 }
 function updateTroops(dt){
   const aH=document.getElementById('arena').offsetHeight;
@@ -1679,6 +1762,25 @@ function showResultScreen(winner){
     earnedGold=10;player.gold+=earnedGold; // consolation
   }
 
+  // XP gain: win=30, draw=15, loss=10, + bonus per tower destroyed
+  let earnedXp=(trophyDelta>0?30:trophyDelta<0?10:15)+ed*8;
+  const levelBefore=player.level;
+  player.xp+=earnedXp;
+  // Level up (can be multiple at once)
+  let leveledUp=false;
+  while(player.xp>=xpForLevel(player.level)){
+    player.xp-=xpForLevel(player.level);
+    player.level++;
+    leveledUp=true;
+  }
+  if(leveledUp){
+    setTimeout(()=>{
+      toast(`⭐ NIVEAU ${player.level} ATTEINT ! Tes tours sont renforcées !`,4500);
+      launchConfetti();
+      SFX.victory();
+    },1600);
+  }
+
   // Update home stats
   document.getElementById('stat-wins').textContent=player.wins;
   document.getElementById('stat-losses').textContent=player.losses;
@@ -1699,17 +1801,14 @@ function showResultScreen(winner){
   document.getElementById('rs-trophy-change').style.color=trophyDelta>0?'#2ecc71':trophyDelta<0?'#e74c3c':'#95a5a6';
   document.getElementById('rs-trophy-total').textContent=player.trophies;
 
-  // Rewards (gold + chest)
+  // Rewards (gold + chest + XP)
   const rewBox=document.getElementById('rs-rewards');
-  if(earnedGold>0||earnedChest){
-    let rh='';
-    if(earnedGold>0) rh+=`<div class="currency-pill gold" style="font-size:.9rem;padding:8px 14px">🪙 +${earnedGold}</div>`;
-    if(earnedChest) rh+=`<div class="currency-pill" style="font-size:.9rem;padding:8px 14px;color:var(--gold);border-color:var(--gold)">📦 +1 Coffre</div>`;
-    rewBox.innerHTML=rh;
-    rewBox.style.display='flex';
-  } else {
-    rewBox.style.display='none';
-  }
+  let rh='';
+  if(earnedXp>0) rh+=`<div class="currency-pill" style="font-size:.9rem;padding:8px 14px;color:#d7a8ff;border-color:#9b59b6">⭐ +${earnedXp} XP</div>`;
+  if(earnedGold>0) rh+=`<div class="currency-pill gold" style="font-size:.9rem;padding:8px 14px">🪙 +${earnedGold}</div>`;
+  if(earnedChest) rh+=`<div class="currency-pill" style="font-size:.9rem;padding:8px 14px;color:var(--gold);border-color:var(--gold)">📦 +1 Coffre</div>`;
+  if(rh){ rewBox.innerHTML=rh; rewBox.style.display='flex'; rewBox.style.flexWrap='wrap'; }
+  else rewBox.style.display='none';
 
   // Destroyed/lost towers
   document.getElementById('rs-towers-destroyed').textContent=ed;
@@ -2356,6 +2455,10 @@ function hostBroadcast(){
     towers:{
       player:{left:gs.towers.player.left.hp,right:gs.towers.player.right.hp,king:gs.towers.player.king.hp},
       enemy: {left:gs.towers.enemy.left.hp, right:gs.towers.enemy.right.hp, king:gs.towers.enemy.king.hp}
+    },
+    towerMax:{
+      player:{left:gs.towers.player.left.max,king:gs.towers.player.king.max},
+      enemy: {left:gs.towers.enemy.left.max, king:gs.towers.enemy.king.max}
     },
     timeLeft:gs.timeLeft
   };
