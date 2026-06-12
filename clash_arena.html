@@ -416,6 +416,28 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
 }
 .settings-stat-row:last-child{border-bottom:none}
 .settings-stat-row span:last-child{font-family:'Cinzel',serif;color:var(--gold)}
+/* Avatar picker */
+.avatar-current{
+  display:flex;align-items:center;gap:14px;margin-bottom:14px;
+}
+.avatar-current-emoji{
+  width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(135deg,#1a0a2e,#2a1040);
+  border:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:center;font-size:2.2rem;
+  flex-shrink:0;
+}
+.avatar-grid{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:8px;
+}
+.avatar-opt{
+  aspect-ratio:1;border-radius:10px;border:1px solid var(--border);
+  background:rgba(255,255,255,.04);font-size:1.5rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .15s,border-color .15s,background .15s;
+}
+.avatar-opt:hover{transform:scale(1.1);border-color:rgba(255,215,0,.5)}
+.avatar-opt.selected{border-color:var(--gold);background:rgba(255,215,0,.15);box-shadow:0 0 10px rgba(255,215,0,.3)}
 
 /* ── LEADERBOARD PAGE ── */
 .lb-header{padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between}
@@ -880,7 +902,7 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
 <div class="page active" id="page-home">
   <div class="home-hero">
     <div style="position:relative">
-      <div class="hero-avatar">🧙</div>
+      <div class="hero-avatar" id="hero-avatar">🧙</div>
       <div class="hero-level-badge" id="hero-level-badge">1</div>
     </div>
     <div class="hero-info">
@@ -1022,6 +1044,15 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
 
     <div class="settings-block">
       <div class="settings-block-title">Profil</div>
+      <div class="avatar-current">
+        <div class="avatar-current-emoji" id="avatar-current-emoji">🧙</div>
+        <div>
+          <div class="settings-label">Avatar</div>
+          <div class="settings-sub">Choisis ton emoji de profil</div>
+        </div>
+      </div>
+      <div class="avatar-grid" id="avatar-grid"></div>
+      <div style="height:14px"></div>
       <div class="settings-row">
         <div><div class="settings-label">Pseudo</div><div class="settings-sub">Visible dans le classement</div></div>
         <input class="pseudo-input" id="pseudo-input" type="text" maxlength="16" placeholder="Ton pseudo…">
@@ -1322,7 +1353,7 @@ function buildLeaguesPage(){
   });
 }
 
-let player={pseudo:'Joueur',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+let player={pseudo:'Joueur',avatar:'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
 
 // ══ LEVEL SYSTEM ══
 // XP needed to reach next level (level N → N+1)
@@ -1358,7 +1389,7 @@ const SHOP_CHESTS=[
 // ══ LOCALSTORAGE ══
 function saveProgress(){
   localStorage.setItem('clashArena',JSON.stringify({
-    pseudo:player.pseudo,level:player.level,xp:player.xp,trophies:player.trophies,wins:player.wins,losses:player.losses,
+    pseudo:player.pseudo,avatar:player.avatar,level:player.level,xp:player.xp,trophies:player.trophies,wins:player.wins,losses:player.losses,
     gold:player.gold,gems:player.gems,chests:player.chests,deck:player.deck
   }));
 }
@@ -1368,6 +1399,7 @@ function loadProgress(){
     if(!raw)return;
     const data=JSON.parse(raw);
     if(data.pseudo)                             player.pseudo=data.pseudo;
+    if(data.avatar)                             player.avatar=data.avatar;
     if(typeof data.level==='number')            player.level=data.level;
     if(typeof data.xp==='number')               player.xp=data.xp;
     if(typeof data.trophies==='number')         player.trophies=data.trophies;
@@ -1390,6 +1422,8 @@ function syncUI(){
   document.getElementById('hero-arena-badge').textContent=`${cur.emoji} Arène ${cur.id} — ${cur.name}`;
   const nameEl=document.getElementById('hero-name');
   if(nameEl) nameEl.textContent=player.pseudo||'Joueur';
+  const avEl=document.getElementById('hero-avatar');
+  if(avEl) avEl.textContent=player.avatar||'🧙';
   // League badge
   const lg=getCurrentLeague();
   const lb=document.getElementById('hero-league-badge');
@@ -1915,12 +1949,39 @@ const SUPABASE_KEY = 'sb_publishable_7oQ8rUh7OCE0Uo-DUwSUcw_CKOPnCU4';
 const SUPABASE_READY = SUPABASE_URL !== 'https://TON-PROJET.supabase.co';
 
 // ══ SETTINGS PAGE ══
+const AVATARS=['🧙','⚔️','🏹','👑','🐉','🤴','👸','🧝','🧚','🦸','🦹','🥷','🧛','🧟','👹','👺','🤖','🦁','🐺','🦅','🐲','🔥','💀','⭐'];
+
+function buildAvatarGrid(){
+  const grid=document.getElementById('avatar-grid');
+  if(!grid)return;
+  grid.innerHTML='';
+  AVATARS.forEach(av=>{
+    const b=document.createElement('div');
+    b.className='avatar-opt'+(player.avatar===av?' selected':'');
+    b.textContent=av;
+    b.onclick=()=>selectAvatar(av);
+    grid.appendChild(b);
+  });
+  const cur=document.getElementById('avatar-current-emoji');
+  if(cur) cur.textContent=player.avatar||'🧙';
+}
+
+function selectAvatar(av){
+  player.avatar=av;
+  saveProgress();
+  syncUI();
+  buildAvatarGrid();
+  SFX.click();
+  toast(`${av} Avatar choisi !`);
+}
+
 function buildSettingsPage(){
   document.getElementById('pseudo-input').value = player.pseudo||'';
   document.getElementById('cfg-trophies').textContent = player.trophies;
   document.getElementById('cfg-wins').textContent     = player.wins;
   document.getElementById('cfg-losses').textContent   = player.losses;
   document.getElementById('cfg-deck').textContent     = player.deck.length+'/8';
+  buildAvatarGrid();
   // Audio toggles
   const st=document.getElementById('sound-toggle');
   const mt=document.getElementById('music-toggle');
@@ -1939,7 +2000,7 @@ function savePseudo(){
 
 function resetProgress(){
   if(!confirm('Réinitialiser toute ta progression ?')) return;
-  player = {pseudo:player.pseudo||'Joueur',trophies:0,wins:0,losses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+  player = {pseudo:player.pseudo||'Joueur',avatar:player.avatar||'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
   saveProgress();
   syncUI();
   buildSettingsPage();
