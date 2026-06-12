@@ -1329,6 +1329,7 @@ function showResultScreen(winner){
 function goHome(){
   const btn=document.querySelector('.nav-btn[data-page="home"]');
   showPage('home',btn);
+  startMenuMusic();
 }
 
 function addHistory(icon,winner){
@@ -1347,7 +1348,7 @@ function startGame(){
   SFX.click();
   // Countdown then start
   playBattleCountdown(()=>{
-    startMusic();
+    startBattleMusic();
     initGame();gs.running=true;animId=requestAnimationFrame(gameLoop);
   });
 }
@@ -1795,7 +1796,7 @@ function launchMpGame(){
   document.getElementById('overlay').classList.add('hidden');
   document.body.classList.remove('selecting');
   if(window._mpWaitInterval)clearInterval(window._mpWaitInterval);
-  startMusic();
+  startBattleMusic();
   initGame();
   gs.running=true;
   gs.mpMode=mpMode; // 'host' or 'guest'
@@ -2053,7 +2054,8 @@ const SFX={
 };
 
 // Background music (simple looping arpeggio)
-function startMusic(){
+// Battle music (energetic arpeggio + bass)
+function startBattleMusic(){
   if(!musicOn)return;
   const ctx=getAudioCtx();if(!ctx)return;
   stopMusic();
@@ -2074,7 +2076,6 @@ function startMusic(){
     g.gain.exponentialRampToValueAtTime(0.001,t+0.4);
     osc.connect(g);g.connect(masterGain);
     osc.start(t);osc.stop(t+0.4);
-    // bass note every 4 steps
     if(step%4===0){
       const bass=ctx.createOscillator();const bg=ctx.createGain();
       bass.type='sine';bass.frequency.value=65.41;
@@ -2085,8 +2086,55 @@ function startMusic(){
     }
     step++;
   },450);
-  musicNodes={interval,masterGain};
+  musicNodes={interval,masterGain,kind:'battle'};
 }
+
+// Menu music (slow, calm medieval melody)
+function startMenuMusic(){
+  if(!musicOn)return;
+  const ctx=getAudioCtx();if(!ctx)return;
+  if(musicNodes&&musicNodes.kind==='menu')return; // already playing
+  stopMusic();
+  // A gentle minor-key melody loop (A minor feel)
+  const melody=[220,261.63,329.63,261.63,246.94,196,220,164.81]; // A C E C B G A E
+  let step=0;
+  const masterGain=ctx.createGain();
+  masterGain.gain.value=0.035;
+  masterGain.connect(ctx.destination);
+  const interval=setInterval(()=>{
+    if(!musicOn){stopMusic();return;}
+    const t=ctx.currentTime;
+    // soft pad note
+    const osc=ctx.createOscillator();
+    const g=ctx.createGain();
+    osc.type='sine';
+    osc.frequency.value=melody[step%melody.length];
+    g.gain.setValueAtTime(0,t);
+    g.gain.linearRampToValueAtTime(0.4,t+0.15);
+    g.gain.exponentialRampToValueAtTime(0.001,t+1.1);
+    osc.connect(g);g.connect(masterGain);
+    osc.start(t);osc.stop(t+1.1);
+    // gentle harmony (a fifth above, quieter)
+    const osc2=ctx.createOscillator();const g2=ctx.createGain();
+    osc2.type='triangle';osc2.frequency.value=melody[step%melody.length]*1.5;
+    g2.gain.setValueAtTime(0,t);g2.gain.linearRampToValueAtTime(0.12,t+0.15);
+    g2.gain.exponentialRampToValueAtTime(0.001,t+1.1);
+    osc2.connect(g2);g2.connect(masterGain);
+    osc2.start(t);osc2.stop(t+1.1);
+    // low drone every 4 notes
+    if(step%4===0){
+      const drone=ctx.createOscillator();const dg=ctx.createGain();
+      drone.type='sine';drone.frequency.value=110;
+      dg.gain.setValueAtTime(0,t);dg.gain.linearRampToValueAtTime(0.5,t+0.2);
+      dg.gain.exponentialRampToValueAtTime(0.001,t+2.2);
+      drone.connect(dg);dg.connect(masterGain);
+      drone.start(t);drone.stop(t+2.2);
+    }
+    step++;
+  },750); // slower tempo for menu
+  musicNodes={interval,masterGain,kind:'menu'};
+}
+
 function stopMusic(){
   if(musicNodes){clearInterval(musicNodes.interval);try{musicNodes.masterGain.disconnect();}catch(e){}musicNodes=null;}
 }
@@ -2099,7 +2147,7 @@ function toggleSound(){
 function toggleMusic(){
   musicOn=!musicOn;
   localStorage.setItem('clashMusic',musicOn?'1':'0');
-  if(musicOn){SFX.click();}else{stopMusic();}
+  if(musicOn){SFX.click();startMenuMusic();}else{stopMusic();}
   buildSettingsPage();
 }
 
@@ -2197,6 +2245,17 @@ setInterval(pollChallenges,5000);
 pollChallenges();
 // Show tutorial on first launch
 maybeShowTutorial();
+
+// Start menu music on first user interaction (browsers block audio before that)
+let _musicStarted=false;
+function tryStartMenuMusic(){
+  if(_musicStarted)return;
+  _musicStarted=true;
+  // Only start menu music if not currently in a battle
+  if(!gs.running) startMenuMusic();
+}
+document.addEventListener('click',tryStartMenuMusic,{once:false});
+document.addEventListener('touchstart',tryStartMenuMusic,{once:false});
 </script>
 </body>
 </html>
