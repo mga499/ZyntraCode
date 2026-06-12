@@ -885,6 +885,58 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
 .shop-buy-btn:hover{transform:scale(1.03)}
 .shop-buy-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
 .shop-card-rarity{position:absolute;top:8px;left:8px;font-size:.5rem;letter-spacing:1px;text-transform:uppercase;font-weight:700}
+/* ── CARD LEVEL BADGES ── */
+.dc-level-badge{
+  position:absolute;top:8px;left:8px;
+  background:linear-gradient(135deg,#7B1FA2,#b8960c);
+  color:#fff;font-family:'Cinzel',serif;font-size:.55rem;font-weight:900;
+  padding:2px 6px;border-radius:8px;letter-spacing:.5px;
+}
+.dc-copies-bar{
+  height:4px;background:rgba(255,255,255,.1);border-radius:2px;
+  margin-top:5px;overflow:hidden;
+}
+.dc-copies-fill{height:100%;background:linear-gradient(90deg,#3498db,#4fc3f7);border-radius:2px;transition:width .3s}
+.dc-copies-text{font-size:.5rem;color:var(--text-dim);margin-top:2px}
+.dc-upgrade-dot{
+  position:absolute;top:6px;right:6px;width:10px;height:10px;border-radius:50%;
+  background:#2ecc71;box-shadow:0 0 8px #2ecc71;animation:pulse 1.5s infinite;
+}
+/* Card detail modal */
+#card-modal{
+  position:fixed;inset:0;z-index:360;background:rgba(8,4,20,.92);
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+#card-modal.show{display:flex}
+.cm-box{
+  background:linear-gradient(160deg,#1a0e3a,#241252);
+  border:2px solid var(--gold);border-radius:20px;
+  max-width:320px;width:100%;padding:24px;text-align:center;
+  box-shadow:0 0 40px rgba(255,215,0,.25);position:relative;
+}
+.cm-close{position:absolute;top:12px;right:16px;background:none;border:none;color:var(--text-dim);font-size:1.5rem;cursor:pointer}
+.cm-emoji{font-size:4rem;line-height:1}
+.cm-name{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold);margin:8px 0 2px}
+.cm-level{font-size:.7rem;color:#d7a8ff;letter-spacing:1px;text-transform:uppercase;margin-bottom:14px}
+.cm-stats{display:flex;gap:10px;justify-content:center;margin-bottom:16px}
+.cm-stat{background:rgba(255,255,255,.05);border-radius:10px;padding:10px 14px;flex:1}
+.cm-stat-val{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold)}
+.cm-stat-lbl{font-size:.55rem;color:var(--text-dim);text-transform:uppercase;margin-top:2px}
+.cm-stat-up{color:#2ecc71;font-size:.6rem}
+.cm-progress{margin-bottom:14px}
+.cm-progress-bar{height:10px;background:rgba(0,0,0,.3);border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
+.cm-progress-fill{height:100%;background:linear-gradient(90deg,#3498db,#4fc3f7);border-radius:5px;transition:width .4s}
+.cm-progress-text{font-size:.62rem;color:var(--text-dim);margin-top:6px}
+.cm-upgrade-btn{
+  width:100%;padding:13px;border:none;border-radius:10px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.82rem;font-weight:700;letter-spacing:1px;
+  background:linear-gradient(135deg,#b8960c,#FFD700);color:#0d0620;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:transform .15s;
+}
+.cm-upgrade-btn:hover:not(:disabled){transform:scale(1.03)}
+.cm-upgrade-btn:disabled{opacity:.4;cursor:not-allowed}
+.cm-maxed{font-family:'Cinzel',serif;color:var(--gold);font-size:.9rem;letter-spacing:2px;padding:12px}
 </style>
 </head>
 <body>
@@ -942,6 +994,7 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
     <div class="deck-title">Mon Deck</div>
     <div class="deck-mana-avg">💧 Moy. <span id="avg-mana">4.0</span></div>
   </div>
+  <p style="font-size:.62rem;color:var(--text-dim);padding:0 16px 4px;letter-spacing:.5px">Tape une carte pour voir ses stats et l'améliorer ⬆️</p>
   <div class="deck-grid" id="deck-grid"></div>
   <p class="deck-all-title">Toutes les cartes</p>
   <div class="all-cards-grid" id="all-cards-grid"></div>
@@ -1151,6 +1204,25 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   <div class="shop-grid" id="shop-cards"></div>
 </div>
 
+<!-- CARD DETAIL / UPGRADE MODAL -->
+<div id="card-modal">
+  <div class="cm-box">
+    <button class="cm-close" onclick="closeCardModal()">✕</button>
+    <div class="cm-emoji" id="cm-emoji">⚔️</div>
+    <div class="cm-name" id="cm-name">Chevalier</div>
+    <div class="cm-level" id="cm-level">Niveau 1</div>
+    <div class="cm-stats">
+      <div class="cm-stat"><div class="cm-stat-val" id="cm-hp">600</div><div class="cm-stat-lbl">❤️ PV</div><div class="cm-stat-up" id="cm-hp-up"></div></div>
+      <div class="cm-stat"><div class="cm-stat-val" id="cm-atk">100</div><div class="cm-stat-lbl">⚔️ Dégâts</div><div class="cm-stat-up" id="cm-atk-up"></div></div>
+    </div>
+    <div class="cm-progress">
+      <div class="cm-progress-bar"><div class="cm-progress-fill" id="cm-progress-fill" style="width:0%"></div></div>
+      <div class="cm-progress-text" id="cm-progress-text">0 / 2 cartes</div>
+    </div>
+    <div id="cm-upgrade-container"></div>
+  </div>
+</div>
+
 <!-- CHEST OPENING MODAL -->
 <div id="chest-modal">
   <div class="chest-modal-title" id="chest-modal-title">Coffre</div>
@@ -1353,7 +1425,51 @@ function buildLeaguesPage(){
   });
 }
 
-let player={pseudo:'Joueur',avatar:'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+let player={pseudo:'Joueur',avatar:'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+
+// ══ CARD LEVELS ══
+// Each card: {level, copies}. Upgrading needs copies + gold.
+function getCardLevel(id){
+  if(!player.cardLevels[id]) player.cardLevels[id]={level:1,copies:0};
+  return player.cardLevels[id];
+}
+// Copies needed to upgrade FROM level N to N+1
+function copiesToUpgrade(lvl){ return [0,2,4,10,20,50,100,200,400][lvl]||999; }
+// Gold needed to upgrade FROM level N to N+1
+function goldToUpgrade(lvl){ return [0,20,50,150,400,1000,2000,4000,8000][lvl]||99999; }
+const MAX_CARD_LEVEL=9;
+// Stat multiplier from card level (+10% per level)
+function cardStatMult(lvl){ return 1+(lvl-1)*0.10; }
+// Get card with level-adjusted stats
+function getCardStats(card){
+  const cl=getCardLevel(card.id);
+  const mult=cardStatMult(cl.level);
+  return {
+    ...card,
+    hp:Math.round(card.hp*mult),
+    atk:Math.round(card.atk*mult),
+    level:cl.level
+  };
+}
+function canUpgradeCard(id){
+  const cl=getCardLevel(id);
+  if(cl.level>=MAX_CARD_LEVEL) return false;
+  return cl.copies>=copiesToUpgrade(cl.level) && player.gold>=goldToUpgrade(cl.level);
+}
+function upgradeCard(id){
+  const cl=getCardLevel(id);
+  if(!canUpgradeCard(id)) return false;
+  cl.copies-=copiesToUpgrade(cl.level);
+  player.gold-=goldToUpgrade(cl.level);
+  cl.level++;
+  saveProgress();
+  return true;
+}
+// Add copies of a card (from chests)
+function addCardCopies(id,n){
+  const cl=getCardLevel(id);
+  cl.copies+=n;
+}
 
 // ══ LEVEL SYSTEM ══
 // XP needed to reach next level (level N → N+1)
@@ -1390,7 +1506,7 @@ const SHOP_CHESTS=[
 function saveProgress(){
   localStorage.setItem('clashArena',JSON.stringify({
     pseudo:player.pseudo,avatar:player.avatar,level:player.level,xp:player.xp,trophies:player.trophies,wins:player.wins,losses:player.losses,
-    gold:player.gold,gems:player.gems,chests:player.chests,deck:player.deck
+    gold:player.gold,gems:player.gems,chests:player.chests,cardLevels:player.cardLevels,deck:player.deck
   }));
 }
 function loadProgress(){
@@ -1408,6 +1524,7 @@ function loadProgress(){
     if(typeof data.gold==='number')             player.gold=data.gold;
     if(typeof data.gems==='number')             player.gems=data.gems;
     if(Array.isArray(data.chests))              player.chests=data.chests;
+    if(data.cardLevels&&typeof data.cardLevels==='object') player.cardLevels=data.cardLevels;
     if(Array.isArray(data.deck)&&data.deck.length>=4) player.deck=data.deck;
   }catch(e){}
 }
@@ -1475,10 +1592,23 @@ function buildDeckGrid(){
   const grid=document.getElementById('deck-grid');grid.innerHTML='';
   player.deck.forEach(id=>{
     const c=ALL_CARDS.find(x=>x.id===id);if(!c)return;
+    const cl=getCardLevel(id);
+    const st=getCardStats(c);
+    const needed=copiesToUpgrade(cl.level);
+    const canUp=canUpgradeCard(id);
     const div=document.createElement('div');div.className='deck-card';
-    div.innerHTML=`<div class="dc-cost">${c.cost}</div><div class="dc-emoji">${c.emoji}</div><div class="dc-info"><div class="dc-name">${c.name}</div><div class="dc-stats">❤️${c.hp} ⚔️${c.atk}</div><div class="dc-rarity rarity-${c.rarity}">${c.rarity}</div></div>`;
-    div.title=`Retirer ${c.name}`;
-    div.addEventListener('click',()=>{player.deck=player.deck.filter(x=>x!==id);saveProgress();buildDeckPage();toast(`${c.emoji} ${c.name} retiré`);});
+    const copiesPct=cl.level>=MAX_CARD_LEVEL?100:Math.min(100,cl.copies/needed*100);
+    div.innerHTML=`
+      <div class="dc-level-badge">Niv ${cl.level}</div>
+      ${canUp?'<div class="dc-upgrade-dot"></div>':''}
+      <div class="dc-cost">${c.cost}</div>
+      <div class="dc-emoji">${c.emoji}</div>
+      <div class="dc-info">
+        <div class="dc-name">${c.name}</div>
+        <div class="dc-stats">❤️${st.hp} ⚔️${st.atk}</div>
+        ${cl.level>=MAX_CARD_LEVEL?'<div class="dc-copies-text" style="color:var(--gold)">MAX</div>':`<div class="dc-copies-bar"><div class="dc-copies-fill" style="width:${copiesPct}%"></div></div><div class="dc-copies-text">${cl.copies}/${needed}</div>`}
+      </div>`;
+    div.addEventListener('click',()=>openCardModal(id));
     grid.appendChild(div);
   });
   for(let i=player.deck.length;i<8;i++){
@@ -1486,6 +1616,87 @@ function buildDeckGrid(){
     div.style.cssText='opacity:.3;justify-content:center';
     div.innerHTML='<div style="font-size:1.8rem;color:var(--text-dim)">＋</div>';
     grid.appendChild(div);
+  }
+}
+
+// ── Card detail / upgrade modal ──
+let cardModalId=null;
+function openCardModal(id){
+  cardModalId=id;
+  renderCardModal();
+  document.getElementById('card-modal').classList.add('show');
+  SFX.click();
+}
+function closeCardModal(){
+  document.getElementById('card-modal').classList.remove('show');
+  cardModalId=null;
+}
+function renderCardModal(){
+  const c=ALL_CARDS.find(x=>x.id===cardModalId);
+  if(!c)return;
+  const cl=getCardLevel(c.id);
+  const st=getCardStats(c);
+  document.getElementById('cm-emoji').textContent=c.emoji;
+  document.getElementById('cm-name').textContent=c.name;
+  document.getElementById('cm-level').textContent=`Niveau ${cl.level} • ${c.rarity}`;
+  document.getElementById('cm-hp').textContent=st.hp;
+  document.getElementById('cm-atk').textContent=st.atk;
+  // Show stat increase preview
+  if(cl.level<MAX_CARD_LEVEL){
+    const nextMult=cardStatMult(cl.level+1);
+    const nextHp=Math.round(c.hp*nextMult), nextAtk=Math.round(c.atk*nextMult);
+    document.getElementById('cm-hp-up').textContent=`+${nextHp-st.hp}`;
+    document.getElementById('cm-atk-up').textContent=`+${nextAtk-st.atk}`;
+  } else {
+    document.getElementById('cm-hp-up').textContent='';
+    document.getElementById('cm-atk-up').textContent='';
+  }
+  const needed=copiesToUpgrade(cl.level);
+  const fill=document.getElementById('cm-progress-fill');
+  const txt=document.getElementById('cm-progress-text');
+  const cont=document.getElementById('cm-upgrade-container');
+  if(cl.level>=MAX_CARD_LEVEL){
+    fill.style.width='100%';
+    txt.textContent='Niveau maximum atteint !';
+    cont.innerHTML='<div class="cm-maxed">⭐ NIVEAU MAX ⭐</div>';
+  } else {
+    fill.style.width=Math.min(100,cl.copies/needed*100)+'%';
+    txt.textContent=`${cl.copies} / ${needed} cartes`;
+    const gold=goldToUpgrade(cl.level);
+    const enough=cl.copies>=needed;
+    const canAfford=player.gold>=gold;
+    const ready=enough&&canAfford;
+    cont.innerHTML=`<button class="cm-upgrade-btn" ${ready?'':'disabled'} onclick="doUpgradeCard()">
+      ${!enough?`Il manque ${needed-cl.copies} cartes`:`AMÉLIORER · 🪙 ${gold}`}
+    </button>`;
+  }
+  // Remove from deck option (if in deck)
+  if(player.deck.includes(cardModalId)){
+    cont.innerHTML+=`<button onclick="removeCardFromDeck()" style="width:100%;margin-top:8px;padding:9px;background:rgba(231,76,60,.15);border:1px solid rgba(231,76,60,.3);color:var(--red-light);border-radius:10px;cursor:pointer;font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:1px">RETIRER DU DECK</button>`;
+  }
+}
+function removeCardFromDeck(){
+  if(!cardModalId)return;
+  player.deck=player.deck.filter(x=>x!==cardModalId);
+  saveProgress();
+  const c=ALL_CARDS.find(x=>x.id===cardModalId);
+  toast(`${c.emoji} ${c.name} retiré du deck`);
+  closeCardModal();
+  buildDeckPage();
+}
+function doUpgradeCard(){
+  if(!cardModalId)return;
+  const c=ALL_CARDS.find(x=>x.id===cardModalId);
+  if(upgradeCard(cardModalId)){
+    SFX.victory();
+    launchConfetti();
+    const cl=getCardLevel(cardModalId);
+    toast(`⬆️ ${c.name} amélioré au niveau ${cl.level} !`);
+    syncUI();
+    renderCardModal();
+    buildDeckPage();
+  } else {
+    SFX.error();
   }
 }
 function buildAllCardsGrid(){
@@ -1523,7 +1734,8 @@ const TDOMIDS={player:{left:'ptower-left',right:'ptower-right',king:'pking'},ene
 
 function initGame(){
   document.querySelectorAll('.troop,.dmg-popup,.projectile').forEach(e=>e.remove());
-  const deck=player.deck.length>=4?player.deck.map(id=>ALL_CARDS.find(c=>c.id===id)).filter(Boolean):ALL_CARDS.slice(0,4);
+  // Apply card levels to player's deck cards
+  const deck=player.deck.length>=4?player.deck.map(id=>{const c=ALL_CARDS.find(x=>x.id===id);return c?getCardStats(c):null;}).filter(Boolean):ALL_CARDS.slice(0,4).map(c=>getCardStats(c));
   // Enemy level adapts to player: same as player ±1 (solo). In MP, both use their own player level via towers.
   const enemyLevel=mpMode?player.level:Math.max(1,player.level+(Math.random()<0.5?0:1));
   gs.playerLevel=player.level;
@@ -2000,7 +2212,7 @@ function savePseudo(){
 
 function resetProgress(){
   if(!confirm('Réinitialiser toute ta progression ?')) return;
-  player = {pseudo:player.pseudo||'Joueur',avatar:player.avatar||'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+  player = {pseudo:player.pseudo||'Joueur',avatar:player.avatar||'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
   saveProgress();
   syncUI();
   buildSettingsPage();
@@ -3033,7 +3245,7 @@ let currentOpeningChest=null;
 function openChest(idx){
   const chest=player.chests[idx];
   const def=CHEST_TYPES[chest.type];
-  currentOpeningChest={idx,def,opened:false};
+  currentOpeningChest={idx,def,chestType:chest.type,opened:false};
   // Reset modal
   document.getElementById('chest-modal-title').textContent=def.name;
   const emoji=document.getElementById('chest-open-emoji');
@@ -3056,9 +3268,17 @@ function openChestReveal(){
   const gems=Math.floor(def.gems[0]+Math.random()*(def.gems[1]-def.gems[0]+1));
   player.gold+=gold;
   player.gems+=gems;
-  // Maybe a bonus card
-  const gotCard=Math.random()<0.4;
-  const card=gotCard?ALL_CARDS[Math.floor(Math.random()*ALL_CARDS.length)]:null;
+  // Card copies! Better chests give more cards and copies
+  const chestCardCount={wood:1,silver:2,gold:3,magic:4}[currentOpeningChest.chestType]||1;
+  const copiesPer={wood:[1,3],silver:[2,5],gold:[4,8],magic:[6,14]}[currentOpeningChest.chestType]||[1,3];
+  const cardRewards=[];
+  const pool=[...ALL_CARDS].sort(()=>Math.random()-0.5);
+  for(let i=0;i<chestCardCount;i++){
+    const c=pool[i%pool.length];
+    const copies=Math.floor(copiesPer[0]+Math.random()*(copiesPer[1]-copiesPer[0]+1));
+    addCardCopies(c.id,copies);
+    cardRewards.push({card:c,copies});
+  }
   // Remove chest from inventory
   player.chests.splice(idx,1);
   saveProgress();
@@ -3073,7 +3293,9 @@ function openChestReveal(){
     const rewards=document.getElementById('chest-rewards');
     let html=`<div class="reward-item"><div class="reward-emoji">🪙</div><div class="reward-amount">+${gold}</div><div class="reward-label">Or</div></div>`;
     if(gems>0) html+=`<div class="reward-item"><div class="reward-emoji">💎</div><div class="reward-amount">+${gems}</div><div class="reward-label">Gemmes</div></div>`;
-    if(card) html+=`<div class="reward-item"><div class="reward-emoji">${card.emoji}</div><div class="reward-amount">${card.name}</div><div class="reward-label">Carte</div></div>`;
+    cardRewards.forEach(cr=>{
+      html+=`<div class="reward-item"><div class="reward-emoji">${cr.card.emoji}</div><div class="reward-amount">×${cr.copies}</div><div class="reward-label">${cr.card.name}</div></div>`;
+    });
     rewards.innerHTML=html;
     rewards.style.display='flex';
     document.getElementById('chest-collect-btn').style.display='block';
