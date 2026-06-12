@@ -716,6 +716,50 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
 .chat-send:hover{transform:scale(1.08)}
 /* chat button on friend row */
 .ftn.chat{background:rgba(52,152,219,.2);color:var(--blue-light);border:1px solid rgba(52,152,219,.4)}
+/* ── LEAGUE BADGE (on home hero) ── */
+.hero-league-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  border-radius:20px;padding:3px 11px;font-size:.66rem;font-weight:700;
+  margin-bottom:6px;margin-right:6px;border:1px solid;
+}
+
+/* ── LEAGUES PAGE ── */
+.league-current-card{
+  margin:16px;border-radius:18px;padding:24px 20px;text-align:center;
+  position:relative;overflow:hidden;border:1px solid var(--border);
+}
+.league-current-card::before{
+  content:'';position:absolute;inset:0;opacity:.25;
+  background:radial-gradient(circle at 50% 0%,currentColor,transparent 70%);
+}
+.lc-emblem{font-size:4.5rem;line-height:1;position:relative;z-index:2;filter:drop-shadow(0 4px 12px rgba(0,0,0,.5))}
+.lc-name{font-family:'Cinzel',serif;font-size:1.5rem;margin:8px 0 4px;position:relative;z-index:2;letter-spacing:2px}
+.lc-trophies{font-size:.85rem;color:var(--text);position:relative;z-index:2;margin-bottom:14px}
+.lc-trophies b{font-family:'Cinzel',serif;font-size:1.1rem}
+.lc-progress-wrap{position:relative;z-index:2;margin-top:10px}
+.lc-progress-bar{height:10px;background:rgba(0,0,0,.35);border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,.1)}
+.lc-progress-fill{height:100%;border-radius:5px;transition:width .6s ease;box-shadow:0 0 10px currentColor}
+.lc-progress-text{font-size:.62rem;color:var(--text-dim);margin-top:6px;letter-spacing:1px}
+.lc-next{font-size:.66rem;color:var(--text-dim);margin-top:4px;position:relative;z-index:2}
+
+.leagues-list-title{font-family:'Cinzel',serif;font-size:.7rem;color:var(--text-dim);letter-spacing:3px;text-transform:uppercase;padding:4px 18px 10px}
+.leagues-list{padding:0 14px 14px;display:flex;flex-direction:column;gap:8px}
+.league-row{
+  display:flex;align-items:center;gap:14px;padding:13px 16px;
+  background:var(--card-bg);border:1px solid var(--border);border-radius:12px;
+  position:relative;overflow:hidden;transition:transform .15s;
+}
+.league-row.current{border-width:2px;transform:scale(1.02)}
+.league-row.locked{opacity:.45}
+.league-row.achieved::after{content:'✓';position:absolute;top:10px;right:14px;color:#2ecc71;font-weight:700;font-size:.9rem}
+.lr-emblem{font-size:2.2rem;width:44px;text-align:center}
+.lr-info{flex:1}
+.lr-name{font-family:'Cinzel',serif;font-size:.92rem;font-weight:700}
+.lr-range{font-size:.62rem;color:var(--text-dim);margin-top:2px}
+.lr-badge-you{
+  position:absolute;bottom:10px;right:14px;font-size:.55rem;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;color:var(--gold);
+}
 </style>
 </head>
 <body>
@@ -731,6 +775,7 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
     <div class="hero-avatar">🧙</div>
     <div class="hero-info">
       <div class="hero-name" id="hero-name">Joueur</div>
+      <div><span class="hero-league-badge" id="hero-league-badge" style="display:none"></span></div>
       <div class="hero-arena-badge" id="hero-arena-badge">⚔ Arène 1 — Goblin Stadium</div>
       <div class="hero-xp-bar"><div class="hero-xp-fill"></div></div>
       <div class="hero-xp-label">1 360 / 2 000 XP</div>
@@ -935,6 +980,22 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   </div>
 </div>
 
+<!-- LEAGUES -->
+<div class="page" id="page-leagues">
+  <div class="league-current-card" id="league-current-card">
+    <div class="lc-emblem" id="lc-emblem">🥇</div>
+    <div class="lc-name" id="lc-name">Ligue d'Or</div>
+    <div class="lc-trophies">🏆 <b id="lc-trophies">0</b> trophées</div>
+    <div class="lc-progress-wrap">
+      <div class="lc-progress-bar"><div class="lc-progress-fill" id="lc-progress-fill" style="width:0%"></div></div>
+      <div class="lc-progress-text" id="lc-progress-text">0 / 100 vers la prochaine ligue</div>
+    </div>
+    <div class="lc-next" id="lc-next"></div>
+  </div>
+  <p class="leagues-list-title">Toutes les ligues</p>
+  <div class="leagues-list" id="leagues-list"></div>
+</div>
+
 <!-- OVERLAY (pre-battle only) -->
 <div id="overlay" class="hidden">
   <h2 id="ov-title" style="color:var(--gold)">⚔ Clash Arena ⚔</h2>
@@ -992,6 +1053,7 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   <button class="nav-btn"        data-page="deck"        onclick="showPage('deck',this)"><span class="nav-icon">🃏</span>Deck</button>
   <button class="nav-btn"        data-page="friends"     onclick="showPage('friends',this)" id="nav-friends"><span class="nav-icon">👥</span>Amis<span id="nav-friends-badge" style="position:absolute;top:6px;right:8px;background:#e74c3c;color:#fff;border-radius:8px;font-size:.5rem;padding:1px 4px;display:none"></span></button>
   <button class="nav-btn"        data-page="leaderboard" onclick="showPage('leaderboard',this)"><span class="nav-icon">🌍</span>Classement</button>
+  <button class="nav-btn"        data-page="leagues"     onclick="showPage('leagues',this)"><span class="nav-icon">🏅</span>Ligues</button>
   <button class="nav-btn"        data-page="settings"    onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span>Réglages</button>
   <button class="nav-btn"        data-page="battle"      onclick="showPage('battle',this)"><span class="nav-icon">⚔️</span>Combat</button>
 </nav>
@@ -1007,6 +1069,7 @@ function showPage(name,btn){
   if(name==='arenas')      buildArenaPage();
   if(name==='settings')    buildSettingsPage();
   if(name==='leaderboard') loadLeaderboard();
+  if(name==='leagues')     buildLeaguesPage();
   if(name==='friends')     loadFriendsPage();
 }
 function goToBattle(){
@@ -1052,6 +1115,77 @@ function getCurrentArena(){
   for(const a of ARENAS){ if(player.trophies>=a.trophies) cur=a; }
   return cur;
 }
+
+// ══ LEAGUES ══
+const LEAGUES=[
+  {id:1,name:'Ligue de Bois',   emblem:'🪵',min:0,    color:'#8d6e63'},
+  {id:2,name:'Ligue de Pierre', emblem:'🪨',min:100,  color:'#90a4ae'},
+  {id:3,name:'Ligue de Bronze', emblem:'🥉',min:300,  color:'#cd7f32'},
+  {id:4,name:'Ligue d\'Argent', emblem:'🥈',min:600,  color:'#b0bec5'},
+  {id:5,name:'Ligue d\'Or',     emblem:'🥇',min:1000, color:'#FFD700'},
+  {id:6,name:'Ligue de Cristal',emblem:'💎',min:1500, color:'#4fc3f7'},
+  {id:7,name:'Ligue de Maître', emblem:'👑',min:2200, color:'#ab47bc'},
+  {id:8,name:'Ligue Légende',   emblem:'🌟',min:3000, color:'#ff6f00'},
+];
+
+function getCurrentLeague(trophies=player.trophies){
+  let cur=LEAGUES[0];
+  for(const l of LEAGUES){ if(trophies>=l.min) cur=l; }
+  return cur;
+}
+function getNextLeague(trophies=player.trophies){
+  for(const l of LEAGUES){ if(trophies<l.min) return l; }
+  return null; // max league
+}
+
+function buildLeaguesPage(){
+  const cur=getCurrentLeague();
+  const next=getNextLeague();
+  // Current league card
+  const card=document.getElementById('league-current-card');
+  card.style.color=cur.color;
+  document.getElementById('lc-emblem').textContent=cur.emblem;
+  document.getElementById('lc-name').textContent=cur.name;
+  document.getElementById('lc-name').style.color=cur.color;
+  document.getElementById('lc-trophies').textContent=player.trophies;
+  const fill=document.getElementById('lc-progress-fill');
+  fill.style.color=cur.color;
+  fill.style.background=cur.color;
+  if(next){
+    const span=next.min-cur.min;
+    const prog=player.trophies-cur.min;
+    const pct=Math.min(100,Math.max(0,prog/span*100));
+    fill.style.width=pct+'%';
+    document.getElementById('lc-progress-text').textContent=`${prog} / ${span} vers la prochaine ligue`;
+    document.getElementById('lc-next').textContent=`Prochaine : ${next.emblem} ${next.name} (${next.min} 🏆)`;
+  } else {
+    fill.style.width='100%';
+    document.getElementById('lc-progress-text').textContent='Ligue maximale atteinte ! 🎉';
+    document.getElementById('lc-next').textContent='Tu es une véritable légende !';
+  }
+  // All leagues list
+  const list=document.getElementById('leagues-list');
+  list.innerHTML='';
+  LEAGUES.forEach(l=>{
+    const achieved=player.trophies>=l.min;
+    const isCurrent=l.id===cur.id;
+    const nextL=LEAGUES.find(x=>x.id===l.id+1);
+    const range=nextL?`${l.min} – ${nextL.min-1} 🏆`:`${l.min}+ 🏆`;
+    const div=document.createElement('div');
+    div.className='league-row'+(isCurrent?' current':'')+(!achieved?' locked':(isCurrent?'':' achieved'));
+    if(isCurrent) div.style.borderColor=l.color;
+    div.innerHTML=`
+      <div class="lr-emblem">${l.emblem}</div>
+      <div class="lr-info">
+        <div class="lr-name" style="color:${achieved?l.color:'var(--text-dim)'}">${l.name}</div>
+        <div class="lr-range">${range}</div>
+      </div>
+      ${isCurrent?'<div class="lr-badge-you">◄ Toi</div>':''}
+    `;
+    list.appendChild(div);
+  });
+}
+
 let player={pseudo:'Joueur',trophies:0,wins:0,losses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
 
 // ══ LOCALSTORAGE ══
@@ -1083,6 +1217,16 @@ function syncUI(){
   document.getElementById('hero-arena-badge').textContent=`${cur.emoji} Arène ${cur.id} — ${cur.name}`;
   const nameEl=document.getElementById('hero-name');
   if(nameEl) nameEl.textContent=player.pseudo||'Joueur';
+  // League badge
+  const lg=getCurrentLeague();
+  const lb=document.getElementById('hero-league-badge');
+  if(lb){
+    lb.style.display='inline-flex';
+    lb.textContent=`${lg.emblem} ${lg.name}`;
+    lb.style.color=lg.color;
+    lb.style.borderColor=lg.color;
+    lb.style.background=lg.color+'22';
+  }
 }
 syncUI();
 
@@ -1364,9 +1508,18 @@ function showResultScreen(winner){
   else SFX.notify();
 
   // Update player data
+  const leagueBefore=getCurrentLeague(player.trophies);
   if(trophyDelta>0) player.wins++;
   else if(trophyDelta<0) player.losses++;
   player.trophies=Math.max(0,player.trophies+trophyDelta);
+  const leagueAfter=getCurrentLeague(player.trophies);
+  // League promotion!
+  if(leagueAfter.id>leagueBefore.id){
+    setTimeout(()=>{
+      toast(`${leagueAfter.emblem} Promu en ${leagueAfter.name} !`,4000);
+      launchConfetti();
+    },1200);
+  }
 
   // Update home stats
   document.getElementById('stat-wins').textContent=player.wins;
