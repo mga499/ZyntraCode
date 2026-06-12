@@ -28,16 +28,24 @@ body{
 /* HEADER */
 #app-header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:14px 16px 10px;border-bottom:1px solid var(--border);
+  padding:12px 12px 9px;border-bottom:1px solid var(--border);
   background:rgba(13,6,32,.92);position:sticky;top:0;z-index:50;
-  backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);gap:8px;
 }
-#app-logo{font-family:'Cinzel',serif;font-size:1.15rem;color:var(--gold);letter-spacing:3px;text-shadow:0 0 16px rgba(255,215,0,.5)}
+#app-logo{font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold);letter-spacing:1px;text-shadow:0 0 16px rgba(255,215,0,.5);white-space:nowrap;flex-shrink:0}
+#header-currency{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.currency-pill{
+  display:flex;align-items:center;gap:3px;
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  border-radius:16px;padding:3px 8px;font-size:.7rem;font-weight:700;
+}
+.currency-pill.gold{color:#FFD700;border-color:rgba(255,215,0,.3)}
+.currency-pill.gems{color:#4fc3f7;border-color:rgba(79,195,247,.3)}
 #header-trophies{
-  display:flex;align-items:center;gap:6px;
+  display:flex;align-items:center;gap:3px;
   background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);
-  border-radius:20px;padding:4px 12px;
-  font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold);
+  border-radius:16px;padding:3px 8px;
+  font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);
 }
 /* PAGES */
 .page{display:none;flex-direction:column;flex:1;overflow-y:auto;padding-bottom:calc(var(--nav-h) + 8px)}
@@ -760,13 +768,103 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   position:absolute;bottom:10px;right:14px;font-size:.55rem;font-weight:700;
   letter-spacing:1px;text-transform:uppercase;color:var(--gold);
 }
+/* ── CURRENCY (header) ── */
+#header-currency{display:flex;align-items:center;gap:8px}
+.currency-pill{
+  display:flex;align-items:center;gap:4px;
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  border-radius:20px;padding:4px 10px;font-size:.78rem;font-weight:700;
+}
+.currency-pill.gold{color:#FFD700;border-color:rgba(255,215,0,.3)}
+.currency-pill.gems{color:#4fc3f7;border-color:rgba(79,195,247,.3)}
+
+/* ── CHESTS (home) ── */
+.chest-slots-title{font-family:'Cinzel',serif;font-size:.75rem;color:var(--text-dim);letter-spacing:3px;text-transform:uppercase;padding:8px 16px 8px}
+.chest-slots{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px 16px}
+.chest-slot{
+  aspect-ratio:1;background:var(--card-bg);border:1px solid var(--border);
+  border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;transition:transform .15s,border-color .15s;padding:6px;
+}
+.chest-slot.filled:hover{transform:translateY(-3px);border-color:var(--gold)}
+.chest-slot.empty{opacity:.4;cursor:default}
+.chest-emoji{font-size:2rem;line-height:1}
+.chest-slot-label{font-size:.5rem;color:var(--text-dim);margin-top:3px;text-align:center;letter-spacing:.5px}
+.chest-timer{font-size:.5rem;color:var(--gold);margin-top:2px;font-weight:700}
+.chest-ready-badge{
+  position:absolute;top:4px;right:4px;background:var(--green);color:#fff;
+  font-size:.45rem;padding:1px 4px;border-radius:6px;font-weight:700;letter-spacing:.5px;
+}
+.chest-unlocking-badge{
+  position:absolute;top:4px;right:4px;background:var(--blue);color:#fff;
+  font-size:.45rem;padding:1px 4px;border-radius:6px;font-weight:700;
+}
+
+/* ── CHEST OPENING MODAL ── */
+#chest-modal{
+  position:fixed;inset:0;z-index:360;background:rgba(8,4,20,.96);
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;
+}
+#chest-modal.show{display:flex}
+.chest-open-emoji{font-size:6rem;animation:chestShake .5s ease-in-out infinite;cursor:pointer}
+.chest-open-emoji.opened{animation:chestBurst .6s ease forwards}
+@keyframes chestShake{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes chestBurst{0%{transform:scale(1)}40%{transform:scale(1.4)}100%{transform:scale(0);opacity:0}}
+.chest-open-hint{font-size:.85rem;color:var(--text-dim);letter-spacing:1px;animation:pulse 1.5s infinite}
+.chest-rewards{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:340px}
+.reward-item{
+  background:var(--card-bg);border:1px solid var(--gold);border-radius:14px;
+  padding:14px 18px;text-align:center;min-width:80px;
+  animation:rewardPop .5s cubic-bezier(.18,.89,.32,1.28) both;
+}
+.reward-item:nth-child(2){animation-delay:.15s}
+.reward-item:nth-child(3){animation-delay:.3s}
+.reward-item:nth-child(4){animation-delay:.45s}
+@keyframes rewardPop{from{transform:scale(0) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+.reward-emoji{font-size:2.2rem}
+.reward-amount{font-family:'Cinzel',serif;font-size:1.1rem;color:var(--gold);margin-top:4px}
+.reward-label{font-size:.6rem;color:var(--text-dim);letter-spacing:1px;margin-top:2px}
+.chest-modal-title{font-family:'Cinzel',serif;font-size:1.4rem;color:var(--gold);letter-spacing:3px}
+
+/* ── SHOP PAGE ── */
+.shop-balance{
+  display:flex;gap:10px;padding:14px 16px 8px;
+}
+.shop-balance .currency-pill{flex:1;justify-content:center;padding:10px;font-size:.95rem}
+.shop-section-title{font-family:'Cinzel',serif;font-size:.72rem;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;padding:8px 16px}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px 14px}
+.shop-item{
+  background:linear-gradient(160deg,#1a0e3a,#241252);
+  border:1px solid var(--border);border-radius:14px;
+  padding:16px 12px;text-align:center;position:relative;
+  transition:transform .15s,border-color .15s;
+}
+.shop-item:hover{transform:translateY(-2px);border-color:var(--gold)}
+.shop-item-emoji{font-size:2.6rem;margin-bottom:6px}
+.shop-item-name{font-size:.78rem;font-weight:700;color:var(--text)}
+.shop-item-desc{font-size:.58rem;color:var(--text-dim);margin:4px 0 10px;min-height:24px}
+.shop-buy-btn{
+  width:100%;padding:9px;border:none;border-radius:8px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;letter-spacing:1px;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  transition:transform .15s,opacity .2s;
+}
+.shop-buy-btn.gold{background:linear-gradient(135deg,#b8960c,#FFD700);color:#0d0620}
+.shop-buy-btn.gems{background:linear-gradient(135deg,#0277bd,#4fc3f7);color:#fff}
+.shop-buy-btn:hover{transform:scale(1.03)}
+.shop-buy-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.shop-card-rarity{position:absolute;top:8px;left:8px;font-size:.5rem;letter-spacing:1px;text-transform:uppercase;font-weight:700}
 </style>
 </head>
 <body>
 
 <header id="app-header">
-  <div id="app-logo">⚔ CLASH ARENA</div>
-  <div id="header-trophies"><span>🏆</span><span id="trophy-count">0</span></div>
+  <div id="app-logo">⚔ ARENA</div>
+  <div id="header-currency">
+    <div class="currency-pill gold"><span>🪙</span><span id="gold-count">0</span></div>
+    <div class="currency-pill gems"><span>💎</span><span id="gems-count">0</span></div>
+    <div id="header-trophies"><span>🏆</span><span id="trophy-count">0</span></div>
+  </div>
 </header>
 
 <!-- HOME -->
@@ -787,6 +885,8 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
     <div class="stat-card"><div class="stat-icon">💀</div><div class="stat-value" id="stat-losses">0</div><div class="stat-label">Défaites</div></div>
   </div>
   <button class="home-btn-battle" onclick="goToBattle()"><span>⚔️</span> COMBATTRE <span>⚔️</span></button>
+  <p class="chest-slots-title">📦 Mes coffres</p>
+  <div class="chest-slots" id="chest-slots"></div>
   <p class="section-title">Historique récent</p>
   <div class="recent-section" id="recent-list">
     <div class="recent-row">
@@ -996,6 +1096,27 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   <div class="leagues-list" id="leagues-list"></div>
 </div>
 
+<!-- SHOP -->
+<div class="page" id="page-shop">
+  <div class="shop-balance">
+    <div class="currency-pill gold"><span>🪙</span><span id="shop-gold">0</span></div>
+    <div class="currency-pill gems"><span>💎</span><span id="shop-gems">0</span></div>
+  </div>
+  <p class="shop-section-title">📦 Coffres</p>
+  <div class="shop-grid" id="shop-chests"></div>
+  <p class="shop-section-title">🃏 Cartes à l'unité</p>
+  <div class="shop-grid" id="shop-cards"></div>
+</div>
+
+<!-- CHEST OPENING MODAL -->
+<div id="chest-modal">
+  <div class="chest-modal-title" id="chest-modal-title">Coffre</div>
+  <div class="chest-open-emoji" id="chest-open-emoji" onclick="openChestReveal()">📦</div>
+  <div class="chest-open-hint" id="chest-open-hint">Tape pour ouvrir !</div>
+  <div class="chest-rewards" id="chest-rewards" style="display:none"></div>
+  <button class="ov-btn" id="chest-collect-btn" style="display:none" onclick="closeChestModal()">RÉCUPÉRER</button>
+</div>
+
 <!-- OVERLAY (pre-battle only) -->
 <div id="overlay" class="hidden">
   <h2 id="ov-title" style="color:var(--gold)">⚔ Clash Arena ⚔</h2>
@@ -1018,6 +1139,7 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
     </div>
     <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--text-dim);margin-left:6px">→ <span id="rs-trophy-total">510</span></div>
   </div>
+  <div id="rs-rewards" style="display:none;justify-content:center;gap:10px;margin-bottom:18px"></div>
   <div class="rs-section-title">Stats de la partie</div>
   <div class="rs-stats-grid">
     <div class="rs-stat"><div class="rs-stat-icon">⚔️</div><div class="rs-stat-val" id="rs-towers-destroyed">0</div><div class="rs-stat-lbl">Tours détruites</div></div>
@@ -1051,6 +1173,7 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   <button class="nav-btn active" data-page="home"        onclick="showPage('home',this)"><span class="nav-icon">🏠</span>Accueil</button>
   <button class="nav-btn"        data-page="arenas"      onclick="showPage('arenas',this)"><span class="nav-icon">🗺️</span>Arènes</button>
   <button class="nav-btn"        data-page="deck"        onclick="showPage('deck',this)"><span class="nav-icon">🃏</span>Deck</button>
+  <button class="nav-btn"        data-page="shop"        onclick="showPage('shop',this)"><span class="nav-icon">🛒</span>Boutique</button>
   <button class="nav-btn"        data-page="friends"     onclick="showPage('friends',this)" id="nav-friends"><span class="nav-icon">👥</span>Amis<span id="nav-friends-badge" style="position:absolute;top:6px;right:8px;background:#e74c3c;color:#fff;border-radius:8px;font-size:.5rem;padding:1px 4px;display:none"></span></button>
   <button class="nav-btn"        data-page="leaderboard" onclick="showPage('leaderboard',this)"><span class="nav-icon">🌍</span>Classement</button>
   <button class="nav-btn"        data-page="leagues"     onclick="showPage('leagues',this)"><span class="nav-icon">🏅</span>Ligues</button>
@@ -1070,6 +1193,7 @@ function showPage(name,btn){
   if(name==='settings')    buildSettingsPage();
   if(name==='leaderboard') loadLeaderboard();
   if(name==='leagues')     buildLeaguesPage();
+  if(name==='shop')        buildShopPage();
   if(name==='friends')     loadFriendsPage();
 }
 function goToBattle(){
@@ -1186,12 +1310,28 @@ function buildLeaguesPage(){
   });
 }
 
-let player={pseudo:'Joueur',trophies:0,wins:0,losses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+let player={pseudo:'Joueur',trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+
+// ══ CHEST CONSTANTS (defined early — used by syncUI/buildChestSlots) ══
+const CHEST_TYPES={
+  wood:    {name:'Coffre de Bois',    emoji:'📦',unlockMin:0,    gold:[20,40],  gems:[0,1], color:'#8d6e63'},
+  silver:  {name:'Coffre d\'Argent',  emoji:'🎁',unlockMin:3,    gold:[50,90],  gems:[1,3], color:'#b0bec5'},
+  gold:    {name:'Coffre d\'Or',      emoji:'🏆',unlockMin:6,    gold:[100,180],gems:[2,5], color:'#FFD700'},
+  magic:   {name:'Coffre Magique',    emoji:'🔮',unlockMin:10,   gold:[200,350],gems:[5,12],color:'#7B1FA2'},
+};
+const MAX_CHEST_SLOTS=4;
+const CHEST_UNLOCK_MS=10*1000; // 10 seconds (demo; real game would be hours)
+const SHOP_CHESTS=[
+  {type:'silver',price:200,cur:'gold'},
+  {type:'gold',  price:500,cur:'gold'},
+  {type:'magic', price:50, cur:'gems'},
+];
 
 // ══ LOCALSTORAGE ══
 function saveProgress(){
   localStorage.setItem('clashArena',JSON.stringify({
-    pseudo:player.pseudo,trophies:player.trophies,wins:player.wins,losses:player.losses,deck:player.deck
+    pseudo:player.pseudo,trophies:player.trophies,wins:player.wins,losses:player.losses,
+    gold:player.gold,gems:player.gems,chests:player.chests,deck:player.deck
   }));
 }
 function loadProgress(){
@@ -1203,6 +1343,9 @@ function loadProgress(){
     if(typeof data.trophies==='number')         player.trophies=data.trophies;
     if(typeof data.wins==='number')             player.wins=data.wins;
     if(typeof data.losses==='number')           player.losses=data.losses;
+    if(typeof data.gold==='number')             player.gold=data.gold;
+    if(typeof data.gems==='number')             player.gems=data.gems;
+    if(Array.isArray(data.chests))              player.chests=data.chests;
     if(Array.isArray(data.deck)&&data.deck.length>=4) player.deck=data.deck;
   }catch(e){}
 }
@@ -1227,6 +1370,11 @@ function syncUI(){
     lb.style.borderColor=lg.color;
     lb.style.background=lg.color+'22';
   }
+  // Currency
+  document.getElementById('gold-count').textContent=player.gold;
+  document.getElementById('gems-count').textContent=player.gems;
+  // Chests
+  buildChestSlots();
 }
 syncUI();
 
@@ -1521,6 +1669,16 @@ function showResultScreen(winner){
     },1200);
   }
 
+  // Reward gold + chest on win
+  let earnedGold=0,earnedChest=false;
+  if(trophyDelta>0){
+    earnedGold=20+Math.floor(Math.random()*30); // 20-50 gold per win
+    player.gold+=earnedGold;
+    earnedChest=awardChest();
+  } else if(trophyDelta===0){
+    earnedGold=10;player.gold+=earnedGold; // consolation
+  }
+
   // Update home stats
   document.getElementById('stat-wins').textContent=player.wins;
   document.getElementById('stat-losses').textContent=player.losses;
@@ -1540,6 +1698,18 @@ function showResultScreen(winner){
   document.getElementById('rs-trophy-change').textContent=sign+trophyDelta;
   document.getElementById('rs-trophy-change').style.color=trophyDelta>0?'#2ecc71':trophyDelta<0?'#e74c3c':'#95a5a6';
   document.getElementById('rs-trophy-total').textContent=player.trophies;
+
+  // Rewards (gold + chest)
+  const rewBox=document.getElementById('rs-rewards');
+  if(earnedGold>0||earnedChest){
+    let rh='';
+    if(earnedGold>0) rh+=`<div class="currency-pill gold" style="font-size:.9rem;padding:8px 14px">🪙 +${earnedGold}</div>`;
+    if(earnedChest) rh+=`<div class="currency-pill" style="font-size:.9rem;padding:8px 14px;color:var(--gold);border-color:var(--gold)">📦 +1 Coffre</div>`;
+    rewBox.innerHTML=rh;
+    rewBox.style.display='flex';
+  } else {
+    rewBox.style.display='none';
+  }
 
   // Destroyed/lost towers
   document.getElementById('rs-towers-destroyed').textContent=ed;
@@ -2620,6 +2790,222 @@ function playBattleCountdown(callback){
       setTimeout(()=>{cd.classList.remove('show');callback();},700);
     }
   },800);
+}
+
+// ══ CHESTS & ECONOMY ══
+const MAX_CHEST_SLOTS_REF=MAX_CHEST_SLOTS; // (constants defined at top)
+
+// Award a random chest after victory
+function awardChest(){
+  if(player.chests.length>=MAX_CHEST_SLOTS){
+    toast('📦 Tous tes emplacements de coffres sont pleins !');
+    return false;
+  }
+  // Pick chest type based on trophies (better chests at higher trophies)
+  const r=Math.random();
+  let type='wood';
+  if(player.trophies>=1000&&r<0.15) type='magic';
+  else if(player.trophies>=600&&r<0.3) type='gold';
+  else if(player.trophies>=300&&r<0.5) type='silver';
+  else if(r<0.25) type='silver';
+  player.chests.push({type,state:'locked',unlockAt:null});
+  saveProgress();
+  return true;
+}
+
+function buildChestSlots(){
+  const cont=document.getElementById('chest-slots');
+  if(!cont)return;
+  cont.innerHTML='';
+  for(let i=0;i<MAX_CHEST_SLOTS;i++){
+    const chest=player.chests[i];
+    const slot=document.createElement('div');
+    if(!chest){
+      slot.className='chest-slot empty';
+      slot.innerHTML='<div class="chest-emoji">➕</div><div class="chest-slot-label">Vide</div>';
+    } else {
+      const def=CHEST_TYPES[chest.type];
+      slot.className='chest-slot filled';
+      let badge='',label=def.name.replace('Coffre ','').replace('de ','').replace('d\'',''),timer='';
+      if(chest.state==='locked'){
+        label='Tape pour déverrouiller';
+        slot.onclick=()=>startUnlockChest(i);
+      } else if(chest.state==='unlocking'){
+        const remain=Math.max(0,Math.ceil((chest.unlockAt-Date.now())/1000));
+        if(remain<=0){
+          chest.state='ready';saveProgress();
+        } else {
+          badge='<div class="chest-unlocking-badge">⏳</div>';
+          timer=`<div class="chest-timer">${remain}s</div>`;
+          slot.onclick=()=>{toast(`⏳ Encore ${remain}s ! (ou ouvre avec 💎)`);};
+        }
+      }
+      if(chest.state==='ready'){
+        badge='<div class="chest-ready-badge">PRÊT</div>';
+        label='Tape pour ouvrir !';
+        slot.onclick=()=>openChest(i);
+      }
+      slot.innerHTML=`${badge}<div class="chest-emoji">${def.emoji}</div><div class="chest-slot-label">${label}</div>${timer}`;
+    }
+    cont.appendChild(slot);
+  }
+}
+
+function startUnlockChest(idx){
+  // Only one chest can unlock at a time
+  if(player.chests.some(c=>c.state==='unlocking')){
+    toast('⏳ Un coffre se déverrouille déjà !');
+    return;
+  }
+  player.chests[idx].state='unlocking';
+  player.chests[idx].unlockAt=Date.now()+CHEST_UNLOCK_MS;
+  saveProgress();
+  SFX.click();
+  toast('⏳ Déverrouillage en cours…');
+  buildChestSlots();
+}
+
+let currentOpeningChest=null;
+function openChest(idx){
+  const chest=player.chests[idx];
+  const def=CHEST_TYPES[chest.type];
+  currentOpeningChest={idx,def,opened:false};
+  // Reset modal
+  document.getElementById('chest-modal-title').textContent=def.name;
+  const emoji=document.getElementById('chest-open-emoji');
+  emoji.textContent=def.emoji;
+  emoji.classList.remove('opened');
+  document.getElementById('chest-open-hint').style.display='block';
+  document.getElementById('chest-rewards').style.display='none';
+  document.getElementById('chest-rewards').innerHTML='';
+  document.getElementById('chest-collect-btn').style.display='none';
+  document.getElementById('chest-modal').classList.add('show');
+  SFX.challenge();
+}
+
+function openChestReveal(){
+  if(!currentOpeningChest||currentOpeningChest.opened)return;
+  currentOpeningChest.opened=true;
+  const {def,idx}=currentOpeningChest;
+  // Compute rewards
+  const gold=Math.floor(def.gold[0]+Math.random()*(def.gold[1]-def.gold[0]));
+  const gems=Math.floor(def.gems[0]+Math.random()*(def.gems[1]-def.gems[0]+1));
+  player.gold+=gold;
+  player.gems+=gems;
+  // Maybe a bonus card
+  const gotCard=Math.random()<0.4;
+  const card=gotCard?ALL_CARDS[Math.floor(Math.random()*ALL_CARDS.length)]:null;
+  // Remove chest from inventory
+  player.chests.splice(idx,1);
+  saveProgress();
+  syncUI();
+  // Animate
+  const emoji=document.getElementById('chest-open-emoji');
+  emoji.classList.add('opened');
+  document.getElementById('chest-open-hint').style.display='none';
+  SFX.towerDown();
+  launchConfetti();
+  setTimeout(()=>{
+    const rewards=document.getElementById('chest-rewards');
+    let html=`<div class="reward-item"><div class="reward-emoji">🪙</div><div class="reward-amount">+${gold}</div><div class="reward-label">Or</div></div>`;
+    if(gems>0) html+=`<div class="reward-item"><div class="reward-emoji">💎</div><div class="reward-amount">+${gems}</div><div class="reward-label">Gemmes</div></div>`;
+    if(card) html+=`<div class="reward-item"><div class="reward-emoji">${card.emoji}</div><div class="reward-amount">${card.name}</div><div class="reward-label">Carte</div></div>`;
+    rewards.innerHTML=html;
+    rewards.style.display='flex';
+    document.getElementById('chest-collect-btn').style.display='block';
+    SFX.victory();
+  },600);
+}
+
+function closeChestModal(){
+  document.getElementById('chest-modal').classList.remove('show');
+  currentOpeningChest=null;
+  SFX.click();
+  buildChestSlots();
+}
+
+// Update chest timers every second
+setInterval(()=>{
+  if(player.chests.some(c=>c.state==='unlocking')){
+    if(document.getElementById('page-home').classList.contains('active')){
+      buildChestSlots();
+    }
+  }
+},1000);
+
+// ══ SHOP ══
+function buildShopPage(){
+  document.getElementById('shop-gold').textContent=player.gold;
+  document.getElementById('shop-gems').textContent=player.gems;
+  // Chests for sale
+  const cc=document.getElementById('shop-chests');
+  cc.innerHTML='';
+  SHOP_CHESTS.forEach((item,i)=>{
+    const def=CHEST_TYPES[item.type];
+    const canAfford=item.cur==='gold'?player.gold>=item.price:player.gems>=item.price;
+    const curIcon=item.cur==='gold'?'🪙':'💎';
+    const div=document.createElement('div');
+    div.className='shop-item';
+    div.innerHTML=`
+      <div class="shop-item-emoji">${def.emoji}</div>
+      <div class="shop-item-name">${def.name}</div>
+      <div class="shop-item-desc">${def.gold[0]}-${def.gold[1]} 🪙${def.gems[1]>0?` · ${def.gems[0]}-${def.gems[1]} 💎`:''}</div>
+      <button class="shop-buy-btn ${item.cur}" ${canAfford?'':'disabled'} onclick="buyChest(${i})">${curIcon} ${item.price}</button>
+    `;
+    cc.appendChild(div);
+  });
+  // Cards for sale (random selection of 4, refreshed per session)
+  if(!window._shopCards){
+    window._shopCards=[...ALL_CARDS].sort(()=>Math.random()-0.5).slice(0,4).map(c=>({
+      id:c.id,
+      price:c.rarity==='legendary'?300:c.rarity==='epic'?180:c.rarity==='rare'?100:50,
+      cur:c.rarity==='legendary'||c.rarity==='epic'?'gems':'gold'
+    }));
+  }
+  const sc=document.getElementById('shop-cards');
+  sc.innerHTML='';
+  window._shopCards.forEach((item,i)=>{
+    const c=ALL_CARDS.find(x=>x.id===item.id);
+    const owned=player.deck.includes(c.id);
+    const canAfford=item.cur==='gold'?player.gold>=item.price:player.gems>=item.price;
+    const curIcon=item.cur==='gold'?'🪙':'💎';
+    const div=document.createElement('div');
+    div.className='shop-item';
+    div.innerHTML=`
+      <div class="shop-card-rarity rarity-${c.rarity}">${c.rarity}</div>
+      <div class="shop-item-emoji">${c.emoji}</div>
+      <div class="shop-item-name">${c.name}</div>
+      <div class="shop-item-desc">❤️${c.hp} ⚔️${c.atk}</div>
+      <button class="shop-buy-btn ${item.cur}" ${owned||!canAfford?'disabled':''} onclick="buyCard(${i})">${owned?'✓ Possédée':`${curIcon} ${item.price}`}</button>
+    `;
+    sc.appendChild(div);
+  });
+}
+
+function buyChest(i){
+  const item=SHOP_CHESTS[i];
+  if(player.chests.length>=MAX_CHEST_SLOTS){toast('📦 Emplacements de coffres pleins !');return;}
+  const have=item.cur==='gold'?player.gold:player.gems;
+  if(have<item.price){toast('❌ Pas assez de '+(item.cur==='gold'?'pièces':'gemmes'));return;}
+  if(item.cur==='gold')player.gold-=item.price;else player.gems-=item.price;
+  player.chests.push({type:item.type,state:'ready',unlockAt:null}); // bought chests are instantly ready
+  saveProgress();syncUI();buildShopPage();
+  SFX.notify();
+  toast(`${CHEST_TYPES[item.type].emoji} ${CHEST_TYPES[item.type].name} acheté ! Va l'ouvrir.`);
+}
+
+function buyCard(i){
+  const item=window._shopCards[i];
+  const c=ALL_CARDS.find(x=>x.id===item.id);
+  if(player.deck.includes(c.id)){toast('✓ Déjà dans ton deck');return;}
+  if(player.deck.length>=8){toast('🃏 Deck plein ! Retire une carte d\'abord.');return;}
+  const have=item.cur==='gold'?player.gold:player.gems;
+  if(have<item.price){toast('❌ Pas assez de '+(item.cur==='gold'?'pièces':'gemmes'));return;}
+  if(item.cur==='gold')player.gold-=item.price;else player.gems-=item.price;
+  player.deck.push(c.id);
+  saveProgress();syncUI();buildShopPage();
+  SFX.notify();
+  toast(`${c.emoji} ${c.name} ajoutée à ton deck !`);
 }
 
 // INIT
