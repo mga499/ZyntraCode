@@ -1487,6 +1487,16 @@ function towerDmgMultiplier(lvl){
   return 1+(lvl-1)*0.06; // +6% tower damage per level
 }
 
+// ══ DIFFICULTY (anti-stomp for beginners) ══
+// Returns 0 (beginner, very easy bot) → 1 (full strength).
+// Ramps up with player level. Full difficulty reached at level 8.
+function getDifficulty(){
+  const lvl=player.level||1;
+  // Levels 1-2: very easy. Linear ramp to full by level 8.
+  let d=(lvl-1)/7; // L1→0, L8→1
+  return Math.max(0,Math.min(1,d));
+}
+
 // ══ CHEST CONSTANTS (defined early — used by syncUI/buildChestSlots) ══
 const CHEST_TYPES={
   wood:    {name:'Coffre de Bois',    emoji:'📦',unlockMin:0,    gold:[20,40],  gems:[0,1], color:'#8d6e63'},
@@ -1736,17 +1746,29 @@ function initGame(){
   document.querySelectorAll('.troop,.dmg-popup,.projectile').forEach(e=>e.remove());
   // Apply card levels to player's deck cards
   const deck=player.deck.length>=4?player.deck.map(id=>{const c=ALL_CARDS.find(x=>x.id===id);return c?getCardStats(c):null;}).filter(Boolean):ALL_CARDS.slice(0,4).map(c=>getCardStats(c));
-  // Enemy level adapts to player: same as player ±1 (solo). In MP, both use their own player level via towers.
-  const enemyLevel=mpMode?player.level:Math.max(1,player.level+(Math.random()<0.5?0:1));
+  // ── PROGRESSIVE DIFFICULTY ──
+  // New players face a weak bot; difficulty ramps up with level.
+  // diff 0 = beginner (very easy), 1 = full strength
+  const diff=getDifficulty();
+  // Enemy tower level: capped below player at low levels, catches up by player level 8
+  let enemyLevel;
+  if(mpMode){
+    enemyLevel=player.level; // MP uses real player level
+  } else {
+    // Beginners: enemy is 1-2 levels BELOW. Veterans: enemy matches or +1.
+    const offset=Math.round(-2 + diff*3); // diff 0 → -2, diff 1 → +1
+    enemyLevel=Math.max(1,player.level+offset);
+  }
   gs.playerLevel=player.level;
   gs.enemyLevel=enemyLevel;
+  gs.difficulty=diff;
   // Tower HP scaled by level
   const pTwr=towerHpForLevel(player.level,false), pKing=towerHpForLevel(player.level,true);
   const eTwr=towerHpForLevel(enemyLevel,false),   eKing=towerHpForLevel(enemyLevel,true);
   gs={
     mana:5,timeLeft:GAME_DUR,running:false,selectedCard:null,
     hand:deck.slice(0,4),deckCards:deck,deckIdx:4%deck.length,troops:[],
-    playerLevel:player.level,enemyLevel:enemyLevel,
+    playerLevel:player.level,enemyLevel:enemyLevel,difficulty:diff,
     towers:{
       player:{left:{hp:pTwr,max:pTwr},right:{hp:pTwr,max:pTwr},king:{hp:pKing,max:pKing}},
       enemy: {left:{hp:eTwr,max:eTwr},right:{hp:eTwr,max:eTwr},king:{hp:eKing,max:eKing}}
@@ -1849,7 +1871,10 @@ function gameLoop(ts){
     mpBroadcastTick+=dt;
     if(mpBroadcastTick>=0.15){hostBroadcast();mpBroadcastTick=0;}
   } else {
-    gs.aiTick+=dt;if(gs.aiTick>=4+Math.random()*3){aiPlay();gs.aiTick=0;}
+    // AI aggressiveness scales with difficulty: beginners face a slow bot
+    const diff=gs.difficulty!==undefined?gs.difficulty:1;
+    const aiInterval=(8-diff*4)+Math.random()*3; // diff 0 → ~8-11s, diff 1 → ~4-7s
+    gs.aiTick+=dt;if(gs.aiTick>=aiInterval){aiPlay();gs.aiTick=0;}
   }
   updateTroops(dt);
   updateTowerDefense(dt);
@@ -1946,7 +1971,17 @@ function showDmg(x,y,dmg,col){
   setTimeout(()=>el.remove(),850);
 }
 function aiPlay(){
-  const c=ALL_CARDS[Math.floor(Math.random()*ALL_CARDS.length)];
+  const base=ALL_CARDS[Math.floor(Math.random()*ALL_CARDS.length)];
+  const diff=gs.difficulty!==undefined?gs.difficulty:1;
+  // Enemy troops scale with enemy level, then reduced for beginners.
+  const lvlMult=cardStatMult(gs.enemyLevel||1);
+  // Beginner penalty: at diff 0, enemy troops have 55% stats; at diff 1, full.
+  const diffMult=0.55+diff*0.45;
+  const c={
+    ...base,
+    hp:Math.round(base.hp*lvlMult*diffMult),
+    atk:Math.round(base.atk*lvlMult*diffMult)
+  };
   spawnTroop(c,'enemy',Math.random()<.5?'left':'right');
 }
 function updateTimer(){
@@ -1964,7 +1999,12 @@ function showOverlay(type){
   const btn=document.getElementById('btn-start');btn.onclick=null;
   document.getElementById('ov-title').textContent='⚔ Prêt au combat ?';
   document.getElementById('ov-title').style.color='var(--gold)';
-  document.getElementById('ov-sub').textContent='Déploie tes troupes, détruis les tours !';
+  const diff=getDifficulty();
+  let diffTxt='Déploie tes troupes, détruis les tours !';
+  if(diff<0.3) diffTxt='🟢 Adversaire FACILE — parfait pour débuter !';
+  else if(diff<0.7) diffTxt='🟡 Adversaire MOYEN — à toi de jouer !';
+  else diffTxt='🔴 Adversaire DIFFICILE — bonne chance !';
+  document.getElementById('ov-sub').textContent=diffTxt;
   btn.textContent='LANCER';btn.onclick=startGame;
 }
 
