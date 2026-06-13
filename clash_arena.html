@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clash Arena</title>
+<title>Zyntra Arena</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Exo+2:wght@400;600;700&display=swap');
@@ -1042,7 +1042,7 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 <body>
 
 <header id="app-header">
-  <div id="app-logo">⚔ ARENA</div>
+  <div id="app-logo">⚔ ZYNTRA</div>
   <div id="header-currency">
     <div class="currency-pill gold"><span>🪙</span><span id="gold-count">0</span></div>
     <div class="currency-pill gems"><span>💎</span><span id="gems-count">0</span></div>
@@ -1144,7 +1144,7 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
     <div class="tuto-body">
       <div class="tuto-step-num" id="tuto-step-num">Étape 1 / 6</div>
       <div class="tuto-title" id="tuto-title">Bienvenue !</div>
-      <div class="tuto-text" id="tuto-text">Bienvenue dans Clash Arena !</div>
+      <div class="tuto-text" id="tuto-text">Bienvenue dans Zyntra Arena !</div>
       <div class="tuto-dots" id="tuto-dots"></div>
       <div class="tuto-actions">
         <button class="tuto-skip" onclick="endTutorial()">Passer</button>
@@ -1361,7 +1361,7 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 
 <!-- OVERLAY (pre-battle only) -->
 <div id="overlay" class="hidden">
-  <h2 id="ov-title" style="color:var(--gold)">⚔ Clash Arena ⚔</h2>
+  <h2 id="ov-title" style="color:var(--gold)">⚔ Zyntra Arena ⚔</h2>
   <p id="ov-sub">Détruis les tours ennemies !</p>
   <button class="ov-btn" id="btn-start">LANCER</button>
 </div>
@@ -3250,7 +3250,7 @@ function toggleMusic(){
 
 // ══ TUTORIAL ══
 const TUTO_STEPS=[
-  {emoji:'⚔️',title:'Bienvenue !',text:'Bienvenue dans <b>Clash Arena</b> ! Le but : détruire les <b>tours</b> de ton adversaire avant la fin du temps. Voici comment jouer en 6 étapes.'},
+  {emoji:'⚔️',title:'Bienvenue !',text:'Bienvenue dans <b>Zyntra Arena</b> ! Le but : détruire les <b>tours</b> de ton adversaire avant la fin du temps. Voici comment jouer en 6 étapes.'},
   {emoji:'💧',title:'Le Mana',text:'En bas, ta barre de <b>mana</b> se remplit avec le temps (1 point/seconde, max 10). Chaque carte coûte du mana pour être jouée. Gère-le bien !'},
   {emoji:'🃏',title:'Tes Cartes',text:'Tu as 4 cartes en main. <b>Clique une carte</b> pour la sélectionner, puis <b>clique une zone</b> (gauche ou droite) de l\'arène pour déployer ta troupe. Une nouvelle carte arrive aussitôt.'},
   {emoji:'🏰',title:'Les Tours',text:'Chaque camp a <b>2 tours latérales</b> et <b>1 tour du Roi</b> 👑. Détruis la <b>tour du Roi</b> pour gagner immédiatement ! Sinon, celui qui a détruit le plus de tours à la fin gagne.'},
