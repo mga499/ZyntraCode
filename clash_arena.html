@@ -1050,6 +1050,41 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 .ban-title{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--red-light);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px;text-shadow:0 0 20px rgba(231,76,60,.5)}
 .ban-text{font-size:.9rem;color:var(--text-dim);line-height:1.7;max-width:320px}
 .ban-pseudo{color:var(--gold);font-family:'Cinzel',serif}
+/* ── DAILY QUESTS ── */
+.quests-header{padding:16px 16px 4px;text-align:center}
+.quests-title{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold);letter-spacing:2px}
+.quests-sub{font-size:.66rem;color:var(--text-dim);margin-top:4px}
+.quests-reset{font-size:.6rem;color:var(--mana);margin-top:6px;letter-spacing:1px}
+.quests-list{padding:14px;display:flex;flex-direction:column;gap:12px}
+.quest-card{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:14px;
+  padding:14px 16px;position:relative;overflow:hidden;transition:border-color .2s;
+}
+.quest-card.done{border-color:var(--green);background:rgba(39,174,96,.08)}
+.quest-card.claimed{opacity:.55}
+.quest-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.quest-icon{font-size:1.8rem;flex-shrink:0}
+.quest-info{flex:1;min-width:0}
+.quest-name{font-size:.82rem;font-weight:700}
+.quest-reward{font-size:.64rem;color:var(--gold);margin-top:2px}
+.quest-progress-bar{height:8px;background:rgba(0,0,0,.3);border-radius:4px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.quest-progress-fill{height:100%;background:linear-gradient(90deg,#3498db,#4fc3f7);border-radius:4px;transition:width .4s}
+.quest-progress-fill.full{background:linear-gradient(90deg,#27ae60,#2ecc71)}
+.quest-progress-text{font-size:.6rem;color:var(--text-dim);margin-top:5px;display:flex;justify-content:space-between;align-items:center}
+.quest-claim-btn{
+  padding:6px 16px;border:none;border-radius:8px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.65rem;font-weight:700;letter-spacing:1px;
+  background:linear-gradient(135deg,#b8960c,#FFD700);color:#0d0620;transition:transform .15s;
+}
+.quest-claim-btn:hover{transform:scale(1.05)}
+.quest-claimed-tag{font-size:.6rem;color:var(--green);font-weight:700;letter-spacing:1px}
+.quests-bonus{
+  margin:0 14px 14px;padding:14px 16px;border-radius:14px;text-align:center;
+  background:linear-gradient(135deg,rgba(123,31,162,.25),rgba(255,215,0,.12));
+  border:1px solid rgba(255,215,0,.3);
+}
+.quests-bonus-title{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold);letter-spacing:1px}
+.quests-bonus-sub{font-size:.62rem;color:var(--text-dim);margin-top:4px}
 </style>
 </head>
 <body>
@@ -1351,6 +1386,20 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
   </div>
 </div>
 
+<!-- DAILY QUESTS -->
+<div class="page" id="page-quests">
+  <div class="quests-header">
+    <div class="quests-title">📅 Quêtes Journalières</div>
+    <div class="quests-sub">Accomplis-les pour gagner or et gemmes !</div>
+    <div class="quests-reset" id="quests-reset">⏳ Nouvelles quêtes dans —</div>
+  </div>
+  <div class="quests-list" id="quests-list"></div>
+  <div class="quests-bonus" id="quests-bonus" style="display:none">
+    <div class="quests-bonus-title">🎁 Toutes les quêtes terminées !</div>
+    <div class="quests-bonus-sub">Reviens demain pour de nouvelles quêtes.</div>
+  </div>
+</div>
+
 <!-- CARD DETAIL / UPGRADE MODAL -->
 <div id="card-modal">
   <div class="cm-box">
@@ -1439,6 +1488,7 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
   <button class="nav-btn"        data-page="friends"     onclick="showPage('friends',this)" id="nav-friends"><span class="nav-icon">👥</span>Amis<span id="nav-friends-badge" style="position:absolute;top:6px;right:8px;background:#e74c3c;color:#fff;border-radius:8px;font-size:.5rem;padding:1px 4px;display:none"></span></button>
   <button class="nav-btn"        data-page="leaderboard" onclick="showPage('leaderboard',this)"><span class="nav-icon">🌍</span>Classement</button>
   <button class="nav-btn"        data-page="leagues"     onclick="showPage('leagues',this)"><span class="nav-icon">🏅</span>Ligues</button>
+  <button class="nav-btn"        data-page="quests"      onclick="showPage('quests',this)" id="nav-quests"><span class="nav-icon">📅</span>Quêtes<span id="nav-quests-badge" style="position:absolute;top:6px;right:8px;background:#2ecc71;color:#fff;border-radius:8px;font-size:.5rem;padding:1px 4px;display:none"></span></button>
   <button class="nav-btn"        data-page="settings"    onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span>Réglages</button>
   <button class="nav-btn"        data-page="admin"       onclick="showPage('admin',this)"><span class="nav-icon">🛡️</span>Admin</button>
   <button class="nav-btn"        data-page="battle"      onclick="showPage('battle',this)"><span class="nav-icon">⚔️</span>Combat</button>
@@ -1458,6 +1508,7 @@ function showPage(name,btn){
   if(name==='leagues')     buildLeaguesPage();
   if(name==='shop')        buildShopPage();
   if(name==='admin')       showAdminPage();
+  if(name==='quests')      buildQuestsPage();
   if(name==='friends')     loadFriendsPage();
 }
 function goToBattle(){
@@ -1582,7 +1633,113 @@ function buildLeaguesPage(){
   });
 }
 
-let player={pseudo:'Joueur',avatar:'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+let player={pseudo:'Joueur',avatar:'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+
+// ══ DAILY QUESTS ══
+// Pool of possible quests. type matches an event we track during play.
+const QUEST_POOL=[
+  {id:'win2',   type:'win',    goal:2, name:'Remporte 2 combats',       icon:'🏆',gold:60, gems:1},
+  {id:'win3',   type:'win',    goal:3, name:'Remporte 3 combats',       icon:'🏆',gold:100,gems:2},
+  {id:'play3',  type:'play',   goal:3, name:'Joue 3 combats',           icon:'⚔️',gold:50, gems:0},
+  {id:'play5',  type:'play',   goal:5, name:'Joue 5 combats',           icon:'⚔️',gold:90, gems:1},
+  {id:'deploy15',type:'deploy',goal:15,name:'Déploie 15 troupes',       icon:'🐗',gold:50, gems:0},
+  {id:'deploy30',type:'deploy',goal:30,name:'Déploie 30 troupes',       icon:'🐗',gold:90, gems:1},
+  {id:'towers5',type:'tower',  goal:5, name:'Détruis 5 tours',          icon:'🏰',gold:70, gems:1},
+  {id:'towers8',type:'tower',  goal:8, name:'Détruis 8 tours',          icon:'🏰',gold:120,gems:2},
+  {id:'power3', type:'power',  goal:3, name:'Utilise 3 pouvoirs',       icon:'🦸',gold:60, gems:1},
+  {id:'chest1', type:'chest',  goal:1, name:'Ouvre 1 coffre',           icon:'📦',gold:40, gems:1},
+];
+
+function todayStr(){ return new Date().toISOString().slice(0,10); } // YYYY-MM-DD
+
+function ensureDailyQuests(){
+  const today=todayStr();
+  if(player.questDay!==today||!Array.isArray(player.quests)){
+    // Generate 3 random distinct quests for today
+    const pool=[...QUEST_POOL].sort(()=>Math.random()-0.5);
+    const picked=[];const usedTypes=new Set();
+    for(const q of pool){
+      if(picked.length>=3)break;
+      if(usedTypes.has(q.type))continue; // avoid duplicate types
+      usedTypes.add(q.type);
+      picked.push({...q,progress:0,claimed:false});
+    }
+    player.quests=picked;
+    player.questDay=today;
+    saveProgress();
+  }
+}
+
+// Called when a game event happens (win, play, deploy, tower, power, chest)
+function trackQuest(type,amount=1){
+  ensureDailyQuests();
+  let changed=false;
+  player.quests.forEach(q=>{
+    if(q.type===type&&!q.claimed&&q.progress<q.goal){
+      q.progress=Math.min(q.goal,q.progress+amount);
+      changed=true;
+    }
+  });
+  if(changed){saveProgress();updateQuestsBadge();}
+}
+
+function claimQuest(id){
+  const q=player.quests.find(x=>x.id===id);
+  if(!q||q.claimed||q.progress<q.goal)return;
+  q.claimed=true;
+  player.gold+=q.gold;
+  player.gems+=q.gems;
+  saveProgress();syncUI();
+  SFX.victory();launchConfetti();
+  toast(`🎁 Récompense : +${q.gold} 🪙${q.gems>0?` +${q.gems} 💎`:''}`);
+  buildQuestsPage();
+}
+
+function buildQuestsPage(){
+  ensureDailyQuests();
+  const list=document.getElementById('quests-list');
+  list.innerHTML='';
+  player.quests.forEach(q=>{
+    const done=q.progress>=q.goal;
+    const pct=Math.min(100,q.progress/q.goal*100);
+    const div=document.createElement('div');
+    div.className='quest-card'+(done?' done':'')+(q.claimed?' claimed':'');
+    div.innerHTML=`
+      <div class="quest-top">
+        <div class="quest-icon">${q.icon}</div>
+        <div class="quest-info">
+          <div class="quest-name">${q.name}</div>
+          <div class="quest-reward">🪙 ${q.gold}${q.gems>0?` · 💎 ${q.gems}`:''}</div>
+        </div>
+        ${q.claimed?'<div class="quest-claimed-tag">✓ Réclamé</div>':done?`<button class="quest-claim-btn" onclick="claimQuest('${q.id}')">RÉCLAMER</button>`:''}
+      </div>
+      <div class="quest-progress-bar"><div class="quest-progress-fill ${done?'full':''}" style="width:${pct}%"></div></div>
+      <div class="quest-progress-text"><span>${q.progress} / ${q.goal}</span>${done&&!q.claimed?'<span style="color:#2ecc71">Terminé !</span>':''}</div>`;
+    list.appendChild(div);
+  });
+  // Bonus banner if all claimed
+  const allClaimed=player.quests.every(q=>q.claimed);
+  document.getElementById('quests-bonus').style.display=allClaimed?'block':'none';
+  // Countdown to reset
+  updateQuestResetTimer();
+}
+
+function updateQuestResetTimer(){
+  const el=document.getElementById('quests-reset');
+  if(!el)return;
+  const now=new Date();
+  const tomorrow=new Date(now);tomorrow.setHours(24,0,0,0);
+  const diff=tomorrow-now;
+  const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000);
+  el.textContent=`⏳ Nouvelles quêtes dans ${h}h ${m}min`;
+}
+
+function updateQuestsBadge(){
+  ensureDailyQuests();
+  const claimable=player.quests.filter(q=>q.progress>=q.goal&&!q.claimed).length;
+  const badge=document.getElementById('nav-quests-badge');
+  if(badge){badge.style.display=claimable>0?'':'none';badge.textContent=claimable;}
+}
 
 // ══ HERO POWERS ══
 const POWERS={
@@ -1682,7 +1839,7 @@ const SHOP_CHESTS=[
 function saveProgress(){
   localStorage.setItem('clashArena',JSON.stringify({
     pseudo:player.pseudo,avatar:player.avatar,level:player.level,xp:player.xp,trophies:player.trophies,wins:player.wins,losses:player.losses,
-    gold:player.gold,gems:player.gems,chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,deck:player.deck
+    gold:player.gold,gems:player.gems,chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,quests:player.quests,questDay:player.questDay,deck:player.deck
   }));
 }
 function loadProgress(){
@@ -1702,6 +1859,8 @@ function loadProgress(){
     if(Array.isArray(data.chests))              player.chests=data.chests;
     if(data.cardLevels&&typeof data.cardLevels==='object') player.cardLevels=data.cardLevels;
     if(Array.isArray(data.powers)&&data.powers.length===2) player.powers=data.powers;
+    if(Array.isArray(data.quests))              player.quests=data.quests;
+    if(data.questDay)                           player.questDay=data.questDay;
     if(Array.isArray(data.deck)&&data.deck.length>=4) player.deck=data.deck;
   }catch(e){}
 }
@@ -2048,6 +2207,7 @@ function deployCard(lane){
     return;
   }
   spawnTroop(c,'player',lane);updateManaUI();buildHandUI();setStatus('Sélectionne une carte');
+  trackQuest('deploy',1);
 }
 function updateTowerUI(s,w){
   const t=gs.towers[s][w];
@@ -2063,7 +2223,7 @@ function damageTower(s,w,dmg){
   dom.classList.add('damaged');setTimeout(()=>dom.classList.remove('damaged'),350);
   const p=TPOS[s][w];showDmg(p.x+14,p.y-10,dmg,s==='enemy'?'#e74c3c':'#3498db');
   SFX.towerHit();
-  if(t.hp<=0){dom.querySelector('.tower-icon').textContent='💀';dom.classList.add('destroyed');gs.destroyed[s]++;updateScore();SFX.towerDown();if(w==='king')endGame(s==='enemy'?'player':'enemy');}
+  if(t.hp<=0){dom.querySelector('.tower-icon').textContent='💀';dom.classList.add('destroyed');gs.destroyed[s]++;updateScore();SFX.towerDown();if(s==='enemy')trackQuest('tower',1);if(w==='king')endGame(s==='enemy'?'player':'enemy');}
 }
 function spawnTroop(card,owner,lane){
   const arena=document.getElementById('arena');
@@ -2323,6 +2483,8 @@ function showResultScreen(winner){
   document.getElementById('stat-trophies').textContent=player.trophies;
   document.getElementById('trophy-count').textContent=player.trophies;
   addHistory(icon,winner);
+  trackQuest('play',1);
+  if(trophyDelta>0) trackQuest('win',1);
   saveProgress();
   syncUI();
 
@@ -2504,7 +2666,7 @@ function savePseudo(){
 
 function resetProgress(){
   if(!confirm('Réinitialiser toute ta progression ?')) return;
-  player = {pseudo:player.pseudo||'Joueur',avatar:player.avatar||'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+  player = {pseudo:player.pseudo||'Joueur',avatar:player.avatar||'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
   saveProgress();
   syncUI();
   buildSettingsPage();
@@ -3581,6 +3743,7 @@ function openChestReveal(){
   player.chests.splice(idx,1);
   saveProgress();
   syncUI();
+  trackQuest('chest',1);
   // Animate
   const emoji=document.getElementById('chest-open-emoji');
   emoji.classList.add('opened');
@@ -3872,6 +4035,7 @@ function firePower(i,lane){
   const def=POWERS[p.id];
   p.ready=false;p.cd=def.cooldown;
   SFX.deploy();
+  trackQuest('power',1);
   if(p.id==='meteor')  powerMeteor(lane);
   else if(p.id==='freeze') powerFreeze();
   else if(p.id==='rage')   powerRage();
@@ -3990,6 +4154,10 @@ pollChallenges();
 // Check ban status at startup and every 10s
 checkIfBanned();
 setInterval(checkIfBanned,10000);
+// Daily quests: generate today's and show badge
+ensureDailyQuests();
+updateQuestsBadge();
+setInterval(updateQuestResetTimer,60000);
 // Show tutorial on first launch
 maybeShowTutorial();
 
