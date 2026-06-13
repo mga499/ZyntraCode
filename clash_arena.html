@@ -1037,9 +1037,29 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 .pc-name{font-size:.72rem;font-weight:700;color:var(--gold)}
 .pc-desc{font-size:.56rem;color:var(--text-dim);margin-top:2px;line-height:1.3}
 .pc-check{font-size:.9rem;color:var(--gold)}
+/* ── BAN SCREEN ── */
+#ban-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(160deg,#1a0606,#0d0620);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:30px;
+}
+#ban-screen.show{display:flex}
+.ban-icon{font-size:5rem;margin-bottom:16px;animation:banPulse 2s infinite}
+@keyframes banPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.1);opacity:.7}}
+.ban-title{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--red-light);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px;text-shadow:0 0 20px rgba(231,76,60,.5)}
+.ban-text{font-size:.9rem;color:var(--text-dim);line-height:1.7;max-width:320px}
+.ban-pseudo{color:var(--gold);font-family:'Cinzel',serif}
 </style>
 </head>
 <body>
+
+<!-- BAN SCREEN -->
+<div id="ban-screen">
+  <div class="ban-icon">🚫</div>
+  <div class="ban-title">Banni</div>
+  <div class="ban-text">Le compte <span class="ban-pseudo" id="ban-pseudo">—</span> a été banni de Zyntra Arena pour non-respect des règles.<br><br>Si tu penses qu'il s'agit d'une erreur, contacte l'administrateur.</div>
+</div>
 
 <header id="app-header">
   <div id="app-logo">⚔ ZYNTRA</div>
@@ -1441,6 +1461,7 @@ function showPage(name,btn){
   if(name==='friends')     loadFriendsPage();
 }
 function goToBattle(){
+  if(_isBanned){showBanScreen();return;}
   const btn=document.querySelector('.nav-btn[data-page="battle"]');
   showPage('battle',btn);
   if(!gs.running) showOverlay('start');
@@ -2390,6 +2411,7 @@ function addHistory(icon,winner){
 }
 
 function startGame(){
+  if(_isBanned){showBanScreen();return;}
   document.getElementById('overlay').classList.add('hidden');
   document.getElementById('result-screen').classList.remove('show');
   document.body.classList.remove('selecting');
@@ -2477,6 +2499,7 @@ function savePseudo(){
   saveProgress();
   syncUI();
   toast(`✅ Pseudo sauvegardé : ${val}`);
+  checkIfBanned();
 }
 
 function resetProgress(){
@@ -3934,12 +3957,39 @@ function updatePowers(dt){
   if(gs.powerUiTick>=0.25||changed){gs.powerUiTick=0;updatePowersBar();}
 }
 
+// ══ BAN ENFORCEMENT ══
+let banCheckActive=true;
+async function checkIfBanned(){
+  if(!SUPABASE_READY||!banCheckActive)return;
+  if(!(player.pseudo&&player.pseudo!=='Joueur'))return; // no pseudo set yet
+  try{
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?pseudo=eq.${encodeURIComponent(player.pseudo)}&select=banned`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    const data=await r.json();
+    if(data.length>0 && data[0].banned===true){
+      showBanScreen();
+    }
+  }catch(e){}
+}
+let _isBanned=false;
+function showBanScreen(){
+  _isBanned=true;
+  document.getElementById('ban-pseudo').textContent=player.pseudo;
+  document.getElementById('ban-screen').classList.add('show');
+  // Stop the game if running
+  if(gs&&gs.running){gs.running=false;if(animId)cancelAnimationFrame(animId);}
+  stopMusic();
+}
+
 // INIT
 buildManaUI();buildArenaPage();buildDeckPage();
 initSB();
 // Poll for challenges + friend requests every 5s
 setInterval(pollChallenges,5000);
 pollChallenges();
+// Check ban status at startup and every 10s
+checkIfBanned();
+setInterval(checkIfBanned,10000);
 // Show tutorial on first launch
 maybeShowTutorial();
 
