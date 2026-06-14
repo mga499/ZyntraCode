@@ -1050,6 +1050,53 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 .ban-title{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--red-light);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px;text-shadow:0 0 20px rgba(231,76,60,.5)}
 .ban-text{font-size:.9rem;color:var(--text-dim);line-height:1.7;max-width:320px}
 .ban-pseudo{color:var(--gold);font-family:'Cinzel',serif}
+/* ── AUTH SCREEN ── */
+#auth-screen{
+  position:fixed;inset:0;z-index:5000;
+  background:linear-gradient(160deg,#1a0a2e,#0d0620);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  padding:30px;text-align:center;
+}
+#auth-screen.show{display:flex}
+.auth-logo{font-family:'Cinzel',serif;font-size:1.8rem;color:var(--gold);letter-spacing:4px;text-shadow:0 0 24px rgba(255,215,0,.5);margin-bottom:6px}
+.auth-tagline{font-size:.72rem;color:var(--text-dim);letter-spacing:2px;margin-bottom:28px}
+.auth-box{
+  background:var(--card-bg);border:1px solid var(--border);border-radius:18px;
+  padding:24px 22px;max-width:340px;width:100%;
+  box-shadow:0 0 40px rgba(123,31,162,.2);
+}
+.auth-tabs{display:flex;gap:0;margin-bottom:18px;border-radius:10px;overflow:hidden;border:1px solid var(--border)}
+.auth-tab{
+  flex:1;padding:10px;border:none;cursor:pointer;background:transparent;
+  color:var(--text-dim);font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;
+  letter-spacing:1px;transition:background .2s,color .2s;
+}
+.auth-tab.active{background:rgba(255,215,0,.12);color:var(--gold)}
+.auth-input{
+  width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,215,0,.25);
+  border-radius:10px;padding:12px 14px;color:var(--text);font-family:'Exo 2',sans-serif;
+  font-size:.9rem;outline:none;margin-bottom:12px;transition:border-color .2s;
+}
+.auth-input:focus{border-color:var(--gold)}
+.auth-pseudo-row{display:none}
+.auth-pseudo-row.show{display:block}
+.auth-btn{
+  width:100%;padding:13px;border:none;border-radius:10px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.85rem;font-weight:700;letter-spacing:2px;
+  background:linear-gradient(135deg,#b8960c,#FFD700,#b8960c);color:#0d0620;
+  margin-top:6px;transition:transform .15s,opacity .2s;
+}
+.auth-btn:hover{transform:scale(1.02)}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.auth-msg{font-size:.7rem;margin-top:12px;min-height:18px;line-height:1.4}
+.auth-msg.error{color:var(--red-light)}
+.auth-msg.success{color:#2ecc71}
+.auth-skip{
+  margin-top:18px;background:none;border:none;color:var(--text-dim);
+  font-size:.66rem;cursor:pointer;text-decoration:underline;font-family:'Exo 2',sans-serif;
+}
+.auth-skip:hover{color:var(--text)}
+.auth-note{font-size:.6rem;color:var(--text-dim);margin-top:14px;line-height:1.5;opacity:.8}
 /* ── DAILY QUESTS ── */
 .quests-header{padding:16px 16px 4px;text-align:center}
 .quests-title{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold);letter-spacing:2px}
@@ -1094,6 +1141,27 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
   <div class="ban-icon">🚫</div>
   <div class="ban-title">Banni</div>
   <div class="ban-text">Le compte <span class="ban-pseudo" id="ban-pseudo">—</span> a été banni de Zyntra Arena pour non-respect des règles.<br><br>Si tu penses qu'il s'agit d'une erreur, contacte l'administrateur.</div>
+</div>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-logo">⚔ ZYNTRA ARENA</div>
+  <div class="auth-tagline">Connecte-toi pour sauvegarder ta progression</div>
+  <div class="auth-box">
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="auth-tab-login" onclick="switchAuthTab('login')">Connexion</button>
+      <button class="auth-tab" id="auth-tab-signup" onclick="switchAuthTab('signup')">Créer un compte</button>
+    </div>
+    <div class="auth-pseudo-row" id="auth-pseudo-row">
+      <input class="auth-input" id="auth-pseudo" type="text" maxlength="16" placeholder="Ton pseudo de jeu">
+    </div>
+    <input class="auth-input" id="auth-email" type="email" placeholder="Email" autocomplete="email">
+    <input class="auth-input" id="auth-password" type="password" placeholder="Mot de passe" autocomplete="current-password" onkeydown="if(event.key==='Enter')submitAuth()">
+    <button class="auth-btn" id="auth-submit" onclick="submitAuth()">SE CONNECTER</button>
+    <div class="auth-msg" id="auth-msg"></div>
+    <div class="auth-note" id="auth-note">Utilise les mêmes identifiants que sur zyntracode.ch</div>
+  </div>
+  <button class="auth-skip" onclick="skipAuth()">Jouer sans compte (progression locale uniquement)</button>
 </div>
 
 <header id="app-header">
@@ -1252,6 +1320,21 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 <!-- SETTINGS -->
 <div class="page" id="page-settings">
   <div class="settings-section">
+
+    <div class="settings-block">
+      <div class="settings-block-title">Compte</div>
+      <div class="settings-row">
+        <div><div class="settings-label" id="account-status">Mode local</div><div class="settings-sub" id="account-sub">Connecte-toi pour sauvegarder en ligne</div></div>
+        <button class="settings-btn" id="account-btn" onclick="accountAction()">SE CONNECTER</button>
+      </div>
+      <div class="settings-row" id="account-sync-row" style="display:none">
+        <div><div class="settings-label">Synchronisation</div><div class="settings-sub">Sauvegarde ou récupère ta progression</div></div>
+        <div style="display:flex;gap:8px">
+          <button class="settings-btn" onclick="manualCloudSave()">💾 Sauver</button>
+          <button class="settings-btn" onclick="manualCloudLoad()">📥 Récupérer</button>
+        </div>
+      </div>
+    </div>
 
     <div class="settings-block">
       <div class="settings-block-title">Profil</div>
@@ -1841,6 +1924,7 @@ function saveProgress(){
     pseudo:player.pseudo,avatar:player.avatar,level:player.level,xp:player.xp,trophies:player.trophies,wins:player.wins,losses:player.losses,
     gold:player.gold,gems:player.gems,chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,quests:player.quests,questDay:player.questDay,deck:player.deck
   }));
+  if(typeof scheduleCloudSave==='function') scheduleCloudSave();
 }
 function loadProgress(){
   try{
@@ -2647,11 +2731,46 @@ function buildSettingsPage(){
   document.getElementById('cfg-losses').textContent   = player.losses;
   document.getElementById('cfg-deck').textContent     = player.deck.length+'/8';
   buildAvatarGrid();
+  // Account status
+  const statusEl=document.getElementById('account-status');
+  const subEl=document.getElementById('account-sub');
+  const btnEl=document.getElementById('account-btn');
+  if(statusEl){
+    if(currentUser){
+      statusEl.textContent='☁️ Connecté';
+      subEl.textContent=currentUser.email||'Progression sauvegardée en ligne';
+      btnEl.textContent='DÉCONNEXION';
+    } else {
+      statusEl.textContent='📱 Mode local';
+      subEl.textContent='Connecte-toi pour sauvegarder en ligne';
+      btnEl.textContent='SE CONNECTER';
+    }
+  }
+  const syncRow=document.getElementById('account-sync-row');
+  if(syncRow) syncRow.style.display=currentUser?'flex':'none';
   // Audio toggles
   const st=document.getElementById('sound-toggle');
   const mt=document.getElementById('music-toggle');
   if(st){st.textContent=soundOn?'ON':'OFF';st.style.opacity=soundOn?'1':'0.5';}
   if(mt){mt.textContent=musicOn?'ON':'OFF';mt.style.opacity=musicOn?'1':'0.5';}
+}
+function accountAction(){
+  if(currentUser) logout();
+  else showAuthScreen();
+}
+async function manualCloudSave(){
+  if(!currentUser){toast('Connecte-toi d\'abord');return;}
+  toast('💾 Sauvegarde en cours…');
+  await saveToCloud();
+  toast('✅ Progression sauvegardée en ligne !');
+}
+async function manualCloudLoad(){
+  if(!currentUser){toast('Connecte-toi d\'abord');return;}
+  if(!confirm('Récupérer ta progression en ligne ? Ta progression locale actuelle sera remplacée.'))return;
+  toast('📥 Récupération…');
+  await loadFromCloud(true);
+  syncUI();buildChestSlots();updateQuestsBadge();buildSettingsPage();
+  toast('✅ Progression récupérée !');
 }
 
 function savePseudo(){
@@ -4145,9 +4264,190 @@ function showBanScreen(){
   stopMusic();
 }
 
+// ══ AUTHENTICATION (Supabase Auth) ══
+let authMode='login'; // 'login' | 'signup'
+let currentUser=null;  // Supabase user object when logged in
+let cloudSaveTimer=null;
+
+function switchAuthTab(mode){
+  authMode=mode;
+  document.getElementById('auth-tab-login').classList.toggle('active',mode==='login');
+  document.getElementById('auth-tab-signup').classList.toggle('active',mode==='signup');
+  document.getElementById('auth-pseudo-row').classList.toggle('show',mode==='signup');
+  document.getElementById('auth-submit').textContent=mode==='login'?'SE CONNECTER':'CRÉER LE COMPTE';
+  document.getElementById('auth-note').textContent=mode==='login'
+    ?'Utilise les mêmes identifiants que sur zyntracode.ch'
+    :'Ton compte fonctionnera aussi sur zyntracode.ch';
+  setAuthMsg('');
+}
+function setAuthMsg(msg,type=''){
+  const el=document.getElementById('auth-msg');
+  el.textContent=msg;el.className='auth-msg'+(type?' '+type:'');
+}
+function showAuthScreen(){ document.getElementById('auth-screen').classList.add('show'); }
+function hideAuthScreen(){ document.getElementById('auth-screen').classList.remove('show'); }
+
+async function submitAuth(){
+  if(!sb){ setAuthMsg('Supabase non configuré',' error'); return; }
+  const email=document.getElementById('auth-email').value.trim();
+  const password=document.getElementById('auth-password').value;
+  if(!email||!password){ setAuthMsg('Remplis tous les champs','error'); return; }
+  const btn=document.getElementById('auth-submit');
+  btn.disabled=true;
+  try{
+    if(authMode==='signup'){
+      const pseudo=document.getElementById('auth-pseudo').value.trim();
+      if(!pseudo){ setAuthMsg('Choisis un pseudo','error'); btn.disabled=false; return; }
+      const {data,error}=await sb.auth.signUp({email,password});
+      if(error){ setAuthMsg(translateAuthError(error.message),'error'); btn.disabled=false; return; }
+      currentUser=data.user;
+      // New account: set pseudo, keep current local progress as starting point
+      player.pseudo=pseudo;
+      setAuthMsg('✅ Compte créé !','success');
+      await saveToCloud();
+      finishLogin();
+    } else {
+      const {data,error}=await sb.auth.signInWithPassword({email,password});
+      if(error){ setAuthMsg(translateAuthError(error.message),'error'); btn.disabled=false; return; }
+      currentUser=data.user;
+      setAuthMsg('✅ Connecté !','success');
+      await loadFromCloud();
+      finishLogin();
+    }
+  }catch(e){
+    setAuthMsg('Erreur de connexion','error');
+    btn.disabled=false;
+  }
+}
+
+function translateAuthError(msg){
+  if(/Invalid login/i.test(msg)) return 'Email ou mot de passe incorrect';
+  if(/already registered/i.test(msg)) return 'Cet email a déjà un compte';
+  if(/at least 6/i.test(msg)) return 'Mot de passe : 6 caractères minimum';
+  if(/valid email/i.test(msg)) return 'Email invalide';
+  return msg;
+}
+
+function finishLogin(){
+  document.getElementById('auth-submit').disabled=false;
+  hideAuthScreen();
+  syncUI();
+  buildChestSlots();
+  updateQuestsBadge();
+  checkIfBanned();
+  toast(`👋 Bienvenue ${player.pseudo} !`);
+}
+
+function skipAuth(){
+  // Play with local-only progression
+  hideAuthScreen();
+  toast('Mode local — ta progression reste sur cet appareil');
+}
+
+// ── Cloud save/load ──
+async function saveToCloud(){
+  if(!sb||!currentUser)return;
+  try{
+    const data={
+      avatar:player.avatar,level:player.level,xp:player.xp,trophies:player.trophies,
+      wins:player.wins,losses:player.losses,gold:player.gold,gems:player.gems,
+      chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,
+      quests:player.quests,questDay:player.questDay,deck:player.deck
+    };
+    await sb.from('clash_saves').upsert({
+      user_id:currentUser.id,
+      pseudo:player.pseudo,
+      data,
+      updated_at:new Date().toISOString()
+    });
+  }catch(e){}
+}
+
+// Compute a "progression score" to compare two saves
+function progressScore(p){
+  return (p.level||1)*1000 + (p.trophies||0) + (p.gold||0)*0.1 + (p.gems||0)*5 + (p.wins||0)*10;
+}
+
+async function loadFromCloud(force=false){
+  if(!sb||!currentUser)return;
+  try{
+    const {data,error}=await sb.from('clash_saves').select('pseudo,data').eq('user_id',currentUser.id).maybeSingle();
+    if(error||!data||!data.data){
+      // No cloud save yet → upload current local progress as the starting point
+      await saveToCloud();
+      return;
+    }
+    const cloud=data.data;
+    // Compare local (current player) vs cloud — keep the most advanced
+    // (unless force=true, e.g. manual "Récupérer" button)
+    const localScore=progressScore(player);
+    const cloudScore=progressScore(cloud);
+    if(!force && localScore>cloudScore){
+      // Local progress is more advanced → keep it, push it to the cloud
+      if(data.pseudo&&(!player.pseudo||player.pseudo==='Joueur')) player.pseudo=data.pseudo;
+      await saveToCloud();
+      toast('📱 Progression locale conservée (plus avancée)');
+      return;
+    }
+    // Cloud is more advanced (or equal) → load it
+    if(data.pseudo) player.pseudo=data.pseudo;
+    const d=cloud;
+    if(d.avatar) player.avatar=d.avatar;
+    if(typeof d.level==='number') player.level=d.level;
+    if(typeof d.xp==='number') player.xp=d.xp;
+    if(typeof d.trophies==='number') player.trophies=d.trophies;
+    if(typeof d.wins==='number') player.wins=d.wins;
+    if(typeof d.losses==='number') player.losses=d.losses;
+    if(typeof d.gold==='number') player.gold=d.gold;
+    if(typeof d.gems==='number') player.gems=d.gems;
+    if(Array.isArray(d.chests)) player.chests=d.chests;
+    if(d.cardLevels&&typeof d.cardLevels==='object') player.cardLevels=d.cardLevels;
+    if(Array.isArray(d.powers)&&d.powers.length===2) player.powers=d.powers;
+    if(Array.isArray(d.quests)) player.quests=d.quests;
+    if(d.questDay) player.questDay=d.questDay;
+    if(Array.isArray(d.deck)&&d.deck.length>=4) player.deck=d.deck;
+    ensureDailyQuests(); // refresh if it's a new day
+    saveProgress(); // mirror to local cache
+  }catch(e){}
+}
+
+// Debounced cloud save (called after saveProgress when logged in)
+function scheduleCloudSave(){
+  if(!currentUser)return;
+  clearTimeout(cloudSaveTimer);
+  cloudSaveTimer=setTimeout(saveToCloud,1500);
+}
+
+async function logout(){
+  if(sb){ try{ await sb.auth.signOut(); }catch(e){} }
+  currentUser=null;
+  toast('Déconnecté');
+  showAuthScreen();
+}
+
+// Check for existing session at startup
+async function checkAuthSession(){
+  if(!sb){ return; }
+  try{
+    const {data}=await sb.auth.getSession();
+    if(data&&data.session&&data.session.user){
+      currentUser=data.session.user;
+      await loadFromCloud();
+      syncUI();buildChestSlots();updateQuestsBadge();checkIfBanned();
+      return true;
+    }
+  }catch(e){}
+  return false;
+}
+
 // INIT
 buildManaUI();buildArenaPage();buildDeckPage();
 initSB();
+// Auth: check for existing session, else show login screen
+(async()=>{
+  const hasSession=await checkAuthSession();
+  if(!hasSession && sb){ showAuthScreen(); }
+})();
 // Poll for challenges + friend requests every 5s
 setInterval(pollChallenges,5000);
 pollChallenges();
