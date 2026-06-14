@@ -1382,6 +1382,10 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
         <div><div class="settings-label">🎵 Musique</div><div class="settings-sub">Musique de fond en combat</div></div>
         <button class="settings-btn" id="music-toggle" onclick="toggleMusic()">ON</button>
       </div>
+      <div class="settings-row">
+        <div style="flex:1"><div class="settings-label">🔉 Volume musique</div><div class="settings-sub">Règle le volume (<span id="music-vol-pct">100</span>%)</div></div>
+        <input type="range" id="music-vol-slider" min="0" max="100" value="100" oninput="setMusicVolume(this.value)" style="width:120px;accent-color:var(--gold)">
+      </div>
     </div>
 
     <div class="settings-block">
@@ -2758,6 +2762,10 @@ function buildSettingsPage(){
   const mt=document.getElementById('music-toggle');
   if(st){st.textContent=soundOn?'ON':'OFF';st.style.opacity=soundOn?'1':'0.5';}
   if(mt){mt.textContent=musicOn?'ON':'OFF';mt.style.opacity=musicOn?'1':'0.5';}
+  const volSlider=document.getElementById('music-vol-slider');
+  const volPct=document.getElementById('music-vol-pct');
+  if(volSlider){volSlider.value=Math.round(musicVolume*100);}
+  if(volPct){volPct.textContent=Math.round(musicVolume*100);}
 }
 function accountAction(){
   if(currentUser) logout();
@@ -3419,6 +3427,7 @@ function endMpGame(winner){
 let audioCtx=null;
 let soundOn=localStorage.getItem('clashSound')!=='0';
 let musicOn=localStorage.getItem('clashMusic')!=='0';
+let musicVolume=parseFloat(localStorage.getItem('clashMusicVol')||'1'); // 0 to 1 multiplier
 let musicNodes=null;
 
 function getAudioCtx(){
@@ -3468,7 +3477,7 @@ function startBattleMusic(){
   const notes=[130.81,164.81,196,164.81]; // C E G E
   let step=0;
   const masterGain=ctx.createGain();
-  masterGain.gain.value=0.04;
+  masterGain.gain.value=0.04*musicVolume;
   masterGain.connect(ctx.destination);
   const interval=setInterval(()=>{
     if(!musicOn){stopMusic();return;}
@@ -3505,7 +3514,7 @@ function startMenuMusic(){
   const melody=[220,261.63,329.63,261.63,246.94,196,220,164.81]; // A C E C B G A E
   let step=0;
   const masterGain=ctx.createGain();
-  masterGain.gain.value=0.12;
+  masterGain.gain.value=0.12*musicVolume;
   masterGain.connect(ctx.destination);
   const interval=setInterval(()=>{
     if(!musicOn){stopMusic();return;}
@@ -3555,6 +3564,16 @@ function toggleMusic(){
   localStorage.setItem('clashMusic',musicOn?'1':'0');
   if(musicOn){SFX.click();startMenuMusic();}else{stopMusic();}
   buildSettingsPage();
+}
+function setMusicVolume(val){
+  musicVolume=Math.max(0,Math.min(1,val/100));
+  localStorage.setItem('clashMusicVol',musicVolume);
+  document.getElementById('music-vol-pct').textContent=Math.round(musicVolume*100);
+  // Apply live to currently playing music
+  if(musicNodes&&musicNodes.masterGain){
+    const base=musicNodes.kind==='battle'?0.04:0.12;
+    try{musicNodes.masterGain.gain.value=base*musicVolume;}catch(e){}
+  }
 }
 
 // ══ TUTORIAL ══
