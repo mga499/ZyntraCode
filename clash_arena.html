@@ -1198,9 +1198,9 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
   <div class="chest-slots" id="chest-slots"></div>
   <p class="section-title">Historique récent</p>
   <div class="recent-section" id="recent-list">
-    <div class="recent-row">
-      <div class="recent-icon">🏰</div>
-      <div class="recent-info"><div class="recent-desc">Arène 4 — Épée &amp; Bouclier</div><div class="recent-sub">Début de partie</div></div>
+    <div class="recent-row" id="recent-placeholder">
+      <div class="recent-icon">⚔️</div>
+      <div class="recent-info"><div class="recent-desc">Aucune partie</div><div class="recent-sub">Lance ton premier combat !</div></div>
       <div class="recent-result result-draw">—</div>
     </div>
   </div>
@@ -2650,9 +2650,14 @@ function goHome(){
 
 function addHistory(icon,winner){
   const cls=winner==='player'?'result-win':winner==='enemy'?'result-loss':'result-draw';
+  const cur=getCurrentArena();
+  const resultTxt=winner==='player'?'Victoire':winner==='enemy'?'Défaite':'Égalité';
+  const now=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
   const row=document.createElement('div');row.className='recent-row';
-  row.innerHTML=`<div class="recent-icon">🏰</div><div class="recent-info"><div class="recent-desc">Arène 4</div><div class="recent-sub">Partie terminée</div></div><div class="recent-result ${cls}">${icon}</div>`;
+  row.innerHTML=`<div class="recent-icon">${cur.emoji}</div><div class="recent-info"><div class="recent-desc">Arène ${cur.id} — ${cur.name}</div><div class="recent-sub">${resultTxt} · ${now}</div></div><div class="recent-result ${cls}">${icon}</div>`;
   const list=document.getElementById('recent-list');
+  const ph=document.getElementById('recent-placeholder');
+  if(ph) ph.remove();
   list.prepend(row);if(list.children.length>5)list.lastChild.remove();
 }
 
