@@ -4325,6 +4325,9 @@ function showBanScreen(){
 let authMode='login'; // 'login' | 'signup'
 let currentUser=null;  // Supabase user object when logged in
 let cloudSaveTimer=null;
+let mySessionId=null;  // unique id for this device's session
+let sessionCheckTimer=null;
+function genSessionId(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,10); }
 
 function switchAuthTab(mode){
   authMode=mode;
@@ -4392,6 +4395,7 @@ function finishLogin(){
   buildChestSlots();
   updateQuestsBadge();
   checkIfBanned();
+  claimSession();
   toast(`👋 Bienvenue ${player.pseudo} !`);
 }
 
@@ -4476,8 +4480,9 @@ function scheduleCloudSave(){
 }
 
 async function logout(){
+  stopSessionCheck();
   if(sb){ try{ await sb.auth.signOut(); }catch(e){} }
-  currentUser=null;
+  currentUser=null;mySessionId=null;
   toast('Déconnecté');
   showAuthScreen();
 }
@@ -4491,10 +4496,57 @@ async function checkAuthSession(){
       currentUser=data.session.user;
       await loadFromCloud();
       syncUI();buildChestSlots();updateQuestsBadge();checkIfBanned();
+      claimSession();
       return true;
     }
   }catch(e){}
   return false;
+}
+
+// ── Single-session enforcement ──
+// When you log in, you claim the session. Other devices get kicked.
+async function claimSession(){
+  if(!sb||!currentUser)return;
+  mySessionId=genSessionId();
+  try{
+    await sb.from('clash_saves').upsert({
+      user_id:currentUser.id,
+      active_session:mySessionId
+    });
+  }catch(e){}
+  startSessionCheck();
+}
+function startSessionCheck(){
+  clearInterval(sessionCheckTimer);
+  // Every 5s, verify our session is still the active one
+  sessionCheckTimer=setInterval(checkSession,5000);
+}
+function stopSessionCheck(){
+  clearInterval(sessionCheckTimer);
+  sessionCheckTimer=null;
+}
+async function checkSession(){
+  if(!sb||!currentUser||!mySessionId)return;
+  try{
+    const {data,error}=await sb.from('clash_saves').select('active_session').eq('user_id',currentUser.id).maybeSingle();
+    if(error||!data)return;
+    if(data.active_session && data.active_session!==mySessionId){
+      // Another device took over → kick this one
+      kickedBySession();
+    }
+  }catch(e){}
+}
+function kickedBySession(){
+  stopSessionCheck();
+  // Save nothing (the other device is now authoritative), just sign out locally
+  if(sb){ try{ sb.auth.signOut(); }catch(e){} }
+  currentUser=null;mySessionId=null;
+  // Stop any running game
+  if(gs&&gs.running){gs.running=false;if(animId)cancelAnimationFrame(animId);}
+  stopMusic();
+  // Show a message then the login screen
+  setAuthMsg('⚠️ Connecté sur un autre appareil — tu as été déconnecté ici.','error');
+  showAuthScreen();
 }
 
 // INIT
