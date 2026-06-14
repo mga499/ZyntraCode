@@ -261,9 +261,6 @@
             document.getElementById('menu-register').style.display = 'none';
         }
     }
-    async function vérifierSiPasConecter(){
-        const {data:{ user }} = await supabaseClient.auth.getUser();
-        if not (user){document.getElementById('menu-jeux-titre').style.display = 'none';} 
     }
     verifierConnexion();
 </script>
