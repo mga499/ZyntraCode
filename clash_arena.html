@@ -1383,8 +1383,12 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
         <button class="settings-btn" id="music-toggle" onclick="toggleMusic()">ON</button>
       </div>
       <div class="settings-row">
-        <div style="flex:1"><div class="settings-label">🔉 Volume musique</div><div class="settings-sub">Règle le volume (<span id="music-vol-pct">100</span>%)</div></div>
+        <div style="flex:1"><div class="settings-label">🎵 Volume salon</div><div class="settings-sub">Musique des menus (<span id="music-vol-pct">100</span>%)</div></div>
         <input type="range" id="music-vol-slider" min="0" max="100" value="100" oninput="setMusicVolume(this.value)" style="width:120px;accent-color:var(--gold)">
+      </div>
+      <div class="settings-row">
+        <div style="flex:1"><div class="settings-label">⚔️ Volume combat</div><div class="settings-sub">Musique en bataille (<span id="battle-vol-pct">100</span>%)</div></div>
+        <input type="range" id="battle-vol-slider" min="0" max="100" value="100" oninput="setBattleVolume(this.value)" style="width:120px;accent-color:var(--red-light)">
       </div>
     </div>
 
@@ -2766,6 +2770,10 @@ function buildSettingsPage(){
   const volPct=document.getElementById('music-vol-pct');
   if(volSlider){volSlider.value=Math.round(musicVolume*100);}
   if(volPct){volPct.textContent=Math.round(musicVolume*100);}
+  const bvolSlider=document.getElementById('battle-vol-slider');
+  const bvolPct=document.getElementById('battle-vol-pct');
+  if(bvolSlider){bvolSlider.value=Math.round(battleVolume*100);}
+  if(bvolPct){bvolPct.textContent=Math.round(battleVolume*100);}
 }
 function accountAction(){
   if(currentUser) logout();
@@ -3427,7 +3435,11 @@ function endMpGame(winner){
 let audioCtx=null;
 let soundOn=localStorage.getItem('clashSound')!=='0';
 let musicOn=localStorage.getItem('clashMusic')!=='0';
-let musicVolume=parseFloat(localStorage.getItem('clashMusicVol')||'1'); // 0 to 1 multiplier
+let musicVolume=parseFloat(localStorage.getItem('clashMusicVol')||'1'); // menu music multiplier (0 to 1)
+let battleVolume=parseFloat(localStorage.getItem('clashBattleVol')||'1'); // battle music multiplier (0 to 1)
+// Base volumes (raised significantly)
+const MENU_MUSIC_BASE=0.30;
+const BATTLE_MUSIC_BASE=0.18;
 let musicNodes=null;
 
 function getAudioCtx(){
@@ -3477,7 +3489,7 @@ function startBattleMusic(){
   const notes=[130.81,164.81,196,164.81]; // C E G E
   let step=0;
   const masterGain=ctx.createGain();
-  masterGain.gain.value=0.04*musicVolume;
+  masterGain.gain.value=BATTLE_MUSIC_BASE*battleVolume;
   masterGain.connect(ctx.destination);
   const interval=setInterval(()=>{
     if(!musicOn){stopMusic();return;}
@@ -3514,7 +3526,7 @@ function startMenuMusic(){
   const melody=[220,261.63,329.63,261.63,246.94,196,220,164.81]; // A C E C B G A E
   let step=0;
   const masterGain=ctx.createGain();
-  masterGain.gain.value=0.12*musicVolume;
+  masterGain.gain.value=MENU_MUSIC_BASE*musicVolume;
   masterGain.connect(ctx.destination);
   const interval=setInterval(()=>{
     if(!musicOn){stopMusic();return;}
@@ -3569,10 +3581,18 @@ function setMusicVolume(val){
   musicVolume=Math.max(0,Math.min(1,val/100));
   localStorage.setItem('clashMusicVol',musicVolume);
   document.getElementById('music-vol-pct').textContent=Math.round(musicVolume*100);
-  // Apply live to currently playing music
-  if(musicNodes&&musicNodes.masterGain){
-    const base=musicNodes.kind==='battle'?0.04:0.12;
-    try{musicNodes.masterGain.gain.value=base*musicVolume;}catch(e){}
+  // Apply live if menu music is playing
+  if(musicNodes&&musicNodes.masterGain&&musicNodes.kind==='menu'){
+    try{musicNodes.masterGain.gain.value=MENU_MUSIC_BASE*musicVolume;}catch(e){}
+  }
+}
+function setBattleVolume(val){
+  battleVolume=Math.max(0,Math.min(1,val/100));
+  localStorage.setItem('clashBattleVol',battleVolume);
+  document.getElementById('battle-vol-pct').textContent=Math.round(battleVolume*100);
+  // Apply live if battle music is playing
+  if(musicNodes&&musicNodes.masterGain&&musicNodes.kind==='battle'){
+    try{musicNodes.masterGain.gain.value=BATTLE_MUSIC_BASE*battleVolume;}catch(e){}
   }
 }
 
