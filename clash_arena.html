@@ -1161,6 +1161,33 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
   font-size:1.4rem;text-align:center;letter-spacing:8px;outline:none;margin:8px 0;
 }
 .twofa-code-input:focus{border-color:var(--gold)}
+/* ── RANKED PANEL ── */
+.ranked-panel{margin:0 16px 16px}
+.ranked-record{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.ranked-rec-item{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:12px 8px;text-align:center}
+.ranked-rec-val{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold)}
+.ranked-rec-lbl{font-size:.55rem;color:var(--text-dim);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.ranked-find-btn{
+  width:100%;padding:16px;border:none;border-radius:14px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.95rem;font-weight:900;letter-spacing:2px;
+  background:linear-gradient(135deg,#7B1FA2,#b8960c,#FFD700);color:#0d0620;
+  box-shadow:0 4px 24px rgba(255,215,0,.35);transition:transform .15s,box-shadow .15s;
+}
+.ranked-find-btn:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,215,0,.55)}
+.ranked-find-note{font-size:.6rem;color:var(--text-dim);text-align:center;margin-top:8px;letter-spacing:.5px}
+.ranked-searching{
+  background:var(--card-bg);border:1px solid var(--gold);border-radius:16px;
+  padding:24px 18px;text-align:center;box-shadow:0 0 24px rgba(255,215,0,.15);
+}
+.ranked-spinner{font-size:2.6rem;animation:spin 2s linear infinite;display:inline-block}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.ranked-search-txt{font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold);margin-top:10px;letter-spacing:1px}
+.ranked-search-sub{font-size:.7rem;color:var(--text-dim);margin-top:6px}
+.ranked-cancel-btn{
+  margin-top:14px;padding:9px 24px;border:1px solid rgba(231,76,60,.4);
+  background:rgba(231,76,60,.15);color:var(--red-light);border-radius:10px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.7rem;font-weight:700;letter-spacing:1px;
+}
 </style>
 </head>
 <body>
@@ -1458,19 +1485,20 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
   </div>
 </div>
 
-<!-- LEAGUES -->
+<!-- LEAGUES (RANKED) -->
 <div class="page" id="page-leagues">
   <div class="league-current-card" id="league-current-card">
     <div class="lc-emblem" id="lc-emblem">🥇</div>
     <div class="lc-name" id="lc-name">Ligue d'Or</div>
-    <div class="lc-trophies">🏆 <b id="lc-trophies">0</b> trophées</div>
+    <div class="lc-trophies" id="lc-trophies"><b>0</b> PC</div>
     <div class="lc-progress-wrap">
       <div class="lc-progress-bar"><div class="lc-progress-fill" id="lc-progress-fill" style="width:0%"></div></div>
-      <div class="lc-progress-text" id="lc-progress-text">0 / 100 vers la prochaine ligue</div>
+      <div class="lc-progress-text" id="lc-progress-text">0 / 100 vers le rang suivant</div>
     </div>
     <div class="lc-next" id="lc-next"></div>
   </div>
-  <p class="leagues-list-title">Toutes les ligues</p>
+  <div id="ranked-panel" class="ranked-panel"></div>
+  <p class="leagues-list-title">Tous les rangs</p>
   <div class="leagues-list" id="leagues-list"></div>
 </div>
 
@@ -1641,7 +1669,7 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
   <button class="nav-btn"        data-page="shop"        onclick="showPage('shop',this)"><span class="nav-icon">🛒</span>Boutique</button>
   <button class="nav-btn"        data-page="friends"     onclick="showPage('friends',this)" id="nav-friends"><span class="nav-icon">👥</span>Amis<span id="nav-friends-badge" style="position:absolute;top:6px;right:8px;background:#e74c3c;color:#fff;border-radius:8px;font-size:.5rem;padding:1px 4px;display:none"></span></button>
   <button class="nav-btn"        data-page="leaderboard" onclick="showPage('leaderboard',this)"><span class="nav-icon">🌍</span>Classement</button>
-  <button class="nav-btn"        data-page="leagues"     onclick="showPage('leagues',this)"><span class="nav-icon">🏅</span>Ligues</button>
+  <button class="nav-btn"        data-page="leagues"     onclick="showPage('leagues',this)"><span class="nav-icon">🏅</span>Classé</button>
   <button class="nav-btn"        data-page="quests"      onclick="showPage('quests',this)" id="nav-quests"><span class="nav-icon">📅</span>Quêtes<span id="nav-quests-badge" style="position:absolute;top:6px;right:8px;background:#2ecc71;color:#fff;border-radius:8px;font-size:.5rem;padding:1px 4px;display:none"></span></button>
   <button class="nav-btn"        data-page="settings"    onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span>Réglages</button>
   <button class="nav-btn"        data-page="admin"       onclick="showPage('admin',this)"><span class="nav-icon">🛡️</span>Admin</button>
@@ -1729,13 +1757,13 @@ const LEAGUES=[
   {id:8,name:'Ligue Légende',   emblem:'🌟',min:3000, color:'#ff6f00'},
 ];
 
-function getCurrentLeague(trophies=player.trophies){
+function getCurrentLeague(rp=player.rankedRP){
   let cur=LEAGUES[0];
-  for(const l of LEAGUES){ if(trophies>=l.min) cur=l; }
+  for(const l of LEAGUES){ if(rp>=l.min) cur=l; }
   return cur;
 }
-function getNextLeague(trophies=player.trophies){
-  for(const l of LEAGUES){ if(trophies<l.min) return l; }
+function getNextLeague(rp=player.rankedRP){
+  for(const l of LEAGUES){ if(rp<l.min) return l; }
   return null; // max league
 }
 
@@ -1748,30 +1776,32 @@ function buildLeaguesPage(){
   document.getElementById('lc-emblem').textContent=cur.emblem;
   document.getElementById('lc-name').textContent=cur.name;
   document.getElementById('lc-name').style.color=cur.color;
-  document.getElementById('lc-trophies').textContent=player.trophies;
+  document.getElementById('lc-trophies').innerHTML=`<b>${player.rankedRP}</b> PC`;
   const fill=document.getElementById('lc-progress-fill');
   fill.style.color=cur.color;
   fill.style.background=cur.color;
   if(next){
     const span=next.min-cur.min;
-    const prog=player.trophies-cur.min;
+    const prog=player.rankedRP-cur.min;
     const pct=Math.min(100,Math.max(0,prog/span*100));
     fill.style.width=pct+'%';
-    document.getElementById('lc-progress-text').textContent=`${prog} / ${span} vers la prochaine ligue`;
-    document.getElementById('lc-next').textContent=`Prochaine : ${next.emblem} ${next.name} (${next.min} 🏆)`;
+    document.getElementById('lc-progress-text').textContent=`${prog} / ${span} PC vers le rang suivant`;
+    document.getElementById('lc-next').textContent=`Prochain : ${next.emblem} ${next.name} (${next.min} PC)`;
   } else {
     fill.style.width='100%';
-    document.getElementById('lc-progress-text').textContent='Ligue maximale atteinte ! 🎉';
+    document.getElementById('lc-progress-text').textContent='Rang maximal atteint ! 🎉';
     document.getElementById('lc-next').textContent='Tu es une véritable légende !';
   }
+  // Ranked record + matchmaking panel
+  renderRankedPanel();
   // All leagues list
   const list=document.getElementById('leagues-list');
   list.innerHTML='';
   LEAGUES.forEach(l=>{
-    const achieved=player.trophies>=l.min;
+    const achieved=player.rankedRP>=l.min;
     const isCurrent=l.id===cur.id;
     const nextL=LEAGUES.find(x=>x.id===l.id+1);
-    const range=nextL?`${l.min} – ${nextL.min-1} 🏆`:`${l.min}+ 🏆`;
+    const range=nextL?`${l.min} – ${nextL.min-1} PC`:`${l.min}+ PC`;
     const div=document.createElement('div');
     div.className='league-row'+(isCurrent?' current':'')+(!achieved?' locked':(isCurrent?'':' achieved'));
     if(isCurrent) div.style.borderColor=l.color;
@@ -1787,7 +1817,32 @@ function buildLeaguesPage(){
   });
 }
 
-let player={pseudo:'Joueur',avatar:'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+// Ranked matchmaking panel (inserted into the leagues page)
+function renderRankedPanel(){
+  const panel=document.getElementById('ranked-panel');
+  if(!panel)return;
+  const searching=rankedSearching;
+  const total=player.rankedWins+player.rankedLosses;
+  const winrate=total>0?Math.round(player.rankedWins/total*100):0;
+  panel.innerHTML=`
+    <div class="ranked-record">
+      <div class="ranked-rec-item"><div class="ranked-rec-val" style="color:#2ecc71">${player.rankedWins}</div><div class="ranked-rec-lbl">Victoires</div></div>
+      <div class="ranked-rec-item"><div class="ranked-rec-val" style="color:#e74c3c">${player.rankedLosses}</div><div class="ranked-rec-lbl">Défaites</div></div>
+      <div class="ranked-rec-item"><div class="ranked-rec-val">${winrate}%</div><div class="ranked-rec-lbl">Ratio</div></div>
+    </div>
+    ${searching
+      ? `<div class="ranked-searching">
+           <div class="ranked-spinner">🔍</div>
+           <div class="ranked-search-txt">Recherche d'un adversaire de ton rang…</div>
+           <div class="ranked-search-sub" id="ranked-search-time">0s</div>
+           <button class="ranked-cancel-btn" onclick="cancelRankedQueue()">ANNULER</button>
+         </div>`
+      : `<button class="ranked-find-btn" onclick="joinRankedQueue()">⚔️ TROUVER UNE PARTIE CLASSÉE</button>
+         <div class="ranked-find-note">Combats contre de vrais joueurs uniquement · +25 PC par victoire</div>`
+    }`;
+}
+
+let player={pseudo:'Joueur',avatar:'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,rankedRP:0,rankedWins:0,rankedLosses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
 
 // ══ DAILY QUESTS ══
 // Pool of possible quests. type matches an event we track during play.
@@ -1993,7 +2048,7 @@ const SHOP_CHESTS=[
 function saveProgress(){
   localStorage.setItem('clashArena',JSON.stringify({
     pseudo:player.pseudo,avatar:player.avatar,level:player.level,xp:player.xp,trophies:player.trophies,wins:player.wins,losses:player.losses,
-    gold:player.gold,gems:player.gems,chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,quests:player.quests,questDay:player.questDay,deck:player.deck
+    gold:player.gold,gems:player.gems,chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,quests:player.quests,questDay:player.questDay,rankedRP:player.rankedRP,rankedWins:player.rankedWins,rankedLosses:player.rankedLosses,deck:player.deck
   }));
   if(typeof scheduleCloudSave==='function') scheduleCloudSave();
 }
@@ -2016,6 +2071,9 @@ function loadProgress(){
     if(Array.isArray(data.powers)&&data.powers.length===2) player.powers=data.powers;
     if(Array.isArray(data.quests))              player.quests=data.quests;
     if(data.questDay)                           player.questDay=data.questDay;
+    if(typeof data.rankedRP==='number')         player.rankedRP=data.rankedRP;
+    if(typeof data.rankedWins==='number')       player.rankedWins=data.rankedWins;
+    if(typeof data.rankedLosses==='number')     player.rankedLosses=data.rankedLosses;
     if(Array.isArray(data.deck)&&data.deck.length>=4) player.deck=data.deck;
   }catch(e){}
 }
@@ -2574,6 +2632,8 @@ function showOverlay(type){
 }
 
 function showResultScreen(winner){
+  // Ranked matches use a dedicated result flow (PC instead of trophies)
+  if(isRankedMatch){ showRankedResult(winner); return; }
   // Compute result
   const pd=gs.destroyed.player, ed=gs.destroyed.enemy;
   let icon,title,sub,col,trophyDelta;
@@ -2590,18 +2650,9 @@ function showResultScreen(winner){
   else SFX.notify();
 
   // Update player data
-  const leagueBefore=getCurrentLeague(player.trophies);
   if(trophyDelta>0) player.wins++;
   else if(trophyDelta<0) player.losses++;
   player.trophies=Math.max(0,player.trophies+trophyDelta);
-  const leagueAfter=getCurrentLeague(player.trophies);
-  // League promotion!
-  if(leagueAfter.id>leagueBefore.id){
-    setTimeout(()=>{
-      toast(`${leagueAfter.emblem} Promu en ${leagueAfter.name} !`,4000);
-      launchConfetti();
-    },1200);
-  }
 
   // Reward gold + chest on win
   let earnedGold=0,earnedChest=false;
@@ -2650,6 +2701,8 @@ function showResultScreen(winner){
   document.getElementById('rs-sub').textContent=sub;
 
   const sign=trophyDelta>=0?'+':'';
+  const nlbl=document.querySelector('#result-screen .rs-trophy-label'); if(nlbl) nlbl.textContent='Trophées';
+  const nicon=document.querySelector('#result-screen .rs-trophy-icon'); if(nicon) nicon.textContent='🏆';
   document.getElementById('rs-trophy-change').textContent=sign+trophyDelta;
   document.getElementById('rs-trophy-change').style.color=trophyDelta>0?'#2ecc71':trophyDelta<0?'#e74c3c':'#95a5a6';
   document.getElementById('rs-trophy-total').textContent=player.trophies;
@@ -2719,6 +2772,99 @@ function goHome(){
   startMenuMusic();
 }
 
+// ── Ranked result screen (PC instead of trophies) ──
+function showRankedResult(winner){
+  isRankedMatch=false; // consume the flag
+  const pd=gs.destroyed.player, ed=gs.destroyed.enemy;
+  let icon,title,sub,col,rpDelta;
+  if(winner==='player'){icon='🏆';title='VICTOIRE !';sub='Tu as gagné le match classé !';col='#FFD700';rpDelta=+RANKED_WIN_RP;}
+  else if(winner==='enemy'){icon='💀';title='DÉFAITE';sub='Tu as perdu le match classé.';col='#e74c3c';rpDelta=-RANKED_LOSS_RP;}
+  else if(ed>pd){icon='🏆';title='VICTOIRE !';sub=`Plus de tours détruites (${ed}–${pd})`;col='#FFD700';rpDelta=+RANKED_WIN_RP;}
+  else if(pd>ed){icon='💀';title='DÉFAITE';sub=`Adversaire devant (${pd}–${ed})`;col='#e74c3c';rpDelta=-RANKED_LOSS_RP;}
+  else{icon='🤝';title='ÉGALITÉ';sub='Match nul — aucun PC';col='#95a5a6';rpDelta=0;}
+
+  stopMusic();
+  if(rpDelta>0){SFX.victory();launchConfetti();}
+  else if(rpDelta<0)SFX.defeat();
+  else SFX.notify();
+
+  // Update ranked data
+  const leagueBefore=getCurrentLeague(player.rankedRP);
+  if(rpDelta>0) player.rankedWins++;
+  else if(rpDelta<0) player.rankedLosses++;
+  player.rankedRP=Math.max(0,player.rankedRP+rpDelta);
+  const leagueAfter=getCurrentLeague(player.rankedRP);
+  if(leagueAfter.id>leagueBefore.id){
+    setTimeout(()=>{toast(`${leagueAfter.emblem} Promu en ${leagueAfter.name} !`,4000);launchConfetti();},1200);
+  } else if(leagueAfter.id<leagueBefore.id){
+    setTimeout(()=>{toast(`⬇️ Rétrogradé en ${leagueAfter.name}`,4000);},1200);
+  }
+  // XP + gold for playing ranked
+  let earnedXp=(rpDelta>0?40:rpDelta<0?12:20)+ed*8;
+  player.xp+=earnedXp;
+  let leveledUp=false;
+  while(player.xp>=xpForLevel(player.level)){ player.xp-=xpForLevel(player.level); player.level++; leveledUp=true; }
+  if(leveledUp){ setTimeout(()=>{toast(`⭐ NIVEAU ${player.level} ATTEINT !`,4000);SFX.victory();},1600); }
+  let earnedGold=0;
+  if(rpDelta>0){ earnedGold=40+Math.floor(Math.random()*40); player.gold+=earnedGold; }
+
+  addHistory(icon,winner);
+  trackQuest('play',1);
+  if(rpDelta>0) trackQuest('win',1);
+  saveProgress();
+  syncUI();
+
+  // Fill result DOM (trophy section repurposed for PC)
+  document.getElementById('rs-icon').textContent=icon;
+  document.getElementById('rs-title').textContent=title;
+  document.getElementById('rs-title').style.color=col;
+  document.getElementById('rs-sub').textContent=sub;
+  const lbl=document.querySelector('#result-screen .rs-trophy-label'); if(lbl) lbl.textContent='Points de Classement';
+  const ticon=document.querySelector('#result-screen .rs-trophy-icon'); if(ticon) ticon.textContent=leagueAfter.emblem;
+  const sign=rpDelta>=0?'+':'';
+  document.getElementById('rs-trophy-change').textContent=sign+rpDelta+' PC';
+  document.getElementById('rs-trophy-change').style.color=rpDelta>0?'#2ecc71':rpDelta<0?'#e74c3c':'#95a5a6';
+  document.getElementById('rs-trophy-total').textContent=player.rankedRP+' PC';
+
+  const rewBox=document.getElementById('rs-rewards');
+  let rh='';
+  if(earnedXp>0) rh+=`<div class="currency-pill" style="font-size:.9rem;padding:8px 14px;color:#d7a8ff;border-color:#9b59b6">⭐ +${earnedXp} XP</div>`;
+  if(earnedGold>0) rh+=`<div class="currency-pill gold" style="font-size:.9rem;padding:8px 14px">🪙 +${earnedGold}</div>`;
+  if(rh){ rewBox.innerHTML=rh; rewBox.style.display='flex'; rewBox.style.flexWrap='wrap'; }
+  else rewBox.style.display='none';
+
+  document.getElementById('rs-towers-destroyed').textContent=ed;
+  document.getElementById('rs-towers-lost').textContent=pd;
+  const elapsed=GAME_DUR-gs.timeLeft;
+  const dm=Math.floor(elapsed/60),ds=Math.floor(elapsed%60);
+  document.getElementById('rs-duration').textContent=`${dm}:${ds.toString().padStart(2,'0')}`;
+  const pt=gs.towers.player, et=gs.towers.enemy;
+  document.getElementById('rs-player-towers').textContent=(pt.left.hp>0?'🏯':'💀')+(pt.right.hp>0?'🏯':'💀')+(pt.king.hp>0?'🛡️':'💀');
+  document.getElementById('rs-enemy-towers').textContent=(et.left.hp>0?'🏰':'💀')+(et.right.hp>0?'🏰':'💀')+(et.king.hp>0?'👑':'💀');
+  document.getElementById('rs-player-alive').textContent=[pt.left,pt.right,pt.king].filter(t=>t.hp>0).length+'/3';
+  document.getElementById('rs-enemy-alive').textContent=[et.left,et.right,et.king].filter(t=>t.hp>0).length+'/3';
+  document.getElementById('rs-player-box').classList.toggle('winner-side',rpDelta>0);
+  document.getElementById('rs-enemy-box').classList.toggle('winner-side',rpDelta<0);
+
+  const rs=document.getElementById('result-screen');
+  rs.classList.add('show'); rs.scrollTop=0;
+  document.getElementById('rs-countdown').textContent=5;
+  document.getElementById('rs-bar').style.width='100%';
+  clearInterval(rsTimer);
+  const total=5000,step=50;let el2=0;
+  rsTimer=setInterval(()=>{
+    el2+=step;
+    document.getElementById('rs-bar').style.width=Math.max(0,100-(el2/total*100))+'%';
+    document.getElementById('rs-countdown').textContent=Math.ceil((total-el2)/1000);
+    if(el2>=total){ clearInterval(rsTimer); rs.classList.remove('show'); setTimeout(()=>goRanked(),400); }
+  },step);
+}
+function goRanked(){
+  const btn=document.querySelector('.nav-btn[data-page="leagues"]');
+  showPage('leagues',btn);
+  startMenuMusic();
+}
+
 function addHistory(icon,winner){
   const cls=winner==='player'?'result-win':winner==='enemy'?'result-loss':'result-draw';
   const cur=getCurrentArena();
@@ -2734,6 +2880,7 @@ function addHistory(icon,winner){
 
 function startGame(){
   if(_isBanned){showBanScreen();return;}
+  isRankedMatch=false; // normal battle, never ranked
   document.getElementById('overlay').classList.add('hidden');
   document.getElementById('result-screen').classList.remove('show');
   document.body.classList.remove('selecting');
@@ -2875,7 +3022,7 @@ function savePseudo(){
 
 function resetProgress(){
   if(!confirm('Réinitialiser toute ta progression ?')) return;
-  player = {pseudo:player.pseudo||'Joueur',avatar:player.avatar||'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+  player = {pseudo:player.pseudo||'Joueur',avatar:player.avatar||'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,rankedRP:0,rankedWins:0,rankedLosses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
   saveProgress();
   syncUI();
   buildSettingsPage();
@@ -3237,6 +3384,7 @@ function showMpBanner(opponent,statusTxt){
 function hideMpBanner(){document.getElementById('mp-banner').classList.remove('show');}
 
 async function startMultiplayerHost(guestPseudo,roomId){
+  isRankedMatch=false; // friend challenges are casual
   mpMode='host';mpRoomId=roomId;mpOpponent=guestPseudo;
   const btn=document.querySelector('.nav-btn[data-page="battle"]');
   showPage('battle',btn);
@@ -3262,6 +3410,7 @@ async function startMultiplayerHost(guestPseudo,roomId){
 }
 
 function startMultiplayerGuest(hostPseudo,roomId){
+  isRankedMatch=false; // friend challenges are casual
   mpMode='guest';mpRoomId=roomId;mpOpponent=hostPseudo;
   const btn=document.querySelector('.nav-btn[data-page="battle"]');
   showPage('battle',btn);
@@ -3321,6 +3470,154 @@ function launchMpGame(){
     // Fallback: polling for guest, direct start for host
     animId=requestAnimationFrame(mpMode==='host'?gameLoop:guestPollLoop);
   }
+}
+
+// ══ RANKED MATCHMAKING (Mode Classé) ══
+// Real-player-only ranked matches. Separate from normal battles & trophies.
+// SQL to create in Supabase:
+// CREATE TABLE clash_ranked_queue (
+//   pseudo text PRIMARY KEY,
+//   rp integer DEFAULT 0,
+//   league_id integer DEFAULT 1,
+//   status text DEFAULT 'searching',   -- searching | matched
+//   room_id text,
+//   joined_at timestamptz DEFAULT now()
+// );
+// ALTER TABLE clash_ranked_queue ENABLE ROW LEVEL SECURITY;
+// CREATE POLICY "ranked all" ON clash_ranked_queue FOR ALL USING(true) WITH CHECK(true);
+const RANKED_WIN_RP=25, RANKED_LOSS_RP=18;
+let rankedSearching=false;
+let isRankedMatch=false;
+let rankedQueueTimer=null;
+let rankedSearchStart=0;
+let rankedSearchTick=null;
+
+async function joinRankedQueue(){
+  if(!SUPABASE_READY){toast('⚙️ Configure Supabase');return;}
+  if(!currentUser){toast('🔐 Connecte-toi pour jouer en classé');return;}
+  if(!(player.pseudo&&player.pseudo!=='Joueur')){toast('👤 Choisis un pseudo d\'abord');return;}
+  if(_isBanned){showBanScreen();return;}
+  saveProgress(); // push latest so the opponent faces your real level
+  rankedSearching=true;
+  rankedSearchStart=Date.now();
+  const lg=getCurrentLeague();
+  try{
+    await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue`,{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({pseudo:player.pseudo,rp:player.rankedRP,league_id:lg.id,status:'searching',room_id:null,joined_at:new Date().toISOString()})
+    });
+  }catch(e){}
+  renderRankedPanel();
+  SFX.challenge();
+  clearInterval(rankedQueueTimer);
+  rankedQueueTimer=setInterval(rankedMatchmakingTick,2500);
+  rankedMatchmakingTick();
+  clearInterval(rankedSearchTick);
+  rankedSearchTick=setInterval(()=>{
+    const el=document.getElementById('ranked-search-time');
+    if(el){const s=Math.floor((Date.now()-rankedSearchStart)/1000);el.textContent=s+'s';}
+  },1000);
+}
+
+async function rankedMatchmakingTick(){
+  if(!rankedSearching)return;
+  try{
+    // 1) Did someone already match ME? (I'm the guest)
+    const meR=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?pseudo=eq.${encodeURIComponent(player.pseudo)}&select=status,room_id`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    const meData=await meR.json();
+    if(meData[0] && meData[0].status==='matched' && meData[0].room_id){
+      const roomId=meData[0].room_id;
+      const rr=await fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${roomId}&select=host_pseudo`,
+        {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+      const rd=await rr.json();
+      const host=rd[0]?rd[0].host_pseudo:mpOpponent;
+      stopRankedSearch(false);
+      startRankedMatch(host,roomId,false);
+      return;
+    }
+    // 2) Find an opponent (I host if my pseudo sorts before theirs)
+    // Only consider players seen in the last 15s (avoids matching closed tabs)
+    const fresh=new Date(Date.now()-15000).toISOString();
+    const oppR=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?status=eq.searching&pseudo=neq.${encodeURIComponent(player.pseudo)}&joined_at=gte.${fresh}&order=joined_at.asc&limit=20`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    let opps=await oppR.json();
+    if(!Array.isArray(opps)||!opps.length){ rankedHeartbeat(); return; }
+    // Prefer the closest RP (similar rank)
+    opps.sort((a,b)=>Math.abs((a.rp||0)-player.rankedRP)-Math.abs((b.rp||0)-player.rankedRP));
+    const opp=opps[0];
+    if(player.pseudo < opp.pseudo){
+      // I'm the host → create room + claim opponent
+      const roomId='ranked_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+      await fetch(`${SUPABASE_URL}/rest/v1/clash_rooms`,{
+        method:'POST',
+        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({id:roomId,host_pseudo:player.pseudo,guest_pseudo:opp.pseudo,status:'accepted',guest_moves:'[]'})
+      });
+      // Claim opponent only if still searching (avoids double-match)
+      const upd=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?pseudo=eq.${encodeURIComponent(opp.pseudo)}&status=eq.searching`,{
+        method:'PATCH',
+        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+        body:JSON.stringify({status:'matched',room_id:roomId})
+      });
+      const updRows=await upd.json();
+      if(!Array.isArray(updRows)||!updRows.length){
+        // Someone grabbed them first → delete our room, keep searching
+        fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${roomId}`,{method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}).catch(()=>{});
+        return;
+      }
+      stopRankedSearch(false);
+      startRankedMatch(opp.pseudo,roomId,true);
+    }
+    // else: wait — the other player will host and match me (caught in step 1)
+    else { rankedHeartbeat(); }
+  }catch(e){}
+}
+
+// Keep my queue entry "fresh" so other searchers know I'm still active
+function rankedHeartbeat(){
+  if(!rankedSearching||!player.pseudo)return;
+  fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?pseudo=eq.${encodeURIComponent(player.pseudo)}&status=eq.searching`,{
+    method:'PATCH',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({joined_at:new Date().toISOString()})
+  }).catch(()=>{});
+}
+
+function stopRankedSearch(removeFromQueue=true){
+  rankedSearching=false;
+  clearInterval(rankedQueueTimer);rankedQueueTimer=null;
+  clearInterval(rankedSearchTick);rankedSearchTick=null;
+  if(removeFromQueue && player.pseudo){
+    fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?pseudo=eq.${encodeURIComponent(player.pseudo)}`,{
+      method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    }).catch(()=>{});
+  }
+}
+
+function cancelRankedQueue(){
+  stopRankedSearch(true);
+  renderRankedPanel();
+  toast('Recherche annulée');
+  SFX.click();
+}
+
+function startRankedMatch(opponentPseudo,roomId,asHost){
+  isRankedMatch=true;
+  mpMode=asHost?'host':'guest';
+  mpRoomId=roomId;
+  mpOpponent=opponentPseudo;
+  // Remove my queue row now that we're matched
+  fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?pseudo=eq.${encodeURIComponent(player.pseudo)}`,{
+    method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+  }).catch(()=>{});
+  const btn=document.querySelector('.nav-btn[data-page="battle"]');
+  showPage('battle',btn);
+  showMpBanner(opponentPseudo,'🏆 Match classé vs '+opponentPseudo);
+  toast(`⚔️ Adversaire trouvé : ${opponentPseudo} !`);
+  SFX.victory();
+  launchMpGame();
 }
 
 function cancelMp(){
@@ -4497,7 +4794,9 @@ async function saveToCloud(){
       avatar:player.avatar,level:player.level,xp:player.xp,trophies:player.trophies,
       wins:player.wins,losses:player.losses,gold:player.gold,gems:player.gems,
       chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,
-      quests:player.quests,questDay:player.questDay,deck:player.deck
+      quests:player.quests,questDay:player.questDay,
+      rankedRP:player.rankedRP,rankedWins:player.rankedWins,rankedLosses:player.rankedLosses,
+      deck:player.deck
     };
     await sb.from('clash_saves').upsert({
       user_id:currentUser.id,
@@ -4550,6 +4849,9 @@ async function loadFromCloud(force=false){
     if(Array.isArray(d.powers)&&d.powers.length===2) player.powers=d.powers;
     if(Array.isArray(d.quests)) player.quests=d.quests;
     if(d.questDay) player.questDay=d.questDay;
+    if(typeof d.rankedRP==='number') player.rankedRP=d.rankedRP;
+    if(typeof d.rankedWins==='number') player.rankedWins=d.rankedWins;
+    if(typeof d.rankedLosses==='number') player.rankedLosses=d.rankedLosses;
     if(Array.isArray(d.deck)&&d.deck.length>=4) player.deck=d.deck;
     ensureDailyQuests(); // refresh if it's a new day
     saveProgress(); // mirror to local cache
