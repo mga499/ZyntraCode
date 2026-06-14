@@ -1103,6 +1103,8 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 .quests-sub{font-size:.66rem;color:var(--text-dim);margin-top:4px}
 .quests-reset{font-size:.6rem;color:var(--mana);margin-top:6px;letter-spacing:1px}
 .quests-list{padding:14px;display:flex;flex-direction:column;gap:12px}
+.quests-section-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 2px}
+.quests-section-title{font-family:'Cinzel',serif;font-size:.85rem;color:var(--gold);letter-spacing:1px}
 .quest-card{
   background:var(--card-bg);border:1px solid var(--border);border-radius:14px;
   padding:14px 16px;position:relative;overflow:hidden;transition:border-color .2s;
@@ -1541,14 +1543,22 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 <!-- DAILY QUESTS -->
 <div class="page" id="page-quests">
   <div class="quests-header">
-    <div class="quests-title">📅 Quêtes Journalières</div>
+    <div class="quests-title">📋 Quêtes</div>
     <div class="quests-sub">Accomplis-les pour gagner or et gemmes !</div>
-    <div class="quests-reset" id="quests-reset">⏳ Nouvelles quêtes dans —</div>
+  </div>
+  <div class="quests-section-head">
+    <span class="quests-section-title">📅 Journalières</span>
+    <span class="quests-reset" id="quests-reset">⏳ —</span>
   </div>
   <div class="quests-list" id="quests-list"></div>
+  <div class="quests-section-head">
+    <span class="quests-section-title">🗓️ Hebdomadaires</span>
+    <span class="quests-reset" id="weekly-quests-reset">⏳ —</span>
+  </div>
+  <div class="quests-list" id="weekly-quests-list"></div>
   <div class="quests-bonus" id="quests-bonus" style="display:none">
     <div class="quests-bonus-title">🎁 Toutes les quêtes terminées !</div>
-    <div class="quests-bonus-sub">Reviens demain pour de nouvelles quêtes.</div>
+    <div class="quests-bonus-sub">Reviens plus tard pour de nouvelles quêtes.</div>
   </div>
 </div>
 
@@ -1842,7 +1852,7 @@ function renderRankedPanel(){
     }`;
 }
 
-let player={pseudo:'Joueur',avatar:'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,rankedRP:0,rankedWins:0,rankedLosses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+let player={pseudo:'Joueur',avatar:'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,weeklyQuests:null,questWeek:null,rankedRP:0,rankedWins:0,rankedLosses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
 
 // ══ DAILY QUESTS ══
 // Pool of possible quests. type matches an event we track during play.
@@ -1858,6 +1868,62 @@ const QUEST_POOL=[
   {id:'power3', type:'power',  goal:3, name:'Utilise 3 pouvoirs',       icon:'🦸',gold:60, gems:1},
   {id:'chest1', type:'chest',  goal:1, name:'Ouvre 1 coffre',           icon:'📦',gold:40, gems:1},
 ];
+
+// ══ WEEKLY QUESTS ══ (20 per week, reset every Monday)
+const WEEKLY_QUEST_POOL=[
+  {id:'wk_win5',  type:'win',      goal:5,  name:'Remporte 5 combats',         icon:'🏆',gold:200, gems:3},
+  {id:'wk_win10', type:'win',      goal:10, name:'Remporte 10 combats',        icon:'🏆',gold:400, gems:5},
+  {id:'wk_win15', type:'win',      goal:15, name:'Remporte 15 combats',        icon:'🏆',gold:550, gems:7},
+  {id:'wk_win20', type:'win',      goal:20, name:'Remporte 20 combats',        icon:'👑',gold:750, gems:9},
+  {id:'wk_win30', type:'win',      goal:30, name:'Remporte 30 combats',        icon:'👑',gold:1100,gems:14},
+  {id:'wk_rwin3', type:'rankedwin',goal:3,  name:'Gagne 3 matchs classés',     icon:'🥇',gold:300, gems:5},
+  {id:'wk_rwin5', type:'rankedwin',goal:5,  name:'Gagne 5 matchs classés',     icon:'🥇',gold:500, gems:8},
+  {id:'wk_rwin8', type:'rankedwin',goal:8,  name:'Gagne 8 matchs classés',     icon:'🏅',gold:800, gems:12},
+  {id:'wk_rwin12',type:'rankedwin',goal:12, name:'Gagne 12 matchs classés',    icon:'🏅',gold:1200,gems:18},
+  {id:'wk_play10',type:'play',     goal:10, name:'Joue 10 combats',            icon:'⚔️',gold:150, gems:2},
+  {id:'wk_play20',type:'play',     goal:20, name:'Joue 20 combats',            icon:'⚔️',gold:300, gems:4},
+  {id:'wk_play35',type:'play',     goal:35, name:'Joue 35 combats',            icon:'⚔️',gold:520, gems:6},
+  {id:'wk_play50',type:'play',     goal:50, name:'Joue 50 combats',            icon:'⚔️',gold:750, gems:9},
+  {id:'wk_dep60', type:'deploy',   goal:60, name:'Déploie 60 troupes',         icon:'🐗',gold:160, gems:2},
+  {id:'wk_dep150',type:'deploy',   goal:150,name:'Déploie 150 troupes',        icon:'🐗',gold:380, gems:5},
+  {id:'wk_dep300',type:'deploy',   goal:300,name:'Déploie 300 troupes',        icon:'🐗',gold:700, gems:9},
+  {id:'wk_tow15', type:'tower',    goal:15, name:'Détruis 15 tours',           icon:'🏰',gold:220, gems:3},
+  {id:'wk_tow30', type:'tower',    goal:30, name:'Détruis 30 tours',           icon:'🏰',gold:420, gems:5},
+  {id:'wk_tow55', type:'tower',    goal:55, name:'Détruis 55 tours',           icon:'🏰',gold:780, gems:10},
+  {id:'wk_pow10', type:'power',    goal:10, name:'Utilise 10 pouvoirs',        icon:'🦸',gold:180, gems:2},
+  {id:'wk_pow25', type:'power',    goal:25, name:'Utilise 25 pouvoirs',        icon:'🦸',gold:420, gems:5},
+  {id:'wk_chest3',type:'chest',    goal:3,  name:'Ouvre 3 coffres',            icon:'📦',gold:160, gems:3},
+  {id:'wk_chest7',type:'chest',    goal:7,  name:'Ouvre 7 coffres',            icon:'📦',gold:380, gems:6},
+  {id:'wk_chest12',type:'chest',   goal:12, name:'Ouvre 12 coffres',           icon:'🔮',gold:720, gems:11},
+];
+
+// Monday-based week key (stable within a week, changes each Monday)
+function weekKey(){
+  const d=new Date();
+  const day=(d.getDay()+6)%7; // 0 = Monday
+  const monday=new Date(d); monday.setDate(d.getDate()-day); monday.setHours(0,0,0,0);
+  return monday.toISOString().slice(0,10);
+}
+// Deterministic shuffle seeded by a string (same lineup all week)
+function seededShuffle(arr,seed){
+  const a=[...arr];
+  let s=0; for(const ch of seed) s=(s*31+ch.charCodeAt(0))>>>0;
+  for(let i=a.length-1;i>0;i--){
+    s=(s*1103515245+12345)&0x7fffffff;
+    const j=s%(i+1);
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function ensureWeeklyQuests(){
+  const wk=weekKey();
+  if(player.questWeek!==wk||!Array.isArray(player.weeklyQuests)){
+    const picked=seededShuffle(WEEKLY_QUEST_POOL,wk).slice(0,20).map(q=>({...q,progress:0,claimed:false}));
+    player.weeklyQuests=picked;
+    player.questWeek=wk;
+    saveProgress();
+  }
+}
 
 function todayStr(){ return new Date().toISOString().slice(0,10); } // YYYY-MM-DD
 
@@ -1879,21 +1945,24 @@ function ensureDailyQuests(){
   }
 }
 
-// Called when a game event happens (win, play, deploy, tower, power, chest)
+// Called when a game event happens (win, play, deploy, tower, power, chest, rankedwin)
 function trackQuest(type,amount=1){
   ensureDailyQuests();
+  ensureWeeklyQuests();
   let changed=false;
-  player.quests.forEach(q=>{
+  const bump=q=>{
     if(q.type===type&&!q.claimed&&q.progress<q.goal){
       q.progress=Math.min(q.goal,q.progress+amount);
       changed=true;
     }
-  });
+  };
+  player.quests.forEach(bump);
+  player.weeklyQuests.forEach(bump);
   if(changed){saveProgress();updateQuestsBadge();}
 }
 
 function claimQuest(id){
-  const q=player.quests.find(x=>x.id===id);
+  const q=(player.quests||[]).find(x=>x.id===id)||(player.weeklyQuests||[]).find(x=>x.id===id);
   if(!q||q.claimed||q.progress<q.goal)return;
   q.claimed=true;
   player.gold+=q.gold;
@@ -1904,16 +1973,10 @@ function claimQuest(id){
   buildQuestsPage();
 }
 
-function buildQuestsPage(){
-  ensureDailyQuests();
-  const list=document.getElementById('quests-list');
-  list.innerHTML='';
-  player.quests.forEach(q=>{
-    const done=q.progress>=q.goal;
-    const pct=Math.min(100,q.progress/q.goal*100);
-    const div=document.createElement('div');
-    div.className='quest-card'+(done?' done':'')+(q.claimed?' claimed':'');
-    div.innerHTML=`
+function questCardHTML(q){
+  const done=q.progress>=q.goal;
+  const pct=Math.min(100,q.progress/q.goal*100);
+  return `<div class="quest-card${done?' done':''}${q.claimed?' claimed':''}">
       <div class="quest-top">
         <div class="quest-icon">${q.icon}</div>
         <div class="quest-info">
@@ -1923,29 +1986,52 @@ function buildQuestsPage(){
         ${q.claimed?'<div class="quest-claimed-tag">✓ Réclamé</div>':done?`<button class="quest-claim-btn" onclick="claimQuest('${q.id}')">RÉCLAMER</button>`:''}
       </div>
       <div class="quest-progress-bar"><div class="quest-progress-fill ${done?'full':''}" style="width:${pct}%"></div></div>
-      <div class="quest-progress-text"><span>${q.progress} / ${q.goal}</span>${done&&!q.claimed?'<span style="color:#2ecc71">Terminé !</span>':''}</div>`;
-    list.appendChild(div);
-  });
-  // Bonus banner if all claimed
-  const allClaimed=player.quests.every(q=>q.claimed);
+      <div class="quest-progress-text"><span>${q.progress} / ${q.goal}</span>${done&&!q.claimed?'<span style="color:#2ecc71">Terminé !</span>':''}</div>
+    </div>`;
+}
+
+function buildQuestsPage(){
+  ensureDailyQuests();
+  ensureWeeklyQuests();
+  // Daily section
+  document.getElementById('quests-list').innerHTML=player.quests.map(questCardHTML).join('');
+  // Weekly section
+  const wl=document.getElementById('weekly-quests-list');
+  if(wl) wl.innerHTML=player.weeklyQuests.map(questCardHTML).join('');
+  // Bonus banner if everything (daily + weekly) claimed
+  const allClaimed=player.quests.every(q=>q.claimed)&&player.weeklyQuests.every(q=>q.claimed);
   document.getElementById('quests-bonus').style.display=allClaimed?'block':'none';
-  // Countdown to reset
   updateQuestResetTimer();
 }
 
 function updateQuestResetTimer(){
+  // Daily reset (midnight)
   const el=document.getElementById('quests-reset');
-  if(!el)return;
-  const now=new Date();
-  const tomorrow=new Date(now);tomorrow.setHours(24,0,0,0);
-  const diff=tomorrow-now;
-  const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000);
-  el.textContent=`⏳ Nouvelles quêtes dans ${h}h ${m}min`;
+  if(el){
+    const now=new Date();
+    const tomorrow=new Date(now);tomorrow.setHours(24,0,0,0);
+    const diff=tomorrow-now;
+    const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000);
+    el.textContent=`⏳ Journalières dans ${h}h ${m}min`;
+  }
+  // Weekly reset (next Monday)
+  const wel=document.getElementById('weekly-quests-reset');
+  if(wel){
+    const now=new Date();
+    const day=(now.getDay()+6)%7; // 0=Monday
+    const nextMon=new Date(now); nextMon.setDate(now.getDate()+(7-day)); nextMon.setHours(0,0,0,0);
+    const diff=nextMon-now;
+    const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000);
+    wel.textContent=`⏳ Hebdomadaires dans ${d}j ${h}h`;
+  }
 }
 
 function updateQuestsBadge(){
   ensureDailyQuests();
-  const claimable=player.quests.filter(q=>q.progress>=q.goal&&!q.claimed).length;
+  ensureWeeklyQuests();
+  const daily=player.quests.filter(q=>q.progress>=q.goal&&!q.claimed).length;
+  const weekly=player.weeklyQuests.filter(q=>q.progress>=q.goal&&!q.claimed).length;
+  const claimable=daily+weekly;
   const badge=document.getElementById('nav-quests-badge');
   if(badge){badge.style.display=claimable>0?'':'none';badge.textContent=claimable;}
 }
@@ -2048,7 +2134,7 @@ const SHOP_CHESTS=[
 function saveProgress(){
   localStorage.setItem('clashArena',JSON.stringify({
     pseudo:player.pseudo,avatar:player.avatar,level:player.level,xp:player.xp,trophies:player.trophies,wins:player.wins,losses:player.losses,
-    gold:player.gold,gems:player.gems,chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,quests:player.quests,questDay:player.questDay,rankedRP:player.rankedRP,rankedWins:player.rankedWins,rankedLosses:player.rankedLosses,deck:player.deck
+    gold:player.gold,gems:player.gems,chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,quests:player.quests,questDay:player.questDay,weeklyQuests:player.weeklyQuests,questWeek:player.questWeek,rankedRP:player.rankedRP,rankedWins:player.rankedWins,rankedLosses:player.rankedLosses,deck:player.deck
   }));
   if(typeof scheduleCloudSave==='function') scheduleCloudSave();
 }
@@ -2071,6 +2157,8 @@ function loadProgress(){
     if(Array.isArray(data.powers)&&data.powers.length===2) player.powers=data.powers;
     if(Array.isArray(data.quests))              player.quests=data.quests;
     if(data.questDay)                           player.questDay=data.questDay;
+    if(Array.isArray(data.weeklyQuests))        player.weeklyQuests=data.weeklyQuests;
+    if(data.questWeek)                          player.questWeek=data.questWeek;
     if(typeof data.rankedRP==='number')         player.rankedRP=data.rankedRP;
     if(typeof data.rankedWins==='number')       player.rankedWins=data.rankedWins;
     if(typeof data.rankedLosses==='number')     player.rankedLosses=data.rankedLosses;
@@ -2810,7 +2898,7 @@ function showRankedResult(winner){
 
   addHistory(icon,winner);
   trackQuest('play',1);
-  if(rpDelta>0) trackQuest('win',1);
+  if(rpDelta>0){ trackQuest('win',1); trackQuest('rankedwin',1); }
   saveProgress();
   syncUI();
 
@@ -3022,7 +3110,7 @@ function savePseudo(){
 
 function resetProgress(){
   if(!confirm('Réinitialiser toute ta progression ?')) return;
-  player = {pseudo:player.pseudo||'Joueur',avatar:player.avatar||'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,rankedRP:0,rankedWins:0,rankedLosses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+  player = {pseudo:player.pseudo||'Joueur',avatar:player.avatar||'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,weeklyQuests:null,questWeek:null,rankedRP:0,rankedWins:0,rankedLosses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
   saveProgress();
   syncUI();
   buildSettingsPage();
@@ -3498,16 +3586,27 @@ async function joinRankedQueue(){
   if(!(player.pseudo&&player.pseudo!=='Joueur')){toast('👤 Choisis un pseudo d\'abord');return;}
   if(_isBanned){showBanScreen();return;}
   saveProgress(); // push latest so the opponent faces your real level
-  rankedSearching=true;
-  rankedSearchStart=Date.now();
   const lg=getCurrentLeague();
+  // Insert into queue — verify it worked (catches missing table / RLS issues)
   try{
-    await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue`,{
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue`,{
       method:'POST',
       headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
       body:JSON.stringify({pseudo:player.pseudo,rp:player.rankedRP,league_id:lg.id,status:'searching',room_id:null,joined_at:new Date().toISOString()})
     });
-  }catch(e){}
+    if(!res.ok){
+      const txt=await res.text();
+      console.error('Ranked queue error:',res.status,txt);
+      if(res.status===404||/does not exist|relation/i.test(txt)){
+        toast('⚙️ Table "clash_ranked_queue" manquante — lance le SQL dans Supabase',4500);
+      } else {
+        toast('❌ Erreur file classée ('+res.status+')',3500);
+      }
+      return;
+    }
+  }catch(e){ toast('❌ Erreur réseau (classé)'); return; }
+  rankedSearching=true;
+  rankedSearchStart=Date.now();
   renderRankedPanel();
   SFX.challenge();
   clearInterval(rankedQueueTimer);
@@ -3538,12 +3637,17 @@ async function rankedMatchmakingTick(){
       return;
     }
     // 2) Find an opponent (I host if my pseudo sorts before theirs)
-    // Only consider players seen in the last 15s (avoids matching closed tabs)
-    const fresh=new Date(Date.now()-15000).toISOString();
-    const oppR=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?status=eq.searching&pseudo=neq.${encodeURIComponent(player.pseudo)}&joined_at=gte.${fresh}&order=joined_at.asc&limit=20`,
+    const oppR=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?status=eq.searching&pseudo=neq.${encodeURIComponent(player.pseudo)}&order=joined_at.asc&limit=20`,
       {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
     let opps=await oppR.json();
-    if(!Array.isArray(opps)||!opps.length){ rankedHeartbeat(); return; }
+    if(!Array.isArray(opps)){ rankedHeartbeat(); return; }
+    // Keep only players seen in the last 20s (client-side, avoids closed tabs)
+    const now=Date.now();
+    opps=opps.filter(o=>{
+      const t=o.joined_at?new Date(o.joined_at).getTime():0;
+      return (now-t)<20000;
+    });
+    if(!opps.length){ rankedHeartbeat(); return; }
     // Prefer the closest RP (similar rank)
     opps.sort((a,b)=>Math.abs((a.rp||0)-player.rankedRP)-Math.abs((b.rp||0)-player.rankedRP));
     const opp=opps[0];
@@ -4795,6 +4899,7 @@ async function saveToCloud(){
       wins:player.wins,losses:player.losses,gold:player.gold,gems:player.gems,
       chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,
       quests:player.quests,questDay:player.questDay,
+      weeklyQuests:player.weeklyQuests,questWeek:player.questWeek,
       rankedRP:player.rankedRP,rankedWins:player.rankedWins,rankedLosses:player.rankedLosses,
       deck:player.deck
     };
@@ -4849,11 +4954,14 @@ async function loadFromCloud(force=false){
     if(Array.isArray(d.powers)&&d.powers.length===2) player.powers=d.powers;
     if(Array.isArray(d.quests)) player.quests=d.quests;
     if(d.questDay) player.questDay=d.questDay;
+    if(Array.isArray(d.weeklyQuests)) player.weeklyQuests=d.weeklyQuests;
+    if(d.questWeek) player.questWeek=d.questWeek;
     if(typeof d.rankedRP==='number') player.rankedRP=d.rankedRP;
     if(typeof d.rankedWins==='number') player.rankedWins=d.rankedWins;
     if(typeof d.rankedLosses==='number') player.rankedLosses=d.rankedLosses;
     if(Array.isArray(d.deck)&&d.deck.length>=4) player.deck=d.deck;
     ensureDailyQuests(); // refresh if it's a new day
+    ensureWeeklyQuests(); // refresh if it's a new week
     saveProgress(); // mirror to local cache
   }catch(e){}
 }
@@ -5097,8 +5205,9 @@ pollChallenges();
 // Check ban status at startup and every 10s
 checkIfBanned();
 setInterval(checkIfBanned,10000);
-// Daily quests: generate today's and show badge
+// Daily + weekly quests: generate and show badge
 ensureDailyQuests();
+ensureWeeklyQuests();
 updateQuestsBadge();
 setInterval(updateQuestResetTimer,60000);
 // Show tutorial on first launch
