@@ -1132,6 +1132,35 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 }
 .quests-bonus-title{font-family:'Cinzel',serif;font-size:.75rem;color:var(--gold);letter-spacing:1px}
 .quests-bonus-sub{font-size:.62rem;color:var(--text-dim);margin-top:4px}
+/* ── 2FA MODALS ── */
+#twofa-setup-modal,#twofa-login-modal{
+  position:fixed;inset:0;z-index:5500;background:rgba(8,4,20,.95);
+  display:none;align-items:center;justify-content:center;padding:20px;
+}
+#twofa-setup-modal.show,#twofa-login-modal.show{display:flex}
+.twofa-box{
+  background:linear-gradient(160deg,#1a0e3a,#241252);
+  border:2px solid var(--gold);border-radius:20px;
+  max-width:340px;width:100%;padding:24px 22px;text-align:center;position:relative;
+  box-shadow:0 0 40px rgba(255,215,0,.25);max-height:90vh;overflow-y:auto;
+}
+.twofa-icon{font-size:3rem;line-height:1;margin-bottom:6px}
+.twofa-title{font-family:'Cinzel',serif;font-size:1.3rem;color:var(--gold);letter-spacing:2px;margin-bottom:14px}
+.twofa-step{font-size:.72rem;color:var(--text-dim);line-height:1.5;margin:12px 0 8px;text-align:left}
+.twofa-qr-wrap{background:#fff;border-radius:12px;padding:10px;display:inline-block;margin:4px auto}
+.twofa-qr-wrap img{width:160px;height:160px;display:block}
+.twofa-secret-hint{font-size:.62rem;color:var(--text-dim);margin-top:10px}
+.twofa-secret{
+  font-family:monospace;font-size:.78rem;color:var(--gold);
+  background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.25);
+  border-radius:8px;padding:8px;margin:6px 0;word-break:break-all;letter-spacing:1px;
+}
+.twofa-code-input{
+  width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,215,0,.3);
+  border-radius:10px;padding:14px;color:var(--text);font-family:'Cinzel',serif;
+  font-size:1.4rem;text-align:center;letter-spacing:8px;outline:none;margin:8px 0;
+}
+.twofa-code-input:focus{border-color:var(--gold)}
 </style>
 </head>
 <body>
@@ -1334,6 +1363,10 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
           <button class="settings-btn" onclick="manualCloudLoad()">📥 Récupérer</button>
         </div>
       </div>
+      <div class="settings-row" id="account-2fa-row" style="display:none">
+        <div><div class="settings-label" id="twofa-status-label">🔐 Double authentification</div><div class="settings-sub" id="twofa-status-sub">Protège ton compte avec un code</div></div>
+        <button class="settings-btn" id="twofa-btn" onclick="toggle2FA()">ACTIVER</button>
+      </div>
     </div>
 
     <div class="settings-block">
@@ -1517,6 +1550,36 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
   <div class="chest-open-hint" id="chest-open-hint">Tape pour ouvrir !</div>
   <div class="chest-rewards" id="chest-rewards" style="display:none"></div>
   <button class="ov-btn" id="chest-collect-btn" style="display:none" onclick="closeChestModal()">RÉCUPÉRER</button>
+</div>
+
+<!-- 2FA SETUP MODAL -->
+<div id="twofa-setup-modal">
+  <div class="twofa-box">
+    <button class="cm-close" onclick="close2FASetup()">✕</button>
+    <div class="twofa-icon">🔐</div>
+    <div class="twofa-title">Activer la 2FA</div>
+    <div class="twofa-step">1. Scanne ce QR code avec ton app d'authentification (Google Authenticator, Authy…)</div>
+    <div class="twofa-qr-wrap"><img id="twofa-qr" alt="QR code 2FA"></div>
+    <div class="twofa-secret-hint">Ou entre cette clé manuellement :</div>
+    <div class="twofa-secret" id="twofa-secret">—</div>
+    <div class="twofa-step">2. Entre le code à 6 chiffres affiché dans l'app :</div>
+    <input class="twofa-code-input" id="twofa-setup-code" type="text" inputmode="numeric" maxlength="6" placeholder="000000" onkeydown="if(event.key==='Enter')verify2FASetup()">
+    <button class="auth-btn" id="twofa-setup-verify" onclick="verify2FASetup()">VÉRIFIER & ACTIVER</button>
+    <div class="auth-msg" id="twofa-setup-msg"></div>
+  </div>
+</div>
+
+<!-- 2FA LOGIN MODAL -->
+<div id="twofa-login-modal">
+  <div class="twofa-box">
+    <div class="twofa-icon">🔐</div>
+    <div class="twofa-title">Vérification 2FA</div>
+    <div class="twofa-step">Entre le code à 6 chiffres de ton app d'authentification pour te connecter.</div>
+    <input class="twofa-code-input" id="twofa-login-code" type="text" inputmode="numeric" maxlength="6" placeholder="000000" onkeydown="if(event.key==='Enter')submit2FALogin()">
+    <button class="auth-btn" id="twofa-login-verify" onclick="submit2FALogin()">VÉRIFIER</button>
+    <div class="auth-msg" id="twofa-login-msg"></div>
+    <button class="auth-skip" onclick="cancel2FALogin()">Annuler</button>
+  </div>
 </div>
 
 <!-- OVERLAY (pre-battle only) -->
@@ -2761,6 +2824,12 @@ function buildSettingsPage(){
   }
   const syncRow=document.getElementById('account-sync-row');
   if(syncRow) syncRow.style.display=currentUser?'flex':'none';
+  // 2FA row
+  const tfaRow=document.getElementById('account-2fa-row');
+  if(tfaRow){
+    tfaRow.style.display=currentUser?'flex':'none';
+    if(currentUser) refresh2FAStatus();
+  }
   // Audio toggles
   const st=document.getElementById('sound-toggle');
   const mt=document.getElementById('music-toggle');
@@ -3655,7 +3724,7 @@ function maybeShowTutorial(){
 }
 
 // ══ EMOTES (in-battle) ══
-const EMOTES=['👍','😂','😎','😡','😭','👑','🔥','💀','❤️','🎉','🤝','😴'];
+const EMOTES=['👍','😂','😎','😡','😭','👑','🔥','💀','❤️','🎉','🤝','😴','🎃','⚔️','🤣','😏'];
 
 function buildEmoteTray(){
   const tray=document.getElementById('emote-tray');
@@ -4328,6 +4397,14 @@ let cloudSaveTimer=null;
 let mySessionId=null;  // unique id for this device's session
 let sessionCheckTimer=null;
 function genSessionId(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,10); }
+// Each device keeps a STABLE session id in localStorage, so reopening the
+// game on the same device reuses it (no self-eviction). Only a different
+// device (different localStorage) gets a different id.
+function getDeviceSessionId(){
+  let id=localStorage.getItem('clashDeviceSession');
+  if(!id){ id=genSessionId(); localStorage.setItem('clashDeviceSession',id); }
+  return id;
+}
 
 function switchAuthTab(mode){
   authMode=mode;
@@ -4370,6 +4447,13 @@ async function submitAuth(){
       const {data,error}=await sb.auth.signInWithPassword({email,password});
       if(error){ setAuthMsg(translateAuthError(error.message),'error'); btn.disabled=false; return; }
       currentUser=data.user;
+      // Check if this account requires a 2FA code
+      if(await needs2FA()){
+        btn.disabled=false;
+        setAuthMsg('');
+        show2FALoginModal();
+        return;
+      }
       setAuthMsg('✅ Connecté !','success');
       await loadFromCloud();
       finishLogin();
@@ -4507,7 +4591,10 @@ async function checkAuthSession(){
 // When you log in, you claim the session. Other devices get kicked.
 async function claimSession(){
   if(!sb||!currentUser)return;
-  mySessionId=genSessionId();
+  // Reuse this device's stable id so reopening the game on the SAME device
+  // doesn't evict itself. Only a different device (different localStorage)
+  // gets a different id and kicks the old one.
+  mySessionId=getDeviceSessionId();
   try{
     await sb.from('clash_saves').upsert({
       user_id:currentUser.id,
@@ -4546,6 +4633,151 @@ function kickedBySession(){
   stopMusic();
   // Show a message then the login screen
   setAuthMsg('⚠️ Connecté sur un autre appareil — tu as été déconnecté ici.','error');
+  showAuthScreen();
+}
+
+// ── 2FA / MFA (Supabase TOTP) ──
+let twofaSetupFactorId=null;
+
+// Does the current user have a verified 2FA factor?
+async function has2FA(){
+  if(!sb||!currentUser)return false;
+  try{
+    const {data}=await sb.auth.mfa.listFactors();
+    const totp=(data&&data.totp)||[];
+    return totp.some(f=>f.status==='verified');
+  }catch(e){return false;}
+}
+
+// Does login currently require a 2FA challenge?
+async function needs2FA(){
+  if(!sb)return false;
+  try{
+    const {data}=await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+    return data && data.nextLevel==='aal2' && data.currentLevel!=='aal2';
+  }catch(e){return false;}
+}
+
+function set2FASetupMsg(msg,type=''){
+  const el=document.getElementById('twofa-setup-msg');
+  if(el){el.textContent=msg;el.className='auth-msg'+(type?' '+type:'');}
+}
+function set2FALoginMsg(msg,type=''){
+  const el=document.getElementById('twofa-login-msg');
+  if(el){el.textContent=msg;el.className='auth-msg'+(type?' '+type:'');}
+}
+
+// Update the settings button label based on whether 2FA is on
+async function refresh2FAStatus(){
+  const btn=document.getElementById('twofa-btn');
+  const sub=document.getElementById('twofa-status-sub');
+  if(!btn)return;
+  const on=await has2FA();
+  btn.textContent=on?'DÉSACTIVER':'ACTIVER';
+  if(sub) sub.textContent=on?'✅ Ton compte est protégé':'Protège ton compte avec un code';
+}
+
+// Toggle button in settings
+async function toggle2FA(){
+  if(!sb||!currentUser){toast('Connecte-toi d\'abord');return;}
+  const on=await has2FA();
+  if(on) disable2FA();
+  else start2FASetup();
+}
+
+// Begin enrollment: get QR code
+async function start2FASetup(){
+  if(!sb||!currentUser){toast('Connecte-toi d\'abord');return;}
+  try{
+    // Clean up any leftover unverified factors first
+    const {data:list}=await sb.auth.mfa.listFactors();
+    if(list&&list.all){
+      for(const f of list.all){ if(f.status!=='verified'){ try{await sb.auth.mfa.unenroll({factorId:f.id});}catch(e){} } }
+    }
+    const {data,error}=await sb.auth.mfa.enroll({factorType:'totp',friendlyName:'Zyntra-'+Date.now()});
+    if(error){toast('❌ '+error.message);return;}
+    twofaSetupFactorId=data.id;
+    document.getElementById('twofa-qr').src=data.totp.qr_code;
+    document.getElementById('twofa-secret').textContent=data.totp.secret;
+    document.getElementById('twofa-setup-code').value='';
+    set2FASetupMsg('');
+    document.getElementById('twofa-setup-modal').classList.add('show');
+    SFX.click();
+  }catch(e){toast('❌ Erreur 2FA');}
+}
+
+async function verify2FASetup(){
+  if(!twofaSetupFactorId)return;
+  const code=document.getElementById('twofa-setup-code').value.trim();
+  if(code.length<6){set2FASetupMsg('Entre le code à 6 chiffres','error');return;}
+  const btn=document.getElementById('twofa-setup-verify');btn.disabled=true;
+  try{
+    const {data:ch,error:chErr}=await sb.auth.mfa.challenge({factorId:twofaSetupFactorId});
+    if(chErr){set2FASetupMsg(chErr.message,'error');btn.disabled=false;return;}
+    const {error}=await sb.auth.mfa.verify({factorId:twofaSetupFactorId,challengeId:ch.id,code});
+    if(error){set2FASetupMsg('❌ Code incorrect, réessaie','error');btn.disabled=false;return;}
+    set2FASetupMsg('✅ 2FA activée !','success');
+    SFX.victory();launchConfetti();
+    setTimeout(()=>{
+      document.getElementById('twofa-setup-modal').classList.remove('show');
+      btn.disabled=false;
+      buildSettingsPage();
+    },1300);
+  }catch(e){set2FASetupMsg('Erreur','error');btn.disabled=false;}
+}
+
+function close2FASetup(){
+  document.getElementById('twofa-setup-modal').classList.remove('show');
+  // Remove the unverified factor we just created
+  if(twofaSetupFactorId){
+    sb.auth.mfa.unenroll({factorId:twofaSetupFactorId}).catch(()=>{});
+    twofaSetupFactorId=null;
+  }
+}
+
+async function disable2FA(){
+  if(!confirm('Désactiver la double authentification ? Ton compte sera moins protégé.'))return;
+  try{
+    const {data:list}=await sb.auth.mfa.listFactors();
+    const all=(list&&list.all)||[];
+    for(const f of all){ try{await sb.auth.mfa.unenroll({factorId:f.id});}catch(e){} }
+    toast('🔓 2FA désactivée');
+    SFX.notify();
+    buildSettingsPage();
+  }catch(e){toast('❌ Erreur');}
+}
+
+// Shown at login when a 2FA code is required
+function show2FALoginModal(){
+  document.getElementById('twofa-login-code').value='';
+  set2FALoginMsg('');
+  document.getElementById('twofa-login-modal').classList.add('show');
+  setTimeout(()=>document.getElementById('twofa-login-code').focus(),200);
+}
+async function submit2FALogin(){
+  const code=document.getElementById('twofa-login-code').value.trim();
+  if(code.length<6){set2FALoginMsg('Code à 6 chiffres','error');return;}
+  const btn=document.getElementById('twofa-login-verify');btn.disabled=true;
+  try{
+    const {data:list}=await sb.auth.mfa.listFactors();
+    const factor=((list&&list.totp)||[]).find(f=>f.status==='verified');
+    if(!factor){set2FALoginMsg('Aucun facteur 2FA','error');btn.disabled=false;return;}
+    const {data:ch,error:chErr}=await sb.auth.mfa.challenge({factorId:factor.id});
+    if(chErr){set2FALoginMsg(chErr.message,'error');btn.disabled=false;return;}
+    const {error}=await sb.auth.mfa.verify({factorId:factor.id,challengeId:ch.id,code});
+    if(error){set2FALoginMsg('❌ Code incorrect','error');btn.disabled=false;return;}
+    // Verified! Finish login
+    document.getElementById('twofa-login-modal').classList.remove('show');
+    btn.disabled=false;
+    await loadFromCloud();
+    finishLogin();
+  }catch(e){set2FALoginMsg('Erreur','error');btn.disabled=false;}
+}
+function cancel2FALogin(){
+  document.getElementById('twofa-login-modal').classList.remove('show');
+  // Sign out — login wasn't completed
+  if(sb){ try{ sb.auth.signOut(); }catch(e){} }
+  currentUser=null;
   showAuthScreen();
 }
 
