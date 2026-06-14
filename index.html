@@ -137,7 +137,7 @@
         <span class="menu-jeux-titre">🎮 Jeux ▾</span>
         <div class="menu-jeux-dropdown">
             <a href="morpion.html">⭕ Morpion</a>
-            <a href="clash_arena.html">🏯 Clash arena</a>
+            <a href="clash_arena.html">🏯 Zyntra arena</a>
         </div>
     </div>
 
@@ -173,6 +173,11 @@
         <div class="icon">💡</div>
         <h3>Solutions Digitales</h3>
         <p>Des solutions sur mesure pour votre présence digitale.</p>
+    </div>
+    <div class="service-card">
+        <div class="icon">💡</div>
+        <h3>Jeu video</h3>
+        <p>Des jeu vidéo cool pour vous amuser avec vos pote.</p>
     </div>
 </div>
 
@@ -255,6 +260,10 @@
             document.getElementById('menu-login').style.display = 'none';
             document.getElementById('menu-register').style.display = 'none';
         }
+    }
+    async function vérifierSiPasConecter(){
+        const {data:{ user }} = await supabaseClient.auth.getUser();
+        if not (user){document.getElementById('menu-jeux-titre').style.display = 'none';} 
     }
     verifierConnexion();
 </script>
