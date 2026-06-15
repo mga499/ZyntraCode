@@ -3922,6 +3922,12 @@ const SUPABASE_KEY = 'sb_publishable_7oQ8rUh7OCE0Uo-DUwSUcw_CKOPnCU4';
 
 const SUPABASE_READY = SUPABASE_URL !== 'https://TON-PROJET.supabase.co';
 
+// ── Anti-cheat: when true, scores are submitted through the validated
+//    Edge Function "submit-score" instead of being written directly.
+//    Set to true ONLY after you've deployed the function + run setup.sql
+//    (see the anti-cheat/ folder). Until then, leave it false. ──
+const USE_SECURE_SCORE = true;
+
 // ══ SETTINGS PAGE ══
 const AVATARS=['🧙','⚔️','🏹','👑','🐉','🤴','👸','🧝','🧚','🦸','🦹','🥷','🧛','🧟','👹','👺','🤖','🦁','🐺','🦅','🐲','🔥','💀','⭐'];
 
@@ -4039,6 +4045,28 @@ async function publishScore(){
   if(!SUPABASE_READY){ toast('⚙️ Configure d\'abord Supabase dans le code !'); return; }
   const pseudo = player.pseudo||'Joueur';
   if(pseudo==='Joueur'){ toast('⚠️ Change ton pseudo dans Réglages d\'abord !'); return; }
+
+  // ── Secure path: validated server-side via the Edge Function ──
+  if(USE_SECURE_SCORE){
+    if(!sb||!currentUser){ toast('🔐 Connecte-toi pour publier ton score'); return; }
+    try{
+      const { data:{ session } } = await sb.auth.getSession();
+      const token = session && session.access_token;
+      if(!token){ toast('🔐 Session expirée, reconnecte-toi'); return; }
+      const res = await fetch(`${SUPABASE_URL}/functions/v1/submit-score`,{
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
+        body: JSON.stringify({ pseudo, trophies:player.trophies, wins:player.wins, losses:player.losses })
+      });
+      const out = await res.json().catch(()=>({}));
+      if(!res.ok){ toast('❌ '+(out.error||'Publication refusée')); return; }
+      toast('🌍 Score publié (vérifié) !');
+      loadLeaderboard();
+    }catch(e){ toast('❌ Erreur de connexion'); }
+    return;
+  }
+
+  // ── Legacy path: direct write (used until the Edge Function is deployed) ──
   try {
     // Upsert: update if pseudo exists, insert otherwise
     const res = await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?pseudo=eq.${encodeURIComponent(pseudo)}`, {
@@ -4423,6 +4451,39 @@ function startMultiplayerGuest(hostPseudo,roomId){
   launchMpGame();
 }
 
+// ── Multiplayer disconnect detection ──
+let mpLastOpponentMsg=0;
+let mpWatchdog=null;
+let mpPingTimer=null;
+const MP_TIMEOUT_MS=10000; // opponent considered gone after 10s of silence
+function startMpWatchdog(){
+  stopMpWatchdog();
+  // Send a heartbeat ping every 2s so the opponent knows we're alive
+  mpPingTimer=setInterval(()=>{
+    if(mpChannel&&mpMode){ try{ mpChannel.send({type:'broadcast',event:'ping',payload:{}}); }catch(e){} }
+  },2000);
+  // Check every 3s whether the opponent has gone silent
+  mpWatchdog=setInterval(()=>{
+    if(!mpMode||!gs||!gs.running)return;
+    if(Date.now()-mpLastOpponentMsg>MP_TIMEOUT_MS){
+      handleMpOpponentLeft();
+    }
+  },3000);
+}
+function stopMpWatchdog(){
+  clearInterval(mpWatchdog);mpWatchdog=null;
+  clearInterval(mpPingTimer);mpPingTimer=null;
+}
+function handleMpOpponentLeft(){
+  if(!mpMode)return;
+  stopMpWatchdog();
+  gs.running=false;if(animId)cancelAnimationFrame(animId);
+  document.body.classList.remove('selecting');
+  toast('🏆 Adversaire déconnecté — victoire par forfait !',3500);
+  // The present player wins
+  endMpGame('player');
+}
+
 function launchMpGame(){
   document.getElementById('overlay').classList.add('hidden');
   document.body.classList.remove('selecting');
@@ -4438,8 +4499,10 @@ function launchMpGame(){
   buildEmoteTray();
   // Subscribe to Supabase Realtime
   if(sb){
+    mpLastOpponentMsg=Date.now();
     mpChannel=sb.channel('game:'+mpRoomId);
     mpChannel.on('broadcast',{event:'deploy'},(msg)=>{
+      mpLastOpponentMsg=Date.now();
       // Guest deployed a troop → host spawns as enemy
       if(mpMode==='host'){
         const c=ALL_CARDS.find(x=>x.id===msg.payload.cardId);
@@ -4447,15 +4510,19 @@ function launchMpGame(){
       }
     });
     mpChannel.on('broadcast',{event:'state'},(msg)=>{
+      mpLastOpponentMsg=Date.now();
       // Host sent game state → guest renders
       if(mpMode==='guest') renderGuestState(msg.payload);
     });
+    mpChannel.on('broadcast',{event:'ping'},()=>{ mpLastOpponentMsg=Date.now(); });
     mpChannel.on('broadcast',{event:'emote'},(msg)=>{
+      mpLastOpponentMsg=Date.now();
       // Opponent sent an emote
       showFlyingEmote(msg.payload.emoji,'enemy');
       SFX.notify();
     });
     mpChannel.on('broadcast',{event:'end'},(msg)=>{
+      mpLastOpponentMsg=Date.now();
       if(mpMode==='guest'){
         gs.running=false;if(animId)cancelAnimationFrame(animId);
         document.body.classList.remove('selecting');
@@ -4471,6 +4538,7 @@ function launchMpGame(){
         animId=requestAnimationFrame(guestRenderLoop);
       }
     });
+    startMpWatchdog();
   } else {
     // Fallback: polling for guest, direct start for host
     animId=requestAnimationFrame(mpMode==='host'?gameLoop:guestPollLoop);
@@ -4643,6 +4711,7 @@ function startRankedMatch(opponentPseudo,roomId,asHost){
 
 function cancelMp(){
   if(window._mpWaitInterval)clearInterval(window._mpWaitInterval);
+  if(typeof stopMpWatchdog==='function') stopMpWatchdog();
   if(mpRoomId){
     fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${mpRoomId}`,{
       method:'PATCH',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
@@ -4795,6 +4864,7 @@ function renderGuestState(state){
 
 // ── End multiplayer ──
 function endMpGame(winner){
+  stopMpWatchdog();
   // Host: notify guest BEFORE closing the channel
   if(mpMode==='host'&&mpChannel){
     mpChannel.send({type:'broadcast',event:'end',payload:{winner}});
@@ -5111,6 +5181,7 @@ function closeChat(){
   SFX.click();
 }
 async function loadChatMessages(){
+  if(document.hidden)return; // skip polling when tab is in the background
   if(!chatFriend||!SUPABASE_READY)return;
   const me=player.pseudo;
   try{
@@ -5209,6 +5280,7 @@ function refreshGchatNotifBtn(){
 }
 
 async function loadGlobalChat(){
+  if(document.hidden)return; // skip polling when tab is in the background
   if(!SUPABASE_READY)return;
   try{
     const r=await fetch(`${SUPABASE_URL}/rest/v1/clash_global_chat?order=created_at.desc&limit=60`,
@@ -5827,6 +5899,7 @@ function updatePowers(dt){
 // ══ BAN ENFORCEMENT ══
 let banCheckActive=true;
 async function checkIfBanned(){
+  if(document.hidden)return; // skip polling when tab is in the background
   if(!SUPABASE_READY||!banCheckActive)return;
   if(!(player.pseudo&&player.pseudo!=='Joueur'))return; // no pseudo set yet
   try{
@@ -6087,6 +6160,7 @@ function stopSessionCheck(){
   sessionCheckTimer=null;
 }
 async function checkSession(){
+  if(document.hidden)return; // skip polling when tab is in the background
   if(!sb||!currentUser||!mySessionId)return;
   try{
     const {data,error}=await sb.from('clash_saves').select('active_session').eq('user_id',currentUser.id).maybeSingle();
@@ -6268,7 +6342,14 @@ setInterval(pollChallenges,5000);
 pollChallenges();
 // Check ban status at startup and every 10s
 checkIfBanned();
-setInterval(checkIfBanned,10000);
+setInterval(checkIfBanned,25000);
+// When the player returns to the tab, run checks immediately (catch up on what was paused)
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden){
+    checkIfBanned();
+    if(typeof checkSession==='function') checkSession();
+  }
+});
 // Daily + weekly quests: generate and show badge
 ensureDailyQuests();
 ensureWeeklyQuests();
