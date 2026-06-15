@@ -34,6 +34,14 @@ body{
 }
 #app-logo{font-family:'Cinzel',serif;font-size:.82rem;color:var(--gold);letter-spacing:1px;text-shadow:0 0 16px rgba(255,215,0,.5);white-space:nowrap;flex-shrink:0}
 #header-currency{display:flex;align-items:center;gap:5px;flex-shrink:0}
+#header-menu-btn{
+  background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--gold);
+  width:30px;height:30px;border-radius:9px;cursor:pointer;flex-shrink:0;
+  font-size:1.25rem;line-height:1;display:flex;align-items:center;justify-content:center;
+  font-weight:700;transition:background .15s,transform .15s;
+}
+#header-menu-btn:hover{background:rgba(255,215,0,.18);transform:scale(1.08)}
+#header-menu-btn:active{transform:scale(.94)}
 .currency-pill{
   display:flex;align-items:center;gap:3px;
   background:rgba(255,255,255,.06);border:1px solid var(--border);
@@ -708,6 +716,145 @@ body.selecting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair}
   display:none;flex-direction:column;max-width:440px;margin:0 auto;
 }
 #chat-modal.show{display:flex}
+#global-chat-panel{
+  position:fixed;inset:0;z-index:360;background:var(--bg);
+  display:none;flex-direction:column;max-width:440px;margin:0 auto;
+}
+#global-chat-panel.show{display:flex}
+/* ── BATTLE PASS ── */
+#battle-pass-panel{
+  position:fixed;inset:0;z-index:360;background:var(--bg);
+  display:none;flex-direction:column;max-width:440px;margin:0 auto;
+}
+#battle-pass-panel.show{display:flex}
+/* ── HOME FEATURE BUTTONS ── */
+.home-feature-row{display:flex;gap:10px;padding:0 16px;margin-bottom:12px}
+.home-feature-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:12px;border-radius:14px;cursor:pointer;position:relative;
+  background:var(--card-bg);border:1px solid var(--border);transition:transform .12s,border-color .15s;
+}
+.home-feature-btn:active{transform:scale(.96)}
+.home-feature-btn:hover{border-color:var(--gold)}
+.hf-icon{font-size:1.7rem;line-height:1}
+.hf-label{font-family:'Cinzel',serif;font-size:.7rem;color:var(--gold);letter-spacing:1px}
+.hf-badge{
+  position:absolute;top:6px;right:10px;background:var(--red);color:#fff;
+  min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;font-weight:900;padding:0 5px;border:2px solid var(--bg);
+}
+/* ── ACHIEVEMENTS ── */
+#achievements-panel,#tournament-panel{
+  position:fixed;inset:0;z-index:360;background:var(--bg);
+  display:none;flex-direction:column;max-width:440px;margin:0 auto;
+}
+#achievements-panel.show,#tournament-panel.show{display:flex}
+.ach-list{flex:1;overflow-y:auto;padding:14px}
+.ach-cat-title{font-family:'Cinzel',serif;font-size:.78rem;color:var(--gold);letter-spacing:1px;margin:14px 0 8px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+.ach-cat-title:first-child{margin-top:0}
+.ach-card{display:flex;align-items:center;gap:12px;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:11px;margin-bottom:9px}
+.ach-card.done{border-color:var(--gold);box-shadow:0 0 12px rgba(255,215,0,.2)}
+.ach-card.claimed{opacity:.6}
+.ach-icon{font-size:1.9rem;flex-shrink:0;width:42px;text-align:center}
+.ach-info{flex:1;min-width:0}
+.ach-name{font-family:'Cinzel',serif;font-size:.82rem;color:var(--text);font-weight:700}
+.ach-desc{font-size:.62rem;color:var(--text-dim);margin:1px 0 5px}
+.ach-bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden}
+.ach-bar-fill{height:100%;background:var(--mana);border-radius:3px;transition:width .4s}
+.ach-bar-fill.full{background:linear-gradient(90deg,#FFD700,#2ecc71)}
+.ach-prog{font-size:.58rem;color:var(--text-dim);margin-top:4px}
+.ach-rwd{color:var(--gold)}
+.ach-claim{flex-shrink:0;width:42px;height:42px;border:none;border-radius:11px;cursor:pointer;font-size:1.3rem;background:linear-gradient(135deg,#FFD700,#b8960c);animation:bpBounce 1s infinite}
+.ach-tag{flex-shrink:0;color:#2ecc71;font-size:1.3rem;font-weight:900}
+/* ── TOURNAMENT ── */
+.tour-body{flex:1;overflow-y:auto;padding:18px 16px}
+.tour-intro{text-align:center;margin-bottom:18px}
+.tour-trophy{font-size:3.4rem;line-height:1}
+.tour-title{font-family:'Cinzel',serif;font-size:1.2rem;color:var(--gold);letter-spacing:1px;margin-top:6px}
+.tour-desc{font-size:.7rem;color:var(--text-dim);line-height:1.5;margin-top:8px}
+.tour-bracket{display:flex;flex-direction:column;gap:10px;margin:18px 0}
+.tour-round{display:flex;align-items:center;gap:12px;background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:13px}
+.tour-round.current{border-color:var(--gold);box-shadow:0 0 16px rgba(255,215,0,.3)}
+.tour-round.won{border-color:#2ecc71;opacity:.85}
+.tour-round.lost{border-color:var(--red);opacity:.7}
+.tour-round-icon{font-size:1.6rem}
+.tour-round-info{flex:1}
+.tour-round-name{font-family:'Cinzel',serif;font-size:.85rem;color:var(--text)}
+.tour-round-sub{font-size:.6rem;color:var(--text-dim);margin-top:2px}
+.tour-round-status{font-size:1.3rem}
+.tour-start-btn{
+  width:100%;padding:15px;border:none;border-radius:14px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.95rem;font-weight:900;letter-spacing:2px;
+  background:linear-gradient(135deg,#7B1FA2,#b8960c,#FFD700);color:#0d0620;
+  box-shadow:0 4px 20px rgba(255,215,0,.35);
+}
+.tour-start-btn:active{transform:scale(.97)}
+.tour-prize{background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);border-radius:12px;padding:12px;text-align:center;margin-top:14px;font-size:.72rem;color:var(--gold)}
+.bp-banner{
+  width:calc(100% - 32px);margin:0 16px 12px;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;
+  background:linear-gradient(120deg,#4a148c,#7B1FA2,#b8960c);
+  box-shadow:0 4px 20px rgba(123,31,162,.4);position:relative;overflow:hidden;
+}
+.bp-banner:active{transform:scale(.98)}
+.bp-banner-icon{font-size:2rem;flex-shrink:0}
+.bp-banner-text{flex:1;text-align:left}
+.bp-banner-title{font-family:'Cinzel',serif;font-size:.95rem;color:#fff;font-weight:900;letter-spacing:1px}
+.bp-banner-sub{font-size:.62rem;color:rgba(255,255,255,.85);margin-top:2px}
+.bp-banner-arrow{font-size:1.6rem;color:#fff;opacity:.8}
+.bp-banner-badge{
+  position:absolute;top:8px;right:38px;background:var(--red);color:#fff;
+  min-width:20px;height:20px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  font-size:.65rem;font-weight:900;padding:0 5px;border:2px solid #fff;
+}
+.bp-progress-wrap{padding:14px 16px;border-bottom:1px solid var(--border);background:rgba(20,10,45,.6)}
+.bp-progress-bar{height:10px;background:rgba(255,255,255,.1);border-radius:5px;overflow:hidden}
+.bp-progress-fill{height:100%;background:linear-gradient(90deg,#7B1FA2,#FFD700);border-radius:5px;transition:width .4s}
+.bp-progress-text{font-size:.62rem;color:var(--text-dim);margin-top:6px;text-align:center}
+.bp-premium-btn{
+  width:100%;margin-top:10px;padding:11px;border:none;border-radius:11px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.72rem;font-weight:900;letter-spacing:1px;
+  background:linear-gradient(135deg,#FFD700,#b8960c);color:#0d0620;
+}
+.bp-track-legend{display:flex;gap:8px;margin-top:10px}
+.bp-leg-free,.bp-leg-prem{flex:1;text-align:center;font-size:.58rem;font-weight:700;letter-spacing:1px;padding:4px;border-radius:6px;text-transform:uppercase}
+.bp-leg-free{background:rgba(255,255,255,.08);color:var(--text-dim)}
+.bp-leg-prem{background:rgba(255,215,0,.15);color:var(--gold)}
+.bp-tiers{flex:1;overflow-y:auto;padding:10px 12px}
+.bp-tier-row{display:grid;grid-template-columns:36px 1fr 1fr;gap:8px;align-items:stretch;margin-bottom:8px}
+.bp-tier-num{
+  display:flex;align-items:center;justify-content:center;border-radius:8px;
+  background:var(--card-bg);border:1px solid var(--border);color:var(--text-dim);
+  font-family:'Cinzel',serif;font-weight:900;font-size:.85rem;
+}
+.bp-tier-num.on{background:linear-gradient(135deg,#7B1FA2,#9b59b6);color:#fff;border-color:var(--gold)}
+.bp-cell{
+  border-radius:10px;padding:8px 4px;text-align:center;position:relative;
+  border:1px solid var(--border);background:var(--card-bg);transition:transform .12s;
+}
+.bp-cell.free{background:rgba(255,255,255,.04)}
+.bp-cell.prem{background:rgba(255,215,0,.06);border-color:rgba(255,215,0,.2)}
+.bp-cell.locked{opacity:.4}
+.bp-cell.claimed{opacity:.55;border-color:#2ecc71}
+.bp-cell.claimable{cursor:pointer;border-color:var(--gold);box-shadow:0 0 12px rgba(255,215,0,.35);animation:bpPulse 1.5s infinite}
+.bp-cell.claimable:active{transform:scale(.95)}
+@keyframes bpPulse{0%,100%{box-shadow:0 0 8px rgba(255,215,0,.3)}50%{box-shadow:0 0 18px rgba(255,215,0,.6)}}
+.bp-cell-icon{font-size:1.3rem;line-height:1}
+.bp-cell-label{font-size:.6rem;color:var(--text);margin-top:3px;font-weight:700}
+.bp-cell-tag{position:absolute;top:3px;right:5px;font-size:.65rem}
+.bp-cell-tag.claim{animation:bpBounce 1s infinite}
+@keyframes bpBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+#gchat-settings{
+  padding:12px 16px;background:rgba(20,10,45,.95);border-bottom:1px solid var(--border);
+}
+.gchat-set-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.gchat-rules{font-size:.62rem;color:var(--text-dim);line-height:1.4;background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.15);border-radius:8px;padding:8px 10px}
+.gchat-msg{display:flex;flex-direction:column;max-width:80%;padding:7px 11px;border-radius:12px;font-size:.78rem;line-height:1.35;word-break:break-word}
+.gchat-msg.mine{align-self:flex-end;background:linear-gradient(135deg,#7B1FA2,#9b59b6);color:#fff;border-bottom-right-radius:3px}
+.gchat-msg.theirs{align-self:flex-start;background:var(--card-bg);border:1px solid var(--border);border-bottom-left-radius:3px}
+.gchat-msg-author{font-size:.6rem;font-weight:700;color:var(--gold);margin-bottom:2px;display:flex;align-items:center;gap:4px}
+.gchat-msg.mine .gchat-msg-author{color:#ffe082}
+.gchat-msg-time{font-size:.5rem;color:var(--text-dim);margin-top:3px;align-self:flex-end}
 .chat-header{
   display:flex;align-items:center;gap:12px;padding:14px 16px;
   border-bottom:1px solid var(--border);background:rgba(13,6,32,.95);
@@ -1204,22 +1351,22 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 <!-- AUTH SCREEN -->
 <div id="auth-screen">
   <div class="auth-logo">⚔ ZYNTRA ARENA</div>
-  <div class="auth-tagline">Connecte-toi pour sauvegarder ta progression</div>
+  <div class="auth-tagline" data-i18n="auth_tagline">Connecte-toi pour sauvegarder ta progression</div>
   <div class="auth-box">
     <div class="auth-tabs">
-      <button class="auth-tab active" id="auth-tab-login" onclick="switchAuthTab('login')">Connexion</button>
-      <button class="auth-tab" id="auth-tab-signup" onclick="switchAuthTab('signup')">Créer un compte</button>
+      <button class="auth-tab active" id="auth-tab-login" onclick="switchAuthTab('login')" data-i18n="auth_login_tab">Connexion</button>
+      <button class="auth-tab" id="auth-tab-signup" onclick="switchAuthTab('signup')" data-i18n="auth_signup_tab">Créer un compte</button>
     </div>
     <div class="auth-pseudo-row" id="auth-pseudo-row">
-      <input class="auth-input" id="auth-pseudo" type="text" maxlength="16" placeholder="Ton pseudo de jeu">
+      <input class="auth-input" id="auth-pseudo" type="text" maxlength="16" placeholder="Ton pseudo de jeu" data-i18n="auth_pseudo_ph">
     </div>
     <input class="auth-input" id="auth-email" type="email" placeholder="Email" autocomplete="email">
-    <input class="auth-input" id="auth-password" type="password" placeholder="Mot de passe" autocomplete="current-password" onkeydown="if(event.key==='Enter')submitAuth()">
-    <button class="auth-btn" id="auth-submit" onclick="submitAuth()">SE CONNECTER</button>
+    <input class="auth-input" id="auth-password" type="password" placeholder="Mot de passe" data-i18n="auth_pw_ph" autocomplete="current-password" onkeydown="if(event.key==='Enter')submitAuth()">
+    <button class="auth-btn" id="auth-submit" onclick="submitAuth()" data-i18n="auth_login_btn">SE CONNECTER</button>
     <div class="auth-msg" id="auth-msg"></div>
-    <div class="auth-note" id="auth-note">Utilise les mêmes identifiants que sur zyntracode.ch</div>
+    <div class="auth-note" id="auth-note" data-i18n="auth_note_login">Utilise les mêmes identifiants que sur zyntracode.ch</div>
   </div>
-  <button class="auth-skip" onclick="skipAuth()">Jouer sans compte (progression locale uniquement)</button>
+  <button class="auth-skip" onclick="skipAuth()" data-i18n="auth_skip">Jouer sans compte (progression locale uniquement)</button>
 </div>
 
 <header id="app-header">
@@ -1229,6 +1376,7 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
     <div class="currency-pill gems"><span>💎</span><span id="gems-count">0</span></div>
     <div id="header-trophies"><span>🏆</span><span id="trophy-count">0</span></div>
   </div>
+  <button id="header-menu-btn" onclick="openGlobalChat()" title="Chat Global">⋮</button>
 </header>
 
 <!-- HOME -->
@@ -1247,14 +1395,34 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
     </div>
   </div>
   <div class="home-stats">
-    <div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-value" id="stat-trophies">0</div><div class="stat-label">Trophées</div></div>
-    <div class="stat-card"><div class="stat-icon">⚔️</div><div class="stat-value" id="stat-wins">0</div><div class="stat-label">Victoires</div></div>
-    <div class="stat-card"><div class="stat-icon">💀</div><div class="stat-value" id="stat-losses">0</div><div class="stat-label">Défaites</div></div>
+    <div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-value" id="stat-trophies">0</div><div class="stat-label" data-i18n="trophies">Trophées</div></div>
+    <div class="stat-card"><div class="stat-icon">⚔️</div><div class="stat-value" id="stat-wins">0</div><div class="stat-label" data-i18n="wins">Victoires</div></div>
+    <div class="stat-card"><div class="stat-icon">💀</div><div class="stat-value" id="stat-losses">0</div><div class="stat-label" data-i18n="losses">Défaites</div></div>
   </div>
-  <button class="home-btn-battle" onclick="goToBattle()"><span>⚔️</span> COMBATTRE <span>⚔️</span></button>
-  <p class="chest-slots-title">📦 Mes coffres</p>
+  <button class="bp-banner" onclick="openBattlePass()">
+    <div class="bp-banner-icon">🎟️</div>
+    <div class="bp-banner-text">
+      <div class="bp-banner-title" data-i18n="battle_pass">Passe de Combat</div>
+      <div class="bp-banner-sub" id="bp-banner-sub">Palier 0 · récompenses à débloquer</div>
+    </div>
+    <div class="bp-banner-badge" id="pass-badge" style="display:none">0</div>
+    <div class="bp-banner-arrow">›</div>
+  </button>
+  <div class="home-feature-row">
+    <button class="home-feature-btn" onclick="openAchievements()">
+      <span class="hf-icon">🏅</span>
+      <span class="hf-label" data-i18n="achievements">Succès</span>
+      <span class="hf-badge" id="ach-badge" style="display:none">0</span>
+    </button>
+    <button class="home-feature-btn" onclick="openTournament()">
+      <span class="hf-icon">🏆</span>
+      <span class="hf-label" data-i18n="tournament">Tournoi</span>
+    </button>
+  </div>
+  <button class="home-btn-battle" onclick="goToBattle()"><span>⚔️</span> <span data-i18n="fight">COMBATTRE</span> <span>⚔️</span></button>
+  <p class="chest-slots-title" data-i18n="my_chests">📦 Mes coffres</p>
   <div class="chest-slots" id="chest-slots"></div>
-  <p class="section-title">Historique récent</p>
+  <p class="section-title" data-i18n="recent_history">Historique récent</p>
   <div class="recent-section" id="recent-list">
     <div class="recent-row" id="recent-placeholder">
       <div class="recent-icon">⚔️</div>
@@ -1272,27 +1440,27 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 <!-- DECK -->
 <div class="page" id="page-deck">
   <div class="deck-header">
-    <div class="deck-title">Mon Deck</div>
-    <div class="deck-mana-avg">💧 Moy. <span id="avg-mana">4.0</span></div>
+    <div class="deck-title" data-i18n="my_deck">Mon Deck</div>
+    <div class="deck-mana-avg">💧 <span data-i18n="deck_avg">Moy.</span> <span id="avg-mana">4.0</span></div>
   </div>
-  <p style="font-size:.62rem;color:var(--text-dim);padding:0 16px 4px;letter-spacing:.5px">Tape une carte pour voir ses stats et l'améliorer ⬆️</p>
+  <p data-i18n="deck_hint" style="font-size:.62rem;color:var(--text-dim);padding:0 16px 4px;letter-spacing:.5px">Tape une carte pour voir ses stats et l'améliorer ⬆️</p>
   <div class="deck-grid" id="deck-grid"></div>
-  <p class="power-select-title">🦸 Pouvoirs du Héros (choisis-en 2)</p>
+  <p class="power-select-title" data-i18n="hero_powers">🦸 Pouvoirs du Héros (choisis-en 2)</p>
   <div class="power-select-grid" id="power-select-grid"></div>
-  <p class="deck-all-title">Toutes les cartes</p>
+  <p class="deck-all-title" data-i18n="all_cards">Toutes les cartes</p>
   <div class="all-cards-grid" id="all-cards-grid"></div>
 </div>
 
 <!-- FRIENDS -->
 <div class="page" id="page-friends">
   <div class="friends-search">
-    <input id="friend-search-input" type="text" maxlength="16" placeholder="Chercher un joueur par pseudo…" onkeydown="if(event.key==='Enter')searchAndAdd()">
-    <button onclick="searchAndAdd()">CHERCHER</button>
+    <input id="friend-search-input" type="text" maxlength="16" placeholder="Chercher un joueur par pseudo…" data-i18n="friend_search_ph" onkeydown="if(event.key==='Enter')searchAndAdd()">
+    <button onclick="searchAndAdd()" data-i18n="search_btn">CHERCHER</button>
   </div>
   <div class="friends-tabs">
-    <button class="ftab active" id="ftab-friends" onclick="switchFTab('friends')">Amis<span class="ftab-badge" id="ftab-badge-friends" style="display:none"></span></button>
-    <button class="ftab" id="ftab-pending" onclick="switchFTab('pending')">En attente<span class="ftab-badge" id="ftab-badge-pending" style="display:none"></span></button>
-    <button class="ftab" id="ftab-requests" onclick="switchFTab('requests')">Reçues<span class="ftab-badge" id="ftab-badge-requests" style="display:none"></span></button>
+    <button class="ftab active" id="ftab-friends" onclick="switchFTab('friends')"><span data-i18n="friends">Amis</span><span class="ftab-badge" id="ftab-badge-friends" style="display:none"></span></button>
+    <button class="ftab" id="ftab-pending" onclick="switchFTab('pending')"><span data-i18n="tab_pending">En attente</span><span class="ftab-badge" id="ftab-badge-pending" style="display:none"></span></button>
+    <button class="ftab" id="ftab-requests" onclick="switchFTab('requests')"><span data-i18n="tab_requests">Reçues</span><span class="ftab-badge" id="ftab-badge-requests" style="display:none"></span></button>
   </div>
   <div class="friends-list" id="friends-list"></div>
 </div>
@@ -1304,15 +1472,86 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
     <div class="chat-avatar">🧙</div>
     <div class="chat-title-info">
       <div class="chat-name" id="chat-friend-name">Ami</div>
-      <div class="chat-status">En ligne</div>
+      <div class="chat-status" data-i18n="online">En ligne</div>
     </div>
-    <button class="chat-challenge-btn" id="chat-challenge-btn">⚔️ Défier</button>
+    <button class="chat-challenge-btn" id="chat-challenge-btn" data-i18n="challenge_btn">⚔️ Défier</button>
   </div>
   <div class="chat-messages" id="chat-messages"></div>
   <div class="chat-input-bar">
-    <input id="chat-input" type="text" maxlength="200" placeholder="Écris un message…" onkeydown="if(event.key==='Enter')sendChatMessage()">
+    <input id="chat-input" type="text" maxlength="200" placeholder="Écris un message…" data-i18n="chat_placeholder" onkeydown="if(event.key==='Enter')sendChatMessage()">
     <button class="chat-send" onclick="sendChatMessage()">➤</button>
   </div>
+</div>
+
+<!-- GLOBAL CHAT PANEL -->
+<div id="global-chat-panel">
+  <div class="chat-header">
+    <button class="chat-back" onclick="closeGlobalChat()">‹</button>
+    <div class="chat-avatar">🌍</div>
+    <div class="chat-title-info">
+      <div class="chat-name" data-i18n="chat_global">Chat Global</div>
+      <div class="chat-status" id="gchat-online" data-i18n="online">En ligne</div>
+    </div>
+    <button class="chat-challenge-btn" id="gchat-settings-btn" onclick="toggleGlobalChatSettings()">⚙️</button>
+  </div>
+  <!-- Settings sub-panel -->
+  <div id="gchat-settings" style="display:none">
+    <div class="gchat-set-row">
+      <div><div class="settings-label" data-i18n="chat_notifications">Notifications</div><div class="settings-sub" data-i18n="chat_notif_sub">Son à la réception d'un message</div></div>
+      <button class="settings-btn" id="gchat-notif-btn" onclick="toggleGlobalChatNotif()">ON</button>
+    </div>
+    <div class="gchat-rules" data-i18n="chat_rules">💡 Sois respectueux. Les messages sont publics et modérés.</div>
+  </div>
+  <div class="chat-messages" id="gchat-messages"></div>
+  <div class="chat-input-bar">
+    <input id="gchat-input" type="text" maxlength="200" placeholder="Écris un message…" data-i18n="chat_placeholder" onkeydown="if(event.key==='Enter')sendGlobalChat()">
+    <button class="chat-send" onclick="sendGlobalChat()">➤</button>
+  </div>
+</div>
+
+<!-- BATTLE PASS PANEL -->
+<div id="battle-pass-panel">
+  <div class="chat-header">
+    <button class="chat-back" onclick="closeBattlePass()">‹</button>
+    <div class="chat-avatar">🎟️</div>
+    <div class="chat-title-info">
+      <div class="chat-name" id="bp-season">Passe de Combat</div>
+      <div class="chat-status"><span data-i18n="bp_tier">Palier</span> <b id="bp-tier">0</b> / 30</div>
+    </div>
+  </div>
+  <div class="bp-progress-wrap">
+    <div class="bp-progress-bar"><div class="bp-progress-fill" id="bp-progress-fill" style="width:0%"></div></div>
+    <div class="bp-progress-text" id="bp-progress-text">0 / 100</div>
+    <button class="bp-premium-btn" id="bp-premium-btn" onclick="buyPassPremium()">⭐ DÉBLOQUER PREMIUM — 500 💎</button>
+    <div class="bp-track-legend"><span class="bp-leg-free" data-i18n="bp_free">Gratuit</span><span class="bp-leg-prem" data-i18n="bp_premium">Premium ⭐</span></div>
+  </div>
+  <div class="bp-tiers" id="bp-tiers"></div>
+</div>
+
+<!-- ACHIEVEMENTS PANEL -->
+<div id="achievements-panel">
+  <div class="chat-header">
+    <button class="chat-back" onclick="closeAchievements()">‹</button>
+    <div class="chat-avatar">🏅</div>
+    <div class="chat-title-info">
+      <div class="chat-name" data-i18n="achievements">Succès</div>
+      <div class="chat-status"><span id="ach-count">0 / 0</span> <span data-i18n="ach_unlocked">débloqués</span></div>
+    </div>
+  </div>
+  <div class="ach-list" id="ach-list"></div>
+</div>
+
+<!-- TOURNAMENT PANEL -->
+<div id="tournament-panel">
+  <div class="chat-header">
+    <button class="chat-back" onclick="closeTournament()">‹</button>
+    <div class="chat-avatar">🏆</div>
+    <div class="chat-title-info">
+      <div class="chat-name" data-i18n="tournament">Tournoi</div>
+      <div class="chat-status"><span data-i18n="tour_wins">Tournois gagnés</span> : <b id="tour-wins-count">0</b></div>
+    </div>
+  </div>
+  <div class="tour-body" id="tour-body"></div>
 </div>
 
 <!-- BATTLE COUNTDOWN -->
@@ -1352,7 +1591,7 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 <div class="page" id="page-battle">
   <div id="mp-banner"><span>⚔️ Combat contre <strong id="mp-opponent-name">—</strong></span><span class="mp-waiting" id="mp-status-txt">En attente…</span></div>
   <div id="battle-top">
-    <h2>⚔ COMBAT</h2>
+    <h2><span data-i18n="combat_title">⚔ COMBAT</span></h2>
     <div id="timer-display">3:00</div>
     <div id="score-display">0 – 0</div>
   </div>
@@ -1369,10 +1608,10 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
     <div id="emote-tray"></div>
   </div>
   <div id="powers-bar"></div>
-  <div id="mana-section"><div id="mana-label">MANA</div><div id="mana-track"></div><div id="mana-count">0</div></div>
+  <div id="mana-section"><div id="mana-label" data-i18n="mana">MANA</div><div id="mana-track"></div><div id="mana-count">0</div></div>
   <div id="hand"></div>
   <div id="bottom-ui"><div></div><div id="status-msg">Sélectionne une carte</div><div></div></div>
-  <div id="instruction">Clique une carte → puis une zone pour déployer</div>
+  <div id="instruction" data-i18n="battle_instruction">Clique une carte → puis une zone pour déployer</div>
 </div>
 
 <!-- SETTINGS -->
@@ -1380,16 +1619,16 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
   <div class="settings-section">
 
     <div class="settings-block">
-      <div class="settings-block-title">Compte</div>
+      <div class="settings-block-title" data-i18n="account">Compte</div>
       <div class="settings-row">
         <div><div class="settings-label" id="account-status">Mode local</div><div class="settings-sub" id="account-sub">Connecte-toi pour sauvegarder en ligne</div></div>
         <button class="settings-btn" id="account-btn" onclick="accountAction()">SE CONNECTER</button>
       </div>
       <div class="settings-row" id="account-sync-row" style="display:none">
-        <div><div class="settings-label">Synchronisation</div><div class="settings-sub">Sauvegarde ou récupère ta progression</div></div>
+        <div><div class="settings-label" data-i18n="sync">Synchronisation</div><div class="settings-sub" data-i18n="sync_sub">Sauvegarde ou récupère ta progression</div></div>
         <div style="display:flex;gap:8px">
-          <button class="settings-btn" onclick="manualCloudSave()">💾 Sauver</button>
-          <button class="settings-btn" onclick="manualCloudLoad()">📥 Récupérer</button>
+          <button class="settings-btn" onclick="manualCloudSave()" data-i18n="save">💾 Sauver</button>
+          <button class="settings-btn" onclick="manualCloudLoad()" data-i18n="load">📥 Récupérer</button>
         </div>
       </div>
       <div class="settings-row" id="account-2fa-row" style="display:none">
@@ -1399,74 +1638,89 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
     </div>
 
     <div class="settings-block">
-      <div class="settings-block-title">Profil</div>
+      <div class="settings-block-title" data-i18n="profile">Profil</div>
       <div class="avatar-current">
         <div class="avatar-current-emoji" id="avatar-current-emoji">🧙</div>
         <div>
-          <div class="settings-label">Avatar</div>
-          <div class="settings-sub">Choisis ton emoji de profil</div>
+          <div class="settings-label" data-i18n="avatar">Avatar</div>
+          <div class="settings-sub" data-i18n="avatar_sub">Choisis ton emoji de profil</div>
         </div>
       </div>
       <div class="avatar-grid" id="avatar-grid"></div>
       <div style="height:14px"></div>
       <div class="settings-row">
-        <div><div class="settings-label">Pseudo</div><div class="settings-sub">Visible dans le classement</div></div>
+        <div><div class="settings-label" data-i18n="pseudo">Pseudo</div><div class="settings-sub" data-i18n="pseudo_sub">Visible dans le classement</div></div>
         <input class="pseudo-input" id="pseudo-input" type="text" maxlength="16" placeholder="Ton pseudo…">
       </div>
       <div style="display:flex;justify-content:flex-end">
-        <button class="settings-btn" onclick="savePseudo()">SAUVEGARDER</button>
+        <button class="settings-btn" onclick="savePseudo()" data-i18n="save_btn">SAUVEGARDER</button>
       </div>
     </div>
 
     <div class="settings-block">
-      <div class="settings-block-title">Mes statistiques</div>
-      <div class="settings-stat-row"><span>🏆 Trophées</span><span id="cfg-trophies">0</span></div>
-      <div class="settings-stat-row"><span>⚔️ Victoires</span><span id="cfg-wins">0</span></div>
-      <div class="settings-stat-row"><span>💀 Défaites</span><span id="cfg-losses">0</span></div>
-      <div class="settings-stat-row"><span>🃏 Cartes dans le deck</span><span id="cfg-deck">8</span></div>
+      <div class="settings-block-title" data-i18n="my_stats">Mes statistiques</div>
+      <div class="settings-stat-row"><span data-i18n="st_trophies">🏆 Trophées</span><span id="cfg-trophies">0</span></div>
+      <div class="settings-stat-row"><span data-i18n="st_wins">⚔️ Victoires</span><span id="cfg-wins">0</span></div>
+      <div class="settings-stat-row"><span data-i18n="st_losses">💀 Défaites</span><span id="cfg-losses">0</span></div>
+      <div class="settings-stat-row"><span data-i18n="st_deck">🃏 Cartes dans le deck</span><span id="cfg-deck">8</span></div>
     </div>
 
     <div class="settings-block">
-      <div class="settings-block-title">Classement</div>
+      <div class="settings-block-title" data-i18n="leaderboard">Classement</div>
       <div class="settings-row">
-        <div><div class="settings-label">Publier mon score</div><div class="settings-sub">Envoie tes trophées dans le classement mondial</div></div>
-        <button class="settings-btn" onclick="publishScore()">PUBLIER</button>
+        <div><div class="settings-label" data-i18n="publish_label">Publier mon score</div><div class="settings-sub" data-i18n="publish_sub">Envoie tes trophées dans le classement mondial</div></div>
+        <button class="settings-btn" onclick="publishScore()" data-i18n="publish_btn">PUBLIER</button>
       </div>
     </div>
 
     <div class="settings-block">
-      <div class="settings-block-title">Audio</div>
+      <div class="settings-block-title" data-i18n="audio">Audio</div>
       <div class="settings-row">
-        <div><div class="settings-label">🔊 Effets sonores</div><div class="settings-sub">Sons de combat et clics</div></div>
+        <div><div class="settings-label" data-i18n="sfx_label">🔊 Effets sonores</div><div class="settings-sub" data-i18n="sfx_sub">Sons de combat et clics</div></div>
         <button class="settings-btn" id="sound-toggle" onclick="toggleSound()">ON</button>
       </div>
       <div class="settings-row">
-        <div><div class="settings-label">🎵 Musique</div><div class="settings-sub">Musique de fond en combat</div></div>
+        <div><div class="settings-label" data-i18n="music_label">🎵 Musique</div><div class="settings-sub" data-i18n="music_sub">Musique de fond en combat</div></div>
         <button class="settings-btn" id="music-toggle" onclick="toggleMusic()">ON</button>
       </div>
       <div class="settings-row">
-        <div style="flex:1"><div class="settings-label">🎵 Volume salon</div><div class="settings-sub">Musique des menus (<span id="music-vol-pct">100</span>%)</div></div>
+        <div style="flex:1"><div class="settings-label" data-i18n="vol_menu">🎵 Volume salon</div><div class="settings-sub"><span data-i18n="vol_menu_sub">Musique des menus</span> (<span id="music-vol-pct">100</span>%)</div></div>
         <input type="range" id="music-vol-slider" min="0" max="100" value="100" oninput="setMusicVolume(this.value)" style="width:120px;accent-color:var(--gold)">
       </div>
       <div class="settings-row">
-        <div style="flex:1"><div class="settings-label">⚔️ Volume combat</div><div class="settings-sub">Musique en bataille (<span id="battle-vol-pct">100</span>%)</div></div>
+        <div style="flex:1"><div class="settings-label" data-i18n="vol_battle">⚔️ Volume combat</div><div class="settings-sub"><span data-i18n="vol_battle_sub">Musique en bataille</span> (<span id="battle-vol-pct">100</span>%)</div></div>
         <input type="range" id="battle-vol-slider" min="0" max="100" value="100" oninput="setBattleVolume(this.value)" style="width:120px;accent-color:var(--red-light)">
       </div>
     </div>
 
     <div class="settings-block">
-      <div class="settings-block-title">Aide</div>
+      <div class="settings-block-title">🌍 <span data-i18n="language">Langue</span></div>
       <div class="settings-row">
-        <div><div class="settings-label">Tutoriel</div><div class="settings-sub">Revoir comment jouer</div></div>
-        <button class="settings-btn" onclick="startTutorial()">REVOIR</button>
+        <div style="flex:1"><div class="settings-label" data-i18n="language">Langue</div><div class="settings-sub" data-i18n="language_sub">Choisis ta langue préférée</div></div>
+        <select id="language-select" onchange="setLanguage(this.value)" style="padding:6px 10px;background:var(--card-bg);color:var(--gold);border:1px solid var(--gold);border-radius:8px;font-family:'Cinzel',serif;cursor:pointer">
+          <option value="fr">🇫🇷 Français</option>
+          <option value="en">🇬🇧 English</option>
+          <option value="es">🇪🇸 Español</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="it">🇮🇹 Italiano</option>
+          <option value="pt">🇵🇹 Português</option>
+        </select>
       </div>
     </div>
 
     <div class="settings-block">
-      <div class="settings-block-title">Danger</div>
+      <div class="settings-block-title" data-i18n="help">Aide</div>
       <div class="settings-row">
-        <div><div class="settings-label">Réinitialiser</div><div class="settings-sub">Efface toute ta progression</div></div>
-        <button class="settings-btn danger" onclick="resetProgress()">RESET</button>
+        <div><div class="settings-label" data-i18n="tutorial">Tutoriel</div><div class="settings-sub" data-i18n="tutorial_sub">Revoir comment jouer</div></div>
+        <button class="settings-btn" onclick="startTutorial()" data-i18n="review_btn">REVOIR</button>
+      </div>
+    </div>
+
+    <div class="settings-block">
+      <div class="settings-block-title" data-i18n="danger">Danger</div>
+      <div class="settings-row">
+        <div><div class="settings-label" data-i18n="reset_label">Réinitialiser</div><div class="settings-sub" data-i18n="reset_sub">Efface toute ta progression</div></div>
+        <button class="settings-btn danger" onclick="resetProgress()" data-i18n="reset_btn">RESET</button>
       </div>
     </div>
 
@@ -1476,14 +1730,14 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 <!-- LEADERBOARD -->
 <div class="page" id="page-leaderboard">
   <div class="lb-header">
-    <div class="lb-title">🌍 Classement Mondial</div>
-    <button class="lb-refresh" onclick="loadLeaderboard()">↻ Actualiser</button>
+    <div class="lb-title" data-i18n="lb_title">🌍 Classement Mondial</div>
+    <button class="lb-refresh" onclick="loadLeaderboard()" data-i18n="refresh">↻ Actualiser</button>
   </div>
   <div class="lb-supabase-note" id="lb-config-note">
     ⚙️ Configure Supabase : remplace <code>SUPABASE_URL</code> et <code>SUPABASE_KEY</code> dans le code, puis crée la table <code>clash_leaderboard</code>.
   </div>
   <div class="lb-list" id="lb-list">
-    <div class="lb-loading">Chargement…</div>
+    <div class="lb-loading" data-i18n="loading">Chargement…</div>
   </div>
 </div>
 
@@ -1500,7 +1754,7 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
     <div class="lc-next" id="lc-next"></div>
   </div>
   <div id="ranked-panel" class="ranked-panel"></div>
-  <p class="leagues-list-title">Tous les rangs</p>
+  <p class="leagues-list-title" data-i18n="all_ranks">Tous les rangs</p>
   <div class="leagues-list" id="leagues-list"></div>
 </div>
 
@@ -1510,9 +1764,9 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
     <div class="currency-pill gold"><span>🪙</span><span id="shop-gold">0</span></div>
     <div class="currency-pill gems"><span>💎</span><span id="shop-gems">0</span></div>
   </div>
-  <p class="shop-section-title">📦 Coffres</p>
+  <p class="shop-section-title" data-i18n="shop_chests">📦 Coffres</p>
   <div class="shop-grid" id="shop-chests"></div>
-  <p class="shop-section-title">🃏 Cartes à l'unité</p>
+  <p class="shop-section-title" data-i18n="shop_cards">🃏 Cartes à l'unité</p>
   <div class="shop-grid" id="shop-cards"></div>
 </div>
 
@@ -1547,12 +1801,12 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
     <div class="quests-sub">Accomplis-les pour gagner or et gemmes !</div>
   </div>
   <div class="quests-section-head">
-    <span class="quests-section-title">📅 Journalières</span>
+    <span class="quests-section-title" data-i18n="daily_quests">📅 Quêtes Journalières</span>
     <span class="quests-reset" id="quests-reset">⏳ —</span>
   </div>
   <div class="quests-list" id="quests-list"></div>
   <div class="quests-section-head">
-    <span class="quests-section-title">🗓️ Hebdomadaires</span>
+    <span class="quests-section-title" data-i18n="weekly_quests">🗓️ Quêtes Hebdomadaires</span>
     <span class="quests-reset" id="weekly-quests-reset">⏳ —</span>
   </div>
   <div class="quests-list" id="weekly-quests-list"></div>
@@ -1624,7 +1878,7 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 <div id="overlay" class="hidden">
   <h2 id="ov-title" style="color:var(--gold)">⚔ Zyntra Arena ⚔</h2>
   <p id="ov-sub">Détruis les tours ennemies !</p>
-  <button class="ov-btn" id="btn-start">LANCER</button>
+  <button class="ov-btn" id="btn-start" data-i18n="launch">LANCER</button>
 </div>
 
 <!-- RESULT SCREEN (post-battle) -->
@@ -1643,22 +1897,22 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
     <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--text-dim);margin-left:6px">→ <span id="rs-trophy-total">510</span></div>
   </div>
   <div id="rs-rewards" style="display:none;justify-content:center;gap:10px;margin-bottom:18px"></div>
-  <div class="rs-section-title">Stats de la partie</div>
+  <div class="rs-section-title" data-i18n="rs_stats">Stats de la partie</div>
   <div class="rs-stats-grid">
-    <div class="rs-stat"><div class="rs-stat-icon">⚔️</div><div class="rs-stat-val" id="rs-towers-destroyed">0</div><div class="rs-stat-lbl">Tours détruites</div></div>
-    <div class="rs-stat"><div class="rs-stat-icon">🛡️</div><div class="rs-stat-val" id="rs-towers-lost">0</div><div class="rs-stat-lbl">Tours perdues</div></div>
-    <div class="rs-stat"><div class="rs-stat-icon">⏱️</div><div class="rs-stat-val" id="rs-duration">3:00</div><div class="rs-stat-lbl">Durée</div></div>
+    <div class="rs-stat"><div class="rs-stat-icon">⚔️</div><div class="rs-stat-val" id="rs-towers-destroyed">0</div><div class="rs-stat-lbl" data-i18n="rs_destroyed">Tours détruites</div></div>
+    <div class="rs-stat"><div class="rs-stat-icon">🛡️</div><div class="rs-stat-val" id="rs-towers-lost">0</div><div class="rs-stat-lbl" data-i18n="rs_lost">Tours perdues</div></div>
+    <div class="rs-stat"><div class="rs-stat-icon">⏱️</div><div class="rs-stat-val" id="rs-duration">3:00</div><div class="rs-stat-lbl" data-i18n="rs_duration">Durée</div></div>
   </div>
-  <div class="rs-section-title">Tours</div>
+  <div class="rs-section-title" data-i18n="rs_towers">Tours</div>
   <div class="rs-towers">
     <div class="rs-tower-box" id="rs-player-box">
-      <div class="rs-tower-label blue">🛡️ Toi</div>
+      <div class="rs-tower-label blue">🛡️ <span data-i18n="rs_you">Toi</span></div>
       <div class="rs-tower-icons" id="rs-player-towers">🏯🏯🛡️</div>
       <div class="rs-tower-count" id="rs-player-alive"></div>
       <div class="rs-tower-sub">tours survivantes</div>
     </div>
     <div class="rs-tower-box" id="rs-enemy-box">
-      <div class="rs-tower-label red">👑 Ennemi</div>
+      <div class="rs-tower-label red">👑 <span data-i18n="rs_enemy">Ennemi</span></div>
       <div class="rs-tower-icons" id="rs-enemy-towers">🏰🏰👑</div>
       <div class="rs-tower-count" id="rs-enemy-alive"></div>
       <div class="rs-tower-sub">tours survivantes</div>
@@ -1673,17 +1927,17 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
 <div id="toast"></div>
 
 <nav id="nav">
-  <button class="nav-btn active" data-page="home"        onclick="showPage('home',this)"><span class="nav-icon">🏠</span>Accueil</button>
-  <button class="nav-btn"        data-page="arenas"      onclick="showPage('arenas',this)"><span class="nav-icon">🗺️</span>Arènes</button>
-  <button class="nav-btn"        data-page="deck"        onclick="showPage('deck',this)"><span class="nav-icon">🃏</span>Deck</button>
-  <button class="nav-btn"        data-page="shop"        onclick="showPage('shop',this)"><span class="nav-icon">🛒</span>Boutique</button>
-  <button class="nav-btn"        data-page="friends"     onclick="showPage('friends',this)" id="nav-friends"><span class="nav-icon">👥</span>Amis<span id="nav-friends-badge" style="position:absolute;top:6px;right:8px;background:#e74c3c;color:#fff;border-radius:8px;font-size:.5rem;padding:1px 4px;display:none"></span></button>
-  <button class="nav-btn"        data-page="leaderboard" onclick="showPage('leaderboard',this)"><span class="nav-icon">🌍</span>Classement</button>
-  <button class="nav-btn"        data-page="leagues"     onclick="showPage('leagues',this)"><span class="nav-icon">🏅</span>Classé</button>
-  <button class="nav-btn"        data-page="quests"      onclick="showPage('quests',this)" id="nav-quests"><span class="nav-icon">📅</span>Quêtes<span id="nav-quests-badge" style="position:absolute;top:6px;right:8px;background:#2ecc71;color:#fff;border-radius:8px;font-size:.5rem;padding:1px 4px;display:none"></span></button>
-  <button class="nav-btn"        data-page="settings"    onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span>Réglages</button>
-  <button class="nav-btn"        data-page="admin"       onclick="showPage('admin',this)"><span class="nav-icon">🛡️</span>Admin</button>
-  <button class="nav-btn"        data-page="battle"      onclick="showPage('battle',this)"><span class="nav-icon">⚔️</span>Combat</button>
+  <button class="nav-btn active" data-page="home"        onclick="showPage('home',this)"><span class="nav-icon">🏠</span><span data-i18n="home">Accueil</span></button>
+  <button class="nav-btn"        data-page="arenas"      onclick="showPage('arenas',this)"><span class="nav-icon">🗺️</span><span data-i18n="arenas">Arènes</span></button>
+  <button class="nav-btn"        data-page="deck"        onclick="showPage('deck',this)"><span class="nav-icon">🃏</span><span data-i18n="deck">Deck</span></button>
+  <button class="nav-btn"        data-page="shop"        onclick="showPage('shop',this)"><span class="nav-icon">🛒</span><span data-i18n="shop">Boutique</span></button>
+  <button class="nav-btn"        data-page="friends"     onclick="showPage('friends',this)" id="nav-friends"><span class="nav-icon">👥</span><span data-i18n="friends">Amis</span><span id="nav-friends-badge" style="position:absolute;top:6px;right:8px;background:#e74c3c;color:#fff;border-radius:8px;font-size:.5rem;padding:1px 4px;display:none"></span></button>
+  <button class="nav-btn"        data-page="leaderboard" onclick="showPage('leaderboard',this)"><span class="nav-icon">🌍</span><span data-i18n="leaderboard">Classement</span></button>
+  <button class="nav-btn"        data-page="leagues"     onclick="showPage('leagues',this)"><span class="nav-icon">🏅</span><span data-i18n="leagues">Classé</span></button>
+  <button class="nav-btn"        data-page="quests"      onclick="showPage('quests',this)" id="nav-quests"><span class="nav-icon">📅</span><span data-i18n="quests">Quêtes</span><span id="nav-quests-badge" style="position:absolute;top:6px;right:8px;background:#2ecc71;color:#fff;border-radius:8px;font-size:.5rem;padding:1px 4px;display:none"></span></button>
+  <button class="nav-btn"        data-page="settings"    onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span><span data-i18n="settings">Réglages</span></button>
+  <button class="nav-btn"        data-page="admin"       onclick="showPage('admin',this)"><span class="nav-icon">🛡️</span><span data-i18n="admin">Admin</span></button>
+  <button class="nav-btn"        data-page="battle"      onclick="showPage('battle',this)"><span class="nav-icon">⚔️</span><span data-i18n="combat">Combat</span></button>
 </nav>
 
 <script>
@@ -1756,6 +2010,174 @@ function getCurrentArena(){
 }
 
 // ══ LEAGUES ══
+// ══ INTERNATIONALIZATION (i18n) ══
+let currentLanguage='fr'; // default: français
+const TRANSLATIONS={
+  fr:{
+    home:'Accueil',battle:'Arènes',deck:'Deck',shop:'Boutique',friends:'Amis',leaderboard:'Classement',leagues:'Classé',quests:'Quêtes',settings:'Réglages',admin:'Admin',combat:'Combat',arenas:'Arènes',fight:'COMBATTRE',my_chests:'📦 Mes coffres',recent_history:'Historique récent',my_deck:'Mon Deck',lb_title:'🌍 Classement Mondial',shop_chests:'📦 Coffres',shop_cards:'🃏 Cartes à l\'unité',sync_sub:'Sauvegarde ou récupère ta progression',avatar_sub:'Choisis ton emoji de profil',pseudo_sub:'Visible dans le classement',save_btn:'SAUVEGARDER',my_stats:'Mes statistiques',st_trophies:'🏆 Trophées',st_wins:'⚔️ Victoires',st_losses:'💀 Défaites',st_deck:'🃏 Cartes dans le deck',publish_label:'Publier mon score',publish_sub:'Envoie tes trophées dans le classement mondial',publish_btn:'PUBLIER',audio:'Audio',sfx_label:'🔊 Effets sonores',sfx_sub:'Sons de combat et clics',music_label:'🎵 Musique',music_sub:'Musique de fond en combat',vol_menu:'🎵 Volume salon',vol_menu_sub:'Musique des menus',vol_battle:'⚔️ Volume combat',vol_battle_sub:'Musique en bataille',language_sub:'Choisis ta langue préférée',help:'Aide',tutorial_sub:'Revoir comment jouer',review_btn:'REVOIR',danger:'Danger',reset_label:'Réinitialiser',reset_sub:'Efface toute ta progression',acc_connected:'Connecté',acc_local:'Mode local',acc_logout:'DÉCONNEXION',acc_login:'SE CONNECTER',acc_sub_online:'Progression sauvegardée en ligne',acc_sub_offline:'Connecte-toi pour sauvegarder en ligne',twofa_enable:'ACTIVER',twofa_disable:'DÉSACTIVER',twofa_protected:'✅ Ton compte est protégé',twofa_sub_off:'Protège ton compte avec un code',deck_avg:'Moy.',deck_hint:'Tape une carte pour voir ses stats et l\'améliorer ⬆️',hero_powers:'🦸 Pouvoirs du Héros (choisis-en 2)',all_cards:'Toutes les cartes',friend_search_ph:'Chercher un joueur par pseudo…',search_btn:'CHERCHER',tab_pending:'En attente',tab_requests:'Reçues',online:'En ligne',challenge_btn:'⚔️ Défier',refresh:'↻ Actualiser',all_ranks:'Tous les rangs',auth_tagline:'Connecte-toi pour sauvegarder ta progression',auth_login_tab:'Connexion',auth_signup_tab:'Créer un compte',auth_pseudo_ph:'Ton pseudo de jeu',auth_pw_ph:'Mot de passe',auth_skip:'Jouer sans compte (progression locale uniquement)',combat_title:'⚔ COMBAT',mana:'MANA',battle_instruction:'Clique une carte → puis une zone pour déployer',rs_stats:'Stats de la partie',rs_destroyed:'Tours détruites',rs_lost:'Tours perdues',rs_duration:'Durée',rs_towers:'Tours',rs_you:'Toi',rs_enemy:'Ennemi',launch:'LANCER',auth_login_btn:'SE CONNECTER',auth_signup_btn:'CRÉER LE COMPTE',auth_note_login:'Utilise les mêmes identifiants que sur zyntracode.ch',auth_note_signup:'Ton compte fonctionnera aussi sur zyntracode.ch',rs_back_home:'Retour à l\'accueil dans',reset_btn:'RESET',
+    play:'Joue',battles:'Combats',victory:'Victoire',defeat:'Défaite',draw:'Égalité',trophies:'Trophées',win:'Remporte',lose:'Perd',
+    login:'Se connecter',register:'Créer un compte',logout:'Se déconnecter',email:'E-mail',password:'Mot de passe',confirm:'Confirmer',
+    level:'Niveau',xp:'XP',gold:'Or',gems:'Gemmes',chests:'Coffres',cards:'Cartes',powers:'Pouvoirs',
+    daily_quests:'Quêtes Journalières',weekly_quests:'Quêtes Hebdomadaires',claim:'RÉCLAMER',claimed:'✓ Réclamé',completed:'Terminé !',all_quests_completed:'Toutes les quêtes terminées !',
+    ranked:'Points de Classement',ranked_find:'⚔️ TROUVER UNE PARTIE CLASSÉE',ranked_search:'Recherche d\'un adversaire de ton rang…',ranked_cancel:'ANNULER',
+    settings:'Réglages',account:'Compte',sync:'Synchronisation',save:'💾 Sauver',load:'📥 Récupérer',reset:'🗑️ Réinitialiser',
+    language:'Langue',theme:'Thème',sound:'Son',music:'Musique',sfx:'Effets sonores',volume:'Volume',
+    profile:'Profil',avatar:'Avatar',pseudo:'Pseudo',level:'Niveau',stats:'Statistiques',
+    shop_title:'Boutique',buy:'Acheter',cost:'Coût',sold_out:'Rupture',
+    friends_title:'Amis',add_friend:'Ajouter un ami',challenge:'Défier',message:'Message',
+    leaderboard_title:'Classement Mondial',rank:'Rang',wins:'Victoires',losses:'Défaites',
+    arenas:'Arènes',arena:'Arène',trophies_required:'trophées requis',
+    tutorial:'Tutoriel',skip:'Ignorer',next:'Suivant',understood:'D\'accord',
+    connected:'Connecté',disconnected:'Déconnecté',loading:'Chargement...',error:'Erreur',success:'Succès',
+    cancel:'Annuler',confirm_reset:'Réinitialiser toute ta progression ?',confirm_logout:'Te déconnecter ?',
+    community:'Communauté',chat_global:'Chat Global',chat_global_sub:'Discute avec tous les joueurs',chat_send:'Envoyer',chat_placeholder:'Écris un message…',chat_settings:'Paramètres du chat',chat_notifications:'Notifications',chat_notif_sub:'Son à la réception d\'un message',chat_rules:'💡 Sois respectueux. Les messages sont publics et modérés.',chat_empty:'Aucun message. Sois le premier à écrire !',chat_need_pseudo:'Choisis d\'abord un pseudo',chat_slow:'Doucement, attends un instant',
+    battle_pass:'Passe de Combat',bp_tier:'Palier',bp_free:'Gratuit',bp_premium:'Premium ⭐',achievements:'Succès',ach_unlocked:'débloqués',tournament:'Tournoi',tour_wins:'Tournois gagnés',
+  },
+  en:{
+    home:'Home',battle:'Arenas',deck:'Deck',shop:'Shop',friends:'Friends',leaderboard:'Leaderboard',leagues:'Ranked',quests:'Quests',settings:'Settings',admin:'Admin',combat:'Battle',arenas:'Arenas',fight:'FIGHT',my_chests:'📦 My Chests',recent_history:'Recent History',my_deck:'My Deck',lb_title:'🌍 Global Leaderboard',shop_chests:'📦 Chests',shop_cards:'🃏 Single Cards',sync_sub:'Save or restore your progress',avatar_sub:'Pick your profile emoji',pseudo_sub:'Shown on the leaderboard',save_btn:'SAVE',my_stats:'My Stats',st_trophies:'🏆 Trophies',st_wins:'⚔️ Wins',st_losses:'💀 Losses',st_deck:'🃏 Cards in deck',publish_label:'Publish my score',publish_sub:'Send your trophies to the global leaderboard',publish_btn:'PUBLISH',audio:'Audio',sfx_label:'🔊 Sound Effects',sfx_sub:'Battle sounds and clicks',music_label:'🎵 Music',music_sub:'Background music in battle',vol_menu:'🎵 Menu Volume',vol_menu_sub:'Menu music',vol_battle:'⚔️ Battle Volume',vol_battle_sub:'Battle music',language_sub:'Choose your preferred language',help:'Help',tutorial_sub:'Review how to play',review_btn:'REVIEW',danger:'Danger',reset_label:'Reset',reset_sub:'Erase all your progress',acc_connected:'Connected',acc_local:'Local mode',acc_logout:'SIGN OUT',acc_login:'SIGN IN',acc_sub_online:'Progress saved online',acc_sub_offline:'Sign in to save online',twofa_enable:'ENABLE',twofa_disable:'DISABLE',twofa_protected:'✅ Your account is protected',twofa_sub_off:'Protect your account with a code',deck_avg:'Avg.',deck_hint:'Tap a card to see its stats and upgrade it ⬆️',hero_powers:'🦸 Hero Powers (choose 2)',all_cards:'All cards',friend_search_ph:'Search a player by username…',search_btn:'SEARCH',tab_pending:'Pending',tab_requests:'Received',online:'Online',challenge_btn:'⚔️ Challenge',refresh:'↻ Refresh',all_ranks:'All ranks',auth_tagline:'Sign in to save your progress',auth_login_tab:'Sign In',auth_signup_tab:'Sign Up',auth_pseudo_ph:'Your in-game username',auth_pw_ph:'Password',auth_skip:'Play without an account (local progress only)',combat_title:'⚔ BATTLE',mana:'MANA',battle_instruction:'Tap a card → then a zone to deploy',rs_stats:'Match stats',rs_destroyed:'Towers destroyed',rs_lost:'Towers lost',rs_duration:'Duration',rs_towers:'Towers',rs_you:'You',rs_enemy:'Enemy',launch:'START',auth_login_btn:'SIGN IN',auth_signup_btn:'CREATE ACCOUNT',auth_note_login:'Use the same credentials as on zyntracode.ch',auth_note_signup:'Your account will also work on zyntracode.ch',rs_back_home:'Back to home in',reset_btn:'RESET',
+    play:'Play',battles:'Battles',victory:'Victory',defeat:'Defeat',draw:'Draw',trophies:'Trophies',win:'Win',lose:'Lose',
+    login:'Sign In',register:'Sign Up',logout:'Sign Out',email:'Email',password:'Password',confirm:'Confirm',
+    level:'Level',xp:'XP',gold:'Gold',gems:'Gems',chests:'Chests',cards:'Cards',powers:'Powers',
+    daily_quests:'Daily Quests',weekly_quests:'Weekly Quests',claim:'CLAIM',claimed:'✓ Claimed',completed:'Completed!',all_quests_completed:'All Quests Completed!',
+    ranked:'Ranking Points',ranked_find:'⚔️ FIND A RANKED MATCH',ranked_search:'Searching for an opponent...',ranked_cancel:'CANCEL',
+    settings:'Settings',account:'Account',sync:'Cloud Sync',save:'💾 Save',load:'📥 Load',reset:'🗑️ Reset',
+    language:'Language',theme:'Theme',sound:'Sound',music:'Music',sfx:'Sound Effects',volume:'Volume',
+    profile:'Profile',avatar:'Avatar',pseudo:'Username',level:'Level',stats:'Stats',
+    shop_title:'Shop',buy:'Buy',cost:'Cost',sold_out:'Sold Out',
+    friends_title:'Friends',add_friend:'Add Friend',challenge:'Challenge',message:'Message',
+    leaderboard_title:'Global Leaderboard',rank:'Rank',wins:'Wins',losses:'Losses',
+    arenas:'Arenas',arena:'Arena',trophies_required:'trophies required',
+    tutorial:'Tutorial',skip:'Skip',next:'Next',understood:'Got it',
+    connected:'Connected',disconnected:'Disconnected',loading:'Loading...',error:'Error',success:'Success',
+    cancel:'Cancel',confirm_reset:'Reset all your progress?',confirm_logout:'Sign out?',
+    community:'Community',chat_global:'Global Chat',chat_global_sub:'Chat with all players',chat_send:'Send',chat_placeholder:'Write a message…',chat_settings:'Chat settings',chat_notifications:'Notifications',chat_notif_sub:'Sound when a message arrives',chat_rules:'💡 Be respectful. Messages are public and moderated.',chat_empty:'No messages yet. Be the first to write!',chat_need_pseudo:'Choose a username first',chat_slow:'Slow down, wait a moment',
+    battle_pass:'Battle Pass',bp_tier:'Tier',bp_free:'Free',bp_premium:'Premium ⭐',achievements:'Achievements',ach_unlocked:'unlocked',tournament:'Tournament',tour_wins:'Tournaments won',
+  },
+  es:{
+    home:'Inicio',battle:'Arenas',deck:'Mazo',shop:'Tienda',friends:'Amigos',leaderboard:'Clasificación',leagues:'Clasificado',quests:'Misiones',settings:'Configuración',admin:'Admin',combat:'Combate',arenas:'Arenas',fight:'COMBATIR',my_chests:'📦 Mis Cofres',recent_history:'Historial Reciente',my_deck:'Mi Mazo',lb_title:'🌍 Clasificación Global',shop_chests:'📦 Cofres',shop_cards:'🃏 Cartas sueltas',sync_sub:'Guarda o recupera tu progreso',avatar_sub:'Elige tu emoji de perfil',pseudo_sub:'Visible en la clasificación',save_btn:'GUARDAR',my_stats:'Mis estadísticas',st_trophies:'🏆 Trofeos',st_wins:'⚔️ Victorias',st_losses:'💀 Derrotas',st_deck:'🃏 Cartas en el mazo',publish_label:'Publicar mi puntuación',publish_sub:'Envía tus trofeos a la clasificación global',publish_btn:'PUBLICAR',audio:'Audio',sfx_label:'🔊 Efectos de sonido',sfx_sub:'Sonidos de combate y clics',music_label:'🎵 Música',music_sub:'Música de fondo en combate',vol_menu:'🎵 Volumen menú',vol_menu_sub:'Música de menús',vol_battle:'⚔️ Volumen combate',vol_battle_sub:'Música en combate',language_sub:'Elige tu idioma preferido',help:'Ayuda',tutorial_sub:'Repasar cómo jugar',review_btn:'REPASAR',danger:'Peligro',reset_label:'Reiniciar',reset_sub:'Borra todo tu progreso',acc_connected:'Conectado',acc_local:'Modo local',acc_logout:'CERRAR SESIÓN',acc_login:'INICIAR SESIÓN',acc_sub_online:'Progreso guardado en línea',acc_sub_offline:'Inicia sesión para guardar en línea',twofa_enable:'ACTIVAR',twofa_disable:'DESACTIVAR',twofa_protected:'✅ Tu cuenta está protegida',twofa_sub_off:'Protege tu cuenta con un código',deck_avg:'Prom.',deck_hint:'Toca una carta para ver sus stats y mejorarla ⬆️',hero_powers:'🦸 Poderes del Héroe (elige 2)',all_cards:'Todas las cartas',friend_search_ph:'Buscar un jugador por usuario…',search_btn:'BUSCAR',tab_pending:'Pendiente',tab_requests:'Recibidas',online:'En línea',challenge_btn:'⚔️ Desafiar',refresh:'↻ Actualizar',all_ranks:'Todos los rangos',auth_tagline:'Inicia sesión para guardar tu progreso',auth_login_tab:'Iniciar sesión',auth_signup_tab:'Crear cuenta',auth_pseudo_ph:'Tu usuario de juego',auth_pw_ph:'Contraseña',auth_skip:'Jugar sin cuenta (progreso local únicamente)',combat_title:'⚔ COMBATE',mana:'MANÁ',battle_instruction:'Toca una carta → luego una zona para desplegar',rs_stats:'Estadísticas',rs_destroyed:'Torres destruidas',rs_lost:'Torres perdidas',rs_duration:'Duración',rs_towers:'Torres',rs_you:'Tú',rs_enemy:'Enemigo',launch:'EMPEZAR',auth_login_btn:'INICIAR SESIÓN',auth_signup_btn:'CREAR CUENTA',auth_note_login:'Usa las mismas credenciales que en zyntracode.ch',auth_note_signup:'Tu cuenta también funcionará en zyntracode.ch',rs_back_home:'Volver al inicio en',reset_btn:'REINICIAR',
+    play:'Juega',battles:'Batallas',victory:'Victoria',defeat:'Derrota',draw:'Empate',trophies:'Trofeos',win:'Gana',lose:'Pierde',
+    login:'Iniciar sesión',register:'Crear cuenta',logout:'Cerrar sesión',email:'Correo electrónico',password:'Contraseña',confirm:'Confirmar',
+    level:'Nivel',xp:'XP',gold:'Oro',gems:'Gemas',chests:'Cofres',cards:'Cartas',powers:'Poderes',
+    daily_quests:'Misiones Diarias',weekly_quests:'Misiones Semanales',claim:'RECLAMAR',claimed:'✓ Reclamado',completed:'¡Completado!',all_quests_completed:'¡Todas las misiones completadas!',
+    ranked:'Puntos de Clasificación',ranked_find:'⚔️ ENCONTRAR PARTIDA CLASIFICADA',ranked_search:'Buscando oponente...',ranked_cancel:'CANCELAR',
+    settings:'Configuración',account:'Cuenta',sync:'Sincronización',save:'💾 Guardar',load:'📥 Cargar',reset:'🗑️ Reiniciar',
+    language:'Idioma',theme:'Tema',sound:'Sonido',music:'Música',sfx:'Efectos de sonido',volume:'Volumen',
+    profile:'Perfil',avatar:'Avatar',pseudo:'Usuario',level:'Nivel',stats:'Estadísticas',
+    shop_title:'Tienda',buy:'Comprar',cost:'Coste',sold_out:'Agotado',
+    friends_title:'Amigos',add_friend:'Agregar amigo',challenge:'Desafiar',message:'Mensaje',
+    leaderboard_title:'Clasificación Global',rank:'Puesto',wins:'Victorias',losses:'Derrotas',
+    arenas:'Arenas',arena:'Arena',trophies_required:'trofeos requeridos',
+    tutorial:'Tutorial',skip:'Saltar',next:'Siguiente',understood:'Entendido',
+    connected:'Conectado',disconnected:'Desconectado',loading:'Cargando...',error:'Error',success:'Éxito',
+    cancel:'Cancelar',confirm_reset:'¿Reiniciar todo tu progreso?',confirm_logout:'¿Cerrar sesión?',
+    community:'Comunidad',chat_global:'Chat Global',chat_global_sub:'Chatea con todos los jugadores',chat_send:'Enviar',chat_placeholder:'Escribe un mensaje…',chat_settings:'Ajustes del chat',chat_notifications:'Notificaciones',chat_notif_sub:'Sonido al recibir un mensaje',chat_rules:'💡 Sé respetuoso. Los mensajes son públicos y moderados.',chat_empty:'No hay mensajes. ¡Sé el primero en escribir!',chat_need_pseudo:'Elige un usuario primero',chat_slow:'Más despacio, espera un momento',
+    battle_pass:'Pase de Batalla',bp_tier:'Nivel',bp_free:'Gratis',bp_premium:'Premium ⭐',achievements:'Logros',ach_unlocked:'desbloqueados',tournament:'Torneo',tour_wins:'Torneos ganados',
+  },
+  de:{
+    home:'Startseite',battle:'Arenen',deck:'Deck',shop:'Shop',friends:'Freunde',leaderboard:'Rangliste',leagues:'Rang',quests:'Quests',settings:'Einstellungen',admin:'Admin',combat:'Kampf',arenas:'Arenen',fight:'KÄMPFEN',my_chests:'📦 Meine Kisten',recent_history:'Verlauf',my_deck:'Mein Deck',lb_title:'🌍 Globale Rangliste',shop_chests:'📦 Kisten',shop_cards:'🃏 Einzelne Karten',sync_sub:'Speichere oder lade deinen Fortschritt',avatar_sub:'Wähle dein Profil-Emoji',pseudo_sub:'In der Rangliste sichtbar',save_btn:'SPEICHERN',my_stats:'Meine Statistik',st_trophies:'🏆 Pokale',st_wins:'⚔️ Siege',st_losses:'💀 Niederlagen',st_deck:'🃏 Karten im Deck',publish_label:'Punktzahl veröffentlichen',publish_sub:'Sende deine Pokale an die globale Rangliste',publish_btn:'VERÖFFENTLICHEN',audio:'Audio',sfx_label:'🔊 Soundeffekte',sfx_sub:'Kampfgeräusche und Klicks',music_label:'🎵 Musik',music_sub:'Hintergrundmusik im Kampf',vol_menu:'🎵 Menü-Lautstärke',vol_menu_sub:'Menümusik',vol_battle:'⚔️ Kampf-Lautstärke',vol_battle_sub:'Kampfmusik',language_sub:'Wähle deine bevorzugte Sprache',help:'Hilfe',tutorial_sub:'Spielweise ansehen',review_btn:'ANSEHEN',danger:'Gefahr',reset_label:'Zurücksetzen',reset_sub:'Löscht deinen gesamten Fortschritt',acc_connected:'Verbunden',acc_local:'Lokaler Modus',acc_logout:'ABMELDEN',acc_login:'ANMELDEN',acc_sub_online:'Fortschritt online gespeichert',acc_sub_offline:'Melde dich an, um online zu speichern',twofa_enable:'AKTIVIEREN',twofa_disable:'DEAKTIVIEREN',twofa_protected:'✅ Dein Konto ist geschützt',twofa_sub_off:'Schütze dein Konto mit einem Code',deck_avg:'Ø',deck_hint:'Tippe auf eine Karte für Werte und Upgrade ⬆️',hero_powers:'🦸 Heldenkräfte (wähle 2)',all_cards:'Alle Karten',friend_search_ph:'Spieler nach Namen suchen…',search_btn:'SUCHEN',tab_pending:'Ausstehend',tab_requests:'Erhalten',online:'Online',challenge_btn:'⚔️ Herausfordern',refresh:'↻ Aktualisieren',all_ranks:'Alle Ränge',auth_tagline:'Melde dich an, um deinen Fortschritt zu speichern',auth_login_tab:'Anmelden',auth_signup_tab:'Registrieren',auth_pseudo_ph:'Dein Spielername',auth_pw_ph:'Passwort',auth_skip:'Ohne Konto spielen (nur lokaler Fortschritt)',combat_title:'⚔ KAMPF',mana:'MANA',battle_instruction:'Tippe eine Karte → dann eine Zone zum Einsetzen',rs_stats:'Match-Statistik',rs_destroyed:'Türme zerstört',rs_lost:'Türme verloren',rs_duration:'Dauer',rs_towers:'Türme',rs_you:'Du',rs_enemy:'Gegner',launch:'START',auth_login_btn:'ANMELDEN',auth_signup_btn:'KONTO ERSTELLEN',auth_note_login:'Nutze die gleichen Zugangsdaten wie auf zyntracode.ch',auth_note_signup:'Dein Konto funktioniert auch auf zyntracode.ch',rs_back_home:'Zurück zum Start in',reset_btn:'RESET',
+    play:'Spielen',battles:'Kämpfe',victory:'Sieg',defeat:'Niederlage',draw:'Unentschieden',trophies:'Pokale',win:'Gewinne',lose:'Verliere',
+    login:'Anmelden',register:'Registrieren',logout:'Abmelden',email:'E-Mail',password:'Passwort',confirm:'Bestätigen',
+    level:'Stufe',xp:'XP',gold:'Gold',gems:'Edelsteine',chests:'Kisten',cards:'Karten',powers:'Kräfte',
+    daily_quests:'Tägliche Quests',weekly_quests:'Wöchentliche Quests',claim:'BEANSPRUCHEN',claimed:'✓ Beansprucht',completed:'Abgeschlossen!',all_quests_completed:'Alle Quests abgeschlossen!',
+    ranked:'Rangpunkte',ranked_find:'⚔️ RANGKAMPF SUCHEN',ranked_search:'Suche Gegner...',ranked_cancel:'ABBRECHEN',
+    settings:'Einstellungen',account:'Konto',sync:'Cloud-Synchronisierung',save:'💾 Speichern',load:'📥 Laden',reset:'🗑️ Zurücksetzen',
+    language:'Sprache',theme:'Design',sound:'Ton',music:'Musik',sfx:'Soundeffekte',volume:'Lautstärke',
+    profile:'Profil',avatar:'Avatar',pseudo:'Benutzername',level:'Stufe',stats:'Statistik',
+    shop_title:'Shop',buy:'Kaufen',cost:'Kosten',sold_out:'Ausverkauft',
+    friends_title:'Freunde',add_friend:'Freund hinzufügen',challenge:'Herausfordern',message:'Nachricht',
+    leaderboard_title:'Globale Rangliste',rank:'Rang',wins:'Siege',losses:'Niederlagen',
+    arenas:'Arenen',arena:'Arena',trophies_required:'Pokale erforderlich',
+    tutorial:'Anleitung',skip:'Überspringen',next:'Weiter',understood:'Verstanden',
+    connected:'Verbunden',disconnected:'Getrennt',loading:'Lädt...',error:'Fehler',success:'Erfolg',
+    cancel:'Abbrechen',confirm_reset:'Gesamten Fortschritt zurücksetzen?',confirm_logout:'Abmelden?',
+    community:'Gemeinschaft',chat_global:'Globaler Chat',chat_global_sub:'Chatte mit allen Spielern',chat_send:'Senden',chat_placeholder:'Nachricht schreiben…',chat_settings:'Chat-Einstellungen',chat_notifications:'Benachrichtigungen',chat_notif_sub:'Ton bei eingehender Nachricht',chat_rules:'💡 Sei respektvoll. Nachrichten sind öffentlich und moderiert.',chat_empty:'Noch keine Nachrichten. Sei der Erste!',chat_need_pseudo:'Wähle zuerst einen Benutzernamen',chat_slow:'Langsam, warte einen Moment',
+    battle_pass:'Kampfpass',bp_tier:'Stufe',bp_free:'Gratis',bp_premium:'Premium ⭐',achievements:'Erfolge',ach_unlocked:'freigeschaltet',tournament:'Turnier',tour_wins:'Gewonnene Turniere',
+  },
+  it:{
+    home:'Home',battle:'Arena',deck:'Mazzo',shop:'Negozio',friends:'Amici',leaderboard:'Classifiche',leagues:'Classificato',quests:'Missioni',settings:'Impostazioni',admin:'Admin',combat:'Combatti',arenas:'Arena',fight:'COMBATTI',my_chests:'📦 I miei forzieri',recent_history:'Cronologia recente',my_deck:'Il mio Mazzo',lb_title:'🌍 Classifiche Globali',shop_chests:'📦 Forzieri',shop_cards:'🃏 Carte singole',sync_sub:'Salva o recupera i tuoi progressi',avatar_sub:'Scegli il tuo emoji profilo',pseudo_sub:'Visibile in classifica',save_btn:'SALVA',my_stats:'Le mie statistiche',st_trophies:'🏆 Trofei',st_wins:'⚔️ Vittorie',st_losses:'💀 Sconfitte',st_deck:'🃏 Carte nel mazzo',publish_label:'Pubblica il mio punteggio',publish_sub:'Invia i tuoi trofei alla classifica globale',publish_btn:'PUBBLICA',audio:'Audio',sfx_label:'🔊 Effetti sonori',sfx_sub:'Suoni di battaglia e clic',music_label:'🎵 Musica',music_sub:'Musica di sottofondo in battaglia',vol_menu:'🎵 Volume menu',vol_menu_sub:'Musica dei menu',vol_battle:'⚔️ Volume battaglia',vol_battle_sub:'Musica in battaglia',language_sub:'Scegli la lingua preferita',help:'Aiuto',tutorial_sub:'Rivedi come giocare',review_btn:'RIVEDI',danger:'Pericolo',reset_label:'Reimposta',reset_sub:'Cancella tutti i tuoi progressi',acc_connected:'Connesso',acc_local:'Modalità locale',acc_logout:'DISCONNETTI',acc_login:'ACCEDI',acc_sub_online:'Progressi salvati online',acc_sub_offline:'Accedi per salvare online',twofa_enable:'ATTIVA',twofa_disable:'DISATTIVA',twofa_protected:'✅ Il tuo account è protetto',twofa_sub_off:'Proteggi il tuo account con un codice',deck_avg:'Media',deck_hint:'Tocca una carta per vedere le stat e potenziarla ⬆️',hero_powers:'🦸 Poteri dell\'Eroe (scegline 2)',all_cards:'Tutte le carte',friend_search_ph:'Cerca un giocatore per nome…',search_btn:'CERCA',tab_pending:'In attesa',tab_requests:'Ricevute',online:'Online',challenge_btn:'⚔️ Sfida',refresh:'↻ Aggiorna',all_ranks:'Tutti i ranghi',auth_tagline:'Accedi per salvare i tuoi progressi',auth_login_tab:'Accedi',auth_signup_tab:'Registrati',auth_pseudo_ph:'Il tuo nome di gioco',auth_pw_ph:'Password',auth_skip:'Gioca senza account (solo progressi locali)',combat_title:'⚔ COMBATTIMENTO',mana:'MANA',battle_instruction:'Tocca una carta → poi una zona per schierare',rs_stats:'Statistiche partita',rs_destroyed:'Torri distrutte',rs_lost:'Torri perse',rs_duration:'Durata',rs_towers:'Torri',rs_you:'Tu',rs_enemy:'Nemico',launch:'AVVIA',auth_login_btn:'ACCEDI',auth_signup_btn:'CREA ACCOUNT',auth_note_login:'Usa le stesse credenziali di zyntracode.ch',auth_note_signup:'Il tuo account funzionerà anche su zyntracode.ch',rs_back_home:'Ritorno alla home tra',reset_btn:'RESET',
+    play:'Gioca',battles:'Battaglie',victory:'Vittoria',defeat:'Sconfitta',draw:'Pareggio',trophies:'Trofei',win:'Vinci',lose:'Perdi',
+    login:'Accedi',register:'Iscriviti',logout:'Esci',email:'Email',password:'Password',confirm:'Conferma',
+    level:'Livello',xp:'XP',gold:'Oro',gems:'Gemme',chests:'Forzieri',cards:'Carte',powers:'Poteri',
+    daily_quests:'Missioni Giornaliere',weekly_quests:'Missioni Settimanali',claim:'RISCATTA',claimed:'✓ Riscattato',completed:'Completato!',all_quests_completed:'Tutte le missioni completate!',
+    ranked:'Punti Classificazione',ranked_find:'⚔️ TROVA PARTITA CLASSIFICATA',ranked_search:'Ricerca avversario...',ranked_cancel:'ANNULLA',
+    settings:'Impostazioni',account:'Account',sync:'Sincronizzazione Cloud',save:'💾 Salva',load:'📥 Carica',reset:'🗑️ Ripristina',
+    language:'Lingua',theme:'Tema',sound:'Audio',music:'Musica',sfx:'Effetti sonori',volume:'Volume',
+    profile:'Profilo',avatar:'Avatar',pseudo:'Nome utente',level:'Livello',stats:'Statistiche',
+    shop_title:'Negozio',buy:'Acquista',cost:'Costo',sold_out:'Esaurito',
+    friends_title:'Amici',add_friend:'Aggiungi amico',challenge:'Sfida',message:'Messaggio',
+    leaderboard_title:'Classifiche Globali',rank:'Posizione',wins:'Vittorie',losses:'Sconfitte',
+    arenas:'Arena',arena:'Arena',trophies_required:'trofei richiesti',
+    tutorial:'Tutorial',skip:'Salta',next:'Avanti',understood:'Ho capito',
+    connected:'Connesso',disconnected:'Disconnesso',loading:'Caricamento...',error:'Errore',success:'Successo',
+    cancel:'Annulla',confirm_reset:'Ripristinare tutto il progresso?',confirm_logout:'Disconnettersi?',
+    community:'Comunità',chat_global:'Chat Globale',chat_global_sub:'Chatta con tutti i giocatori',chat_send:'Invia',chat_placeholder:'Scrivi un messaggio…',chat_settings:'Impostazioni chat',chat_notifications:'Notifiche',chat_notif_sub:'Suono alla ricezione di un messaggio',chat_rules:'💡 Sii rispettoso. I messaggi sono pubblici e moderati.',chat_empty:'Nessun messaggio. Scrivi per primo!',chat_need_pseudo:'Scegli prima un nome utente',chat_slow:'Piano, aspetta un momento',
+    battle_pass:'Pass Battaglia',bp_tier:'Livello',bp_free:'Gratis',bp_premium:'Premium ⭐',achievements:'Obiettivi',ach_unlocked:'sbloccati',tournament:'Torneo',tour_wins:'Tornei vinti',
+  },
+  pt:{
+    home:'Início',battle:'Arenas',deck:'Baralho',shop:'Loja',friends:'Amigos',leaderboard:'Ranking',leagues:'Classificado',quests:'Missões',settings:'Configurações',admin:'Admin',combat:'Combate',arenas:'Arenas',fight:'COMBATER',my_chests:'📦 Meus Baús',recent_history:'Histórico Recente',my_deck:'Meu Baralho',lb_title:'🌍 Ranking Global',shop_chests:'📦 Baús',shop_cards:'🃏 Cartas avulsas',sync_sub:'Salve ou recupere seu progresso',avatar_sub:'Escolha seu emoji de perfil',pseudo_sub:'Visível no ranking',save_btn:'SALVAR',my_stats:'Minhas estatísticas',st_trophies:'🏆 Troféus',st_wins:'⚔️ Vitórias',st_losses:'💀 Derrotas',st_deck:'🃏 Cartas no baralho',publish_label:'Publicar minha pontuação',publish_sub:'Envie seus troféus ao ranking global',publish_btn:'PUBLICAR',audio:'Áudio',sfx_label:'🔊 Efeitos sonoros',sfx_sub:'Sons de batalha e cliques',music_label:'🎵 Música',music_sub:'Música de fundo na batalha',vol_menu:'🎵 Volume menu',vol_menu_sub:'Música dos menus',vol_battle:'⚔️ Volume batalha',vol_battle_sub:'Música na batalha',language_sub:'Escolha seu idioma preferido',help:'Ajuda',tutorial_sub:'Rever como jogar',review_btn:'REVER',danger:'Perigo',reset_label:'Redefinir',reset_sub:'Apaga todo o seu progresso',acc_connected:'Conectado',acc_local:'Modo local',acc_logout:'SAIR',acc_login:'ENTRAR',acc_sub_online:'Progresso salvo online',acc_sub_offline:'Entre para salvar online',twofa_enable:'ATIVAR',twofa_disable:'DESATIVAR',twofa_protected:'✅ Sua conta está protegida',twofa_sub_off:'Proteja sua conta com um código',deck_avg:'Méd.',deck_hint:'Toque numa carta para ver os status e melhorá-la ⬆️',hero_powers:'🦸 Poderes do Herói (escolha 2)',all_cards:'Todas as cartas',friend_search_ph:'Procurar um jogador por nome…',search_btn:'PROCURAR',tab_pending:'Pendente',tab_requests:'Recebidas',online:'Online',challenge_btn:'⚔️ Desafiar',refresh:'↻ Atualizar',all_ranks:'Todos os rangos',auth_tagline:'Entre para salvar seu progresso',auth_login_tab:'Entrar',auth_signup_tab:'Criar conta',auth_pseudo_ph:'Seu nome de jogo',auth_pw_ph:'Senha',auth_skip:'Jogar sem conta (progresso local apenas)',combat_title:'⚔ COMBATE',mana:'MANA',battle_instruction:'Toque numa carta → depois numa zona para implantar',rs_stats:'Estatísticas da partida',rs_destroyed:'Torres destruídas',rs_lost:'Torres perdidas',rs_duration:'Duração',rs_towers:'Torres',rs_you:'Você',rs_enemy:'Inimigo',launch:'INICIAR',auth_login_btn:'ENTRAR',auth_signup_btn:'CRIAR CONTA',auth_note_login:'Use as mesmas credenciais do zyntracode.ch',auth_note_signup:'Sua conta também funcionará no zyntracode.ch',rs_back_home:'Voltar ao início em',reset_btn:'RESET',
+    play:'Jogar',battles:'Batalhas',victory:'Vitória',defeat:'Derrota',draw:'Empate',trophies:'Troféus',win:'Vence',lose:'Perde',
+    login:'Entrar',register:'Registrar',logout:'Sair',email:'Email',password:'Senha',confirm:'Confirmar',
+    level:'Nível',xp:'XP',gold:'Ouro',gems:'Joias',chests:'Baús',cards:'Cartas',powers:'Poderes',
+    daily_quests:'Missões Diárias',weekly_quests:'Missões Semanais',claim:'REIVINDICAR',claimed:'✓ Reivindicado',completed:'Concluído!',all_quests_completed:'Todas as missões concluídas!',
+    ranked:'Pontos de Classificação',ranked_find:'⚔️ ENCONTRAR PARTIDA CLASSIFICADA',ranked_search:'Procurando oponente...',ranked_cancel:'CANCELAR',
+    settings:'Configurações',account:'Conta',sync:'Sincronização',save:'💾 Salvar',load:'📥 Carregar',reset:'🗑️ Resetar',
+    language:'Idioma',theme:'Tema',sound:'Som',music:'Música',sfx:'Efeitos sonoros',volume:'Volume',
+    profile:'Perfil',avatar:'Avatar',pseudo:'Usuário',level:'Nível',stats:'Estatísticas',
+    shop_title:'Loja',buy:'Comprar',cost:'Custo',sold_out:'Esgotado',
+    friends_title:'Amigos',add_friend:'Adicionar amigo',challenge:'Desafiar',message:'Mensagem',
+    leaderboard_title:'Ranking Global',rank:'Posição',wins:'Vitórias',losses:'Derrotas',
+    arenas:'Arenas',arena:'Arena',trophies_required:'troféus necessários',
+    tutorial:'Tutorial',skip:'Pular',next:'Próximo',understood:'Entendi',
+    connected:'Conectado',disconnected:'Desconectado',loading:'Carregando...',error:'Erro',success:'Sucesso',
+    cancel:'Cancelar',confirm_reset:'Resetar todo o progresso?',confirm_logout:'Sair?',
+    community:'Comunidade',chat_global:'Chat Global',chat_global_sub:'Converse com todos os jogadores',chat_send:'Enviar',chat_placeholder:'Escreva uma mensagem…',chat_settings:'Configurações do chat',chat_notifications:'Notificações',chat_notif_sub:'Som ao receber uma mensagem',chat_rules:'💡 Seja respeitoso. As mensagens são públicas e moderadas.',chat_empty:'Nenhuma mensagem. Seja o primeiro a escrever!',chat_need_pseudo:'Escolha um nome de usuário primeiro',chat_slow:'Devagar, espere um momento',
+    battle_pass:'Passe de Batalha',bp_tier:'Nível',bp_free:'Grátis',bp_premium:'Premium ⭐',achievements:'Conquistas',ach_unlocked:'desbloqueadas',tournament:'Torneio',tour_wins:'Torneios vencidos',
+  },
+};
+
+// Get translated string by key
+function t(key){
+  return (TRANSLATIONS[currentLanguage]||TRANSLATIONS.fr)[key]||key;
+}
+
+// Set language and save preference
+function setLanguage(lang){
+  if(TRANSLATIONS[lang]){
+    currentLanguage=lang;
+    localStorage.setItem('zyntraLanguage',lang);
+    location.reload(); // reload to apply translations everywhere
+  }
+}
+
+// Load language preference on startup
+function loadLanguagePreference(){
+  const saved=localStorage.getItem('zyntraLanguage');
+  if(saved&&TRANSLATIONS[saved]){ currentLanguage=saved; }
+  else {
+    // Auto-detect browser language
+    const browserLang=navigator.language.split('-')[0];
+    if(TRANSLATIONS[browserLang]){ currentLanguage=browserLang; }
+  }
+  applyTranslations();
+}
+
+// Apply translations to all UI elements with data-i18n attribute
+function applyTranslations(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key=el.getAttribute('data-i18n');
+    if(!key)return;
+    if(el.tagName==='INPUT'||el.tagName==='TEXTAREA'){ el.placeholder=t(key); }
+    else if(el.children.length===0){ el.textContent=t(key); } // only plain-text elements
+    // elements with children are skipped (their child spans carry their own data-i18n)
+  });
+  // Update dynamic content if on a page
+  if(typeof activePage!=='undefined'){
+    if(activePage==='leagues') buildLeaguesPage();
+    if(activePage==='quests') buildQuestsPage();
+    if(activePage==='settings') buildSettingsPage();
+  }
+}
+
 const LEAGUES=[
   {id:1,name:'Ligue de Bois',   emblem:'🪵',min:0,    color:'#8d6e63'},
   {id:2,name:'Ligue de Pierre', emblem:'🪨',min:100,  color:'#90a4ae'},
@@ -1836,23 +2258,23 @@ function renderRankedPanel(){
   const winrate=total>0?Math.round(player.rankedWins/total*100):0;
   panel.innerHTML=`
     <div class="ranked-record">
-      <div class="ranked-rec-item"><div class="ranked-rec-val" style="color:#2ecc71">${player.rankedWins}</div><div class="ranked-rec-lbl">Victoires</div></div>
-      <div class="ranked-rec-item"><div class="ranked-rec-val" style="color:#e74c3c">${player.rankedLosses}</div><div class="ranked-rec-lbl">Défaites</div></div>
+      <div class="ranked-rec-item"><div class="ranked-rec-val" style="color:#2ecc71">${player.rankedWins}</div><div class="ranked-rec-lbl">${t('wins')}</div></div>
+      <div class="ranked-rec-item"><div class="ranked-rec-val" style="color:#e74c3c">${player.rankedLosses}</div><div class="ranked-rec-lbl">${t('losses')}</div></div>
       <div class="ranked-rec-item"><div class="ranked-rec-val">${winrate}%</div><div class="ranked-rec-lbl">Ratio</div></div>
     </div>
     ${searching
       ? `<div class="ranked-searching">
            <div class="ranked-spinner">🔍</div>
-           <div class="ranked-search-txt">Recherche d'un adversaire de ton rang…</div>
+           <div class="ranked-search-txt">${t('ranked_search')}</div>
            <div class="ranked-search-sub" id="ranked-search-time">0s</div>
-           <button class="ranked-cancel-btn" onclick="cancelRankedQueue()">ANNULER</button>
+           <button class="ranked-cancel-btn" onclick="cancelRankedQueue()">${t('ranked_cancel')}</button>
          </div>`
-      : `<button class="ranked-find-btn" onclick="joinRankedQueue()">⚔️ TROUVER UNE PARTIE CLASSÉE</button>
+      : `<button class="ranked-find-btn" onclick="joinRankedQueue()">${t('ranked_find')}</button>
          <div class="ranked-find-note">Combats contre de vrais joueurs uniquement · +25 PC par victoire</div>`
     }`;
 }
 
-let player={pseudo:'Joueur',avatar:'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,weeklyQuests:null,questWeek:null,rankedRP:0,rankedWins:0,rankedLosses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+let player={pseudo:'Joueur',avatar:'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,weeklyQuests:null,questWeek:null,rankedRP:0,rankedWins:0,rankedLosses:0,passSeason:null,passPoints:0,passPremium:false,passClaimedFree:[],passClaimedPrem:[],achClaimed:[],tourWins:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
 
 // ══ DAILY QUESTS ══
 // Pool of possible quests. type matches an event we track during play.
@@ -1925,6 +2347,462 @@ function ensureWeeklyQuests(){
   }
 }
 
+// ══ BATTLE PASS (Passe de Combat) ══
+const PASS_MAX_TIER=30;
+const PASS_POINTS_PER_TIER=100;   // points needed per tier
+const PASS_PREMIUM_COST=500;      // gems to unlock premium track
+// Build the reward table (tier 1..30), free + premium track
+function buildPassRewards(){
+  const arr=[];
+  for(let i=1;i<=PASS_MAX_TIER;i++){
+    let free,prem;
+    if(i%10===0){ free={type:'chest',value:'magic',label:'🔮 Magique',icon:'🔮'}; }
+    else if(i%5===0){ free={type:'gems',value:15,label:'💎 15',icon:'💎'}; }
+    else { free={type:'gold',value:40+i*8,label:'🪙 '+(40+i*8),icon:'🪙'}; }
+    if(i%10===0){ prem={type:'gems',value:120,label:'💎 120',icon:'💎'}; }
+    else if(i%5===0){ prem={type:'chest',value:'gold',label:'🏆 Coffre Or',icon:'🏆'}; }
+    else if(i%2===0){ prem={type:'gems',value:12,label:'💎 12',icon:'💎'}; }
+    else { prem={type:'gold',value:90+i*12,label:'🪙 '+(90+i*12),icon:'🪙'}; }
+    arr.push({tier:i,free,prem});
+  }
+  return arr;
+}
+const PASS_REWARDS=buildPassRewards();
+
+// Season key = current year-month (resets monthly)
+function seasonKey(){ return new Date().toISOString().slice(0,7); } // YYYY-MM
+function seasonName(){
+  const months=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  const d=new Date();
+  return months[d.getMonth()]+' '+d.getFullYear();
+}
+function ensurePassSeason(){
+  const sk=seasonKey();
+  if(player.passSeason!==sk){
+    player.passSeason=sk;
+    player.passPoints=0;
+    player.passPremium=false;
+    player.passClaimedFree=[];
+    player.passClaimedPrem=[];
+    saveProgress();
+  }
+}
+function passTier(){
+  return Math.min(PASS_MAX_TIER,Math.floor(player.passPoints/PASS_POINTS_PER_TIER));
+}
+// Award battle-pass points (called after battles, quests)
+function addPassPoints(n){
+  ensurePassSeason();
+  const before=passTier();
+  player.passPoints+=n;
+  const after=passTier();
+  saveProgress();
+  if(after>before){
+    setTimeout(()=>{ toast(`🎟️ Passe : palier ${after} atteint !`,3500); SFX.victory(); },800);
+  }
+  updatePassBadge();
+}
+function grantPassReward(r){
+  if(r.type==='gold'){ player.gold+=r.value; }
+  else if(r.type==='gems'){ player.gems+=r.value; }
+  else if(r.type==='chest'){ giveChest(r.value); }
+}
+function claimPassReward(tier,track){
+  ensurePassSeason();
+  if(tier>passTier()){ toast('🔒 Palier pas encore atteint'); return; }
+  if(track==='prem'&&!player.passPremium){ toast('⭐ Débloque le Premium d\'abord'); return; }
+  const claimedArr=track==='prem'?player.passClaimedPrem:player.passClaimedFree;
+  if(claimedArr.includes(tier)){ return; }
+  const reward=PASS_REWARDS.find(p=>p.tier===tier);
+  if(!reward) return;
+  const r=track==='prem'?reward.prem:reward.free;
+  grantPassReward(r);
+  claimedArr.push(tier);
+  saveProgress(); syncUI();
+  SFX.victory(); launchConfetti();
+  toast(`🎁 ${r.label} récupéré !`);
+  buildBattlePassPage();
+  updatePassBadge();
+}
+function buyPassPremium(){
+  ensurePassSeason();
+  if(player.passPremium){ toast('✅ Premium déjà débloqué'); return; }
+  if(player.gems<PASS_PREMIUM_COST){ toast(`💎 Il te faut ${PASS_PREMIUM_COST} gemmes`); return; }
+  if(!confirm(`Débloquer le Passe Premium pour ${PASS_PREMIUM_COST} 💎 ?`)) return;
+  player.gems-=PASS_PREMIUM_COST;
+  player.passPremium=true;
+  saveProgress(); syncUI();
+  SFX.victory(); launchConfetti();
+  toast('⭐ Passe Premium débloqué !',3500);
+  buildBattlePassPage();
+}
+// Count claimable (reached, unclaimed) reward tiers for the badge
+function passClaimableCount(){
+  ensurePassSeason();
+  const tier=passTier();
+  let n=0;
+  for(let i=1;i<=tier;i++){
+    if(!player.passClaimedFree.includes(i)) n++;
+    if(player.passPremium&&!player.passClaimedPrem.includes(i)) n++;
+  }
+  return n;
+}
+function updatePassBadge(){
+  const badge=document.getElementById('pass-badge');
+  if(!badge)return;
+  const n=passClaimableCount();
+  badge.style.display=n>0?'flex':'none';
+  badge.textContent=n;
+}
+
+// ══ ACHIEVEMENTS (Succès) ══
+// Progress is read live from existing stats — no extra tracking needed.
+const ACHIEVEMENTS=[
+  // Combat
+  {id:'win1',  cat:'Combat',name:'Première victoire',desc:'Gagne ton 1er combat',icon:'🥇',stat:'wins',goal:1,gold:50,gems:2},
+  {id:'win10', cat:'Combat',name:'Combattant',desc:'Gagne 10 combats',icon:'⚔️',stat:'wins',goal:10,gold:150,gems:3},
+  {id:'win50', cat:'Combat',name:'Vétéran',desc:'Gagne 50 combats',icon:'🛡️',stat:'wins',goal:50,gold:400,gems:6},
+  {id:'win100',cat:'Combat',name:'Champion',desc:'Gagne 100 combats',icon:'👑',stat:'wins',goal:100,gold:800,gems:12},
+  {id:'win250',cat:'Combat',name:'Légende vivante',desc:'Gagne 250 combats',icon:'🌟',stat:'wins',goal:250,gold:1500,gems:25},
+  // Progression (trophies)
+  {id:'tr300', cat:'Progression',name:'En route',desc:'Atteins 300 trophées',icon:'🏆',stat:'trophies',goal:300,gold:200,gems:3},
+  {id:'tr1000',cat:'Progression',name:'Grimpeur',desc:'Atteins 1000 trophées',icon:'🏆',stat:'trophies',goal:1000,gold:500,gems:7},
+  {id:'tr2200',cat:'Progression',name:'Maître des arènes',desc:'Atteins 2200 trophées',icon:'🏆',stat:'trophies',goal:2200,gold:1000,gems:15},
+  // Level
+  {id:'lvl5',  cat:'Progression',name:'Apprenti',desc:'Atteins le niveau 5',icon:'⭐',stat:'level',goal:5,gold:150,gems:2},
+  {id:'lvl15', cat:'Progression',name:'Expert',desc:'Atteins le niveau 15',icon:'⭐',stat:'level',goal:15,gold:400,gems:6},
+  {id:'lvl30', cat:'Progression',name:'Grand Maître',desc:'Atteins le niveau 30',icon:'🌠',stat:'level',goal:30,gold:1000,gems:15},
+  // Ranked
+  {id:'rw1',   cat:'Classé',name:'Premier rang',desc:'Gagne 1 match classé',icon:'🥇',stat:'rankedWins',goal:1,gold:100,gems:3},
+  {id:'rw10',  cat:'Classé',name:'Compétiteur',desc:'Gagne 10 matchs classés',icon:'🏅',stat:'rankedWins',goal:10,gold:400,gems:8},
+  {id:'rw50',  cat:'Classé',name:'Gladiateur',desc:'Gagne 50 matchs classés',icon:'🏆',stat:'rankedWins',goal:50,gold:1200,gems:20},
+  {id:'rp1000',cat:'Classé',name:'Bien classé',desc:'Atteins 1000 PC',icon:'📈',stat:'rankedRP',goal:1000,gold:600,gems:10},
+  // Collection
+  {id:'cards5',cat:'Collection',name:'Collectionneur',desc:'Possède 5 cartes améliorées',icon:'🃏',stat:'cards',goal:5,gold:150,gems:3},
+  {id:'cards10',cat:'Collection',name:'Deck complet',desc:'Possède 10 cartes améliorées',icon:'🎴',stat:'cards',goal:10,gold:400,gems:6},
+  // Tournament
+  {id:'tour1', cat:'Tournoi',name:'Tournoyeur',desc:'Gagne 1 tournoi',icon:'🏆',stat:'tourWins',goal:1,gold:300,gems:5},
+  {id:'tour5', cat:'Tournoi',name:'Roi du tournoi',desc:'Gagne 5 tournois',icon:'👑',stat:'tourWins',goal:5,gold:900,gems:14},
+  // Battle pass
+  {id:'pass15',cat:'Progression',name:'Passe assidu',desc:'Atteins le palier 15 du passe',icon:'🎟️',stat:'passTier',goal:15,gold:400,gems:6},
+  {id:'pass30',cat:'Progression',name:'Passe maîtrisé',desc:'Termine le passe (palier 30)',icon:'🎟️',stat:'passTier',goal:30,gold:1000,gems:18},
+  // Wealth
+  {id:'gold5k', cat:'Collection',name:'Fortuné',desc:'Accumule 5000 or',icon:'🪙',stat:'gold',goal:5000,gold:0,gems:10},
+  {id:'gems100',cat:'Collection',name:'Joaillier',desc:'Possède 100 gemmes',icon:'💎',stat:'gems',goal:100,gold:500,gems:0},
+];
+function achStatValue(a){
+  switch(a.stat){
+    case 'wins': return player.wins;
+    case 'trophies': return player.trophies;
+    case 'level': return player.level;
+    case 'rankedWins': return player.rankedWins;
+    case 'rankedRP': return player.rankedRP;
+    case 'cards': return Object.keys(player.cardLevels||{}).length;
+    case 'tourWins': return player.tourWins||0;
+    case 'passTier': return passTier();
+    case 'gold': return player.gold;
+    case 'gems': return player.gems;
+    default: return 0;
+  }
+}
+function achClaimableCount(){
+  let n=0;
+  ACHIEVEMENTS.forEach(a=>{ if(achStatValue(a)>=a.goal && !player.achClaimed.includes(a.id)) n++; });
+  return n;
+}
+function updateAchBadge(){
+  const badge=document.getElementById('ach-badge');
+  if(!badge)return;
+  const n=achClaimableCount();
+  badge.style.display=n>0?'flex':'none';
+  badge.textContent=n;
+}
+function claimAchievement(id){
+  const a=ACHIEVEMENTS.find(x=>x.id===id);
+  if(!a||player.achClaimed.includes(id))return;
+  if(achStatValue(a)<a.goal){ toast('🔒 Objectif pas encore atteint'); return; }
+  player.gold+=a.gold;
+  player.gems+=a.gems;
+  player.achClaimed.push(id);
+  saveProgress(); syncUI();
+  SFX.victory(); launchConfetti();
+  const rwd=`${a.gold>0?'+'+a.gold+' 🪙':''}${a.gold>0&&a.gems>0?' ':''}${a.gems>0?'+'+a.gems+' 💎':''}`;
+  toast(`🏅 Succès débloqué ! ${rwd}`);
+  buildAchievementsPage();
+  updateAchBadge();
+}
+function openAchievements(){
+  document.getElementById('achievements-panel').classList.add('show');
+  buildAchievementsPage();
+  SFX.click();
+}
+function closeAchievements(){
+  document.getElementById('achievements-panel').classList.remove('show');
+  SFX.click();
+}
+function buildAchievementsPage(){
+  const unlocked=ACHIEVEMENTS.filter(a=>player.achClaimed.includes(a.id)).length;
+  document.getElementById('ach-count').textContent=`${unlocked} / ${ACHIEVEMENTS.length}`;
+  const cats=['Combat','Classé','Tournoi','Progression','Collection'];
+  const list=document.getElementById('ach-list');
+  list.innerHTML=cats.map(cat=>{
+    const items=ACHIEVEMENTS.filter(a=>a.cat===cat);
+    if(!items.length)return '';
+    return `<div class="ach-cat-title">${cat}</div>`+items.map(a=>{
+      const val=achStatValue(a);
+      const done=val>=a.goal;
+      const claimed=player.achClaimed.includes(a.id);
+      const pct=Math.min(100,val/a.goal*100);
+      const rwd=`${a.gold>0?'🪙 '+a.gold:''}${a.gold>0&&a.gems>0?' · ':''}${a.gems>0?'💎 '+a.gems:''}`;
+      return `<div class="ach-card ${claimed?'claimed':done?'done':''}">
+        <div class="ach-icon">${a.icon}</div>
+        <div class="ach-info">
+          <div class="ach-name">${a.name}</div>
+          <div class="ach-desc">${a.desc}</div>
+          <div class="ach-bar"><div class="ach-bar-fill ${done?'full':''}" style="width:${pct}%"></div></div>
+          <div class="ach-prog">${Math.min(val,a.goal)} / ${a.goal} · <span class="ach-rwd">${rwd}</span></div>
+        </div>
+        ${claimed?'<div class="ach-tag">✓</div>':done?`<button class="ach-claim" onclick="claimAchievement('${a.id}')">🎁</button>`:''}
+      </div>`;
+    }).join('');
+  }).join('');
+  updateAchBadge();
+}
+
+// ══ TOURNAMENT (Tournoi) ══
+const TOUR_ROUNDS=[
+  {name:'Quart de finale',icon:'⚔️'},
+  {name:'Demi-finale',icon:'🔥'},
+  {name:'Finale',icon:'👑'},
+];
+let tournamentMode=false;
+let tournamentRound=0;
+
+function openTournament(){
+  document.getElementById('tournament-panel').classList.add('show');
+  buildTournamentPage();
+  SFX.click();
+}
+function closeTournament(){
+  document.getElementById('tournament-panel').classList.remove('show');
+  SFX.click();
+}
+function buildTournamentPage(){
+  document.getElementById('tour-wins-count').textContent=player.tourWins||0;
+  const running=tournamentMode;
+  const bracket=TOUR_ROUNDS.map((r,i)=>{
+    const rn=i+1;
+    let state='';
+    if(running){
+      if(rn<tournamentRound) state='won';
+      else if(rn===tournamentRound) state='current';
+    }
+    const statusIcon=state==='won'?'✅':state==='current'?'⚔️':'🔒';
+    return `<div class="tour-round ${state}">
+      <div class="tour-round-icon">${r.icon}</div>
+      <div class="tour-round-info">
+        <div class="tour-round-name">${r.name}</div>
+        <div class="tour-round-sub">Adversaire niveau ${player.level+rn}</div>
+      </div>
+      <div class="tour-round-status">${statusIcon}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('tour-body').innerHTML=`
+    <div class="tour-intro">
+      <div class="tour-trophy">🏆</div>
+      <div class="tour-title">${running?'Tournoi en cours':'Tournoi des Champions'}</div>
+      <div class="tour-desc">${running
+        ? `Manche ${tournamentRound} / 3 — gagne pour avancer !`
+        : 'Affronte 3 adversaires de plus en plus forts. Gagne les 3 manches d\'affilée pour remporter le tournoi !'}</div>
+    </div>
+    <div class="tour-bracket">${bracket}</div>
+    <div class="tour-prize">🎁 Grand prix : 500 🪙 · 30 💎 · 🔮 Coffre Magique</div>
+    ${running?'':'<button class="tour-start-btn" onclick="startTournament()">⚔️ COMMENCER LE TOURNOI</button>'}
+  `;
+}
+function startTournament(){
+  if(_isBanned){showBanScreen();return;}
+  tournamentMode=true;
+  tournamentRound=1;
+  closeTournament();
+  launchTournamentBattle();
+}
+function launchTournamentBattle(){
+  isRankedMatch=false;
+  mpMode=null;
+  const btn=document.querySelector('.nav-btn[data-page="battle"]');
+  showPage('battle',btn);
+  document.getElementById('overlay').classList.add('hidden');
+  document.getElementById('result-screen').classList.remove('show');
+  document.body.classList.remove('selecting');
+  clearInterval(rsTimer);
+  toast(`🏆 ${TOUR_ROUNDS[tournamentRound-1].name} — adversaire niveau ${player.level+tournamentRound}`,3000);
+  playBattleCountdown(()=>{
+    startBattleMusic();
+    initGame();gs.running=true;animId=requestAnimationFrame(gameLoop);
+  });
+}
+function showTournamentResult(winner){
+  const pd=gs.destroyed.player, ed=gs.destroyed.enemy;
+  let won;
+  if(winner==='player') won=true;
+  else if(winner==='enemy') won=false;
+  else won=ed>pd; // tie: must have destroyed more towers to advance
+  stopMusic();
+  const isFinal=tournamentRound>=3;
+  // quest + pass progression
+  trackQuest('play',1);
+  addPassPoints(won?25:10);
+  if(won) trackQuest('win',1);
+
+  let icon,title,sub,col,nextAction;
+  let earnedXp=20+ed*8, earnedGold=0, earnedGems=0;
+  if(won && isFinal){
+    // TOURNAMENT WON!
+    icon='🏆';title='TOURNOI REMPORTÉ !';sub='Tu es le champion du tournoi !';col='#FFD700';
+    player.tourWins=(player.tourWins||0)+1;
+    earnedGold=500; earnedGems=30;
+    player.gold+=earnedGold; player.gems+=earnedGems;
+    giveChest('magic');
+    earnedXp+=120;
+    SFX.victory();launchConfetti();
+    nextAction='panel';
+  } else if(won){
+    // Round won, advance
+    icon='✅';title='MANCHE GAGNÉE !';sub=`Tu passes en ${TOUR_ROUNDS[tournamentRound].name} !`;col='#2ecc71';
+    earnedGold=60+tournamentRound*40; player.gold+=earnedGold;
+    SFX.victory();
+    nextAction='next';
+  } else {
+    // Eliminated
+    icon='💀';title='ÉLIMINÉ';sub=`Tu as perdu en ${TOUR_ROUNDS[tournamentRound-1].name}.`;col='#e74c3c';
+    earnedGold=20+tournamentRound*15; player.gold+=earnedGold;
+    SFX.defeat();
+    nextAction='panel';
+  }
+  // XP + level
+  player.xp+=earnedXp;
+  let leveledUp=false;
+  while(player.xp>=xpForLevel(player.level)){ player.xp-=xpForLevel(player.level); player.level++; leveledUp=true; }
+  if(leveledUp){ setTimeout(()=>{toast(`⭐ NIVEAU ${player.level} ATTEINT !`,4000);SFX.victory();},1600); }
+  addHistory(icon,won?'player':'enemy');
+  saveProgress(); syncUI();
+
+  // Fill result DOM
+  document.getElementById('rs-icon').textContent=icon;
+  document.getElementById('rs-title').textContent=title;
+  document.getElementById('rs-title').style.color=col;
+  document.getElementById('rs-sub').textContent=sub;
+  const lbl=document.querySelector('#result-screen .rs-trophy-label'); if(lbl) lbl.textContent='Tournoi';
+  const ticon=document.querySelector('#result-screen .rs-trophy-icon'); if(ticon) ticon.textContent='🏆';
+  document.getElementById('rs-trophy-change').textContent=won&&!isFinal?`Manche ${tournamentRound}/3`:won?'CHAMPION':'Éliminé';
+  document.getElementById('rs-trophy-change').style.color=col;
+  document.getElementById('rs-trophy-total').textContent=`${player.tourWins||0} 🏆`;
+  // Rewards
+  const rewBox=document.getElementById('rs-rewards');
+  let rh='';
+  if(earnedXp>0) rh+=`<div class="currency-pill" style="font-size:.9rem;padding:8px 14px;color:#d7a8ff;border-color:#9b59b6">⭐ +${earnedXp} XP</div>`;
+  if(earnedGold>0) rh+=`<div class="currency-pill gold" style="font-size:.9rem;padding:8px 14px">🪙 +${earnedGold}</div>`;
+  if(earnedGems>0) rh+=`<div class="currency-pill gems" style="font-size:.9rem;padding:8px 14px">💎 +${earnedGems}</div>`;
+  if(won&&isFinal) rh+=`<div class="currency-pill" style="font-size:.9rem;padding:8px 14px;color:#b06fff;border-color:#7B1FA2">🔮 Coffre</div>`;
+  if(rh){ rewBox.innerHTML=rh; rewBox.style.display='flex'; rewBox.style.flexWrap='wrap'; }
+  else rewBox.style.display='none';
+  // Towers stats
+  document.getElementById('rs-towers-destroyed').textContent=ed;
+  document.getElementById('rs-towers-lost').textContent=pd;
+  const elapsed=GAME_DUR-gs.timeLeft;
+  const dm=Math.floor(elapsed/60),ds=Math.floor(elapsed%60);
+  document.getElementById('rs-duration').textContent=`${dm}:${ds.toString().padStart(2,'0')}`;
+  const pt=gs.towers.player, et=gs.towers.enemy;
+  document.getElementById('rs-player-towers').textContent=(pt.left.hp>0?'🏯':'💀')+(pt.right.hp>0?'🏯':'💀')+(pt.king.hp>0?'🛡️':'💀');
+  document.getElementById('rs-enemy-towers').textContent=(et.left.hp>0?'🏰':'💀')+(et.right.hp>0?'🏰':'💀')+(et.king.hp>0?'👑':'💀');
+  document.getElementById('rs-player-alive').textContent=[pt.left,pt.right,pt.king].filter(t=>t.hp>0).length+'/3';
+  document.getElementById('rs-enemy-alive').textContent=[et.left,et.right,et.king].filter(t=>t.hp>0).length+'/3';
+  document.getElementById('rs-player-box').classList.toggle('winner-side',won);
+  document.getElementById('rs-enemy-box').classList.toggle('winner-side',!won);
+
+  const rs=document.getElementById('result-screen');
+  rs.classList.add('show'); rs.scrollTop=0;
+  document.getElementById('rs-countdown').textContent=5;
+  document.getElementById('rs-bar').style.width='100%';
+  clearInterval(rsTimer);
+  const total=5000,step=50;let el2=0;
+  rsTimer=setInterval(()=>{
+    el2+=step;
+    document.getElementById('rs-bar').style.width=Math.max(0,100-(el2/total*100))+'%';
+    document.getElementById('rs-countdown').textContent=Math.ceil((total-el2)/1000);
+    if(el2>=total){
+      clearInterval(rsTimer); rs.classList.remove('show');
+      if(nextAction==='next'){
+        tournamentRound++;
+        setTimeout(()=>launchTournamentBattle(),400);
+      } else {
+        tournamentMode=false; tournamentRound=0;
+        setTimeout(()=>{ goHome(); openTournament(); },400);
+      }
+    }
+  },step);
+}
+
+function openBattlePass(){
+  ensurePassSeason();
+  document.getElementById('battle-pass-panel').classList.add('show');
+  buildBattlePassPage();
+  SFX.click();
+}
+function closeBattlePass(){
+  document.getElementById('battle-pass-panel').classList.remove('show');
+  SFX.click();
+}
+function buildBattlePassPage(){
+  ensurePassSeason();
+  const tier=passTier();
+  const next=Math.min(PASS_MAX_TIER,tier+1);
+  // Header
+  document.getElementById('bp-season').textContent='🎟️ '+seasonName();
+  document.getElementById('bp-tier').textContent=tier;
+  const inTier=player.passPoints%PASS_POINTS_PER_TIER;
+  const pct=tier>=PASS_MAX_TIER?100:(inTier/PASS_POINTS_PER_TIER*100);
+  document.getElementById('bp-progress-fill').style.width=pct+'%';
+  document.getElementById('bp-progress-text').textContent=tier>=PASS_MAX_TIER
+    ? 'Passe terminé ! 🎉'
+    : `${inTier} / ${PASS_POINTS_PER_TIER} pts vers le palier ${next}`;
+  // Premium button
+  const premBtn=document.getElementById('bp-premium-btn');
+  if(player.passPremium){ premBtn.textContent='⭐ PREMIUM ACTIF'; premBtn.disabled=true; premBtn.style.opacity='.6'; }
+  else { premBtn.textContent=`⭐ DÉBLOQUER PREMIUM — ${PASS_PREMIUM_COST} 💎`; premBtn.disabled=false; premBtn.style.opacity='1'; }
+  // Tiers list
+  const list=document.getElementById('bp-tiers');
+  list.innerHTML=PASS_REWARDS.map(p=>{
+    const reached=p.tier<=tier;
+    const freeClaimed=player.passClaimedFree.includes(p.tier);
+    const premClaimed=player.passClaimedPrem.includes(p.tier);
+    const freeCell=passCell(p.free,reached,freeClaimed,p.tier,'free',true);
+    const premCell=passCell(p.prem,reached,premClaimed,p.tier,'prem',player.passPremium);
+    return `<div class="bp-tier-row ${reached?'reached':''}">
+      <div class="bp-tier-num ${p.tier<=tier?'on':''}">${p.tier}</div>
+      ${freeCell}
+      ${premCell}
+    </div>`;
+  }).join('');
+  // Scroll to current tier
+  const cur=list.querySelector('.bp-tier-row.reached:last-of-type');
+  updatePassBadge();
+}
+function passCell(r,reached,claimed,tier,track,unlocked){
+  const canClaim=reached&&!claimed&&unlocked;
+  let cls='bp-cell '+(track==='prem'?'prem':'free');
+  if(claimed) cls+=' claimed';
+  else if(canClaim) cls+=' claimable';
+  else if(!reached||!unlocked) cls+=' locked';
+  const onclick=canClaim?`onclick="claimPassReward(${tier},'${track}')"`:'';
+  return `<div class="${cls}" ${onclick}>
+    <div class="bp-cell-icon">${r.icon}</div>
+    <div class="bp-cell-label">${r.label}</div>
+    ${claimed?'<div class="bp-cell-tag">✓</div>':canClaim?'<div class="bp-cell-tag claim">🎁</div>':(!unlocked&&track==='prem')?'<div class="bp-cell-tag">🔒</div>':''}
+  </div>`;
+}
+
 function todayStr(){ return new Date().toISOString().slice(0,10); } // YYYY-MM-DD
 
 function ensureDailyQuests(){
@@ -1967,6 +2845,7 @@ function claimQuest(id){
   q.claimed=true;
   player.gold+=q.gold;
   player.gems+=q.gems;
+  addPassPoints(q.id&&q.id.startsWith('wk_')?40:15); // weekly quests give more pass points
   saveProgress();syncUI();
   SFX.victory();launchConfetti();
   toast(`🎁 Récompense : +${q.gold} 🪙${q.gems>0?` +${q.gems} 💎`:''}`);
@@ -1983,10 +2862,10 @@ function questCardHTML(q){
           <div class="quest-name">${q.name}</div>
           <div class="quest-reward">🪙 ${q.gold}${q.gems>0?` · 💎 ${q.gems}`:''}</div>
         </div>
-        ${q.claimed?'<div class="quest-claimed-tag">✓ Réclamé</div>':done?`<button class="quest-claim-btn" onclick="claimQuest('${q.id}')">RÉCLAMER</button>`:''}
+        ${q.claimed?'<div class="quest-claimed-tag">✓ '+t('claimed')+'</div>':done?`<button class="quest-claim-btn" onclick="claimQuest('${q.id}')">${t('claim')}</button>`:''}
       </div>
       <div class="quest-progress-bar"><div class="quest-progress-fill ${done?'full':''}" style="width:${pct}%"></div></div>
-      <div class="quest-progress-text"><span>${q.progress} / ${q.goal}</span>${done&&!q.claimed?'<span style="color:#2ecc71">Terminé !</span>':''}</div>
+      <div class="quest-progress-text"><span>${q.progress} / ${q.goal}</span>${done&&!q.claimed?'<span style="color:#2ecc71">'+t('completed')+'</span>':''}</div>
     </div>`;
 }
 
@@ -1998,9 +2877,19 @@ function buildQuestsPage(){
   // Weekly section
   const wl=document.getElementById('weekly-quests-list');
   if(wl) wl.innerHTML=player.weeklyQuests.map(questCardHTML).join('');
+  // Update section titles
+  const dailyTitle=document.querySelector('[data-i18n="daily_quests"]');
+  if(dailyTitle) dailyTitle.textContent=t('daily_quests');
+  const weeklyTitle=document.querySelector('[data-i18n="weekly_quests"]');
+  if(weeklyTitle) weeklyTitle.textContent=t('weekly_quests');
   // Bonus banner if everything (daily + weekly) claimed
   const allClaimed=player.quests.every(q=>q.claimed)&&player.weeklyQuests.every(q=>q.claimed);
-  document.getElementById('quests-bonus').style.display=allClaimed?'block':'none';
+  const bonusDiv=document.getElementById('quests-bonus');
+  if(bonusDiv){
+    bonusDiv.style.display=allClaimed?'block':'none';
+    const bonusTitle=bonusDiv.querySelector('.quests-bonus-title');
+    if(bonusTitle) bonusTitle.textContent='🎁 '+t('all_quests_completed');
+  }
   updateQuestResetTimer();
 }
 
@@ -2134,7 +3023,7 @@ const SHOP_CHESTS=[
 function saveProgress(){
   localStorage.setItem('clashArena',JSON.stringify({
     pseudo:player.pseudo,avatar:player.avatar,level:player.level,xp:player.xp,trophies:player.trophies,wins:player.wins,losses:player.losses,
-    gold:player.gold,gems:player.gems,chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,quests:player.quests,questDay:player.questDay,weeklyQuests:player.weeklyQuests,questWeek:player.questWeek,rankedRP:player.rankedRP,rankedWins:player.rankedWins,rankedLosses:player.rankedLosses,deck:player.deck
+    gold:player.gold,gems:player.gems,chests:player.chests,cardLevels:player.cardLevels,powers:player.powers,quests:player.quests,questDay:player.questDay,weeklyQuests:player.weeklyQuests,questWeek:player.questWeek,rankedRP:player.rankedRP,rankedWins:player.rankedWins,rankedLosses:player.rankedLosses,passSeason:player.passSeason,passPoints:player.passPoints,passPremium:player.passPremium,passClaimedFree:player.passClaimedFree,passClaimedPrem:player.passClaimedPrem,achClaimed:player.achClaimed,tourWins:player.tourWins,deck:player.deck
   }));
   if(typeof scheduleCloudSave==='function') scheduleCloudSave();
 }
@@ -2162,6 +3051,13 @@ function loadProgress(){
     if(typeof data.rankedRP==='number')         player.rankedRP=data.rankedRP;
     if(typeof data.rankedWins==='number')       player.rankedWins=data.rankedWins;
     if(typeof data.rankedLosses==='number')     player.rankedLosses=data.rankedLosses;
+    if(data.passSeason)                         player.passSeason=data.passSeason;
+    if(typeof data.passPoints==='number')       player.passPoints=data.passPoints;
+    if(typeof data.passPremium==='boolean')     player.passPremium=data.passPremium;
+    if(Array.isArray(data.passClaimedFree))     player.passClaimedFree=data.passClaimedFree;
+    if(Array.isArray(data.passClaimedPrem))     player.passClaimedPrem=data.passClaimedPrem;
+    if(Array.isArray(data.achClaimed))          player.achClaimed=data.achClaimed;
+    if(typeof data.tourWins==='number')         player.tourWins=data.tourWins;
     if(Array.isArray(data.deck)&&data.deck.length>=4) player.deck=data.deck;
   }catch(e){}
 }
@@ -2201,6 +3097,17 @@ function syncUI(){
   if(xpLabel) xpLabel.textContent=`${prog.current} / ${prog.need} XP`;
   // Chests
   buildChestSlots();
+  // Battle pass banner
+  ensurePassSeason();
+  const bpSub=document.getElementById('bp-banner-sub');
+  if(bpSub){
+    const c=passClaimableCount();
+    bpSub.textContent=c>0
+      ? `Palier ${passTier()} · ${c} récompense${c>1?'s':''} à récupérer !`
+      : `Palier ${passTier()} / ${PASS_MAX_TIER} · ${seasonName()}`;
+  }
+  updatePassBadge();
+  if(typeof updateAchBadge==='function') updateAchBadge();
 }
 syncUI();
 
@@ -2421,6 +3328,8 @@ function initGame(){
   let enemyLevel;
   if(mpMode){
     enemyLevel=player.level; // MP uses real player level
+  } else if(tournamentMode){
+    enemyLevel=player.level+tournamentRound; // tournament: each round tougher (+1, +2, +3)
   } else {
     // Beginners: enemy is 1-2 levels BELOW. Veterans: enemy matches or +1.
     const offset=Math.round(-2 + diff*3); // diff 0 → -2, diff 1 → +1
@@ -2722,6 +3631,8 @@ function showOverlay(type){
 function showResultScreen(winner){
   // Ranked matches use a dedicated result flow (PC instead of trophies)
   if(isRankedMatch){ showRankedResult(winner); return; }
+  // Tournament matches use their own flow (bracket progression)
+  if(tournamentMode){ showTournamentResult(winner); return; }
   // Compute result
   const pd=gs.destroyed.player, ed=gs.destroyed.enemy;
   let icon,title,sub,col,trophyDelta;
@@ -2779,6 +3690,7 @@ function showResultScreen(winner){
   addHistory(icon,winner);
   trackQuest('play',1);
   if(trophyDelta>0) trackQuest('win',1);
+  addPassPoints(trophyDelta>0?25:10); // battle pass progression
   saveProgress();
   syncUI();
 
@@ -2899,6 +3811,7 @@ function showRankedResult(winner){
   addHistory(icon,winner);
   trackQuest('play',1);
   if(rpDelta>0){ trackQuest('win',1); trackQuest('rankedwin',1); }
+  addPassPoints(rpDelta>0?40:15); // ranked gives more pass points
   saveProgress();
   syncUI();
 
@@ -2969,6 +3882,7 @@ function addHistory(icon,winner){
 function startGame(){
   if(_isBanned){showBanScreen();return;}
   isRankedMatch=false; // normal battle, never ranked
+  tournamentMode=false; // normal battle, never tournament
   document.getElementById('overlay').classList.add('hidden');
   document.getElementById('result-screen').classList.remove('show');
   document.body.classList.remove('selecting');
@@ -3048,13 +3962,13 @@ function buildSettingsPage(){
   const btnEl=document.getElementById('account-btn');
   if(statusEl){
     if(currentUser){
-      statusEl.textContent='☁️ Connecté';
-      subEl.textContent=currentUser.email||'Progression sauvegardée en ligne';
-      btnEl.textContent='DÉCONNEXION';
+      statusEl.textContent='☁️ '+t('acc_connected');
+      subEl.textContent=currentUser.email||t('acc_sub_online');
+      btnEl.textContent=t('acc_logout');
     } else {
-      statusEl.textContent='📱 Mode local';
-      subEl.textContent='Connecte-toi pour sauvegarder en ligne';
-      btnEl.textContent='SE CONNECTER';
+      statusEl.textContent='📱 '+t('acc_local');
+      subEl.textContent=t('acc_sub_offline');
+      btnEl.textContent=t('acc_login');
     }
   }
   const syncRow=document.getElementById('account-sync-row');
@@ -3078,6 +3992,9 @@ function buildSettingsPage(){
   const bvolPct=document.getElementById('battle-vol-pct');
   if(bvolSlider){bvolSlider.value=Math.round(battleVolume*100);}
   if(bvolPct){bvolPct.textContent=Math.round(battleVolume*100);}
+  // Language selector
+  const langSelect=document.getElementById('language-select');
+  if(langSelect) langSelect.value=currentLanguage;
 }
 function accountAction(){
   if(currentUser) logout();
@@ -3110,7 +4027,7 @@ function savePseudo(){
 
 function resetProgress(){
   if(!confirm('Réinitialiser toute ta progression ?')) return;
-  player = {pseudo:player.pseudo||'Joueur',avatar:player.avatar||'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,weeklyQuests:null,questWeek:null,rankedRP:0,rankedWins:0,rankedLosses:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
+  player = {pseudo:player.pseudo||'Joueur',avatar:player.avatar||'🧙',level:1,xp:0,trophies:0,wins:0,losses:0,gold:100,gems:10,chests:[],cardLevels:{},powers:['meteor','freeze'],quests:null,questDay:null,weeklyQuests:null,questWeek:null,rankedRP:0,rankedWins:0,rankedLosses:0,passSeason:null,passPoints:0,passPremium:false,passClaimedFree:[],passClaimedPrem:[],achClaimed:[],tourWins:0,deck:['knight','archer','giant','wizard','goblin','dragon','pekka','balloon']};
   saveProgress();
   syncUI();
   buildSettingsPage();
@@ -4233,6 +5150,131 @@ async function sendChatMessage(){
   }catch(e){toast('❌ Message non envoyé');}
 }
 
+// ══ GLOBAL CHAT ══
+// SQL to create in Supabase:
+// CREATE TABLE clash_global_chat (
+//   id bigint generated by default as identity primary key,
+//   pseudo text NOT NULL,
+//   avatar text DEFAULT '🧙',
+//   message text NOT NULL,
+//   created_at timestamptz DEFAULT now()
+// );
+// ALTER TABLE clash_global_chat ENABLE ROW LEVEL SECURITY;
+// CREATE POLICY "gchat read" ON clash_global_chat FOR SELECT USING(true);
+// CREATE POLICY "gchat insert" ON clash_global_chat FOR INSERT WITH CHECK(true);
+let gchatPollTimer=null;
+let gchatLastSend=0;
+let gchatNotif=localStorage.getItem('gchatNotif')!=='off';
+const PROFANITY=['merde','putain','connard','salope','enculé','pute','fdp','ntm','nique','bitch','fuck','shit','asshole','bastard','cunt','mierda','puta','cabron','scheisse','arschloch','cazzo','stronzo','merda','caralho'];
+
+function censor(text){
+  let out=text;
+  PROFANITY.forEach(w=>{
+    const re=new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi');
+    out=out.replace(re,m=>'*'.repeat(m.length));
+  });
+  return out;
+}
+
+function openGlobalChat(){
+  if(!SUPABASE_READY){toast('⚙️ Configure Supabase');return;}
+  document.getElementById('global-chat-panel').classList.add('show');
+  document.getElementById('gchat-messages').innerHTML='<div class="chat-empty">⏳ '+t('loading')+'</div>';
+  document.getElementById('gchat-settings').style.display='none';
+  refreshGchatNotifBtn();
+  loadGlobalChat();
+  clearInterval(gchatPollTimer);
+  gchatPollTimer=setInterval(loadGlobalChat,3000);
+  SFX.click();
+}
+function closeGlobalChat(){
+  document.getElementById('global-chat-panel').classList.remove('show');
+  clearInterval(gchatPollTimer);
+  SFX.click();
+}
+function toggleGlobalChatSettings(){
+  const s=document.getElementById('gchat-settings');
+  s.style.display=s.style.display==='none'?'block':'none';
+  applyTranslations();
+  SFX.click();
+}
+function toggleGlobalChatNotif(){
+  gchatNotif=!gchatNotif;
+  localStorage.setItem('gchatNotif',gchatNotif?'on':'off');
+  refreshGchatNotifBtn();
+}
+function refreshGchatNotifBtn(){
+  const b=document.getElementById('gchat-notif-btn');
+  if(b){b.textContent=gchatNotif?'ON':'OFF';b.style.opacity=gchatNotif?'1':'0.5';}
+}
+
+async function loadGlobalChat(){
+  if(!SUPABASE_READY)return;
+  try{
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/clash_global_chat?order=created_at.desc&limit=60`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    if(!r.ok){
+      if(r.status===404){document.getElementById('gchat-messages').innerHTML='<div class="chat-empty">⚙️ Table "clash_global_chat" manquante.<br>Lance le SQL dans Supabase.</div>';}
+      return;
+    }
+    let msgs=await r.json();
+    if(!Array.isArray(msgs))return;
+    msgs.reverse(); // oldest first
+    renderGlobalChat(msgs);
+  }catch(e){}
+}
+function renderGlobalChat(msgs){
+  const box=document.getElementById('gchat-messages');
+  const me=player.pseudo;
+  if(box.dataset.count==String(msgs.length))return;
+  const wasAtBottom=box.scrollHeight-box.scrollTop-box.clientHeight<60;
+  const prevCount=parseInt(box.dataset.count||'0');
+  box.dataset.count=String(msgs.length);
+  if(!msgs.length){box.innerHTML='<div class="chat-empty">💬 '+t('chat_empty')+'</div>';return;}
+  box.innerHTML=msgs.map(m=>{
+    const mine=m.pseudo===me;
+    const time=new Date(m.created_at).toLocaleTimeString(currentLanguage,{hour:'2-digit',minute:'2-digit'});
+    return `<div class="gchat-msg ${mine?'mine':'theirs'}">
+      ${mine?'':`<div class="gchat-msg-author">${escHtml(m.avatar||'🧙')} ${escHtml(m.pseudo)}</div>`}
+      <span>${escHtml(censor(m.message))}</span>
+      <div class="gchat-msg-time">${time}</div>
+    </div>`;
+  }).join('');
+  // Notify on a genuinely new incoming message
+  if(prevCount>0 && msgs.length>prevCount){
+    const last=msgs[msgs.length-1];
+    if(last && last.pseudo!==me && gchatNotif){ SFX.notify(); }
+  }
+  if(wasAtBottom||prevCount===0) box.scrollTop=box.scrollHeight;
+}
+async function sendGlobalChat(){
+  const input=document.getElementById('gchat-input');
+  let text=input.value.trim();
+  if(!text||!SUPABASE_READY)return;
+  if(_isBanned){showBanScreen();return;}
+  if(!(player.pseudo&&player.pseudo!=='Joueur')){toast('👤 '+t('chat_need_pseudo'));return;}
+  // Rate limit: 1 message / 2s
+  const now=Date.now();
+  if(now-gchatLastSend<2000){toast('⏳ '+t('chat_slow'));return;}
+  if(text.length>200) text=text.slice(0,200);
+  gchatLastSend=now;
+  input.value='';
+  try{
+    const r=await fetch(`${SUPABASE_URL}/rest/v1/clash_global_chat`,{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({pseudo:player.pseudo,avatar:player.avatar||'🧙',message:text})
+    });
+    if(!r.ok){
+      if(r.status===404) toast('⚙️ Table manquante — lance le SQL',4000);
+      else toast('❌ Message non envoyé');
+      return;
+    }
+    SFX.click();
+    loadGlobalChat();
+  }catch(e){toast('❌ Message non envoyé');}
+}
+
 // ══ VISUAL EFFECTS ══
 function launchConfetti(){
   const colors=['#FFD700','#e74c3c','#3498db','#2ecc71','#9b59b6','#FF9800'];
@@ -4278,6 +5320,21 @@ function playBattleCountdown(callback){
 const MAX_CHEST_SLOTS_REF=MAX_CHEST_SLOTS; // (constants defined at top)
 
 // Award a random chest after victory
+// Give a specific chest type (ready to open). Returns false if slots full.
+function giveChest(type){
+  if(!CHEST_TYPES[type]) type='wood';
+  if(player.chests.length>=MAX_CHEST_SLOTS){
+    toast('📦 Emplacements pleins — coffre converti en or !');
+    const def=CHEST_TYPES[type];
+    player.gold+=def.gold[1]; // give max gold instead
+    saveProgress();
+    return false;
+  }
+  player.chests.push({type,state:'ready',unlockAt:null});
+  saveProgress();
+  return true;
+}
+
 function awardChest(){
   if(player.chests.length>=MAX_CHEST_SLOTS){
     toast('📦 Tous tes emplacements de coffres sont pleins !');
@@ -4812,10 +5869,8 @@ function switchAuthTab(mode){
   document.getElementById('auth-tab-login').classList.toggle('active',mode==='login');
   document.getElementById('auth-tab-signup').classList.toggle('active',mode==='signup');
   document.getElementById('auth-pseudo-row').classList.toggle('show',mode==='signup');
-  document.getElementById('auth-submit').textContent=mode==='login'?'SE CONNECTER':'CRÉER LE COMPTE';
-  document.getElementById('auth-note').textContent=mode==='login'
-    ?'Utilise les mêmes identifiants que sur zyntracode.ch'
-    :'Ton compte fonctionnera aussi sur zyntracode.ch';
+  document.getElementById('auth-submit').textContent=mode==='login'?t('auth_login_btn'):t('auth_signup_btn');
+  document.getElementById('auth-note').textContent=mode==='login'?t('auth_note_login'):t('auth_note_signup');
   setAuthMsg('');
 }
 function setAuthMsg(msg,type=''){
@@ -4901,6 +5956,8 @@ async function saveToCloud(){
       quests:player.quests,questDay:player.questDay,
       weeklyQuests:player.weeklyQuests,questWeek:player.questWeek,
       rankedRP:player.rankedRP,rankedWins:player.rankedWins,rankedLosses:player.rankedLosses,
+      passSeason:player.passSeason,passPoints:player.passPoints,passPremium:player.passPremium,passClaimedFree:player.passClaimedFree,passClaimedPrem:player.passClaimedPrem,
+      achClaimed:player.achClaimed,tourWins:player.tourWins,
       deck:player.deck
     };
     await sb.from('clash_saves').upsert({
@@ -4959,6 +6016,13 @@ async function loadFromCloud(force=false){
     if(typeof d.rankedRP==='number') player.rankedRP=d.rankedRP;
     if(typeof d.rankedWins==='number') player.rankedWins=d.rankedWins;
     if(typeof d.rankedLosses==='number') player.rankedLosses=d.rankedLosses;
+    if(d.passSeason) player.passSeason=d.passSeason;
+    if(typeof d.passPoints==='number') player.passPoints=d.passPoints;
+    if(typeof d.passPremium==='boolean') player.passPremium=d.passPremium;
+    if(Array.isArray(d.passClaimedFree)) player.passClaimedFree=d.passClaimedFree;
+    if(Array.isArray(d.passClaimedPrem)) player.passClaimedPrem=d.passClaimedPrem;
+    if(Array.isArray(d.achClaimed)) player.achClaimed=d.achClaimed;
+    if(typeof d.tourWins==='number') player.tourWins=d.tourWins;
     if(Array.isArray(d.deck)&&d.deck.length>=4) player.deck=d.deck;
     ensureDailyQuests(); // refresh if it's a new day
     ensureWeeklyQuests(); // refresh if it's a new week
@@ -5083,8 +6147,8 @@ async function refresh2FAStatus(){
   const sub=document.getElementById('twofa-status-sub');
   if(!btn)return;
   const on=await has2FA();
-  btn.textContent=on?'DÉSACTIVER':'ACTIVER';
-  if(sub) sub.textContent=on?'✅ Ton compte est protégé':'Protège ton compte avec un code';
+  btn.textContent=on?t('twofa_disable'):t('twofa_enable');
+  if(sub) sub.textContent=on?t('twofa_protected'):t('twofa_sub_off');
 }
 
 // Toggle button in settings
@@ -5210,6 +6274,8 @@ ensureDailyQuests();
 ensureWeeklyQuests();
 updateQuestsBadge();
 setInterval(updateQuestResetTimer,60000);
+// Load language preference and initialize
+loadLanguagePreference();
 // Show tutorial on first launch
 maybeShowTutorial();
 
