@@ -3926,7 +3926,7 @@ const SUPABASE_READY = SUPABASE_URL !== 'https://TON-PROJET.supabase.co';
 //    Edge Function "submit-score" instead of being written directly.
 //    Set to true ONLY after you've deployed the function + run setup.sql
 //    (see the anti-cheat/ folder). Until then, leave it false. ──
-const USE_SECURE_SCORE = true;
+const USE_SECURE_SCORE = false;
 
 // ══ SETTINGS PAGE ══
 const AVATARS=['🧙','⚔️','🏹','👑','🐉','🤴','👸','🧝','🧚','🦸','🦹','🥷','🧛','🧟','👹','👺','🤖','🦁','🐺','🦅','🐲','🔥','💀','⭐'];
@@ -5630,33 +5630,62 @@ function buyCard(i){
   toast(`${c.emoji} ${c.name} ajoutée à ton deck !`);
 }
 
-// ══ ADMIN PANEL ══
-// Change this password to your own secret!
-const ADMIN_PASSWORD='zyntra2024';
-let isAdmin=false;
+// ══ ADMIN PANEL (sécurisé : 2FA + vérification serveur) ══
+// Plus de mot de passe en clair. L'ouverture exige un code 2FA de TON
+// compte, et chaque action est revérifiée par la fonction Edge "admin-action"
+// (qui contrôle ton user_id côté serveur). Passe USE_SECURE_ADMIN à true
+// après avoir déployé la fonction + lancé setup-admin.sql.
+const USE_SECURE_ADMIN = true;
+let isAdmin = false;
 
 function showAdminPage(){
-  document.getElementById('admin-login').style.display=isAdmin?'none':'block';
-  document.getElementById('admin-panel').style.display=isAdmin?'block':'none';
+  document.getElementById('admin-login').style.display = isAdmin ? 'none' : 'block';
+  document.getElementById('admin-panel').style.display = isAdmin ? 'block' : 'none';
   if(isAdmin) loadAdminPlayers();
 }
-function adminLogin(){
-  const pass=document.getElementById('admin-pass').value;
-  if(pass===ADMIN_PASSWORD){
-    isAdmin=true;
-    document.getElementById('admin-pass').value='';
+
+// Ouverture du panneau : exige la 2FA de ton compte
+async function adminLogin(){
+  if(!USE_SECURE_ADMIN){ toast('⚙️ Admin sécurisé pas encore activé'); return; }
+  if(!sb || !currentUser){ toast('🔐 Connecte-toi avec ton compte admin'); return; }
+  if(!(await has2FA())){ toast('🔐 Active d\'abord la 2FA sur ton compte'); return; }
+  const code = prompt('🔐 Code 2FA (6 chiffres) pour ouvrir l\'admin :');
+  if(!code) return;
+  try{
+    const {data:list} = await sb.auth.mfa.listFactors();
+    const factor = ((list&&list.totp)||[]).find(f=>f.status==='verified');
+    if(!factor){ toast('❌ Aucun facteur 2FA'); return; }
+    const {data:ch,error:chErr} = await sb.auth.mfa.challenge({factorId:factor.id});
+    if(chErr){ toast('❌ '+chErr.message); return; }
+    const {error} = await sb.auth.mfa.verify({factorId:factor.id,challengeId:ch.id,code:code.trim()});
+    if(error){ toast('❌ Code incorrect'); SFX.error(); return; }
+    isAdmin = true;
     SFX.victory();
     toast('🛡️ Accès admin accordé');
     showAdminPage();
-  } else {
-    SFX.error();
-    toast('❌ Mot de passe incorrect');
-  }
+  }catch(e){ toast('❌ Erreur 2FA'); }
 }
+
 function adminLogout(){
-  isAdmin=false;
+  isAdmin = false;
   showAdminPage();
   toast('Déconnexion admin');
+}
+
+// Toutes les actions passent par la fonction serveur (qui vérifie ton user_id)
+async function callAdminAction(payload){
+  if(!sb || !currentUser){ toast('🔐 Reconnecte-toi'); return null; }
+  const { data:{ session } } = await sb.auth.getSession();
+  const token = session && session.access_token;
+  if(!token){ toast('🔐 Session expirée'); return null; }
+  const res = await fetch(`${SUPABASE_URL}/functions/v1/admin-action`,{
+    method:'POST',
+    headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
+    body: JSON.stringify(payload)
+  });
+  const out = await res.json().catch(()=>({}));
+  if(!res.ok){ toast('❌ '+(out.error||'Action refusée')); return null; }
+  return out;
 }
 
 async function loadAdminPlayers(){
@@ -5692,57 +5721,27 @@ async function loadAdminPlayers(){
 }
 
 async function adminSetBan(pseudo,banned){
-  try{
-    await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?pseudo=eq.${encodeURIComponent(pseudo)}`,{
-      method:'PATCH',
-      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({banned})
-    });
-    toast(banned?`🚫 ${pseudo} banni`:`✓ ${pseudo} débanni`);
-    loadAdminPlayers();
-  }catch(e){toast('❌ Erreur');}
+  const out=await callAdminAction({action:banned?'ban':'unban',pseudo});
+  if(out){ toast(banned?`🚫 ${pseudo} banni`:`✓ ${pseudo} débanni`); loadAdminPlayers(); }
 }
-
 async function adminRename(oldPseudo){
   const newName=prompt(`Nouveau pseudo pour "${oldPseudo}" :`,oldPseudo);
   if(!newName||newName.trim()===''||newName===oldPseudo)return;
-  try{
-    await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?pseudo=eq.${encodeURIComponent(oldPseudo)}`,{
-      method:'PATCH',
-      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({pseudo:newName.trim()})
-    });
-    toast(`✏️ "${oldPseudo}" → "${newName.trim()}"`);
-    loadAdminPlayers();
-  }catch(e){toast('❌ Erreur (pseudo déjà pris ?)');}
+  const out=await callAdminAction({action:'rename',pseudo:oldPseudo,newPseudo:newName.trim()});
+  if(out){ toast(`✏️ "${oldPseudo}" → "${newName.trim()}"`); loadAdminPlayers(); }
 }
-
 async function adminSetTrophies(pseudo,current){
   const val=prompt(`Trophées de "${pseudo}" :`,current);
   if(val===null)return;
   const n=parseInt(val);
   if(isNaN(n)||n<0){toast('❌ Nombre invalide');return;}
-  try{
-    await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?pseudo=eq.${encodeURIComponent(pseudo)}`,{
-      method:'PATCH',
-      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({trophies:n})
-    });
-    toast(`🏆 ${pseudo} → ${n} trophées`);
-    loadAdminPlayers();
-  }catch(e){toast('❌ Erreur');}
+  const out=await callAdminAction({action:'setTrophies',pseudo,trophies:n});
+  if(out){ toast(`🏆 ${pseudo} → ${n} trophées`); loadAdminPlayers(); }
 }
-
 async function adminDelete(pseudo){
   if(!confirm(`Supprimer définitivement "${pseudo}" du classement ?`))return;
-  try{
-    await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?pseudo=eq.${encodeURIComponent(pseudo)}`,{
-      method:'DELETE',
-      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
-    });
-    toast(`🗑️ ${pseudo} supprimé`);
-    loadAdminPlayers();
-  }catch(e){toast('❌ Erreur');}
+  const out=await callAdminAction({action:'delete',pseudo});
+  if(out){ toast(`🗑️ ${pseudo} supprimé`); loadAdminPlayers(); }
 }
 
 // ══ HERO POWERS (in-battle) ══
