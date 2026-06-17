@@ -1960,7 +1960,7 @@ function goToBattle(){
   if(_isBanned){showBanScreen();return;}
   const btn=document.querySelector('.nav-btn[data-page="battle"]');
   showPage('battle',btn);
-  if(!gs.running) showOverlay('start');
+  if(!gs.running) startNormalSearch();
 }
 function toast(msg,dur=2200){
   const t=document.getElementById('toast');
@@ -4576,6 +4576,175 @@ let rankedQueueTimer=null;
 let rankedSearchStart=0;
 let rankedSearchTick=null;
 
+// ══ MATCHMAKING DU COMBAT NORMAL (10s de recherche → bot) ══
+// Cherche un vrai joueur de ta ligue (niveau proche) pendant 10s.
+// Si personne n'est trouvé, lance un bot de ton niveau.
+const NORMAL_SEARCH_MS=10000; // 10 secondes de recherche
+let normalSearching=false;
+let normalQueueTimer=null;
+let normalSearchStart=0;
+let normalSearchTick=null;
+let normalTimeoutTimer=null;
+
+async function startNormalSearch(){
+  if(_isBanned){showBanScreen();return;}
+  // Pas connecté ou Supabase non prêt → directement le bot (ancien comportement)
+  if(!SUPABASE_READY||!currentUser||!(player.pseudo&&player.pseudo!=='Joueur')){
+    showOverlay('start');
+    return;
+  }
+  saveProgress(); // pousse ton niveau réel pour l'adversaire
+  const lg=getCurrentLeague();
+  // Inscription dans la file en mode "normal"
+  try{
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue`,{
+      method:'POST',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({pseudo:player.pseudo,rp:player.trophies,league_id:lg.id,status:'searching',room_id:null,mode:'normal',joined_at:new Date().toISOString()})
+    });
+    if(!res.ok){ // table absente / erreur → fallback bot
+      showOverlay('start'); return;
+    }
+  }catch(e){ showOverlay('start'); return; }
+  normalSearching=true;
+  normalSearchStart=Date.now();
+  showNormalSearchOverlay();
+  SFX.challenge();
+  clearInterval(normalQueueTimer);
+  normalQueueTimer=setInterval(normalMatchmakingTick,2000);
+  normalMatchmakingTick();
+  // Compteur visuel
+  clearInterval(normalSearchTick);
+  normalSearchTick=setInterval(()=>{
+    const el=document.getElementById('ov-sub');
+    if(el&&normalSearching){
+      const s=Math.max(0,Math.ceil((NORMAL_SEARCH_MS-(Date.now()-normalSearchStart))/1000));
+      el.textContent=`Recherche d'un adversaire… ${s}s`;
+    }
+  },500);
+  // Après 10s sans match → bot de ton niveau
+  clearTimeout(normalTimeoutTimer);
+  normalTimeoutTimer=setTimeout(()=>{
+    if(!normalSearching)return;
+    stopNormalSearch(true);
+    toast('🤖 Aucun joueur trouvé — adversaire IA de ton niveau');
+    showOverlay('start'); // lance le bot via le bouton/overlay habituel
+    // démarrage auto pour fluidité
+    setTimeout(()=>{ if(!gs.running) startGame(); },300);
+  },NORMAL_SEARCH_MS);
+}
+
+function showNormalSearchOverlay(){
+  const ov=document.getElementById('overlay');
+  ov.classList.remove('hidden');
+  document.getElementById('ov-title').textContent='🔍 Recherche…';
+  document.getElementById('ov-title').style.color='var(--gold)';
+  document.getElementById('ov-sub').textContent='Recherche d\'un adversaire… 10s';
+  const btn=document.getElementById('btn-start');
+  btn.textContent='ANNULER';
+  btn.onclick=cancelNormalSearch;
+}
+
+async function normalMatchmakingTick(){
+  if(!normalSearching)return;
+  try{
+    // 1) Quelqu'un m'a-t-il déjà matché ? (je suis l'invité)
+    const meR=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?pseudo=eq.${encodeURIComponent(player.pseudo)}&select=status,room_id`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    const meData=await meR.json();
+    if(meData[0]&&meData[0].status==='matched'&&meData[0].room_id){
+      const roomId=meData[0].room_id;
+      const rr=await fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${roomId}&select=host_pseudo`,
+        {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+      const rd=await rr.json();
+      const host=rd[0]?rd[0].host_pseudo:mpOpponent;
+      stopNormalSearch(false);
+      startNormalMatch(host,roomId,false);
+      return;
+    }
+    // 2) Chercher un adversaire en mode normal (niveau/ligue proche)
+    const oppR=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?status=eq.searching&mode=eq.normal&pseudo=neq.${encodeURIComponent(player.pseudo)}&order=joined_at.asc&limit=20`,
+      {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+    let opps=await oppR.json();
+    if(!Array.isArray(opps)){ normalHeartbeat(); return; }
+    const now=Date.now();
+    opps=opps.filter(o=>{const t=o.joined_at?new Date(o.joined_at).getTime():0;return (now-t)<15000;});
+    if(!opps.length){ normalHeartbeat(); return; }
+    // Préfère les trophées les plus proches (même ligue / niveau proche)
+    opps.sort((a,b)=>Math.abs((a.rp||0)-player.trophies)-Math.abs((b.rp||0)-player.trophies));
+    const opp=opps[0];
+    if(player.pseudo<opp.pseudo){
+      // Je suis l'hôte → crée la salle + réclame l'adversaire
+      const roomId='normal_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+      await fetch(`${SUPABASE_URL}/rest/v1/clash_rooms`,{
+        method:'POST',
+        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({id:roomId,host_pseudo:player.pseudo,guest_pseudo:opp.pseudo,status:'accepted',guest_moves:'[]'})
+      });
+      const upd=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?pseudo=eq.${encodeURIComponent(opp.pseudo)}&status=eq.searching&mode=eq.normal`,{
+        method:'PATCH',
+        headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=representation'},
+        body:JSON.stringify({status:'matched',room_id:roomId})
+      });
+      const updRows=await upd.json();
+      if(!Array.isArray(updRows)||!updRows.length){
+        fetch(`${SUPABASE_URL}/rest/v1/clash_rooms?id=eq.${roomId}`,{method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}}).catch(()=>{});
+        return;
+      }
+      stopNormalSearch(false);
+      startNormalMatch(opp.pseudo,roomId,true);
+    } else { normalHeartbeat(); }
+  }catch(e){}
+}
+
+function normalHeartbeat(){
+  if(!normalSearching||!player.pseudo)return;
+  fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?pseudo=eq.${encodeURIComponent(player.pseudo)}&status=eq.searching&mode=eq.normal`,{
+    method:'PATCH',
+    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({joined_at:new Date().toISOString()})
+  }).catch(()=>{});
+}
+
+function stopNormalSearch(removeFromQueue=true){
+  normalSearching=false;
+  clearInterval(normalQueueTimer);normalQueueTimer=null;
+  clearInterval(normalSearchTick);normalSearchTick=null;
+  clearTimeout(normalTimeoutTimer);normalTimeoutTimer=null;
+  if(removeFromQueue&&player.pseudo){
+    fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?pseudo=eq.${encodeURIComponent(player.pseudo)}`,{
+      method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    }).catch(()=>{});
+  }
+}
+
+function cancelNormalSearch(){
+  stopNormalSearch(true);
+  document.getElementById('overlay').classList.add('hidden');
+  const btn=document.querySelector('.nav-btn[data-page="home"]');
+  showPage('home',btn);
+  toast('Recherche annulée');
+  SFX.click();
+}
+
+// Match normal trouvé (vrai joueur) → trophées, PAS de PC
+function startNormalMatch(opponentPseudo,roomId,asHost){
+  isRankedMatch=false;   // combat normal → trophées
+  tournamentMode=false;
+  mpMode=asHost?'host':'guest';
+  mpRoomId=roomId;
+  mpOpponent=opponentPseudo;
+  fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?pseudo=eq.${encodeURIComponent(player.pseudo)}`,{
+    method:'DELETE',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+  }).catch(()=>{});
+  const btn=document.querySelector('.nav-btn[data-page="battle"]');
+  showPage('battle',btn);
+  showMpBanner(opponentPseudo,'⚔️ Combat vs '+opponentPseudo);
+  toast(`⚔️ Adversaire trouvé : ${opponentPseudo} !`);
+  SFX.victory();
+  launchMpGame();
+}
+
 async function joinRankedQueue(){
   if(!SUPABASE_READY){toast('⚙️ Configure Supabase');return;}
   if(!currentUser){toast('🔐 Connecte-toi pour jouer en classé');return;}
@@ -4588,7 +4757,7 @@ async function joinRankedQueue(){
     const res=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue`,{
       method:'POST',
       headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates,return=minimal'},
-      body:JSON.stringify({pseudo:player.pseudo,rp:player.rankedRP,league_id:lg.id,status:'searching',room_id:null,joined_at:new Date().toISOString()})
+      body:JSON.stringify({pseudo:player.pseudo,rp:player.rankedRP,league_id:lg.id,status:'searching',room_id:null,mode:'ranked',joined_at:new Date().toISOString()})
     });
     if(!res.ok){
       const txt=await res.text();
@@ -4633,7 +4802,7 @@ async function rankedMatchmakingTick(){
       return;
     }
     // 2) Find an opponent (I host if my pseudo sorts before theirs)
-    const oppR=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?status=eq.searching&pseudo=neq.${encodeURIComponent(player.pseudo)}&order=joined_at.asc&limit=20`,
+    const oppR=await fetch(`${SUPABASE_URL}/rest/v1/clash_ranked_queue?status=eq.searching&mode=eq.ranked&pseudo=neq.${encodeURIComponent(player.pseudo)}&order=joined_at.asc&limit=20`,
       {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
     let opps=await oppR.json();
     if(!Array.isArray(opps)){ rankedHeartbeat(); return; }
