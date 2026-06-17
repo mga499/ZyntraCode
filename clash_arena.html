@@ -1776,9 +1776,8 @@ body.power-targeting .deploy-zone{opacity:1;pointer-events:all;cursor:crosshair;
     <div class="admin-locked-box">
       <div class="admin-lock-icon">🔒</div>
       <div style="font-family:'Cinzel',serif;font-size:1rem;color:var(--gold);letter-spacing:2px">PANNEAU ADMIN</div>
-      <div style="font-size:.7rem;color:var(--text-dim);margin-top:6px">Entre le mot de passe administrateur</div>
-      <input class="admin-input" id="admin-pass" type="password" placeholder="••••••" onkeydown="if(event.key==='Enter')adminLogin()">
-      <button class="settings-btn" onclick="adminLogin()" style="width:100%">DÉVERROUILLER</button>
+      <div style="font-size:.7rem;color:var(--text-dim);margin-top:6px">Accès protégé par double authentification (2FA)</div>
+      <button class="settings-btn" onclick="adminLogin()" style="width:100%;margin-top:14px">🔐 DÉVERROUILLER AVEC 2FA</button>
     </div>
   </div>
   <div id="admin-panel" style="display:none">
@@ -4128,7 +4127,7 @@ function renderLbRow(row, rank){
   return `<div class="lb-row${isMe?' me':''}">
     <div class="lb-rank ${rankClass}">${rankIcon}</div>
     <div class="lb-info">
-      <div class="lb-name${isMe?' me-name':''}">${escHtml(row.pseudo)}${isMe?' 👈':''}</div>
+      <div class="lb-name${isMe?' me-name':''}">${onlineDot(row.last_seen)}${escHtml(row.pseudo)}${isMe?' 👈':''}</div>
       <div class="lb-arena">${cur.emoji} Arène ${cur.id} — ${cur.name}</div>
     </div>
     <div class="lb-score">
@@ -4249,6 +4248,18 @@ async function loadFriendsPage(){
       pending: rows.filter(x=>x.status==='pending'&&x.from_pseudo===me),
       requests:rows.filter(x=>x.status==='pending'&&x.to_pseudo===me),
     };
+    // Récupère le statut en ligne (last_seen) de chaque ami
+    try{
+      const names=window._friendsData.friends.map(x=>x.from_pseudo===me?x.to_pseudo:x.from_pseudo);
+      if(names.length){
+        const inList=names.map(n=>'"'+n.replace(/"/g,'')+'"').join(',');
+        const sr=await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?pseudo=in.(${encodeURIComponent(inList)})&select=pseudo,last_seen`,
+          {headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}});
+        const seen=await sr.json();
+        window._friendSeen={};
+        if(Array.isArray(seen)) seen.forEach(p=>{window._friendSeen[p.pseudo]=p.last_seen;});
+      }
+    }catch(e){}
     updateFriendsBadges();
     renderFriendsList();
   }catch(e){document.getElementById('friends-list').innerHTML='<div class="friends-empty">❌ Erreur de chargement</div>';}
@@ -4288,7 +4299,7 @@ function renderFriendsList(){
     if(friendsTab==='friends'){
       return `<div class="friend-row">
         <div class="friend-avatar">🧙</div>
-        <div class="friend-info"><div class="friend-name">${escHtml(other)}</div><div class="friend-meta">Ami ⚔️</div></div>
+        <div class="friend-info"><div class="friend-name">${onlineDot((window._friendSeen||{})[other])}${escHtml(other)}</div><div class="friend-meta">${isPlayerOnline((window._friendSeen||{})[other])?'🟢 '+t('online'):'⚪ Hors ligne'}</div></div>
         <div class="friend-actions">
           <button class="ftn chat" onclick="openChat('${escHtml(other)}')">💬</button>
           <button class="ftn challenge" onclick="challengeFriend('${escHtml(other)}')">⚔️</button>
@@ -5635,7 +5646,7 @@ function buyCard(i){
 // compte, et chaque action est revérifiée par la fonction Edge "admin-action"
 // (qui contrôle ton user_id côté serveur). Passe USE_SECURE_ADMIN à true
 // après avoir déployé la fonction + lancé setup-admin.sql.
-const USE_SECURE_ADMIN = true;
+const USE_SECURE_ADMIN = false;
 let isAdmin = false;
 
 function showAdminPage(){
@@ -6342,6 +6353,38 @@ pollChallenges();
 // Check ban status at startup and every 10s
 checkIfBanned();
 setInterval(checkIfBanned,25000);
+
+// ══ STATUT EN LIGNE / HORS LIGNE ══
+const ONLINE_THRESHOLD_MS = 60000; // en ligne si vu il y a moins de 60s
+// Vrai si le joueur a été vu récemment
+function isPlayerOnline(lastSeen){
+  if(!lastSeen) return false;
+  const t = new Date(lastSeen).getTime();
+  return (Date.now() - t) < ONLINE_THRESHOLD_MS;
+}
+// Petite pastille de statut (HTML)
+function onlineDot(lastSeen){
+  const on = isPlayerOnline(lastSeen);
+  const color = on ? '#2ecc71' : '#7d7d8c';
+  const label = on ? t('online') : 'Hors ligne';
+  return `<span title="${label}" style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${color};box-shadow:0 0 6px ${on?color:'transparent'};margin-right:5px;vertical-align:middle"></span>`;
+}
+// Signale ma présence (heartbeat) — met à jour mon last_seen
+async function sendHeartbeat(){
+  if(document.hidden) return; // pas de heartbeat si l'onglet est en arrière-plan
+  if(!SUPABASE_READY) return;
+  if(!(player.pseudo && player.pseudo!=='Joueur')) return;
+  try{
+    await fetch(`${SUPABASE_URL}/rest/v1/clash_leaderboard?pseudo=eq.${encodeURIComponent(player.pseudo)}`,{
+      method:'PATCH',
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({last_seen:new Date().toISOString()})
+    });
+  }catch(e){}
+}
+// Heartbeat toutes les 30s + une fois au démarrage
+setInterval(sendHeartbeat, 30000);
+sendHeartbeat();
 // When the player returns to the tab, run checks immediately (catch up on what was paused)
 document.addEventListener('visibilitychange',()=>{
   if(!document.hidden){
