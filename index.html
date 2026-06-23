@@ -1,271 +1,463 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZyntraCode</title>
-    <link rel="stylesheet" href="6-styles_page_boutique.css">
-    <link rel="icon" type="image/png" href="logo_zyntracode2.png">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #0a0a0a; color: white; font-family: Arial, Helvetica, sans-serif; }
-        #menu-btn {
-            position: fixed; top: 15px; left: 15px;
-            background: transparent; border: 2px solid rgb(21, 213, 168);
-            color: rgb(21, 213, 168); padding: 8px 15px; border-radius: 8px;
-            cursor: pointer; font-size: 16px; z-index: 1001; display: none;
-        }
-        #menu {
-            background: #1a1a1a; width: 180px; height: 100vh;
-            position: fixed; top: 0; left: 0; z-index: 1000;
-            box-shadow: 0px 0px 15px rgb(21, 213, 168);
-            padding: 60px 10px 10px 10px; transition: 0.3s; display: block;
-        }
-        #menu a {
-            color: white; display: block; padding: 12px 10px;
-            text-decoration: none; border-radius: 8px; transition: 0.2s;
-        }
-        #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZyntraCode — Script • Sites Web • Solutions Digitales</title>
+<link rel="stylesheet" href="6-styles_page_boutique.css">
+<link rel="icon" type="image/png" href="logo_zyntracode2.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;
+  --panel:#101213;
+  --panel-2:#15181a;
+  --border:#222625;
+  --accent:#15d5a8;
+  --accent-rgb:21,213,168;
+  --purple:#c586c0;
+  --orange:#ce9178;
+  --yellow:#dcdcaa;
+  --text:#e9e9e9;
+  --text-dim:#8a9290;
+  --sans:'Inter',Arial,sans-serif;
+  --display:'Space Grotesk',var(--sans);
+  --mono:'JetBrains Mono',Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  overflow-x:hidden;
+  position:relative;
+}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
 
-        /* MENU JEUX DÉROULANT */
-        .menu-jeux-wrapper {
-            position: relative;
-        }
-        .menu-jeux-titre {
-            color: white;
-            display: block;
-            padding: 12px 10px;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: 0.2s;
-            cursor: pointer;
-            user-select: none;
-        }
-        .menu-jeux-titre:hover {
-            color: rgb(21, 213, 168);
-            background: #2a2a2a;
-        }
-        .menu-jeux-dropdown {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            background: #111;
-            border-radius: 8px;
-            margin-top: 2px;
-        }
-        .menu-jeux-wrapper:hover .menu-jeux-dropdown {
-            max-height: 200px;
-        }
-        .menu-jeux-dropdown a {
-            color: #aaa !important;
-            padding: 10px 10px 10px 20px !important;
-            font-size: 13px !important;
-            border-left: 2px solid rgb(21, 213, 168);
-            margin: 2px 5px;
-            border-radius: 0 8px 8px 0 !important;
-        }
-        .menu-jeux-dropdown a:hover {
-            color: rgb(21, 213, 168) !important;
-            background: #1a1a1a !important;
-        }
+/* ---------- ambiance de fond ---------- */
+.bg-grid{
+  position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black 40%,transparent 90%);
+}
+.bg-glow{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden;}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;animation:float 16s ease-in-out infinite;}
+.blob-1{width:480px;height:480px;background:var(--accent);top:-120px;left:10%;}
+.blob-2{width:380px;height:380px;background:var(--purple);bottom:-140px;right:5%;animation-delay:-8s;}
+@keyframes float{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,-50px);}}
 
-        .hero { text-align: center; padding: 100px 20px 50px 200px; }
-        .hero h1 { font-size: 60px; color: rgb(21, 213, 168); margin-bottom: 15px; }
-        .hero h3 { color: white; font-size: 18px; margin-bottom: 10px; }
-        .hero p { color: #aaa; font-size: 16px; max-width: 600px; margin: 0 auto 30px auto; }
-        #test_champ {
-            padding: 12px 20px; width: 350px; border-radius: 10px;
-            border: 2px solid rgb(21, 213, 168); background: #1a1a1a;
-            color: white; font-size: 16px; outline: none;
-        }
-        #resultats { background: #1a1a1a; color: white; width: 350px; margin: 5px auto; border-radius: 10px; overflow: hidden; }
-        #resultats a { text-decoration: none; color: white; }
-        #resultats p { padding: 10px 15px; margin: 0; cursor: pointer; transition: 0.2s; }
-        #resultats p:hover { background: #2a2a2a; color: rgb(21, 213, 168); }
-        .btn-contact {
-            display: inline-block; margin-top: 20px; padding: 12px 30px;
-            background: rgb(21, 213, 168); color: black; border-radius: 10px;
-            text-decoration: none; font-weight: bold; font-size: 16px; transition: 0.3s;
-        }
-        .btn-contact:hover { background: transparent; color: rgb(21, 213, 168); border: 2px solid rgb(21, 213, 168); }
-        .services { display: flex; justify-content: center; gap: 30px; padding: 60px 20px 60px 200px; flex-wrap: wrap; }
-        .service-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 15px; padding: 30px; width: 250px; text-align: center; transition: 0.3s; }
-        .service-card:hover { border-color: rgb(21, 213, 168); box-shadow: 0 0 20px rgba(21, 213, 168, 0.2); }
-        .service-card .icon { font-size: 40px; margin-bottom: 15px; }
-        .service-card h3 { color: rgb(21, 213, 168); margin-bottom: 10px; }
-        .service-card p { color: #aaa; font-size: 14px; }
-        .pourquoi { text-align: center; padding: 40px 20px 80px 200px; }
-        .pourquoi h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 40px; }
-        .pourquoi-cards { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .pourquoi-card { background: #1a1a1a; border-radius: 12px; padding: 20px; width: 200px; text-align: center; }
-        .pourquoi-card .icon { font-size: 30px; margin-bottom: 10px; }
-        .pourquoi-card h4 { color: white; margin-bottom: 8px; }
-        .pourquoi-card p { color: #aaa; font-size: 13px; }
-        .featured { text-align: center; padding: 20px 20px 80px 200px; }
-        .featured h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 40px; }
-        #logo_moderion { width: 120px; border-radius: 50%; border: 3px solid rgb(21, 213, 168); transition: 0.3s; }
-        #logo_moderion:hover { box-shadow: 0 0 20px rgb(21, 213, 168); }
-        .bot-card { display: inline-block; background: #1a1a1a; border: 1px solid rgb(21, 213, 168); border-radius: 15px; padding: 30px 50px; text-align: center; }
-        .bot-card h3 { color: white; margin: 15px 0 10px 0; font-size: 22px; }
-        .bot-card p { color: #aaa; margin-bottom: 15px; }
-        .tag-gratuit { background: rgb(21, 213, 168); color: black; padding: 5px 15px; border-radius: 20px; font-weight: bold; font-size: 14px; }
-        @media (max-width: 768px) {
-            #menu-btn { display: block; }
-            #menu { display: none; }
-            #menu.visible { display: block; }
-            .hero { padding: 80px 20px 50px 20px; }
-            .services { padding: 60px 20px; }
-            .pourquoi { padding: 40px 20px 80px 20px; }
-            .featured { padding: 20px 20px 80px 20px; }
-            #test_champ { width: 95%; }
-            .hero h1 { font-size: 36px; }
-        }
-    </style>
+/* ---------- sidebar / nav ---------- */
+#menu-btn{
+  position:fixed;top:14px;left:14px;z-index:1001;display:none;
+  background:var(--panel);border:1px solid var(--border);color:var(--accent);
+  font-family:var(--mono);font-size:14px;padding:9px 14px;border-radius:6px;cursor:pointer;
+  transition:.2s;
+}
+#menu-btn:hover{border-color:var(--accent);box-shadow:0 0 14px rgba(var(--accent-rgb),.25);}
+#menu{
+  background:var(--panel);width:210px;height:100vh;position:fixed;top:0;left:0;z-index:1000;
+  border-right:1px solid var(--border);padding:26px 14px 14px 14px;transition:.3s;display:flex;flex-direction:column;
+}
+.brand{
+  font-family:var(--mono);font-weight:600;color:var(--text);font-size:15px;
+  padding:0 10px 22px 10px;border-bottom:1px solid var(--border);margin-bottom:14px;letter-spacing:.3px;
+}
+.brand span{color:var(--accent);}
+.cursor-blink{display:inline-block;width:8px;background:var(--accent);margin-left:2px;animation:blink 1s steps(1) infinite;}
+@keyframes blink{50%{opacity:0;}}
+.nav-label{font-family:var(--mono);font-size:11px;color:var(--text-dim);padding:4px 10px 8px;letter-spacing:.5px;}
+#menu a{
+  color:#c7cccb;display:flex;align-items:center;gap:8px;padding:10px 10px;margin-bottom:2px;
+  text-decoration:none;border-radius:6px;font-size:14px;position:relative;transition:.18s;border-left:2px solid transparent;
+}
+#menu a:hover{color:var(--accent);background:var(--panel-2);border-left-color:var(--accent);padding-left:13px;}
+.menu-jeux-wrapper{position:relative;}
+.menu-jeux-titre{
+  color:#c7cccb;display:flex;align-items:center;gap:8px;padding:10px 10px;text-decoration:none;
+  border-radius:6px;cursor:pointer;user-select:none;font-size:14px;transition:.18s;border-left:2px solid transparent;
+}
+.menu-jeux-titre:hover{color:var(--accent);background:var(--panel-2);border-left-color:var(--accent);}
+.menu-jeux-dropdown{max-height:0;overflow:hidden;transition:max-height .3s ease;background:#0c0e0d;border-radius:6px;}
+.menu-jeux-wrapper:hover .menu-jeux-dropdown{max-height:200px;}
+.menu-jeux-dropdown a{
+  color:#8a9290!important;padding:9px 10px 9px 26px!important;font-size:12.5px!important;
+  font-family:var(--mono);border-left:2px solid var(--border);margin:2px 0;border-radius:0!important;
+}
+.menu-jeux-dropdown a:hover{color:var(--accent)!important;background:var(--panel-2)!important;border-left-color:var(--accent);}
+.menu-bottom{margin-top:auto;padding-top:14px;border-top:1px solid var(--border);}
+
+/* ---------- layout général ---------- */
+.page{padding-left:210px;}
+section{padding:0 24px;}
+.eyebrow{
+  font-family:var(--mono);color:var(--accent);font-size:13px;display:inline-flex;align-items:center;gap:8px;
+  margin-bottom:14px;letter-spacing:.3px;
+}
+.eyebrow::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;box-shadow:0 0 8px rgba(var(--accent-rgb),.8);}
+
+/* ---------- hero ---------- */
+.hero{padding:96px 24px 60px;max-width:880px;}
+.hero h1{
+  font-family:var(--display);font-weight:700;font-size:clamp(42px,7vw,68px);line-height:1.05;
+  background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:10px;
+}
+.hero .tagline{font-family:var(--mono);color:var(--text-dim);font-size:15px;margin-bottom:32px;}
+.hero .tagline b{color:var(--text);font-weight:500;}
+
+/* terminal */
+.terminal{
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  max-width:680px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.02);
+  position:relative;
+}
+.terminal::after{
+  content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0px,rgba(255,255,255,.012) 1px,transparent 1px,transparent 3px);
+}
+.term-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--panel-2);border-bottom:1px solid var(--border);}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dot.r{background:#ff5f56;}.dot.y{background:#ffbd2e;}.dot.g{background:#27c93f;}
+.term-tab{margin-left:10px;font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+.term-body{padding:18px 20px 22px;font-family:var(--mono);font-size:13.5px;line-height:1.7;min-height:118px;}
+.term-line{color:var(--text-dim);}
+.term-line .prompt{color:var(--accent);}
+.term-line .path{color:var(--purple);}
+.term-out{color:#c7cccb;margin:4px 0 14px;}
+.type-cursor{display:inline-block;width:7px;height:14px;background:var(--accent);vertical-align:-2px;animation:blink .9s steps(1) infinite;}
+.term-search-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.term-search-row .prompt{color:var(--accent);white-space:nowrap;}
+.term-search-row .path{color:var(--purple);}
+#test_champ{
+  flex:1;min-width:160px;background:transparent;border:none;outline:none;color:var(--text);
+  font-family:var(--mono);font-size:13.5px;padding:4px 0;
+}
+#test_champ::placeholder{color:#5b6260;}
+#resultats{margin-top:6px;}
+#resultats a{text-decoration:none;}
+#resultats p{
+  font-family:var(--mono);font-size:13px;color:#c7cccb;padding:7px 4px;border-radius:4px;cursor:pointer;
+  transition:.15s;display:flex;align-items:center;gap:6px;
+}
+#resultats p::before{content:'>';color:var(--accent);}
+#resultats p:hover{background:var(--panel-2);color:var(--accent);padding-left:8px;}
+
+.hero-ctas{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;}
+.btn{
+  font-family:var(--sans);font-weight:600;font-size:14.5px;padding:12px 26px;border-radius:8px;
+  text-decoration:none;transition:.22s;display:inline-flex;align-items:center;gap:6px;border:1px solid transparent;
+}
+.btn-primary{background:var(--accent);color:#06140f;}
+.btn-primary:hover{box-shadow:0 0 0 1px var(--accent),0 0 24px rgba(var(--accent-rgb),.45);transform:translateY(-2px);}
+.btn-outline{background:transparent;border-color:var(--border);color:var(--text);}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px);}
+.btn-ghost{background:transparent;color:var(--text-dim);}
+.btn-ghost:hover{color:var(--accent);}
+
+/* ---------- reveal générique ---------- */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in-view{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+  .blob,.cursor-blink,.type-cursor{animation:none;}
+}
+
+/* ---------- services (cartes "fichiers") ---------- */
+.services{padding:90px 24px 30px;max-width:1100px;}
+.section-head{margin-bottom:38px;max-width:560px;}
+.section-head h2{font-family:var(--display);font-size:30px;font-weight:600;}
+.cards-row{display:flex;gap:18px;flex-wrap:wrap;}
+.file-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;width:248px;overflow:hidden;
+  transition:.25s;
+}
+.file-card:hover{transform:translateY(-5px);border-color:rgba(var(--accent-rgb),.5);box-shadow:0 18px 36px -16px rgba(var(--accent-rgb),.25);}
+.file-tab{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--panel-2);border-bottom:1px solid var(--border);}
+.file-tab .dot{width:8px;height:8px;}
+.file-tab span{font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+.file-card-body{padding:18px 16px 22px;}
+.file-card-body h3{font-family:var(--display);font-size:17px;margin-bottom:8px;color:var(--text);}
+.file-card-body p{color:var(--text-dim);font-size:13.5px;line-height:1.55;}
+
+/* ---------- pourquoi (log de build) ---------- */
+.pourquoi{padding:90px 24px 30px;max-width:760px;}
+.log-line{
+  display:flex;gap:12px;align-items:flex-start;padding:11px 14px;border:1px solid var(--border);
+  border-radius:8px;background:var(--panel);margin-bottom:10px;font-family:var(--mono);font-size:13.5px;
+}
+.log-check{color:var(--accent);font-weight:700;}
+.log-line b{color:var(--text);font-family:var(--sans);font-weight:600;margin-right:4px;}
+.log-line span.desc{color:var(--text-dim);font-family:var(--sans);}
+
+/* ---------- featured (package) ---------- */
+.featured{padding:90px 24px 90px;max-width:760px;}
+.package-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.package-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;background:var(--panel-2);border-bottom:1px solid var(--border);}
+.package-bar span{font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+.version-tag{font-family:var(--mono);font-size:11px;background:rgba(var(--accent-rgb),.12);color:var(--accent);padding:3px 9px;border-radius:20px;}
+.package-body{display:flex;align-items:center;gap:24px;padding:26px 24px;flex-wrap:wrap;}
+#logo_moderion{width:96px;border-radius:14px;border:2px solid var(--border);transition:.3s;flex-shrink:0;}
+#logo_moderion:hover{border-color:var(--accent);box-shadow:0 0 24px rgba(var(--accent-rgb),.3);}
+.package-info h3{font-family:var(--display);font-size:19px;margin-bottom:6px;}
+.package-info p{color:var(--text-dim);font-size:13.5px;margin-bottom:12px;max-width:360px;}
+.price-tag{font-family:var(--mono);background:var(--accent);color:#06140f;padding:5px 14px;border-radius:6px;font-size:13px;font-weight:700;}
+.see-more{font-family:var(--mono);font-size:12.5px;color:var(--accent);text-decoration:none;margin-left:10px;}
+.see-more:hover{text-decoration:underline;}
+
+/* ---------- footer ---------- */
+.footer-bar{
+  font-family:var(--mono);font-size:12.5px;color:var(--text-dim);padding:22px 24px;border-top:1px solid var(--border);
+  margin-top:10px;
+}
+.footer-bar .prompt{color:var(--accent);}
+.footer-bar .path{color:var(--purple);}
+.footer-bar a{color:var(--accent);text-decoration:none;}
+.footer-bar a:hover{text-decoration:underline;}
+
+/* ---------- mobile ---------- */
+@media (max-width:768px){
+  #menu-btn{display:block;}
+  #menu{display:none;}
+  #menu.visible{display:flex;}
+  .page{padding-left:0;}
+  .hero{padding:90px 18px 40px;}
+  .hero h1{font-size:42px;}
+  .services,.pourquoi,.featured{padding:60px 18px 10px;}
+  .featured{padding-bottom:60px;}
+  .package-body{flex-direction:column;text-align:center;}
+  .package-info p{max-width:none;}
+  .file-card{width:100%;}
+}
+</style>
 </head>
 <body>
 
-<button id="menu-btn">☰ Menu</button>
+<div class="bg-grid"></div>
+<div class="bg-glow"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+
+<button id="menu-btn">[ menu ]</button>
 
 <nav id="menu">
-    <a href="index.html">Accueil</a>
-    <a href="2-script.html">Script</a>
-    <a href="3-contact.html">Contact</a>
-    <a href="10-e-book.html">E-book</a>
+  <div class="brand">Zyntra<span>Code</span><span class="cursor-blink"></span></div>
+  <div class="nav-label">// navigation</div>
+  <a href="index.html">Accueil</a>
+  <a href="2-script.html">Script</a>
+  <a href="3-contact.html">Contact</a>
+  <a href="10-e-book.html">E-book</a>
 
-    <!-- MENU JEUX DÉROULANT -->
-    <div class="menu-jeux-wrapper">
-        <span class="menu-jeux-titre">🎮 Jeux ▾</span>
-        <div class="menu-jeux-dropdown">
-            <a href="morpion.html">⭕ Morpion</a>
-            <a href="clash_arena.html">🕌 zyntra arena</a>
-            
-        </div>
+  <div class="menu-jeux-wrapper">
+    <span class="menu-jeux-titre">🎮 Jeux ▾</span>
+    <div class="menu-jeux-dropdown">
+      <a href="morpion.html">⭕ Morpion</a>
+      <a href="clash_arena.html">🕌 Zyntra Arena</a>
     </div>
+  </div>
 
-    <!-- Ces liens sont cachés si connecté -->
+  <div class="menu-bottom">
     <a href="login.html" id="menu-login">🔐 Se connecter</a>
     <a href="register.html" id="menu-register">✨ S'inscrire</a>
+  </div>
 </nav>
 
-<div class="hero">
+<div class="page">
+
+  <div class="hero">
+    <div class="eyebrow">$ whoami</div>
     <h1>ZyntraCode</h1>
-    <h3>Script • Sites Web • Solutions Digitales</h3>
-    <p>Des solutions digitales professionnelles pour propulser votre présence en ligne.</p>
-    <input id="test_champ" type="search" placeholder="🔎 Rechercher un produit...">
-    <div id="resultats"></div>
-    <br>
-    <a href="3-contact.html" class="btn-contact">📩 Nous contacter</a>
-    <a href="login.html" class="btn-contact" id="btn-login" style="background: transparent; color: rgb(21,213,168); border: 2px solid rgb(21,213,168); margin-left: 10px;">🔐 Se connecter</a>
-    <a href="register.html" class="btn-contact" id="btn-register" style="margin-left: 10px;">✨ S'inscrire</a>
-</div>
+    <div class="tagline"><b>Script</b> • <b>Sites Web</b> • <b>Solutions Digitales</b></div>
 
-<div class="services">
-    <div class="service-card">
-        <div class="icon">💻</div>
-        <h3>Script</h3>
-        <p>Des script qui sers a vous protégé.</p>
+    <div class="terminal">
+      <div class="term-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="term-tab">zyntracode.sh</span>
+      </div>
+      <div class="term-body">
+        <div class="term-line"><span class="prompt">visiteur@zyntracode</span>:<span class="path">~</span>$ cat manifeste.txt</div>
+        <div class="term-out" id="typed-output"><span class="type-cursor" id="type-cursor"></span></div>
+        <div class="term-search-row">
+          <span><span class="prompt">visiteur@zyntracode</span>:<span class="path">~</span>$ ./rechercher</span>
+          <input id="test_champ" type="search" placeholder="nom du produit...">
+        </div>
+        <div id="resultats"></div>
+      </div>
     </div>
-    <div class="service-card">
-        <div class="icon">🌐</div>
-        <h3>Sites Web</h3>
-        <p>Des sites web modernes et professionnels adaptés à vos besoins.</p>
-    </div>
-    <div class="service-card">
-        <div class="icon">💡</div>
-        <h3>Solutions Digitales</h3>
-        <p>Des solutions sur mesure pour votre présence digitale.</p>
-    </div>
-    <div class="service-card">
-        <div class="icon">🎮</div>
-        <h3>Jeu vidéo</h3>
-        <p>Nous créons des jeu vidéo pour vous.</p>
-    </div>
-</div>
 
-<div class="pourquoi">
-    <h2>⭐ Pourquoi nous choisir ?</h2>
-    <div class="pourquoi-cards">
-        <div class="pourquoi-card">
-            <div class="icon">⚡</div>
-            <h4>Rapide</h4>
-            <p>Livraison rapide de vos projets</p>
-        </div>
-        <div class="pourquoi-card">
-            <div class="icon">🔒</div>
-            <h4>Fiable</h4>
-            <p>Des solutions stables et sécurisées</p>
-        </div>
-        <div class="pourquoi-card">
-            <div class="icon">💰</div>
-            <h4>Abordable</h4>
-            <p>Des prix adaptés à tous les budgets</p>
-        </div>
-        <div class="pourquoi-card">
-            <div class="icon">🛠️</div>
-            <h4>Support</h4>
-            <p>Un support disponible pour vous aider</p>
-        </div>
+    <div class="hero-ctas">
+      <a href="3-contact.html" class="btn btn-primary">Nous contacter</a>
+      <a href="login.html" class="btn btn-outline" id="btn-login">Se connecter</a>
+      <a href="register.html" class="btn btn-ghost" id="btn-register">S'inscrire →</a>
     </div>
-</div>
+  </div>
 
-<div class="featured">
-    <h2>💻 Notre script vedette</h2>
-    <div class="bot-card">
+  <section class="services">
+    <div class="section-head reveal">
+      <div class="eyebrow">// nos services</div>
+      <h2>Ce qu'on construit pour vous</h2>
+    </div>
+    <div class="cards-row">
+      <div class="file-card reveal">
+        <div class="file-tab"><span class="dot" style="background:var(--yellow)"></span><span>script.py</span></div>
+        <div class="file-card-body">
+          <h3>Script</h3>
+          <p>Des scripts qui vous servent à protéger vos données et automatiser vos tâches.</p>
+        </div>
+      </div>
+      <div class="file-card reveal">
+        <div class="file-tab"><span class="dot" style="background:var(--orange)"></span><span>site.html</span></div>
+        <div class="file-card-body">
+          <h3>Sites Web</h3>
+          <p>Des sites web modernes et professionnels adaptés à vos besoins.</p>
+        </div>
+      </div>
+      <div class="file-card reveal">
+        <div class="file-tab"><span class="dot" style="background:var(--purple)"></span><span>solution.config</span></div>
+        <div class="file-card-body">
+          <h3>Solutions Digitales</h3>
+          <p>Des solutions sur mesure pour votre présence digitale.</p>
+        </div>
+      </div>
+      <div class="file-card reveal">
+        <div class="file-tab"><span class="dot" style="background:var(--accent)"></span><span>jeu.exe</span></div>
+        <div class="file-card-body">
+          <h3>Jeu vidéo</h3>
+          <p>Nous créons des jeux vidéo sur mesure pour vous.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pourquoi">
+    <div class="section-head reveal">
+      <div class="eyebrow">$ ./pourquoi-nous.sh</div>
+      <h2>Pourquoi nous choisir ?</h2>
+    </div>
+    <div class="log-line reveal"><span class="log-check">✓</span><div><b>Rapide</b><span class="desc">— Livraison rapide de vos projets</span></div></div>
+    <div class="log-line reveal"><span class="log-check">✓</span><div><b>Fiable</b><span class="desc">— Des solutions stables et sécurisées</span></div></div>
+    <div class="log-line reveal"><span class="log-check">✓</span><div><b>Abordable</b><span class="desc">— Des prix adaptés à tous les budgets</span></div></div>
+    <div class="log-line reveal"><span class="log-check">✓</span><div><b>Support</b><span class="desc">— Un support disponible pour vous aider</span></div></div>
+  </section>
+
+  <section class="featured">
+    <div class="section-head reveal">
+      <div class="eyebrow">$ pip install</div>
+      <h2>Notre script vedette</h2>
+    </div>
+    <div class="package-card reveal">
+      <div class="package-bar">
+        <span>📦 generateur-mot-passe</span>
+        <span class="version-tag">v1.0.0</span>
+      </div>
+      <div class="package-body">
         <a href="dtl_Générateur_mot_passe.html">
-            <img src="icone_générateur_motde_passe.png" id="logo_moderion" alt="logo moderion">
+          <img src="icone_générateur_motde_passe.png" id="logo_moderion" alt="logo générateur de mot de passe">
         </a>
-        <h3>Générateur de mot de passe</h3>
-        <p>Script pour généré des mot de passe très fort</p>
-        <span class="tag-gratuit">0,95 CHF</span>
+        <div class="package-info">
+          <h3>Générateur de mot de passe</h3>
+          <p>Script pour générer des mots de passe très forts.</p>
+          <span class="price-tag">0,95 CHF</span>
+          <a href="dtl_Générateur_mot_passe.html" class="see-more">Voir le script →</a>
+        </div>
+      </div>
     </div>
-</div>
+  </section>
 
-<div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px; padding-left: 200px;">
-    © 2026 ZyntraCode — Tous droits réservés | 
-    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
-    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a>
+  <div class="footer-bar">
+    <span class="prompt">zyntracode@ch</span>:<span class="path">~</span>$ © 2026 ZyntraCode — Tous droits réservés
+    &nbsp;|&nbsp; <a href="3-contact.html">Contact</a> &nbsp;|&nbsp; <a href="conditions.html">Conditions d'utilisation</a>
+  </div>
+
 </div>
 
 <script>
-    const btn = document.getElementById("menu-btn");
-    const menu = document.getElementById("menu");
-    btn.addEventListener("click", () => menu.classList.toggle("visible"));
+/* ---------- menu mobile ---------- */
+const btn = document.getElementById("menu-btn");
+const menu = document.getElementById("menu");
+btn.addEventListener("click", () => menu.classList.toggle("visible"));
 
-    const mots = [
-        {nom: "générateur de mot de passe", lien: "https://zyntracode.ch/dtl_G%C3%A9n%C3%A9rateur_mot_passe.html"},
-        {nom: "analayseur de lien", lien: "https://zyntracode.ch/dtl_analyse_lien.html"},
-        {nom: "comment coder en pythoon partie 1", lien: "https://zyntracode.ch/dlt_e-book_comment_coder_en_python_partie_1.html"},
-        
-    ];
-    const input = document.getElementById("test_champ");
-    const resultats = document.getElementById("resultats");
-    input.addEventListener("input", function() {
-        let valeur = input.value.toLowerCase();
-        resultats.innerHTML = "";
-        if (valeur === "") return;
-        let filtres = mots.filter(item => item.nom.toLowerCase().startsWith(valeur));
-        if (filtres.length === 0) {
-            resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
-        }
-        filtres.forEach(item => {
-            resultats.innerHTML += `<a href="${item.lien}"><p>${item.nom}</p></a>`;
-        });
-    });
+/* ---------- effet machine à écrire (terminal hero) ---------- */
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const manifesto = "Des solutions digitales professionnelles pour propulser votre présence en ligne.";
+const outputEl = document.getElementById('typed-output');
+const cursorEl = document.getElementById('type-cursor');
+
+function typeText(text, el, cursor, speed = 22){
+  let i = 0;
+  el.insertBefore(document.createTextNode(""), cursor);
+  const textNode = el.firstChild;
+  function step(){
+    if(i < text.length){
+      textNode.textContent += text.charAt(i);
+      i++;
+      setTimeout(step, speed);
+    }
+  }
+  step();
+}
+
+if(reduceMotion){
+  outputEl.insertBefore(document.createTextNode(manifesto), cursorEl);
+} else {
+  setTimeout(() => typeText(manifesto, outputEl, cursorEl), 350);
+}
+
+/* ---------- recherche ---------- */
+const mots = [
+  {nom: "générateur de mot de passe", lien: "https://zyntracode.ch/dtl_G%C3%A9n%C3%A9rateur_mot_passe.html"},
+  {nom: "analayseur de lien", lien: "https://zyntracode.ch/dtl_analyse_lien.html"},
+  {nom: "comment coder en pythoon partie 1", lien: "https://zyntracode.ch/dlt_e-book_comment_coder_en_python_partie_1.html"},
+];
+const input = document.getElementById("test_champ");
+const resultats = document.getElementById("resultats");
+input.addEventListener("input", function() {
+  let valeur = input.value.toLowerCase();
+  resultats.innerHTML = "";
+  if (valeur === "") return;
+  let filtres = mots.filter(item => item.nom.toLowerCase().startsWith(valeur));
+  if (filtres.length === 0) {
+    resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
+  }
+  filtres.forEach(item => {
+    resultats.innerHTML += `<a href="${item.lien}"><p>${item.nom}</p></a>`;
+  });
+});
+
+/* ---------- scroll reveal ---------- */
+const revealEls = document.querySelectorAll('.reveal');
+revealEls.forEach((el, groupIndex) => {
+  const siblings = el.parentElement.querySelectorAll('.reveal');
+  const idx = Array.prototype.indexOf.call(siblings, el);
+  el.style.transitionDelay = (idx * 0.08) + 's';
+});
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('in-view');
+      observer.unobserve(entry.target);
+    }
+  });
+}, {threshold: 0.15});
+revealEls.forEach(el => observer.observe(el));
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="profil-menu.js"></script>
 <script>
-    async function verifierConnexion() {
-        const { data: { user } } = await supabaseClient.auth.getUser();
-        if (user) {
-            document.getElementById('btn-login').style.display = 'none';
-            document.getElementById('btn-register').style.display = 'none';
-            document.getElementById('menu-login').style.display = 'none';
-            document.getElementById('menu-register').style.display = 'none';
-        }
+  async function verifierConnexion() {
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (user) {
+      document.getElementById('btn-login').style.display = 'none';
+      document.getElementById('btn-register').style.display = 'none';
+      document.getElementById('menu-login').style.display = 'none';
+      document.getElementById('menu-register').style.display = 'none';
     }
-    verifierConnexion();
+  }
+  verifierConnexion();
 </script>
 
 </body>
