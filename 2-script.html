@@ -1,264 +1,343 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZyntraCode - Script</title>
-    <link rel="stylesheet" href="7-styles_page_bot.css">
-    <link rel="icon" type="image/png" href="logo zyntracode v3.png">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #0a0a0a;
-            color: white;
-            font-family: Arial, Helvetica, sans-serif;
-            text-align: center;
-        }
-        /* BOUTON MENU */
-        #menu-btn {
-            padding: 8px 15px;
-            position: fixed;
-            top: 15px;
-            left: 15px;
-            z-index: 1001;
-            color: rgb(21, 213, 168);
-            background-color: transparent;
-            border: 2px solid rgb(21, 213, 168);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        /* MENU */
-        #menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            background: #1a1a1a;
-            width: 180px;
-            height: 100vh;
-            padding: 60px 10px 10px 10px;
-            box-shadow: 0px 0px 15px rgb(21, 213, 168);
-            z-index: 1000;
-        }
-        #menu a {
-            color: white;
-            display: block;
-            padding: 12px 10px;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-        #menu a:hover {
-            color: rgb(21, 213, 168);
-            background: #2a2a2a;
-        }
-        .hidden {
-            display: none;
-        }
-        /* TITRE */
-        #bot_dsd {
-            font-size: 48px;
-            color: rgb(21, 213, 168);
-            padding: 80px 20px 20px 20px;
-        }
-        /* BARRE DE RECHERCHE */
-        #bar_rhr {
-            padding: 12px 20px;
-            width: 350px;
-            border-radius: 10px;
-            border: 2px solid rgb(21, 213, 168);
-            background: #1a1a1a;
-            color: white;
-            font-size: 16px;
-            outline: none;
-            margin-bottom: 10px;
-        }
-        #bar_rhr:focus {
-            box-shadow: 0px 0px 10px rgb(21, 213, 168);
-        }
-        #resultats {
-            background: #1a1a1a;
-            color: white;
-            width: 350px;
-            margin: 0 auto 30px auto;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        #resultats a {
-            text-decoration: none;
-            color: white;
-        }
-        #resultats p {
-            padding: 10px 15px;
-            margin: 0;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        #resultats p:hover {
-            background: #2a2a2a;
-            color: rgb(21, 213, 168);
-        }
-        /* GRILLE DE BOTS */
-        .bots-grid {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 30px;
-            padding: 20px 40px 80px 40px;
-        }
-        .bot-card {
-            background: #1a1a1a;
-            border: 1px solid rgb(21, 213, 168);
-            border-radius: 15px;
-            padding: 30px;
-            width: 250px;
-            text-align: center;
-            transition: 0.3s;
-            text-decoration: none;
-            color: white;
-        }
-        .bot-card:hover {
-            box-shadow: 0 0 25px rgba(21, 213, 168, 0.4);
-            transform: translateY(-5px);
-        }
-        .bot-card img {
-            width: 100px;
-            border-radius: 50%;
-            border: 3px solid rgb(21, 213, 168);
-            margin-bottom: 15px;
-        }
-        .bot-card h3 {
-            color: white;
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        .bot-card p {
-            color: #aaa;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-        .tag {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 13px;
-        }
-        .tag-gratuit {
-            background: rgb(21, 213, 168);
-            color: black;
-        }
-        .tag-bientot {
-            background: #333;
-            color: #aaa;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZyntraCode - Script</title>
+<link rel="stylesheet" href="7-styles_page_bot.css">
+<link rel="icon" type="image/png" href="logo zyntracode v3.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;
+  --panel:#101213;
+  --panel-2:#15181a;
+  --border:#222625;
+  --accent:#15d5a8;
+  --accent-rgb:21,213,168;
+  --purple:#c586c0;
+  --orange:#ce9178;
+  --yellow:#dcdcaa;
+  --text:#e9e9e9;
+  --text-dim:#8a9290;
+  --sans:'Inter',Arial,sans-serif;
+  --display:'Space Grotesk',var(--sans);
+  --mono:'JetBrains Mono',Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden;position:relative;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
+
+/* ---------- ambiance de fond ---------- */
+.bg-grid{
+  position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black 40%,transparent 90%);
+}
+.bg-glow{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden;}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;animation:float 16s ease-in-out infinite;}
+.blob-1{width:480px;height:480px;background:var(--accent);top:-120px;left:10%;}
+.blob-2{width:380px;height:380px;background:var(--purple);bottom:-140px;right:5%;animation-delay:-8s;}
+@keyframes float{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,-50px);}}
+@keyframes blink{50%{opacity:0;}}
+
+/* ---------- sidebar / nav ---------- */
+#menu-btn{
+  position:fixed;top:14px;left:14px;z-index:1001;display:none;
+  background:var(--panel);border:1px solid var(--border);color:var(--accent);
+  font-family:var(--mono);font-size:14px;padding:9px 14px;border-radius:6px;cursor:pointer;transition:.2s;
+}
+#menu-btn:hover{border-color:var(--accent);box-shadow:0 0 14px rgba(var(--accent-rgb),.25);}
+#menu{
+  background:var(--panel);width:210px;height:100vh;position:fixed;top:0;left:0;z-index:1000;
+  border-right:1px solid var(--border);padding:26px 14px 14px 14px;transition:.3s;display:flex;flex-direction:column;
+}
+#menu.hidden{display:none;}
+.brand{font-family:var(--mono);font-weight:600;color:var(--text);font-size:15px;padding:0 10px 22px 10px;border-bottom:1px solid var(--border);margin-bottom:14px;letter-spacing:.3px;text-align:left;}
+.brand span{color:var(--accent);}
+.cursor-blink{display:inline-block;width:8px;background:var(--accent);margin-left:2px;animation:blink 1s steps(1) infinite;}
+.nav-label{font-family:var(--mono);font-size:11px;color:var(--text-dim);padding:4px 10px 8px;letter-spacing:.5px;text-align:left;}
+#menu a{
+  color:#c7cccb;display:flex;align-items:center;gap:8px;padding:10px 10px;margin-bottom:2px;
+  text-decoration:none;border-radius:6px;font-size:14px;transition:.18s;border-left:2px solid transparent;text-align:left;
+}
+#menu a:hover{color:var(--accent);background:var(--panel-2);border-left-color:var(--accent);padding-left:13px;}
+#menu a.active{color:var(--accent);background:var(--panel-2);border-left-color:var(--accent);}
+.menu-jeux-wrapper{position:relative;}
+.menu-jeux-titre{
+  color:#c7cccb;display:flex;align-items:center;gap:8px;padding:10px 10px;text-decoration:none;
+  border-radius:6px;cursor:pointer;user-select:none;font-size:14px;transition:.18s;border-left:2px solid transparent;text-align:left;
+}
+.menu-jeux-titre:hover{color:var(--accent);background:var(--panel-2);border-left-color:var(--accent);}
+.menu-jeux-dropdown{max-height:0;overflow:hidden;transition:max-height .3s ease;background:#0c0e0d;border-radius:6px;}
+.menu-jeux-wrapper:hover .menu-jeux-dropdown{max-height:200px;}
+.menu-jeux-dropdown a{
+  color:#8a9290!important;padding:9px 10px 9px 26px!important;font-size:12.5px!important;
+  font-family:var(--mono);border-left:2px solid var(--border);margin:2px 0;border-radius:0!important;text-align:left;
+}
+.menu-jeux-dropdown a:hover{color:var(--accent)!important;background:var(--panel-2)!important;border-left-color:var(--accent);}
+.menu-bottom{margin-top:auto;padding-top:14px;border-top:1px solid var(--border);}
+
+/* ---------- layout ---------- */
+.page{padding-left:210px;}
+.eyebrow{
+  font-family:var(--mono);color:var(--accent);font-size:13px;display:inline-flex;align-items:center;gap:8px;
+  margin-bottom:14px;letter-spacing:.3px;
+}
+.eyebrow::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;box-shadow:0 0 8px rgba(var(--accent-rgb),.8);}
+
+/* ---------- en-tête de page ---------- */
+.page-header{text-align:center;padding:92px 24px 36px;}
+.page-header .eyebrow{justify-content:center;}
+.page-header h1{font-family:var(--display);font-weight:700;font-size:clamp(36px,6vw,52px);
+  background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:10px;}
+.page-header p{color:var(--text-dim);font-family:var(--mono);font-size:14px;}
+
+/* ---------- recherche terminal ---------- */
+.search-wrap{max-width:520px;margin:30px auto 0;}
+.terminal{background:var(--panel);border:1px solid var(--border);border-radius:10px;overflow:hidden;
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.02);position:relative;}
+.terminal::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0px,rgba(255,255,255,.012) 1px,transparent 1px,transparent 3px);}
+.term-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--panel-2);border-bottom:1px solid var(--border);}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dot.r{background:#ff5f56;}.dot.y{background:#ffbd2e;}.dot.g{background:#27c93f;}
+.term-tab{margin-left:10px;font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+.term-body{padding:16px 18px 18px;font-family:var(--mono);font-size:13.5px;}
+.search-row{display:flex;align-items:center;gap:8px;text-align:left;}
+.search-row .prompt{color:var(--accent);white-space:nowrap;}
+.search-row .path{color:var(--purple);}
+#bar_rhr{flex:1;min-width:120px;background:transparent;border:none;outline:none;color:var(--text);
+  font-family:var(--mono);font-size:13.5px;padding:4px 0;}
+#bar_rhr::placeholder{color:#5b6260;}
+#resultats{margin-top:6px;text-align:left;}
+#resultats a{text-decoration:none;}
+#resultats p{font-family:var(--mono);font-size:13px;color:#c7cccb;padding:7px 4px;border-radius:4px;cursor:pointer;
+  transition:.15s;display:flex;align-items:center;gap:6px;}
+#resultats p::before{content:'>';color:var(--accent);}
+#resultats p:hover{background:var(--panel-2);color:var(--accent);padding-left:8px;}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in-view{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+  .blob,.cursor-blink{animation:none;}
+}
+
+/* ---------- grille de scripts ---------- */
+.scripts-grid{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;padding:50px 24px 90px;max-width:1100px;margin:0 auto;}
+.script-card{
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;width:250px;overflow:hidden;
+  transition:.25s;text-align:left;display:flex;flex-direction:column;
+}
+.script-card:hover{transform:translateY(-6px);border-color:rgba(var(--accent-rgb),.5);box-shadow:0 18px 36px -16px rgba(var(--accent-rgb),.28);}
+.file-tab{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--panel-2);border-bottom:1px solid var(--border);}
+.file-tab .dot{width:8px;height:8px;}
+.file-tab span{font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+.script-card-body{padding:20px 18px 22px;display:flex;flex-direction:column;align-items:flex-start;flex:1;}
+.script-card img{width:64px;height:64px;border-radius:50%;border:2px solid var(--border);margin-bottom:14px;transition:.25s;object-fit:cover;}
+.script-card:hover img{border-color:var(--accent);box-shadow:0 0 18px rgba(var(--accent-rgb),.3);}
+.script-card h3{font-family:var(--display);font-size:16.5px;margin-bottom:8px;color:var(--text);}
+.script-card p{color:var(--text-dim);font-size:13px;line-height:1.55;margin-bottom:16px;flex:1;}
+.price-tag{font-family:var(--mono);background:var(--accent);color:#06140f;padding:5px 13px;border-radius:6px;font-size:12.5px;font-weight:700;align-self:flex-start;}
+.script-card.soon{border-style:dashed;opacity:.75;}
+.script-card.soon:hover{transform:none;box-shadow:none;border-color:var(--border);}
+.tag-soon{font-family:var(--mono);background:#222625;color:var(--text-dim);padding:5px 13px;border-radius:6px;font-size:12.5px;}
+.soon-icon{font-size:38px;margin-bottom:10px;}
+
+/* ---------- footer ---------- */
+.footer-bar{font-family:var(--mono);font-size:12px;color:var(--text-dim);padding:22px 24px;border-top:1px solid var(--border);
+  margin-top:10px;text-align:center;}
+.footer-bar .prompt{color:var(--accent);}
+.footer-bar .path{color:var(--purple);}
+.footer-bar a{color:var(--accent);text-decoration:none;}
+.footer-bar a:hover{text-decoration:underline;}
+
+/* ---------- mobile ---------- */
+@media (max-width:768px){
+  #menu-btn{display:block;}
+  .page{padding-left:0;}
+  .page-header{padding:88px 18px 30px;}
+  .page-header h1{font-size:34px;}
+  .scripts-grid{padding:40px 18px 60px;}
+  .script-card{width:100%;max-width:340px;}
+}
+</style>
 </head>
 <body>
 
-<!-- BOUTON MENU -->
-<button id="menu-btn">☰ Menu</button>
+<div class="bg-grid"></div>
+<div class="bg-glow"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
 
-<!-- MENU -->
+<button id="menu-btn">[ menu ]</button>
+
 <nav id="menu" class="hidden">
-    <a href="index.html">Accueil</a>
-    <a href="2-script.html">script</a>
-    <a href="3-contact.html">Contact</a>
-    <a href="10-e-book.html">E-book</a>
+  <div class="brand">Zyntra<span>Code</span><span class="cursor-blink"></span></div>
+  <div class="nav-label">// navigation</div>
+  <a href="index.html">Accueil</a>
+  <a href="2-script.html" class="active">Script</a>
+  <a href="3-contact.html">Contact</a>
+  <a href="10-e-book.html">E-book</a>
+
+  <div class="menu-jeux-wrapper">
+    <span class="menu-jeux-titre">🎮 Jeux ▾</span>
+    <div class="menu-jeux-dropdown">
+      <a href="morpion.html">⭕ Morpion</a>
+      <a href="clash_arena.html">🕌 Zyntra Arena</a>
+    </div>
+  </div>
+
+  <div class="menu-bottom">
+    <a href="login.html" id="menu-login">🔐 Se connecter</a>
+    <a href="register.html" id="menu-register">✨ S'inscrire</a>
+  </div>
 </nav>
 
-<!-- TITRE -->
-<h1 id="bot_dsd">script</h1>
+<div class="page">
 
-<!-- BARRE DE RECHERCHE -->
-<input id="bar_rhr" type="search" placeholder="🔎 Rechercher un script...">
-<div id="resultats"></div>
+  <div class="page-header reveal">
+    <div class="eyebrow">$ ls ./scripts</div>
+    <h1>Nos scripts</h1>
+    <p>Des outils Python prêts à l'emploi, livrés en exécutable.</p>
 
-<!-- GRILLE DE BOTS -->
-<div class="bots-grid">
-    <a href="dtl_Générateur_mot_passe.html" class="bot-card">
-        <img src="icone_générateur_motde_passe.png" alt="logo moderion">
-        <h3>Générateur de mot passe</h3>
-        <p>Il génère des mots de passe très forts, incassables par force brute !</p>
-        <span class="tag tag-gratuit">0,95 CHF</span>
-    </a>
-
-    
-    <a href="dtl_analyse_lien.html" class="bot-card">
-        <img src="logo analyseur de lien.png" alt="logo moderion">
-        <h3>Analyseur de lien</h3>
-        <p>il analyse le lien si il dangereux ou si il est sur.</p>
-        <span class="tag tag-gratuit">1,95 CHF</span>
-    </a>
-
-    <a href="dlt_nanlyseur_port_ouvert.html" class="bot-card">
-        <img src="logo_analyseur de port ouvert.png" alt="logo moderion">
-        <h3>Analyseur de port ouvert</h3>
-        <p>il analyse vos port qui son ouvert sur pour voir si il y a du danger ou sûr</p>
-        <span class="tag tag-gratuit">1,95 CHF</span>
-    </a>
-    
-    <div style="flex-basis: 100%; height: 0;"></div>
-
-    <div class="bot-card">
-        <div style="font-size:60px; margin-bottom:15px;">🔜</div>
-        <h3>Bientôt...</h3>
-        <p>De nouveaux script arrivent prochainement !</p>
-        <span class="tag tag-bientot">🕐 Bientôt disponible</span>
+    <div class="search-wrap">
+      <div class="terminal">
+        <div class="term-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="term-tab">scripts.sh</span>
+        </div>
+        <div class="term-body">
+          <div class="search-row">
+            <span><span class="prompt">visiteur@zyntracode</span>:<span class="path">~</span>$ ./rechercher</span>
+            <input id="bar_rhr" type="search" placeholder="nom du script...">
+          </div>
+          <div id="resultats"></div>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="scripts-grid">
+
+    <a href="dtl_Générateur_mot_passe.html" class="script-card reveal">
+      <div class="file-tab"><span class="dot" style="background:var(--yellow)"></span><span>password_gen.py</span></div>
+      <div class="script-card-body">
+        <img src="icone_générateur_motde_passe.png" alt="logo générateur de mot de passe">
+        <h3>Générateur de mot de passe</h3>
+        <p>Génère des mots de passe très forts, incassables par force brute.</p>
+        <span class="price-tag">0,95 CHF</span>
+      </div>
+    </a>
+
+    <a href="dtl_analyse_lien.html" class="script-card reveal">
+      <div class="file-tab"><span class="dot" style="background:var(--orange)"></span><span>link_scan.py</span></div>
+      <div class="script-card-body">
+        <img src="logo analyseur de lien.png" alt="logo analyseur de lien">
+        <h3>Analyseur de lien</h3>
+        <p>Analyse un lien pour savoir s'il est dangereux ou sûr.</p>
+        <span class="price-tag">1,95 CHF</span>
+      </div>
+    </a>
+
+    <a href="dlt_nanlyseur_port_ouvert.html" class="script-card reveal">
+      <div class="file-tab"><span class="dot" style="background:var(--purple)"></span><span>port_scan.py</span></div>
+      <div class="script-card-body">
+        <img src="logo_analyseur de port ouvert.png" alt="logo analyseur de port ouvert">
+        <h3>Analyseur de port ouvert</h3>
+        <p>Analyse vos ports ouverts pour repérer les risques de sécurité.</p>
+        <span class="price-tag">1,95 CHF</span>
+      </div>
+    </a>
+
+    <div class="script-card soon reveal">
+      <div class="file-tab"><span class="dot" style="background:#444"></span><span>???.py</span></div>
+      <div class="script-card-body">
+        <div class="soon-icon">🔜</div>
+        <h3>Bientôt...</h3>
+        <p>De nouveaux scripts arrivent prochainement !</p>
+        <span class="tag-soon">🕐 Bientôt disponible</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bar">
+    <span class="prompt">zyntracode@ch</span>:<span class="path">~</span>$ © 2026 ZyntraCode — Tous droits réservés
+    &nbsp;|&nbsp; <a href="3-contact.html">Contact</a>
+    &nbsp;|&nbsp; <a href="conditions.html">Conditions d'utilisation</a>
+    &nbsp;|&nbsp; <a href="politique-confidentialite.html">Politique de confidentialité</a>
+  </div>
+
 </div>
 
 <script>
-    const btn = document.getElementById("menu-btn");
-    const menu = document.getElementById("menu");
-    btn.addEventListener("click", () => {
-        menu.classList.toggle("hidden");
-    });
+/* ---------- menu ---------- */
+const btn = document.getElementById("menu-btn");
+const menu = document.getElementById("menu");
+btn.addEventListener("click", () => menu.classList.toggle("hidden"));
 
-    const mots = [
-        {nom: "Générateur de mot passe", lien: "dtl_Générateur_mot_passe.html"},
-        {nom: "Analyseur de lien", lien: "dtl_analyse_lien.html"},
-    ];
-    const input = document.getElementById("bar_rhr");
-    const resultats = document.getElementById("resultats");
-    input.addEventListener("input", function() {
-        let valeur = input.value.toLowerCase();
-        resultats.innerHTML = "";
-        if (valeur === "") return;
-        let filtres = mots.filter(item =>
-            item.nom.toLowerCase().startsWith(valeur)
-        );
-        if (filtres.length === 0) {
-            resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
-        }
-        filtres.forEach(item => {
-            resultats.innerHTML += `<a href="${item.lien}"><p>${item.nom}</p></a>`;
-        });
-    });
+/* ---------- recherche ---------- */
+const mots = [
+  {nom: "Générateur de mot passe", lien: "dtl_Générateur_mot_passe.html"},
+  {nom: "Analyseur de lien", lien: "dtl_analyse_lien.html"},
+  {nom: "Analyseur de port ouvert", lien: "dlt_nanlyseur_port_ouvert.html"},
+];
+const input = document.getElementById("bar_rhr");
+const resultats = document.getElementById("resultats");
+input.addEventListener("input", function() {
+  let valeur = input.value.toLowerCase();
+  resultats.innerHTML = "";
+  if (valeur === "") return;
+  let filtres = mots.filter(item => item.nom.toLowerCase().startsWith(valeur));
+  if (filtres.length === 0) {
+    resultats.innerHTML = "<p>Aucun résultat trouvé</p>";
+  }
+  filtres.forEach(item => {
+    resultats.innerHTML += `<a href="${item.lien}"><p>${item.nom}</p></a>`;
+  });
+});
+
+/* ---------- scroll reveal ---------- */
+const revealEls = document.querySelectorAll('.reveal');
+revealEls.forEach((el) => {
+  const siblings = el.parentElement.querySelectorAll('.reveal');
+  const idx = Array.prototype.indexOf.call(siblings, el);
+  el.style.transitionDelay = (idx * 0.08) + 's';
+});
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('in-view');
+      observer.unobserve(entry.target);
+    }
+  });
+}, {threshold: 0.15});
+revealEls.forEach(el => observer.observe(el));
 </script>
 
-<!-- COPYRIGHT -->
-<div style="
-    text-align: center;
-    padding: 20px;
-    color: #555;
-    font-size: 13px;
-    border-top: 1px solid #1a1a1a;
-    margin-top: 20px;
-    padding-left: 200px;
-">
-    © 2026 ZyntraCode — Tous droits réservés | 
-    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
-    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a>
-    <a href="politique-confidentialite.html" style="color: rgb(21, 213, 168); text-decoration: none;">Politique de confidentialité</a>
-</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/profil-menu.js"></script>
 <script src="mise-a-jour.js"></script>
+<script>
+  async function verifierConnexion() {
+    if (typeof supabaseClient === 'undefined') return;
+    const { data: { user } } = await supabaseClient.auth.getUser();
+    if (user) {
+      const lo = document.getElementById('menu-login');
+      const re = document.getElementById('menu-register');
+      if (lo) lo.style.display = 'none';
+      if (re) re.style.display = 'none';
+    }
+  }
+  verifierConnexion();
+</script>
 
-    
 </body>
 </html>
