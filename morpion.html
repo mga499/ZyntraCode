@@ -3,81 +3,242 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Morpion Spatial Intelligant</title>
+    <title>Morpion Tactique | ZyntraCode</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Space Mono', monospace;
             text-align: center;
-            background-color: #1a1a1a;
-            color: white;
-            margin-top: 30px;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px 20px;
         }
-        h1 { color: #00ffcc; margin-bottom: 10px; }
-        .menu-modes { margin-bottom: 20px; }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #00ffcc;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+            letter-spacing: 2px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 204, 0.5); }
+            50% { text-shadow: 0 0 30px rgba(0, 255, 204, 0.8); }
+        }
+
+        .subtitle {
+            color: #b0b0b0;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .menu-modes {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+        }
+
         .btn-mode {
-            padding: 10px 20px;
-            font-size: 16px;
-            margin: 0 10px;
-            border: 2px solid #555;
-            background-color: #222;
-            color: white;
+            padding: 12px 28px;
+            font-size: 14px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            border: 2px solid #00ffcc;
+            background-color: transparent;
+            color: #00ffcc;
             cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-            transition: all 0.3s;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
         }
+
+        .btn-mode::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background-color: #00ffcc;
+            z-index: -1;
+            transition: left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .btn-mode:hover {
+            color: #0a0e27;
+        }
+
+        .btn-mode:hover::before {
+            left: 0;
+        }
+
         .btn-mode.actif {
             background-color: #00ffcc;
-            color: black;
-            border-color: #00ffcc;
+            color: #0a0e27;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
         }
+
+        .btn-mode.actif::before {
+            left: 0;
+        }
+
         #statut {
-            font-size: 24px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            height: 35px;
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            font-weight: 700;
+            height: 40px;
+            color: #00ffcc;
+            letter-spacing: 1px;
+            animation: pulse 0.6s ease-in-out;
         }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; transform: scale(0.95); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
         .grille {
             display: grid;
-            grid-template-columns: repeat(3, 100px);
-            grid-template-rows: repeat(3, 100px);
-            gap: 10px;
+            grid-template-columns: repeat(3, 90px);
+            grid-template-rows: repeat(3, 90px);
+            gap: 12px;
             justify-content: center;
-            margin-bottom: 20px;
+            margin: 30px auto;
+            padding: 20px;
+            background: rgba(0, 255, 204, 0.05);
+            border: 2px solid rgba(0, 255, 204, 0.2);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
         }
+
         .case {
-            width: 100px;
-            height: 100px;
-            background-color: #333;
-            border: 2px solid #555;
-            font-size: 40px;
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid #00ffcc;
+            font-size: 38px;
             font-weight: bold;
-            color: white;
+            font-family: 'Space Mono', monospace;
+            color: #00ffcc;
             cursor: pointer;
-            border-radius: 10px;
-            transition: background 0.3s;
+            border-radius: 6px;
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
         }
-        .case:hover { background-color: #444; }
+
+        .case::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 255, 204, 0.2) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1;
+        }
+
+        .case:hover {
+            border-color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.4), inset 0 0 15px rgba(0, 255, 204, 0.1);
+            transform: scale(1.05);
+        }
+
+        .case:hover::before {
+            opacity: 1;
+        }
+
+        .case:active {
+            transform: scale(0.95);
+        }
+
+        .case-x { color: #00ffcc !important; }
+        .case-o { color: #ff1b8d !important; }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
         button#btn-recommencer {
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #ffffff;
-            color: black;
-            border: none;
-            border-radius: 5px;
+            padding: 12px 32px;
+            font-size: 14px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            background-color: #00ffcc;
+            color: #0a0e27;
+            border: 2px solid #00ffcc;
+            border-radius: 4px;
             cursor: pointer;
-            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
-        button#btn-recommencer:hover { background-color: #dddddd; }
+
+        button#btn-recommencer:hover {
+            background-color: transparent;
+            color: #00ffcc;
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.6);
+            transform: translateY(-2px);
+        }
+
+        button#btn-recommencer:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.8rem; }
+            .grille {
+                grid-template-columns: repeat(3, 70px);
+                grid-template-rows: repeat(3, 70px);
+                gap: 10px;
+                padding: 15px;
+            }
+            .case {
+                width: 70px;
+                height: 70px;
+                font-size: 30px;
+            }
+            .menu-modes {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .btn-mode {
+                width: 100%;
+                padding: 10px 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <h1>Morpion Tactique</h1>
+    <h1>MORPION TACTIQUE</h1>
+    <p class="subtitle">ZyntraCode</p>
     
     <div class="menu-modes">
-        <button id="modeSolo" class="btn-mode actif" onclick="changerMode('solo')">Mode Solo (vs Robot Malin)</button>
-        <button id="modeDuo" class="btn-mode" onclick="changerMode('duo')">Mode Duo (2 Joueurs)</button>
+        <button id="modeSolo" class="btn-mode actif" onclick="changerMode('solo')">Solo vs Robot</button>
+        <button id="modeDuo" class="btn-mode" onclick="changerMode('duo')">Duo 2 Joueurs</button>
     </div>
 
     <div id="statut">À toi de jouer ! (Tu es les X)</div>
@@ -94,7 +255,9 @@
         <button class="case" id="b8" onclick="jouerCase(8)"></button>
     </div>
 
-    <button id="btn-recommencer" onclick="recommencer()">Réinitialiser</button>
+    <div class="controls">
+        <button id="btn-recommencer" onclick="recommencer()">Nouvelle Partie</button>
+    </div>
 
     <script>
         let modeActuel = "solo";
@@ -123,9 +286,9 @@
             if (modeActuel === "solo" && joueurActuel !== "X") return;
 
             if (joueurActuel === "X") {
-                validerCoup(index, "X", "#00ffcc");
+                validerCoup(index, "X");
             } else {
-                validerCoup(index, "O", "#ff3366");
+                validerCoup(index, "O");
             }
 
             if (verifierFinPartie()) return;
@@ -137,19 +300,19 @@
             else if (modeActuel === "solo") {
                 joueurActuel = "O";
                 document.getElementById("statut").innerText = "Le robot réfléchit...";
-                setTimeout(tourIA, 400); 
+                setTimeout(tourIA, 500); 
             }
         }
 
         function tourIA() {
             if (partieFinie || modeActuel !== "solo") return;
 
-            // --- STRATÉGIE DE L'I.A. INTERACTIVE ---
+            // STRATÉGIE DE L'I.A. INTERACTIVE
 
             // ÉTAPE 1 : Est-ce que l'I.A. (O) peut gagner tout de suite ?
             let casePourGagner = trouverCaseCle("O");
             if (casePourGagner !== null) {
-                validerCoup(casePourGagner, "O", "#ff3366");
+                validerCoup(casePourGagner, "O");
                 verifierFinPartie();
                 return;
             }
@@ -157,7 +320,7 @@
             // ÉTAPE 2 : Est-ce que le joueur (X) est sur le point de gagner ? SI OUI, ON BLOQUE !
             let caseABloquer = trouverCaseCle("X");
             if (caseABloquer !== null) {
-                validerCoup(caseABloquer, "O", "#ff3366");
+                validerCoup(caseABloquer, "O");
                 verifierFinPartie();
                 joueurActuel = "X";
                 document.getElementById("statut").innerText = "À toi de jouer ! (Tu es les X)";
@@ -166,7 +329,7 @@
 
             // ÉTAPE 3 : Si rien à bloquer, prendre le centre (case 4) si disponible
             if (grille[4] === "") {
-                validerCoup(4, "O", "#ff3366");
+                validerCoup(4, "O");
                 verifierFinPartie();
                 joueurActuel = "X";
                 document.getElementById("statut").innerText = "À toi de jouer !";
@@ -181,7 +344,7 @@
 
             if (casesVides.length > 0) {
                 let indexAuHasard = Math.floor(Math.random() * casesVides.length);
-                validerCoup(casesVides[indexAuHasard], "O", "#ff3366");
+                validerCoup(casesVides[indexAuHasard], "O");
                 verifierFinPartie();
             }
 
@@ -189,32 +352,29 @@
             document.getElementById("statut").innerText = "À toi de jouer ! (Tu es les X)";
         }
 
-        // Fonction magique qui cherche s'il manque une seule case pour faire un alignement
         function trouverCaseCle(symbole) {
             for (let combo of combosVictoire) {
                 const [a, b, c] = combo;
                 
-                // On compte combien de fois le symbole apparaît sur cette ligne
                 let compteur = 0;
                 if (grille[a] === symbole) compteur++;
                 if (grille[b] === symbole) compteur++;
                 if (grille[c] === symbole) compteur++;
 
-                // S'il y en a 2, on cherche si la 3ème case de la ligne est totalement vide
                 if (compteur === 2) {
                     if (grille[a] === "") return a;
                     if (grille[b] === "") return b;
                     if (grille[c] === "") return c;
                 }
             }
-            return null; // Aucun danger ou aucune opportunité trouvée
+            return null;
         }
 
-        function validerCoup(index, symbole, couleur) {
+        function validerCoup(index, symbole) {
             grille[index] = symbole;
             const bouton = document.getElementById(`b${index}`);
             bouton.innerText = symbole;
-            bouton.style.color = couleur;
+            bouton.classList.add(symbole === "X" ? "case-x" : "case-o");
         }
 
         function verifierFinPartie() {
@@ -247,7 +407,9 @@
             grille = ["", "", "", "", "", "", "", "", ""];
             document.getElementById("statut").innerText = (modeActuel === "solo") ? "À toi de jouer ! (Tu es les X)" : "Tour du joueur : X";
             for (let i = 0; i < 9; i++) {
-                document.getElementById(`b${i}`).innerText = "";
+                const btn = document.getElementById(`b${i}`);
+                btn.innerText = "";
+                btn.classList.remove("case-x", "case-o");
             }
         }
     </script>
