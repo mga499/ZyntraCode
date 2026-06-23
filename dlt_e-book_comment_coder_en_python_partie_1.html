@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comment coder en Python — Partie 1 - ZyntraCode</title>
-<link rel="stylesheet" href="styles_exp-moderion.css">
+<title>ZyntraCode - Paramètres</title>
 <link rel="icon" type="image/png" href="logo zyntracode v3.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +17,7 @@
   --accent:#15d5a8;
   --accent-rgb:21,213,168;
   --purple:#c586c0;
+  --red:#ff4d4d;
   --text:#e9e9e9;
   --text-dim:#8a9290;
   --sans:'Inter',Arial,sans-serif;
@@ -26,7 +26,10 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);text-align:center;overflow-x:hidden;position:relative;}
+body{
+  background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden;position:relative;
+  min-height:100vh;padding:50px 24px 50px 234px;
+}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
 
 /* ---------- ambiance de fond ---------- */
@@ -38,95 +41,111 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);text-align:c
 .blob-1{width:480px;height:480px;background:var(--accent);top:-120px;left:10%;}
 .blob-2{width:380px;height:380px;background:var(--purple);bottom:-140px;right:5%;animation-delay:-8s;}
 @keyframes float{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,-50px);}}
+@keyframes blink{50%{opacity:0;}}
 
-/* ---------- bouton retour ---------- */
-#retoure{
-  position:fixed;top:15px;left:15px;padding:9px 16px;background:var(--panel);
-  border:1px solid var(--border);color:var(--accent);border-radius:8px;text-decoration:none;
-  font-family:var(--mono);font-size:14px;z-index:1001;transition:.22s;
+/* ---------- sidebar / nav ---------- */
+#menu-btn{
+  position:fixed;top:14px;left:14px;z-index:1001;display:none;
+  background:var(--panel);border:1px solid var(--border);color:var(--accent);
+  font-family:var(--mono);font-size:14px;padding:9px 14px;border-radius:6px;cursor:pointer;transition:.2s;
 }
-#retoure:hover{border-color:var(--accent);box-shadow:0 0 14px rgba(var(--accent-rgb),.25);}
+#menu-btn:hover{border-color:var(--accent);box-shadow:0 0 14px rgba(var(--accent-rgb),.25);}
+#menu{
+  background:var(--panel);width:210px;height:100vh;position:fixed;top:0;left:0;z-index:1000;
+  border-right:1px solid var(--border);padding:26px 14px 14px 14px;transition:.3s;display:flex;flex-direction:column;
+}
+.brand{font-family:var(--mono);font-weight:600;color:var(--text);font-size:15px;padding:0 10px 22px 10px;border-bottom:1px solid var(--border);margin-bottom:14px;letter-spacing:.3px;text-align:left;}
+.brand span{color:var(--accent);}
+.cursor-blink{display:inline-block;width:8px;background:var(--accent);margin-left:2px;animation:blink 1s steps(1) infinite;}
+.nav-label{font-family:var(--mono);font-size:11px;color:var(--text-dim);padding:4px 10px 8px;letter-spacing:.5px;text-align:left;}
+#menu a{
+  color:#c7cccb;display:flex;align-items:center;gap:8px;padding:10px 10px;margin-bottom:2px;
+  text-decoration:none;border-radius:6px;font-size:14px;transition:.18s;border-left:2px solid transparent;text-align:left;
+}
+#menu a:hover{color:var(--accent);background:var(--panel-2);border-left-color:var(--accent);padding-left:13px;}
+.menu-jeux-wrapper{position:relative;}
+.menu-jeux-titre{
+  color:#c7cccb;display:flex;align-items:center;gap:8px;padding:10px 10px;text-decoration:none;
+  border-radius:6px;cursor:pointer;user-select:none;font-size:14px;transition:.18s;border-left:2px solid transparent;text-align:left;
+}
+.menu-jeux-titre:hover{color:var(--accent);background:var(--panel-2);border-left-color:var(--accent);}
+.menu-jeux-dropdown{max-height:0;overflow:hidden;transition:max-height .3s ease;background:#0c0e0d;border-radius:6px;}
+.menu-jeux-wrapper:hover .menu-jeux-dropdown{max-height:200px;}
+.menu-jeux-dropdown a{
+  color:#8a9290!important;padding:9px 10px 9px 26px!important;font-size:12.5px!important;
+  font-family:var(--mono);border-left:2px solid var(--border);margin:2px 0;border-radius:0!important;text-align:left;
+}
+.menu-jeux-dropdown a:hover{color:var(--accent)!important;background:var(--panel-2)!important;border-left-color:var(--accent);}
 
-@media (max-width:768px){
-  #retoure{padding:6px 12px;font-size:12px;max-width:80px;}
-  #profil-btn{top:15px!important;right:15px!important;max-width:120px!important;}
-  #profil-nom{max-width:60px!important;font-size:11px!important;}
-  #profil-avatar{width:22px!important;height:22px!important;font-size:11px!important;}
+/* ---------- en-tête ---------- */
+.page-head{max-width:560px;margin-bottom:28px;}
+.eyebrow{
+  font-family:var(--mono);color:var(--accent);font-size:13px;display:inline-flex;align-items:center;gap:8px;
+  margin-bottom:10px;letter-spacing:.3px;
 }
+.eyebrow::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;box-shadow:0 0 8px rgba(var(--accent-rgb),.8);}
+h1{font-family:var(--display);font-weight:700;font-size:32px;
+  background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
 
 /* ---------- reveal ---------- */
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease;}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease;}
 .reveal.in-view{opacity:1;transform:none;}
 @media (prefers-reduced-motion:reduce){
   .reveal{opacity:1;transform:none;transition:none;}
-  .blob{animation:none;}
+  .blob,.cursor-blink{animation:none;}
 }
 
-/* ---------- hero / panneau produit ---------- */
-.hero{padding:100px 20px 50px;display:flex;justify-content:center;}
-.product-panel{
-  background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;
-  max-width:480px;width:100%;box-shadow:0 30px 60px -30px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.02);position:relative;
+/* ---------- panneaux de section ---------- */
+.section{
+  background:var(--panel);border:1px solid var(--border);border-radius:10px;max-width:520px;margin-bottom:20px;
+  overflow:hidden;box-shadow:0 24px 48px -28px rgba(0,0,0,.55);transition:.25s;
 }
-.product-panel::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
-  background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0px,rgba(255,255,255,.012) 1px,transparent 1px,transparent 3px);}
-.term-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--panel-2);border-bottom:1px solid var(--border);}
-.dot{width:10px;height:10px;border-radius:50%;}
-.dot.r{background:#ff5f56;}.dot.y{background:#ffbd2e;}.dot.g{background:#27c93f;}
-.term-tab{margin-left:10px;font-family:var(--mono);font-size:12px;color:var(--text-dim);}
-.product-body{padding:34px 28px 36px;}
-#img_moderion{width:110px;border-radius:10px;border:3px solid var(--border);margin-bottom:22px;transition:.3s;}
-#img_moderion:hover{border-color:var(--accent);box-shadow:0 0 25px rgba(var(--accent-rgb),.3);}
-#txt_moderion{font-family:var(--display);font-weight:700;font-size:clamp(24px,4.5vw,32px);
-  background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;text-transform:capitalize;}
-#in_moderion{color:var(--text-dim);font-size:15px;font-weight:400;max-width:380px;margin:0 auto 18px auto;line-height:1.5;}
-#gtt_moderion{display:inline-block;background:var(--accent);color:#06140f;padding:6px 20px;border-radius:20px;font-size:14px;font-family:var(--mono);font-weight:700;margin-bottom:30px;}
-.btn-ajouter{
-  display:inline-block;padding:13px 30px;background:var(--accent);color:#06140f;border:1px solid var(--accent);
-  border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;transition:.22s;font-family:var(--sans);
+.section:hover{border-color:rgba(var(--accent-rgb),.4);}
+.section-bar{display:flex;align-items:center;gap:8px;padding:10px 16px;background:var(--panel-2);border-bottom:1px solid var(--border);}
+.section-bar .dot{width:9px;height:9px;border-radius:50%;}
+.section-bar span{font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+.section-body{padding:24px 24px 26px;}
+.champ{margin-bottom:18px;}
+.champ label{display:flex;align-items:center;gap:6px;color:var(--text);font-size:13px;margin-bottom:8px;font-family:var(--mono);}
+.champ label::before{content:'//';color:var(--accent);}
+.champ input{
+  width:100%;padding:11px 14px;background:#0c0e0d;border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-size:14px;font-family:var(--sans);outline:none;transition:.2s;
 }
-.btn-ajouter:hover{background:transparent;color:var(--accent);box-shadow:0 0 22px rgba(var(--accent-rgb),.3);transform:translateY(-2px);}
-
-/* ---------- fonctionnalités ---------- */
-.features{padding:20px 24px 80px;max-width:900px;margin:0 auto;}
-.features .eyebrow{
-  font-family:var(--mono);color:var(--accent);font-size:13px;display:inline-flex;align-items:center;gap:8px;
-  margin-bottom:14px;letter-spacing:.3px;
+.champ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.12);}
+.champ input:disabled{opacity:.45;cursor:not-allowed;}
+#email-affichage{
+  font-family:var(--mono);font-size:18px;font-weight:600;color:var(--text);background:#0c0e0d;
+  border:1px solid var(--border);border-radius:8px;padding:11px 14px;letter-spacing:1.5px;
 }
-.features .eyebrow::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;box-shadow:0 0 8px rgba(var(--accent-rgb),.8);}
-.features h2{font-family:var(--display);font-weight:600;font-size:28px;margin-bottom:36px;}
-.features-grid{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;}
-.feature-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:26px;width:220px;transition:.25s;text-align:left;}
-.feature-card:hover{transform:translateY(-5px);border-color:rgba(var(--accent-rgb),.5);box-shadow:0 18px 36px -16px rgba(var(--accent-rgb),.25);}
-.feature-card .icon{font-size:30px;margin-bottom:12px;}
-.feature-card h4{color:var(--text);font-family:var(--display);font-size:15.5px;margin-bottom:8px;}
-.feature-card p{color:var(--text-dim);font-size:13px;line-height:1.5;}
+.section-body p{color:var(--text-dim);font-size:13.5px;margin-bottom:16px;line-height:1.5;}
 
-/* ---------- footer ---------- */
-.footer-bar{font-family:var(--mono);font-size:12px;color:var(--text-dim);padding:22px 24px;border-top:1px solid var(--border);margin-top:10px;text-align:center;}
-.footer-bar a{color:var(--accent);text-decoration:none;}
-.footer-bar a:hover{text-decoration:underline;}
+.btn{
+  padding:11px 24px;background:var(--accent);color:#06140f;border:1px solid var(--accent);
+  border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:.22s;font-family:var(--sans);
+}
+.btn:hover{background:transparent;color:var(--accent);box-shadow:0 0 18px rgba(var(--accent-rgb),.3);}
+.btn:disabled{opacity:.6;cursor:not-allowed;box-shadow:none;}
+.btn-danger{
+  padding:11px 24px;background:transparent;color:var(--red);border:1px solid var(--red);
+  border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:.22s;font-family:var(--sans);
+}
+.btn-danger:hover{background:rgba(255,77,77,.1);}
 
-/* ---------- modal (réservé pour une future intégration du paiement) ---------- */
-#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:5000;align-items:center;justify-content:center;}
-#modal-overlay.visible{display:flex;}
-#modal{background:var(--panel);border:1px solid var(--accent);border-radius:14px;padding:30px;width:90%;max-width:400px;animation:popIn .3s ease;text-align:left;}
-@keyframes popIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
-#modal h2{color:var(--accent);font-family:var(--display);font-size:20px;margin-bottom:4px;}
-#modal .modal-sous{color:var(--text-dim);font-size:13px;margin-bottom:22px;}
-#modal .champ{margin-bottom:16px;}
-#modal label{display:block;color:var(--text-dim);font-size:13px;margin-bottom:6px;font-family:var(--mono);}
-#modal input{width:100%;padding:11px 14px;background:#0c0e0d;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;outline:none;transition:.2s;}
-#modal input:focus{border-color:var(--accent);}
-.modal-btns{display:flex;gap:10px;margin-top:6px;}
-.btn-payer{flex:1;padding:12px;background:var(--accent);color:#06140f;border:1px solid var(--accent);border-radius:8px;font-size:14.5px;font-weight:700;cursor:pointer;transition:.2s;}
-.btn-payer:hover{background:transparent;color:var(--accent);}
-.btn-payer:disabled{opacity:.6;cursor:not-allowed;}
-.btn-annuler{padding:12px 16px;background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:8px;font-size:13.5px;cursor:pointer;transition:.2s;}
-.btn-annuler:hover{border-color:var(--text-dim);color:var(--text);}
-.msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;}
-.msg.erreur{background:rgba(255,77,77,.1);border:1px solid #ff4d4d;color:#ff7a7a;}
+.msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:15px;display:none;font-family:var(--mono);}
+.msg.erreur{background:rgba(255,77,77,.1);border:1px solid var(--red);color:#ff7a7a;}
 .msg.succes{background:rgba(var(--accent-rgb),.1);border:1px solid var(--accent);color:var(--accent);}
+
+.force-barre{display:flex;gap:4px;margin-top:8px;}
+.force-barre div{flex:1;height:4px;background:var(--border);border-radius:2px;transition:background .3s;}
+
+/* ---------- mobile ---------- */
+@media (max-width:768px){
+  #menu-btn{display:block;}
+  #menu{display:none;}
+  #menu.visible{display:flex;}
+  body{padding:84px 16px 40px;}
+}
 </style>
 </head>
 <body>
@@ -134,115 +153,139 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);text-align:c
 <div class="bg-grid"></div>
 <div class="bg-glow"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
 
-<a id="retoure" href="index.html">← Retour</a>
+<button id="menu-btn">[ menu ]</button>
 
-<div class="hero">
-  <div class="product-panel reveal">
-    <div class="term-bar">
-      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-      <span class="term-tab">python_p1.pdf</span>
+<nav id="menu">
+  <div class="brand">Zyntra<span>Code</span><span class="cursor-blink"></span></div>
+  <div class="nav-label">// navigation</div>
+  <a href="index.html">Accueil</a>
+  <a href="2-script.html">Script</a>
+  <a href="3-contact.html">Contact</a>
+  <a href="10-e-book.html">E-book</a>
+
+  <div class="menu-jeux-wrapper">
+    <span class="menu-jeux-titre">🎮 Jeux ▾</span>
+    <div class="menu-jeux-dropdown">
+      <a href="morpion.html">⭕ Morpion</a>
+      <a href="clash_arena.html">🕌 Zyntra Arena</a>
     </div>
-    <div class="product-body">
-      <img id="img_moderion" src="couverture_de_comment_coder_en_python_partie_1.png" alt="couverture e-book comment coder en python partie 1">
-      <h1 id="txt_moderion">comment coder en python partie 1</h1>
-      <h4 id="in_moderion">E-book pour apprendre à coder avec les bases de Python.</h4>
-      <h5 id="gtt_moderion">4,95 CHF</h5>
-      <br><br>
-      <a href="3-contact.html" class="btn-ajouter" id="btn-obtenir">Obtenir le E-book</a>
+  </div>
+</nav>
+
+<div class="page-head reveal">
+  <div class="eyebrow">$ cat ./config/utilisateur</div>
+  <h1>Paramètres</h1>
+</div>
+
+<!-- PROFIL -->
+<div class="section reveal">
+  <div class="section-bar"><span class="dot" style="background:var(--accent)"></span><span>profil.json</span></div>
+  <div class="section-body">
+    <div class="msg erreur" id="msg-profil-err"></div>
+    <div class="msg succes" id="msg-profil-ok"></div>
+    <div class="champ">
+      <label>nom_utilisateur</label>
+      <input type="text" id="username" placeholder="MonPseudo">
     </div>
+    <div class="champ">
+      <label>email (non modifiable)</label>
+      <div id="email-affichage">—</div>
+    </div>
+    <button class="btn" onclick="sauvegarderProfil()">Sauvegarder</button>
   </div>
 </div>
 
-<div class="features reveal">
-  <div class="eyebrow">// fonctionnalités</div>
-  <h2>Ce que vous allez apprendre</h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="icon">🧠</div>
-      <h4>Apprendre Python</h4>
-      <p>Apprenez à coder en Python pas à pas, depuis les bases.</p>
-    </div>
-    <div class="feature-card">
-      <div class="icon">🌐</div>
-      <h4>Internet</h4>
-      <p>Comprendre Internet et l'IA plus facilement.</p>
-    </div>
-    <div class="feature-card">
-      <div class="icon">🔄️</div>
-      <h4>Installation</h4>
-      <p>Comment télécharger et installer Python.</p>
-    </div>
+<!-- MOT DE PASSE -->
+<div class="section reveal">
+  <div class="section-bar"><span class="dot" style="background:#ffbd2e"></span><span>securite.json</span></div>
+  <div class="section-body">
+    <div class="msg erreur" id="msg-pwd-err"></div>
+    <div class="msg succes" id="msg-pwd-ok"></div>
+    <p>Un email de réinitialisation sera envoyé à ton adresse email.</p>
+    <button class="btn" onclick="envoyerReset()">Envoyer un email de réinitialisation</button>
   </div>
 </div>
 
-<div class="footer-bar">
-  © 2026 ZyntraCode — Tous droits réservés |
-  <a href="3-contact.html">Contact</a> |
-  <a href="conditions.html">Conditions d'utilisation</a> |
-  <a href="politique-confidentialite.html">Politique de confidentialité</a>
+<!-- SUPPRIMER COMPTE -->
+<div class="section reveal">
+  <div class="section-bar"><span class="dot" style="background:var(--red)"></span><span>zone-dangereuse.json</span></div>
+  <div class="section-body">
+    <p>La suppression de ton compte est irréversible.</p>
+    <button class="btn-danger" onclick="supprimerCompte()">Supprimer mon compte</button>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="profil-menu.js"></script>
 <script>
-    // ================================================
-    // CONFIG
-    // ================================================
-    const EMAILJS_SERVICE_ID  = "service_daaxxvg";
-    const EMAILJS_TEMPLATE_ID = "template_bb5opqq";
-    const EMAILJS_PUBLIC_KEY  = "CIEjPItwnunl99qyE";
+    const btnMenu = document.getElementById("menu-btn");
+    const menu = document.getElementById("menu");
+    btnMenu.addEventListener("click", () => menu.classList.toggle("visible"));
 
-    function ouvrirModal() {
-        document.getElementById("modal-overlay").classList.add("visible");
-        document.getElementById("msg-erreur").style.display = "none";
-        document.getElementById("msg-succes").style.display = "none";
+    function affMsg(idOk, idErr, msg, type) {
+        const ok = document.getElementById(idOk);
+        const err = document.getElementById(idErr);
+        if (type === 'succes') { ok.textContent = msg; ok.style.display = 'block'; err.style.display = 'none'; }
+        else { err.textContent = msg; err.style.display = 'block'; ok.style.display = 'none'; }
+        setTimeout(() => { ok.style.display = 'none'; err.style.display = 'none'; }, 4000);
     }
 
-    function fermerModal() {
-        document.getElementById("modal-overlay").classList.remove("visible");
-    }
-
-    async function verifierRetour() {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get("succes") === "1") {
-            const email = localStorage.getItem("email_achat");
-            if (email) {
-                await envoyerBotParEmail(email);
-                localStorage.removeItem("email_achat");
-            }
-            window.history.replaceState({}, "", "/dlt_e-book_comment_coder_en_python_partie_1.html");
-        }
-        if (params.get("erreur") === "1") {
-            alert("Le paiement a échoué. Réessaie.");
-            window.history.replaceState({}, "", "/dlt_e-book_comment_coder_en_python_partie_1.html");
+    function verifierForce(val) {
+        const couleurs = ["#ff4d4d", "#ffaa00", "rgb(21,213,168)", "rgb(21,213,168)"];
+        let score = 0;
+        if (val.length >= 6) score++;
+        if (val.length >= 10) score++;
+        if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+        if (/[^A-Za-z0-9]/.test(val)) score++;
+        for (let i = 1; i <= 4; i++) {
+            document.getElementById("b" + i).style.background = i <= score ? couleurs[score - 1] : "#2a2a2a";
         }
     }
 
-    async function envoyerBotParEmail(email) {
-        const script = document.createElement("script");
-        script.src = "https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js";
-        document.head.appendChild(script);
-        script.onload = async () => {
-            emailjs.init(EMAILJS_PUBLIC_KEY);
-            try {
-                await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-                    to_email: email,
-                    produit: "Comment coder en Python — Partie 1",
-                    lien_bot: "Lien de téléchargement envoyé séparément"
-                });
-                alert("✅ Paiement réussi ! Vérifie ton email pour recevoir le e-book.");
-            } catch(err) {
-                alert("Paiement reçu mais erreur email. Contacte-nous.");
-            }
-        };
+    async function chargerProfil() {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) { window.location.href = 'login.html'; return; }
+        document.getElementById('username').value = user.user_metadata?.username || '';
+        // Masquer l'email : garder 1er caractère + *** + @domaine
+        const email = user.email;
+        const atIndex = email.indexOf('@');
+        const premierChar = email[0];
+        const etoiles = '●'.repeat(atIndex - 1);
+        const domaine = email.slice(atIndex);
+        document.getElementById('email-affichage').textContent = premierChar + etoiles + domaine;
     }
 
-    verifierRetour();
+    async function sauvegarderProfil() {
+        const username = document.getElementById('username').value.trim();
+        if (!username) return affMsg('msg-profil-ok', 'msg-profil-err', 'Entre un nom d\'utilisateur.', 'erreur');
+        const { error } = await supabaseClient.auth.updateUser({ data: { username } });
+        if (error) affMsg('msg-profil-ok', 'msg-profil-err', 'Erreur : ' + error.message, 'erreur');
+        else affMsg('msg-profil-ok', 'msg-profil-err', 'Profil mis à jour ✓', 'succes');
+    }
+
+    async function envoyerReset() {
+        const { data: { user } } = await supabaseClient.auth.getUser();
+        if (!user) return;
+
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(user.email, {
+            redirectTo: 'https://zyntracode.ch/reset-password.html'
+        });
+
+        if (error) affMsg('msg-pwd-ok', 'msg-pwd-err', 'Erreur : ' + error.message, 'erreur');
+        else affMsg('msg-pwd-ok', 'msg-pwd-err', 'Email envoyé ! Vérifie ta boîte mail. ✓', 'succes');
+    }
+
+    async function supprimerCompte() {
+        if (!confirm('Es-tu sûr de vouloir supprimer ton compte ? Cette action est irréversible.')) return;
+        alert('Pour supprimer ton compte, contacte-nous via la page Contact.');
+    }
+
+    chargerProfil();
 
     /* ---------- reveal au scroll ---------- */
     const revealEls = document.querySelectorAll('.reveal');
     revealEls.forEach((el) => {
-        const siblings = el.parentElement.querySelectorAll('.reveal');
+        const siblings = document.querySelectorAll('.reveal');
         const idx = Array.prototype.indexOf.call(siblings, el);
         el.style.transitionDelay = (idx * 0.08) + 's';
     });
@@ -253,7 +296,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);text-align:c
                 observer.unobserve(entry.target);
             }
         });
-    }, {threshold: 0.15});
+    }, {threshold: 0.12});
     revealEls.forEach(el => observer.observe(el));
 </script>
 
