@@ -1,230 +1,251 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZyntraCode - Connexion</title>
-    <link rel="icon" type="image/png" href="logo zyntracode v3.png">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background-color: #0a0a0a;
-            color: white;
-            font-family: Arial, Helvetica, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #menu-btn {
-            position: fixed;
-            top: 15px; left: 15px;
-            background: transparent;
-            border: 2px solid rgb(21, 213, 168);
-            color: rgb(21, 213, 168);
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            z-index: 1001;
-            display: none;
-        }
-        #menu {
-            background: #1a1a1a;
-            width: 180px; height: 100vh;
-            position: fixed; top: 0; left: 0;
-            z-index: 1000;
-            box-shadow: 0px 0px 15px rgb(21, 213, 168);
-            padding: 60px 10px 10px 10px;
-            transition: 0.3s; display: block;
-        }
-        #menu a {
-            color: white; display: block;
-            padding: 12px 10px; text-decoration: none;
-            border-radius: 8px; transition: 0.2s;
-        }
-        #menu a:hover { color: rgb(21, 213, 168); background: #2a2a2a; }
-        .card {
-            background: #1a1a1a;
-            border: 1px solid #2a2a2a;
-            border-radius: 15px;
-            padding: 40px;
-            width: 100%; max-width: 420px;
-            margin-left: 180px;
-        }
-        .card h2 { color: rgb(21, 213, 168); font-size: 28px; margin-bottom: 8px; text-align: center; }
-        .sous-titre { color: #aaa; font-size: 14px; text-align: center; margin-bottom: 30px; }
-        .champ { margin-bottom: 20px; }
-        .champ label { display: block; color: #aaa; font-size: 13px; margin-bottom: 6px; }
-        .champ input {
-            width: 100%; padding: 12px 15px;
-            background: #0a0a0a;
-            border: 2px solid #2a2a2a;
-            border-radius: 10px;
-            color: white; font-size: 15px;
-            outline: none; transition: 0.2s;
-        }
-        .champ input:focus { border-color: rgb(21, 213, 168); }
-        .lien-oubli {
-            text-align: right; margin-top: 6px;
-        }
-        .lien-oubli a {
-            color: #555; font-size: 12px;
-            text-decoration: none; transition: color 0.2s;
-        }
-        .lien-oubli a:hover { color: rgb(21, 213, 168); }
-        .btn-submit {
-            width: 100%; padding: 13px;
-            background: rgb(21, 213, 168);
-            color: black;
-            border: 2px solid rgb(21, 213, 168);
-            border-radius: 10px;
-            font-size: 16px; font-weight: bold;
-            cursor: pointer; transition: 0.3s; margin-top: 5px;
-        }
-        .btn-submit:hover { background: transparent; color: rgb(21, 213, 168); }
-        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
-        .divider {
-            display: flex; align-items: center;
-            gap: 10px; margin: 25px 0;
-            color: #555; font-size: 13px;
-        }
-        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #2a2a2a; }
-        .btn-social {
-            width: 100%; padding: 11px;
-            background: transparent; color: white;
-            border: 1px solid #2a2a2a;
-            border-radius: 10px; font-size: 14px;
-            cursor: pointer; transition: 0.2s;
-            display: flex; align-items: center;
-            justify-content: center; gap: 8px;
-            margin-bottom: 10px;
-        }
-        .btn-social:hover { border-color: rgb(21, 213, 168); color: rgb(21, 213, 168); }
-        .msg {
-            padding: 10px 15px; border-radius: 8px;
-            font-size: 13px; margin-bottom: 15px;
-            display: none; text-align: center;
-        }
-        .msg.erreur { background: rgba(255,77,77,0.1); border: 1px solid #ff4d4d; color: #ff4d4d; }
-        .msg.succes { background: rgba(21,213,168,0.1); border: 1px solid rgb(21,213,168); color: rgb(21,213,168); }
-        .lien-bas { text-align: center; margin-top: 20px; font-size: 14px; color: #aaa; }
-        .lien-bas a { color: rgb(21, 213, 168); text-decoration: none; }
-        .lien-bas a:hover { text-decoration: underline; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZyntraCode - Connexion</title>
+<link rel="icon" type="image/png" href="logo zyntracode v3.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;
+  --panel:#101213;
+  --panel-2:#15181a;
+  --border:#222625;
+  --accent:#15d5a8;
+  --accent-rgb:21,213,168;
+  --purple:#c586c0;
+  --text:#e9e9e9;
+  --text-dim:#8a9290;
+  --sans:'Inter',Arial,sans-serif;
+  --display:'Space Grotesk',var(--sans);
+  --mono:'JetBrains Mono',Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:hidden;position:relative;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding-left:210px;
+}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
 
-        /* MODAL RESET */
-        #modal-reset {
-            display: none;
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.8);
-            z-index: 5000;
-            align-items: center;
-            justify-content: center;
-        }
-        #modal-reset.visible { display: flex; }
-        .modal-reset-box {
-            background: #1a1a1a;
-            border: 1px solid rgb(21,213,168);
-            border-radius: 15px;
-            padding: 35px;
-            width: 90%; max-width: 400px;
-            animation: popIn 0.3s ease;
-        }
-        @keyframes popIn { from { opacity:0; transform:scale(0.95); } to { opacity:1; transform:scale(1); } }
-        .modal-reset-box h2 { color: rgb(21,213,168); font-size: 22px; margin-bottom: 8px; text-align: center; }
-        .modal-reset-box p { color: #aaa; font-size: 13px; text-align: center; margin-bottom: 25px; }
-        .modal-btns { display: flex; gap: 10px; margin-top: 5px; }
-        .btn-annuler {
-            padding: 13px 18px;
-            background: transparent; color: #aaa;
-            border: 1px solid #2a2a2a; border-radius: 10px;
-            font-size: 14px; cursor: pointer; transition: 0.2s;
-        }
-        .btn-annuler:hover { border-color: #aaa; color: white; }
+/* ---------- ambiance de fond ---------- */
+.bg-grid{position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:42px 42px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black 40%,transparent 90%);}
+.bg-glow{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden;}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;animation:float 16s ease-in-out infinite;}
+.blob-1{width:480px;height:480px;background:var(--accent);top:-120px;left:10%;}
+.blob-2{width:380px;height:380px;background:var(--purple);bottom:-140px;right:5%;animation-delay:-8s;}
+@keyframes float{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,-50px);}}
+@keyframes blink{50%{opacity:0;}}
 
-        @media (max-width: 768px) {
-            #menu-btn { display: block; }
-            #menu { display: none; }
-            #menu.visible { display: block; }
-            .card { margin-left: 0; margin: 20px; }
-            .modal-reset-box { margin: 20px; }
-        }
-    </style>
+/* ---------- sidebar / nav ---------- */
+#menu-btn{
+  position:fixed;top:14px;left:14px;z-index:1001;display:none;
+  background:var(--panel);border:1px solid var(--border);color:var(--accent);
+  font-family:var(--mono);font-size:14px;padding:9px 14px;border-radius:6px;cursor:pointer;transition:.2s;
+}
+#menu-btn:hover{border-color:var(--accent);box-shadow:0 0 14px rgba(var(--accent-rgb),.25);}
+#menu{
+  background:var(--panel);width:210px;height:100vh;position:fixed;top:0;left:0;z-index:1000;
+  border-right:1px solid var(--border);padding:26px 14px 14px 14px;transition:.3s;display:flex;flex-direction:column;
+}
+.brand{font-family:var(--mono);font-weight:600;color:var(--text);font-size:15px;padding:0 10px 22px 10px;border-bottom:1px solid var(--border);margin-bottom:14px;letter-spacing:.3px;text-align:left;}
+.brand span{color:var(--accent);}
+.cursor-blink{display:inline-block;width:8px;background:var(--accent);margin-left:2px;animation:blink 1s steps(1) infinite;}
+.nav-label{font-family:var(--mono);font-size:11px;color:var(--text-dim);padding:4px 10px 8px;letter-spacing:.5px;text-align:left;}
+#menu a{
+  color:#c7cccb;display:flex;align-items:center;gap:8px;padding:10px 10px;margin-bottom:2px;
+  text-decoration:none;border-radius:6px;font-size:14px;transition:.18s;border-left:2px solid transparent;text-align:left;
+}
+#menu a:hover{color:var(--accent);background:var(--panel-2);border-left-color:var(--accent);padding-left:13px;}
+#menu a.active{color:var(--accent);background:var(--panel-2);border-left-color:var(--accent);}
+.menu-jeux-wrapper{position:relative;}
+.menu-jeux-titre{
+  color:#c7cccb;display:flex;align-items:center;gap:8px;padding:10px 10px;text-decoration:none;
+  border-radius:6px;cursor:pointer;user-select:none;font-size:14px;transition:.18s;border-left:2px solid transparent;text-align:left;
+}
+.menu-jeux-titre:hover{color:var(--accent);background:var(--panel-2);border-left-color:var(--accent);}
+.menu-jeux-dropdown{max-height:0;overflow:hidden;transition:max-height .3s ease;background:#0c0e0d;border-radius:6px;}
+.menu-jeux-wrapper:hover .menu-jeux-dropdown{max-height:200px;}
+.menu-jeux-dropdown a{
+  color:#8a9290!important;padding:9px 10px 9px 26px!important;font-size:12.5px!important;
+  font-family:var(--mono);border-left:2px solid var(--border);margin:2px 0;border-radius:0!important;text-align:left;
+}
+.menu-jeux-dropdown a:hover{color:var(--accent)!important;background:var(--panel-2)!important;border-left-color:var(--accent);}
+.menu-bottom{margin-top:auto;padding-top:14px;border-top:1px solid var(--border);}
+
+/* ---------- carte connexion ---------- */
+.card-wrap{padding:24px;width:100%;max-width:440px;}
+.terminal{background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.02);position:relative;}
+.terminal::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0px,rgba(255,255,255,.012) 1px,transparent 1px,transparent 3px);}
+.term-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--panel-2);border-bottom:1px solid var(--border);}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dot.r{background:#ff5f56;}.dot.y{background:#ffbd2e;}.dot.g{background:#27c93f;}
+.term-tab{margin-left:10px;font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+.card{padding:32px 30px 34px;}
+.card h2{font-family:var(--display);font-weight:700;font-size:26px;text-align:center;margin-bottom:6px;
+  background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.sous-titre{color:var(--text-dim);font-size:13.5px;text-align:center;margin-bottom:28px;font-family:var(--mono);}
+.champ{margin-bottom:18px;}
+.champ label{display:flex;align-items:center;gap:6px;color:var(--text);font-size:13px;margin-bottom:8px;font-family:var(--mono);}
+.champ label::before{content:'//';color:var(--accent);}
+.champ input{
+  width:100%;padding:12px 14px;background:#0c0e0d;border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-size:14.5px;font-family:var(--sans);outline:none;transition:.2s;
+}
+.champ input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(var(--accent-rgb),.12);}
+.lien-oubli{text-align:right;margin-top:8px;}
+.lien-oubli a{color:var(--text-dim);font-size:12px;text-decoration:none;transition:.2s;font-family:var(--mono);}
+.lien-oubli a:hover{color:var(--accent);}
+.btn-submit{
+  width:100%;padding:13px;background:var(--accent);color:#06140f;border:1px solid var(--accent);
+  border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;transition:.22s;margin-top:6px;font-family:var(--sans);
+}
+.btn-submit:hover{background:transparent;color:var(--accent);box-shadow:0 0 22px rgba(var(--accent-rgb),.3);transform:translateY(-2px);}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none;}
+.divider{display:flex;align-items:center;gap:10px;margin:24px 0;color:var(--text-dim);font-size:12.5px;font-family:var(--mono);}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border);}
+.btn-social{
+  width:100%;padding:11px;background:transparent;color:var(--text);border:1px solid var(--border);
+  border-radius:8px;font-size:13.5px;cursor:pointer;transition:.2s;display:flex;align-items:center;
+  justify-content:center;gap:8px;margin-bottom:10px;font-family:var(--sans);
+}
+.btn-social:hover{border-color:var(--accent);color:var(--accent);}
+.msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:15px;display:none;text-align:center;font-family:var(--mono);}
+.msg.erreur{background:rgba(255,77,77,.1);border:1px solid #ff4d4d;color:#ff7a7a;}
+.msg.succes{background:rgba(var(--accent-rgb),.1);border:1px solid var(--accent);color:var(--accent);}
+.lien-bas{text-align:center;margin-top:20px;font-size:13.5px;color:var(--text-dim);}
+.lien-bas a{color:var(--accent);text-decoration:none;}
+.lien-bas a:hover{text-decoration:underline;}
+
+/* ---------- modal reset ---------- */
+#modal-reset{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:5000;align-items:center;justify-content:center;}
+#modal-reset.visible{display:flex;}
+.modal-reset-box{background:var(--panel);border:1px solid var(--accent);border-radius:14px;padding:32px;width:90%;max-width:400px;animation:popIn .3s ease;}
+@keyframes popIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+.modal-reset-box h2{color:var(--accent);font-family:var(--display);font-size:21px;margin-bottom:8px;text-align:center;}
+.modal-reset-box p{color:var(--text-dim);font-size:13px;text-align:center;margin-bottom:24px;}
+.modal-btns{display:flex;gap:10px;margin-top:6px;}
+.btn-annuler{padding:13px 18px;background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:8px;font-size:13.5px;cursor:pointer;transition:.2s;}
+.btn-annuler:hover{border-color:var(--text-dim);color:var(--text);}
+
+/* ---------- mobile ---------- */
+@media (max-width:768px){
+  body{padding-left:0;}
+  #menu-btn{display:block;}
+  #menu{display:none;}
+  #menu.visible{display:flex;}
+  .card-wrap{padding:20px;}
+  .modal-reset-box{margin:20px;}
+}
+</style>
 </head>
 <body>
 
-<button id="menu-btn">☰ Menu</button>
+<div class="bg-grid"></div>
+<div class="bg-glow"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+
+<button id="menu-btn">[ menu ]</button>
 
 <nav id="menu">
-    <a href="index.html">Accueil</a>
-    <a href="2-script.html">script</a>
-    <a href="3-contact.html">Contact</a>
+  <div class="brand">Zyntra<span>Code</span><span class="cursor-blink"></span></div>
+  <div class="nav-label">// navigation</div>
+  <a href="index.html">Accueil</a>
+  <a href="2-script.html">Script</a>
+  <a href="3-contact.html">Contact</a>
+  <a href="10-e-book.html">E-book</a>
+
+  <div class="menu-jeux-wrapper">
+    <span class="menu-jeux-titre">🎮 Jeux ▾</span>
+    <div class="menu-jeux-dropdown">
+      <a href="morpion.html">⭕ Morpion</a>
+      <a href="clash_arena.html">🕌 Zyntra Arena</a>
+    </div>
+  </div>
+
+  <div class="menu-bottom">
+    <a href="register.html">✨ S'inscrire</a>
+  </div>
 </nav>
 
-<div class="card">
-    <h2>🔐 Connexion</h2>
-    <p class="sous-titre">Content de te revoir sur ZyntraCode !</p>
-
-    <div class="msg erreur" id="msg-erreur"></div>
-    <div class="msg succes" id="msg-succes"></div>
-
-    <div class="champ">
-        <label>Adresse email</label>
-        <input type="email" id="email" placeholder="toi@exemple.com">
+<div class="card-wrap reveal">
+  <div class="terminal">
+    <div class="term-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="term-tab">login.sh</span>
     </div>
-    <div class="champ">
-        <label>Mot de passe</label>
+    <div class="card">
+      <h2>Connexion</h2>
+      <p class="sous-titre">Content de te revoir sur ZyntraCode !</p>
+
+      <div class="msg erreur" id="msg-erreur"></div>
+      <div class="msg succes" id="msg-succes"></div>
+
+      <div class="champ">
+        <label>email</label>
+        <input type="email" id="email" placeholder="toi@exemple.com">
+      </div>
+      <div class="champ">
+        <label>mot_de_passe</label>
         <input type="password" id="password" placeholder="••••••••">
         <div class="lien-oubli">
-            <a href="#" onclick="afficherReset(); return false;">Mot de passe oublié ?</a>
+          <a href="#" onclick="afficherReset(); return false;">Mot de passe oublié ?</a>
         </div>
-    </div>
+      </div>
 
-    <button class="btn-submit" id="btn-connexion" onclick="login()">Se connecter</button>
+      <button class="btn-submit" id="btn-connexion" onclick="login()">Se connecter</button>
 
-    <div class="divider">ou</div>
+      <div class="divider">ou</div>
 
-    <button class="btn-social" onclick="loginGoogle()">
+      <button class="btn-social" onclick="loginGoogle()">
         <svg width="16" height="16" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
         </svg>
         Continuer avec Google
-    </button>
+      </button>
 
-    <button class="btn-social" onclick="loginGitHub()">
+      <button class="btn-social" onclick="loginGitHub()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
-            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
         </svg>
         Continuer avec GitHub
-    </button>
+      </button>
 
-    <div class="lien-bas">
+      <div class="lien-bas">
         Pas encore de compte ? <a href="register.html">S'inscrire</a>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- MODAL MOT DE PASSE OUBLIÉ -->
 <div id="modal-reset">
-    <div class="modal-reset-box">
-        <h2>🔑 Mot de passe oublié</h2>
-        <p>Entre ton email et on t'envoie un lien de réinitialisation.</p>
+  <div class="modal-reset-box">
+    <h2>Mot de passe oublié</h2>
+    <p>Entre ton email et on t'envoie un lien de réinitialisation.</p>
 
-        <div class="msg erreur" id="msg-reset-err"></div>
-        <div class="msg succes" id="msg-reset-ok"></div>
+    <div class="msg erreur" id="msg-reset-err"></div>
+    <div class="msg succes" id="msg-reset-ok"></div>
 
-        <div class="champ">
-            <label>Adresse email</label>
-            <input type="email" id="reset-email" placeholder="toi@exemple.com">
-        </div>
-
-        <div class="modal-btns">
-            <button class="btn-submit" onclick="envoyerReset()" style="flex:1;">📧 Envoyer le lien</button>
-            <button class="btn-annuler" onclick="fermerReset()">Annuler</button>
-        </div>
+    <div class="champ">
+      <label>email</label>
+      <input type="email" id="reset-email" placeholder="toi@exemple.com">
     </div>
+
+    <div class="modal-btns">
+      <button class="btn-submit" onclick="envoyerReset()" style="flex:1;">Envoyer le lien</button>
+      <button class="btn-annuler" onclick="fermerReset()">Annuler</button>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
