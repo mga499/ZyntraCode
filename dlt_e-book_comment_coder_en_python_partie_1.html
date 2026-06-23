@@ -1,108 +1,185 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modérion - ZyntraCode</title>
-    <link rel="stylesheet" href="styles_exp-moderion.css">
-    <link rel="icon" type="image/png" href="logo zyntracode v3.png">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #0a0a0a; color: white; font-family: Arial, Helvetica, sans-serif; text-align: center; }
-        #retoure {
-            position: fixed; top: 15px; left: 15px;
-            padding: 8px 15px; background: transparent;
-            border: 2px solid rgb(21, 213, 168); color: rgb(21, 213, 168);
-            border-radius: 8px; text-decoration: none; font-size: 16px;
-            z-index: 1001; transition: 0.3s;
-        }
-        #retoure:hover { background: rgb(21, 213, 168); color: black; }
-        .hero { padding: 80px 20px 40px 20px; }
-        #img_moderion { width: 130px; border-radius: 50%; border: 3px solid rgb(21, 213, 168); margin-bottom: 20px; transition: 0.3s; }
-        #img_moderion:hover { box-shadow: 0 0 25px rgb(21, 213, 168); }
-        #txt_moderion { font-size: 48px; color: rgb(21, 213, 168); margin-bottom: 10px; }
-        #in_moderion { color: #aaa; font-size: 16px; font-weight: normal; max-width: 500px; margin: 0 auto 15px auto; }
-        #gtt_moderion { display: inline-block; background: rgb(21, 213, 168); color: black; padding: 6px 20px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 30px; }
-        .btn-ajouter {
-            display: inline-block; padding: 12px 30px;
-            background: rgb(21, 213, 168); color: black;
-            border-radius: 10px; text-decoration: none;
-            font-weight: bold; font-size: 16px; transition: 0.3s; margin-bottom: 60px;
-        }
-        .btn-ajouter:hover { background: transparent; color: rgb(21, 213, 168); border: 2px solid rgb(21, 213, 168); }
-        .btn-test {
-            display: inline-block; padding: 12px 30px;
-            background: transparent; color: rgb(21, 213, 168);
-            border: 2px solid rgb(21, 213, 168);
-            border-radius: 10px; text-decoration: none;
-            font-weight: bold; font-size: 16px; transition: 0.3s;
-            margin-bottom: 60px; margin-left: 10px; cursor: pointer;
-        }
-        .btn-test:hover { background: rgb(21, 213, 168); color: black; }
-        .features { padding: 20px 40px 80px 40px; }
-        .features h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 40px; }
-        .features-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 20px; max-width: 900px; margin: 0 auto; }
-        .feature-card { background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 12px; padding: 25px; width: 200px; transition: 0.3s; }
-        .feature-card:hover { border-color: rgb(21, 213, 168); box-shadow: 0 0 15px rgba(21, 213, 168, 0.2); }
-        .feature-card .icon { font-size: 35px; margin-bottom: 12px; }
-        .feature-card h4 { color: rgb(21, 213, 168); margin-bottom: 8px; }
-        .feature-card p { color: #aaa; font-size: 13px; }
-        .commandes { padding: 0 40px 80px 40px; }
-        .commandes h2 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 30px; }
-        .commande-list { max-width: 600px; margin: 0 auto; text-align: left; }
-        .commande-item { background: #1a1a1a; border-radius: 10px; padding: 15px 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
-        .commande-item code { background: #2a2a2a; color: rgb(21, 213, 168); padding: 5px 10px; border-radius: 6px; font-size: 14px; min-width: 140px; }
-        .commande-item p { color: #aaa; font-size: 14px; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comment coder en Python — Partie 1 - ZyntraCode</title>
+<link rel="stylesheet" href="styles_exp-moderion.css">
+<link rel="icon" type="image/png" href="logo zyntracode v3.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;
+  --panel:#101213;
+  --panel-2:#15181a;
+  --border:#222625;
+  --accent:#15d5a8;
+  --accent-rgb:21,213,168;
+  --purple:#c586c0;
+  --text:#e9e9e9;
+  --text-dim:#8a9290;
+  --sans:'Inter',Arial,sans-serif;
+  --display:'Space Grotesk',var(--sans);
+  --mono:'JetBrains Mono',Consolas,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);text-align:center;overflow-x:hidden;position:relative;}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
 
-        /* MODAL PAIEMENT */
-        #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; align-items: center; justify-content: center; }
-        #modal-overlay.visible { display: flex; }
-        #modal { background: #1a1a1a; border: 1px solid rgb(21,213,168); border-radius: 18px; padding: 35px; width: 90%; max-width: 420px; animation: popIn 0.3s ease; }
-        @keyframes popIn { from { opacity:0; transform: scale(0.95); } to { opacity:1; transform: scale(1); } }
-        #modal h2 { color: rgb(21,213,168); font-size: 22px; margin-bottom: 5px; }
-        #modal .modal-sous { color: #aaa; font-size: 13px; margin-bottom: 25px; }
-        #modal .champ { margin-bottom: 18px; }
-        #modal label { display: block; color: #aaa; font-size: 13px; margin-bottom: 6px; }
-        #modal input { width: 100%; padding: 11px 15px; background: #0a0a0a; border: 2px solid #2a2a2a; border-radius: 10px; color: white; font-size: 14px; outline: none; transition: 0.2s; }
-        #modal input:focus { border-color: rgb(21,213,168); }
-        .modal-btns { display: flex; gap: 10px; margin-top: 5px; }
-        .btn-payer { flex: 1; padding: 13px; background: rgb(21,213,168); color: black; border: 2px solid rgb(21,213,168); border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-payer:hover { background: transparent; color: rgb(21,213,168); }
-        .btn-payer:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-annuler { padding: 13px 18px; background: transparent; color: #aaa; border: 1px solid #2a2a2a; border-radius: 10px; font-size: 14px; cursor: pointer; transition: 0.2s; }
-        .btn-annuler:hover { border-color: #aaa; color: white; }
-        .msg { padding: 10px 15px; border-radius: 8px; font-size: 13px; margin-bottom: 15px; display: none; }
-        .msg.erreur { background: rgba(255,77,77,0.1); border: 1px solid #ff4d4d; color: #ff4d4d; }
-        .msg.succes { background: rgba(21,213,168,0.1); border: 1px solid rgb(21,213,168); color: rgb(21,213,168); }
-        .securite { text-align: center; color: #555; font-size: 12px; margin-top: 15px; }
-    </style>
+/* ---------- ambiance de fond ---------- */
+.bg-grid{position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);
+  background-size:42px 42px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,black 40%,transparent 90%);}
+.bg-glow{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden;}
+.blob{position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;animation:float 16s ease-in-out infinite;}
+.blob-1{width:480px;height:480px;background:var(--accent);top:-120px;left:10%;}
+.blob-2{width:380px;height:380px;background:var(--purple);bottom:-140px;right:5%;animation-delay:-8s;}
+@keyframes float{0%,100%{transform:translate(0,0);}50%{transform:translate(40px,-50px);}}
+
+/* ---------- bouton retour ---------- */
+#retoure{
+  position:fixed;top:15px;left:15px;padding:9px 16px;background:var(--panel);
+  border:1px solid var(--border);color:var(--accent);border-radius:8px;text-decoration:none;
+  font-family:var(--mono);font-size:14px;z-index:1001;transition:.22s;
+}
+#retoure:hover{border-color:var(--accent);box-shadow:0 0 14px rgba(var(--accent-rgb),.25);}
+
+@media (max-width:768px){
+  #retoure{padding:6px 12px;font-size:12px;max-width:80px;}
+  #profil-btn{top:15px!important;right:15px!important;max-width:120px!important;}
+  #profil-nom{max-width:60px!important;font-size:11px!important;}
+  #profil-avatar{width:22px!important;height:22px!important;font-size:11px!important;}
+}
+
+/* ---------- reveal ---------- */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .6s ease;}
+.reveal.in-view{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+  .blob{animation:none;}
+}
+
+/* ---------- hero / panneau produit ---------- */
+.hero{padding:100px 20px 50px;display:flex;justify-content:center;}
+.product-panel{
+  background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;
+  max-width:480px;width:100%;box-shadow:0 30px 60px -30px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.02);position:relative;
+}
+.product-panel::after{content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0px,rgba(255,255,255,.012) 1px,transparent 1px,transparent 3px);}
+.term-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--panel-2);border-bottom:1px solid var(--border);}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dot.r{background:#ff5f56;}.dot.y{background:#ffbd2e;}.dot.g{background:#27c93f;}
+.term-tab{margin-left:10px;font-family:var(--mono);font-size:12px;color:var(--text-dim);}
+.product-body{padding:34px 28px 36px;}
+#img_moderion{width:110px;border-radius:10px;border:3px solid var(--border);margin-bottom:22px;transition:.3s;}
+#img_moderion:hover{border-color:var(--accent);box-shadow:0 0 25px rgba(var(--accent-rgb),.3);}
+#txt_moderion{font-family:var(--display);font-weight:700;font-size:clamp(24px,4.5vw,32px);
+  background:linear-gradient(135deg,#fff 30%,var(--accent) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:12px;text-transform:capitalize;}
+#in_moderion{color:var(--text-dim);font-size:15px;font-weight:400;max-width:380px;margin:0 auto 18px auto;line-height:1.5;}
+#gtt_moderion{display:inline-block;background:var(--accent);color:#06140f;padding:6px 20px;border-radius:20px;font-size:14px;font-family:var(--mono);font-weight:700;margin-bottom:30px;}
+.btn-ajouter{
+  display:inline-block;padding:13px 30px;background:var(--accent);color:#06140f;border:1px solid var(--accent);
+  border-radius:8px;text-decoration:none;font-weight:700;font-size:15px;transition:.22s;font-family:var(--sans);
+}
+.btn-ajouter:hover{background:transparent;color:var(--accent);box-shadow:0 0 22px rgba(var(--accent-rgb),.3);transform:translateY(-2px);}
+
+/* ---------- fonctionnalités ---------- */
+.features{padding:20px 24px 80px;max-width:900px;margin:0 auto;}
+.features .eyebrow{
+  font-family:var(--mono);color:var(--accent);font-size:13px;display:inline-flex;align-items:center;gap:8px;
+  margin-bottom:14px;letter-spacing:.3px;
+}
+.features .eyebrow::before{content:'';width:6px;height:6px;background:var(--accent);border-radius:50%;box-shadow:0 0 8px rgba(var(--accent-rgb),.8);}
+.features h2{font-family:var(--display);font-weight:600;font-size:28px;margin-bottom:36px;}
+.features-grid{display:flex;justify-content:center;flex-wrap:wrap;gap:18px;}
+.feature-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:26px;width:220px;transition:.25s;text-align:left;}
+.feature-card:hover{transform:translateY(-5px);border-color:rgba(var(--accent-rgb),.5);box-shadow:0 18px 36px -16px rgba(var(--accent-rgb),.25);}
+.feature-card .icon{font-size:30px;margin-bottom:12px;}
+.feature-card h4{color:var(--text);font-family:var(--display);font-size:15.5px;margin-bottom:8px;}
+.feature-card p{color:var(--text-dim);font-size:13px;line-height:1.5;}
+
+/* ---------- footer ---------- */
+.footer-bar{font-family:var(--mono);font-size:12px;color:var(--text-dim);padding:22px 24px;border-top:1px solid var(--border);margin-top:10px;text-align:center;}
+.footer-bar a{color:var(--accent);text-decoration:none;}
+.footer-bar a:hover{text-decoration:underline;}
+
+/* ---------- modal (réservé pour une future intégration du paiement) ---------- */
+#modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:5000;align-items:center;justify-content:center;}
+#modal-overlay.visible{display:flex;}
+#modal{background:var(--panel);border:1px solid var(--accent);border-radius:14px;padding:30px;width:90%;max-width:400px;animation:popIn .3s ease;text-align:left;}
+@keyframes popIn{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+#modal h2{color:var(--accent);font-family:var(--display);font-size:20px;margin-bottom:4px;}
+#modal .modal-sous{color:var(--text-dim);font-size:13px;margin-bottom:22px;}
+#modal .champ{margin-bottom:16px;}
+#modal label{display:block;color:var(--text-dim);font-size:13px;margin-bottom:6px;font-family:var(--mono);}
+#modal input{width:100%;padding:11px 14px;background:#0c0e0d;border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;outline:none;transition:.2s;}
+#modal input:focus{border-color:var(--accent);}
+.modal-btns{display:flex;gap:10px;margin-top:6px;}
+.btn-payer{flex:1;padding:12px;background:var(--accent);color:#06140f;border:1px solid var(--accent);border-radius:8px;font-size:14.5px;font-weight:700;cursor:pointer;transition:.2s;}
+.btn-payer:hover{background:transparent;color:var(--accent);}
+.btn-payer:disabled{opacity:.6;cursor:not-allowed;}
+.btn-annuler{padding:12px 16px;background:transparent;color:var(--text-dim);border:1px solid var(--border);border-radius:8px;font-size:13.5px;cursor:pointer;transition:.2s;}
+.btn-annuler:hover{border-color:var(--text-dim);color:var(--text);}
+.msg{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;display:none;}
+.msg.erreur{background:rgba(255,77,77,.1);border:1px solid #ff4d4d;color:#ff7a7a;}
+.msg.succes{background:rgba(var(--accent-rgb),.1);border:1px solid var(--accent);color:var(--accent);}
+</style>
 </head>
 <body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
 
 <a id="retoure" href="index.html">← Retour</a>
 
 <div class="hero">
-    <img id="img_moderion" src="couverture_de_comment_coder_en_python_partie_1.png" alt="Page de couverture comment coder en python partie 1">
-    <h1 id="txt_moderion">comment coder en python partie 1</h1>
-    <h4 id="in_moderion">E-book pour apprendre a coder avec les base de python</h4>
-    <h5 id="gtt_moderion">4,95 CHF</h5>
-    <br><br>
-    <a href="3-contact.html" class="btn-ajouter" id="btn-obtenir">📩 Obtenir le E-book</a>
+  <div class="product-panel reveal">
+    <div class="term-bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="term-tab">python_p1.pdf</span>
+    </div>
+    <div class="product-body">
+      <img id="img_moderion" src="couverture_de_comment_coder_en_python_partie_1.png" alt="couverture e-book comment coder en python partie 1">
+      <h1 id="txt_moderion">comment coder en python partie 1</h1>
+      <h4 id="in_moderion">E-book pour apprendre à coder avec les bases de Python.</h4>
+      <h5 id="gtt_moderion">4,95 CHF</h5>
+      <br><br>
+      <a href="3-contact.html" class="btn-ajouter" id="btn-obtenir">Obtenir le E-book</a>
+    </div>
+  </div>
 </div>
 
-<div class="features">
-    <h2>⚡ Fonctionnalités</h2>
-    <div class="features-grid">
-        <div class="feature-card"><div class="icon">🧠</div><h4>apprendre python</h4><p>apprandre a coder avec python</p></div>
-        <div class="feature-card"><div class="icon">🌐</div><h4>Internet</h4><p>Comprendre internet et IA plus facilement</p></div>
-        <div class="feature-card"><div class="icon">🔄️</div><h4>télécharger</h4><p>Comment téléchargé python</p></div>
+<div class="features reveal">
+  <div class="eyebrow">// fonctionnalités</div>
+  <h2>Ce que vous allez apprendre</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="icon">🧠</div>
+      <h4>Apprendre Python</h4>
+      <p>Apprenez à coder en Python pas à pas, depuis les bases.</p>
     </div>
+    <div class="feature-card">
+      <div class="icon">🌐</div>
+      <h4>Internet</h4>
+      <p>Comprendre Internet et l'IA plus facilement.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🔄️</div>
+      <h4>Installation</h4>
+      <p>Comment télécharger et installer Python.</p>
+    </div>
+  </div>
+</div>
 
-<div style="text-align: center; padding: 20px; color: #555; font-size: 13px; border-top: 1px solid #1a1a1a; margin-top: 20px;">
-    © 2026 ZyntraCode — Tous droits réservés | 
-    <a href="3-contact.html" style="color: rgb(21, 213, 168); text-decoration: none;">Contact</a> |
-    <a href="conditions.html" style="color: rgb(21, 213, 168); text-decoration: none;">Conditions d'utilisation</a> |
-    <a href="politique-confidentialite.html" style="color: rgb(21, 213, 168); text-decoration: none;">Politique de confidentialité</a>
+<div class="footer-bar">
+  © 2026 ZyntraCode — Tous droits réservés |
+  <a href="3-contact.html">Contact</a> |
+  <a href="conditions.html">Conditions d'utilisation</a> |
+  <a href="politique-confidentialite.html">Politique de confidentialité</a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -111,11 +188,6 @@
     // ================================================
     // CONFIG
     // ================================================
-    const PAYREXX_INSTANCE = "zyntracode";
-    const PAYREXX_API_KEY  = "mEgPbxC15moKq2zLicETJL68ftvOrR";
-    const BOT_INVITE_LINK  = "https://discord.com/oauth2/authorize?client_id=1500932045839269968&permissions=8&scope=bot%20applications.commands";
-
-    // EmailJS — remplace par tes clés
     const EMAILJS_SERVICE_ID  = "service_daaxxvg";
     const EMAILJS_TEMPLATE_ID = "template_bb5opqq";
     const EMAILJS_PUBLIC_KEY  = "CIEjPItwnunl99qyE";
@@ -129,7 +201,6 @@
     function fermerModal() {
         document.getElementById("modal-overlay").classList.remove("visible");
     }
-        
 
     async function verifierRetour() {
         const params = new URLSearchParams(window.location.search);
@@ -139,11 +210,11 @@
                 await envoyerBotParEmail(email);
                 localStorage.removeItem("email_achat");
             }
-            window.history.replaceState({}, "", "/dtl_moderion.html");
+            window.history.replaceState({}, "", "/dlt_e-book_comment_coder_en_python_partie_1.html");
         }
         if (params.get("erreur") === "1") {
             alert("Le paiement a échoué. Réessaie.");
-            window.history.replaceState({}, "", "/dtl_moderion.html");
+            window.history.replaceState({}, "", "/dlt_e-book_comment_coder_en_python_partie_1.html");
         }
     }
 
@@ -156,10 +227,10 @@
             try {
                 await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
                     to_email: email,
-                    produit: "Modérion",
-                    lien_bot: BOT_INVITE_LINK
+                    produit: "Comment coder en Python — Partie 1",
+                    lien_bot: "Lien de téléchargement envoyé séparément"
                 });
-                alert("✅ Paiement réussi ! Vérifie ton email pour recevoir le lien du bot.");
+                alert("✅ Paiement réussi ! Vérifie ton email pour recevoir le e-book.");
             } catch(err) {
                 alert("Paiement reçu mais erreur email. Contacte-nous.");
             }
@@ -167,6 +238,23 @@
     }
 
     verifierRetour();
+
+    /* ---------- reveal au scroll ---------- */
+    const revealEls = document.querySelectorAll('.reveal');
+    revealEls.forEach((el) => {
+        const siblings = el.parentElement.querySelectorAll('.reveal');
+        const idx = Array.prototype.indexOf.call(siblings, el);
+        el.style.transitionDelay = (idx * 0.08) + 's';
+    });
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {threshold: 0.15});
+    revealEls.forEach(el => observer.observe(el));
 </script>
 
 <script src="mise-a-jour.js"></script>
