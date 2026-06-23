@@ -58,7 +58,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:h
   background:var(--panel);width:210px;height:100vh;position:fixed;top:0;left:0;z-index:1000;
   border-right:1px solid var(--border);padding:26px 14px 14px 14px;transition:.3s;display:flex;flex-direction:column;
 }
-#menu.hidden{display:none;}
 .brand{font-family:var(--mono);font-weight:600;color:var(--text);font-size:15px;padding:0 10px 22px 10px;border-bottom:1px solid var(--border);margin-bottom:14px;letter-spacing:.3px;text-align:left;}
 .brand span{color:var(--accent);}
 .cursor-blink{display:inline-block;width:8px;background:var(--accent);margin-left:2px;animation:blink 1s steps(1) infinite;}
@@ -163,6 +162,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:h
 /* ---------- mobile ---------- */
 @media (max-width:768px){
   #menu-btn{display:block;}
+  #menu{display:none;}
+  #menu.visible{display:flex;}
   .page{padding-left:0;}
   .page-header{padding:88px 18px 30px;}
   .page-header h1{font-size:34px;}
@@ -178,7 +179,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:h
 
 <button id="menu-btn">[ menu ]</button>
 
-<nav id="menu" class="hidden">
+<nav id="menu">
   <div class="brand">Zyntra<span>Code</span><span class="cursor-blink"></span></div>
   <div class="nav-label">// navigation</div>
   <a href="index.html">Accueil</a>
@@ -281,7 +282,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--sans);overflow-x:h
 /* ---------- menu ---------- */
 const btn = document.getElementById("menu-btn");
 const menu = document.getElementById("menu");
-btn.addEventListener("click", () => menu.classList.toggle("hidden"));
+btn.addEventListener("click", () => menu.classList.toggle("visible"));
 
 /* ---------- recherche ---------- */
 const mots = [
