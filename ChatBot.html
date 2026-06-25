@@ -2,148 +2,431 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Chatbot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot IA | ZyntraCode</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #0a0a0a; color: white; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .login-card { background: #1a1a1a; border: 1px solid rgb(21, 213, 168); border-radius: 20px; padding: 50px; text-align: center; max-width: 400px; }
-        h1 { color: rgb(21, 213, 168); font-size: 32px; margin-bottom: 10px; }
-        p { color: #aaa; margin-bottom: 30px; }
-        .btn-login { display: inline-block; padding: 14px 30px; background: #5865F2; color: white; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        .btn-login:hover { opacity: 0.8; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 100%);
+            color: white;
+            font-family: 'Space Mono', monospace;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            height: 90vh;
+            max-height: 800px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 2px solid #00ffcc;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 255, 204, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, rgba(0, 255, 204, 0.1) 0%, rgba(255, 27, 141, 0.1) 100%);
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 255, 204, 0.3);
+            text-align: center;
+        }
+
+        .chat-header h1 {
+            color: #00ffcc;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
+        }
+
+        .chat-header p {
+            color: #b0b0b0;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            scroll-behavior: smooth;
+        }
+
+        .chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-box::-webkit-scrollbar-track {
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        .chat-box::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 204, 0.3);
+            border-radius: 3px;
+        }
+
+        .msg-ia,
+        .msg-user {
+            display: flex;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .msg-ia {
+            justify-content: flex-start;
+        }
+
+        .msg-ia span {
+            background: rgba(0, 255, 204, 0.15);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            color: #00ffcc;
+            padding: 12px 16px;
+            border-radius: 12px 12px 12px 4px;
+            max-width: 80%;
+            word-wrap: break-word;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .msg-user {
+            justify-content: flex-end;
+        }
+
+        .msg-user span {
+            background: #00ffcc;
+            color: #0a0e27;
+            padding: 12px 16px;
+            border-radius: 12px 12px 4px 12px;
+            max-width: 80%;
+            word-wrap: break-word;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 12px 16px;
+            background: rgba(0, 255, 204, 0.15);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            border-radius: 12px;
+            max-width: 80px;
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #00ffcc;
+            animation: bounce 1.4s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .chat-input-section {
+            background: rgba(0, 255, 204, 0.05);
+            border-top: 1px solid rgba(0, 255, 204, 0.2);
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 204, 0.3);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #00ffcc;
+            background: rgba(0, 255, 204, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+        }
+
+        .chat-input::placeholder {
+            color: #666;
+        }
+
+        .btn-send {
+            padding: 12px 20px;
+            background: #00ffcc;
+            color: #0a0e27;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-send:hover {
+            background: transparent;
+            color: #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-send:active {
+            transform: translateY(0);
+        }
+
+        .btn-send:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 480px) {
+            .chat-container {
+                height: 100vh;
+                max-height: none;
+                border-radius: 0;
+                border: none;
+            }
+
+            .msg-ia span,
+            .msg-user span {
+                max-width: 90%;
+                font-size: 0.9rem;
+            }
+
+            .chat-header h1 {
+                font-size: 1.2rem;
+            }
+
+            .btn-send {
+                padding: 10px 16px;
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 <body>
 
-<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>🤖 CHATBOT IA</h1>
+            <p>ZyntraCode Assistant</p>
+        </div>
 
-<div class="chat-section">
+        <div class="chat-box" id="chat-box">
+            <div class="msg-ia">
+                <span>Bonjour 👋 Je suis l'IA de ZyntraCode 😊 Comment je peux t'aider ?</span>
+            </div>
+        </div>
 
-    <h2>🧠 Chat IA</h2>
-
-    <div class="chat-box" id="chat-box">
-        <div class="msg-ia">
-            <span>
-                Bonjour 👋 Je suis l'IA de ZyntraCode 😊
-            </span>
+        <div class="chat-input-section">
+            <input
+                type="text"
+                id="chat-input"
+                class="chat-input"
+                placeholder="Pose ta question..."
+                onkeypress="if(event.key==='Enter') envoyerMessage()"
+            >
+            <button class="btn-send" onclick="envoyerMessage()" id="btn-send">
+                ENVOYER
+            </button>
         </div>
     </div>
 
-    <div class="chat-input">
-        <input
-            type="text"
-            id="chat-input"
-            placeholder="Pose ta question..."
-            onkeypress="if(event.key==='Enter') envoyerMessage()"
-        >
-
-        <button onclick="envoyerMessage()">
-            Envoyer
-        </button>
-    </div>
-
-</div>
-
-<script>
-
-const CONNAISSANCES = {
-
-    salutation: {
-        mots: ["bonjour", "salut", "hello", "bonsoir", "hey"],
-        reponses: [
-            "Bonjour 👋",
-            "Salut 😊",
-            "Hello 😄"
-        ]
-    },
-
-    identite: {
-        mots: ["qui es tu", "c'est quoi", "tu es quoi"],
-        reponses: [
-            "Je suis l'IA de ZyntraCode 🤖"
-        ]
-    },
-
-    bot: {
-        mots: ["bot", "moderion", "discord"],
-        reponses: [
-            "Modérion est notre bot Discord gratuit 🚀"
-        ]
-    },
-
-    prix: {
-        mots: ["prix", "gratuit", "payant"],
-        reponses: [
-            "Modérion est 100% gratuit 🎉"
-        ]
-    },
-
-    contact: {
-        mots: ["contact", "email", "support"],
-        reponses: [
-            "Tu peux nous contacter sur zyntracode.ch 📩"
-        ]
-    }
-
-};
-
-function repondreIA(message){
-
-    message = message.toLowerCase();
-
-    for(const categorie in CONNAISSANCES){
-
-        const data = CONNAISSANCES[categorie];
-
-        for(const mot of data.mots){
-
-            if(message.includes(mot)){
-
-                return data.reponses[
-                    Math.floor(Math.random() * data.reponses.length)
-                ];
+    <script>
+        const CONNAISSANCES = {
+            salutation: {
+                mots: ["bonjour", "salut", "hello", "bonsoir", "hey", "coucou", "yo"],
+                reponses: [
+                    "Bonjour 👋 Comment je peux t'aider ?",
+                    "Salut 😊 Ça va ?",
+                    "Hello ! Quelque chose de spécifique ?",
+                    "Coucou 👻 Je suis là pour t'aider !"
+                ]
+            },
+            identite: {
+                mots: ["qui es tu", "c'est quoi", "tu es quoi", "zyntracode"],
+                reponses: [
+                    "Je suis l'IA de ZyntraCode 🤖 Une plateforme pour les jeux et scripts Python !",
+                    "ZyntraCode est une plateforme gaming avec des jeux en HTML et des scripts Python 🚀"
+                ]
+            },
+            bot: {
+                mots: ["bot", "discord", "moderation", "moderion"],
+                reponses: [
+                    "On a un super bot Discord avec moderation, economy, casino et bien plus 🎮",
+                    "Ouais, notre bot Discord fait de tout : tickets, moderation, XP... 🤩"
+                ]
+            },
+            prix: {
+                mots: ["prix", "gratuit", "payant", "cout", "acheter"],
+                reponses: [
+                    "Nos jeux sont super accessibles 💰 Les prix varient selon les produits !",
+                    "ZyntraCode propose des scripts, e-books et des jeux à des bons prix 📚"
+                ]
+            },
+            contact: {
+                mots: ["contact", "email", "support", "aide", "probleme"],
+                reponses: [
+                    "Tu peux nous contacter sur zyntracode.ch 📧",
+                    "Besoin d'aide ? Va sur zyntracode.ch pour nous écrire ! 💬"
+                ]
+            },
+            jeux: {
+                mots: ["jeu", "game", "morpion", "rpg", "arena"],
+                reponses: [
+                    "On a plein de jeux sympas : Zyntra Arena, RPG, Morpion... 🎮",
+                    "Zyntra Arena c'est notre jeu de combat gratuit ! Tu peux aussi checker le RPG 🚀"
+                ]
+            },
+            merci: {
+                mots: ["merci", "thanks", "merci beaucoup", "cool"],
+                reponses: [
+                    "De rien ! 😊 Des questions ?",
+                    "Avec plaisir ! 🎉 On est là pour toi !",
+                    "No problem ! À bientôt ! 👋"
+                ]
+            },
+            aurevoir: {
+                mots: ["au revoir", "bye", "a+", "cya", "goodbye"],
+                reponses: [
+                    "À bientôt ! 👋",
+                    "Bye bye ! 😊",
+                    "À plus tard ! 🚀"
+                ]
             }
+        };
+
+        function repondreIA(message) {
+            message = message.toLowerCase().trim();
+            
+            // Cherche dans toutes les catégories
+            for (const categorie in CONNAISSANCES) {
+                const data = CONNAISSANCES[categorie];
+                for (const mot of data.mots) {
+                    if (message.includes(mot)) {
+                        return data.reponses[
+                            Math.floor(Math.random() * data.reponses.length)
+                        ];
+                    }
+                }
+            }
+            
+            return "Je ne suis pas sûr... Peux-tu reformuler ? 🤔";
         }
-    }
 
-    return "Je ne comprends pas 🤔";
-}
+        function afficherTypingIndicator() {
+            const chatBox = document.getElementById("chat-box");
+            const typing = document.createElement("div");
+            typing.className = "msg-ia";
+            typing.innerHTML = `
+                <div class="typing-indicator">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            `;
+            typing.id = "typing-indicator";
+            chatBox.appendChild(typing);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
 
-function envoyerMessage(){
+        function supprimerTypingIndicator() {
+            const typing = document.getElementById("typing-indicator");
+            if (typing) typing.remove();
+        }
 
-    const input = document.getElementById("chat-input");
+        function envoyerMessage() {
+            const input = document.getElementById("chat-input");
+            const chatBox = document.getElementById("chat-box");
+            const btnSend = document.getElementById("btn-send");
+            const message = input.value.trim();
 
-    const chatBox = document.getElementById("chat-box");
+            if (!message) return;
 
-    const message = input.value.trim();
+            // Message utilisateur
+            const msgUser = document.createElement("div");
+            msgUser.className = "msg-user";
+            msgUser.innerHTML = `<span>${message}</span>`;
+            chatBox.appendChild(msgUser);
 
-    if(!message) return;
+            input.value = "";
+            btnSend.disabled = true;
+            chatBox.scrollTop = chatBox.scrollHeight;
 
-    chatBox.innerHTML += `
-        <div class="msg-user">
-            <span>${message}</span>
-        </div>
-    `;
+            // Typing indicator
+            afficherTypingIndicator();
 
-    const reponse = repondreIA(message);
+            // Simulation délai réponse IA
+            setTimeout(() => {
+                supprimerTypingIndicator();
+                const reponse = repondreIA(message);
+                
+                const msgIA = document.createElement("div");
+                msgIA.className = "msg-ia";
+                msgIA.innerHTML = `<span>${reponse}</span>`;
+                chatBox.appendChild(msgIA);
+                
+                btnSend.disabled = false;
+                input.focus();
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }, 800 + Math.random() * 600);
+        }
 
-    chatBox.innerHTML += `
-        <div class="msg-ia">
-            <span>${reponse}</span>
-        </div>
-    `;
-
-    input.value = "";
-
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
-
-</script>
+        // Focus initial
+        document.getElementById("chat-input").focus();
+    </script>
 
 </body>
 </html>
-    
-</body>
-</html>
-
-
