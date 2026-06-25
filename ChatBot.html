@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatBot IA v4 ULTIME | ZyntraCode</title>
+    <title>ChatBot V4 COMPLET | ZyntraCode</title>
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,27 +27,27 @@
             font-family: 'Space Mono', monospace;
             height: 100vh;
             display: flex;
-            padding: 10px;
+            overflow: hidden;
         }
 
         .container {
             display: flex;
             width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
+            height: 100%;
             gap: 10px;
+            padding: 10px;
         }
 
         .sidebar {
-            width: 250px;
-            background: rgba(26, 26, 46, 0.8);
+            width: 220px;
+            background: rgba(26, 26, 46, 0.95);
             border: 2px solid var(--primary);
             border-radius: 12px;
-            padding: 15px;
+            padding: 12px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .sidebar-btn {
@@ -59,20 +59,15 @@
             cursor: pointer;
             font-family: 'Space Mono', monospace;
             font-size: 11px;
-            transition: all 0.2s;
-            text-transform: uppercase;
             font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.2s;
         }
 
         .sidebar-btn:hover {
             background: var(--primary);
             color: var(--bg-dark);
-        }
-
-        .sidebar-btn.active {
-            background: var(--primary);
-            color: var(--bg-dark);
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
         }
 
         .main-chat {
@@ -87,48 +82,25 @@
 
         .header {
             background: linear-gradient(135deg, rgba(0, 255, 204, 0.15) 0%, rgba(255, 27, 141, 0.15) 100%);
-            padding: 15px;
+            padding: 12px 15px;
             border-bottom: 1px solid rgba(0, 255, 204, 0.3);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .header-left h1 {
+        .header h1 {
             color: var(--primary);
-            font-size: 1.3rem;
-            margin-bottom: 5px;
+            font-size: 1.2rem;
+            margin: 0;
             text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
         }
 
         .header-stats {
             display: flex;
-            gap: 15px;
-            font-size: 12px;
-            color: var(--primary);
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 8px;
-        }
-
-        .header-controls button {
-            background: transparent;
-            border: 1px solid var(--primary);
-            color: var(--primary);
-            padding: 6px 10px;
-            border-radius: 4px;
+            gap: 12px;
             font-size: 11px;
-            cursor: pointer;
-            font-family: 'Space Mono', monospace;
-            font-weight: 700;
-            transition: all 0.2s;
-        }
-
-        .header-controls button:hover {
-            background: var(--primary);
-            color: var(--bg-dark);
+            color: var(--primary);
         }
 
         .chat-box {
@@ -160,6 +132,7 @@
             max-width: 70%;
             font-size: 0.9rem;
             line-height: 1.5;
+            word-wrap: break-word;
         }
 
         .msg-user { justify-content: flex-end; }
@@ -171,46 +144,14 @@
             max-width: 70%;
             font-size: 0.9rem;
             font-weight: 600;
-        }
-
-        .mini-game {
-            background: rgba(255, 27, 141, 0.15);
-            border: 1px solid rgba(255, 27, 141, 0.3);
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 8px;
-        }
-
-        .game-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-
-        .game-btn {
-            background: rgba(255, 27, 141, 0.3);
-            border: 1px solid var(--secondary);
-            color: var(--secondary);
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-family: 'Space Mono', monospace;
-            font-weight: 700;
-            transition: all 0.2s;
-        }
-
-        .game-btn:hover {
-            background: rgba(255, 27, 141, 0.5);
-            box-shadow: 0 0 10px rgba(255, 27, 141, 0.5);
+            word-wrap: break-word;
         }
 
         .suggestions {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            margin-top: 8px;
+            margin-top: 5px;
         }
 
         .suggestion-btn {
@@ -243,7 +184,7 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(0, 255, 204, 0.3);
             color: var(--text);
-            padding: 10px;
+            padding: 10px 12px;
             border-radius: 6px;
             font-family: 'Space Mono', monospace;
             font-size: 0.9rem;
@@ -272,6 +213,11 @@
         .send-btn:hover {
             background: linear-gradient(135deg, var(--secondary), #ff6bb5);
             box-shadow: 0 0 15px rgba(255, 27, 141, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .send-btn:active {
+            transform: translateY(0);
         }
 
         .modal {
@@ -281,10 +227,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
         }
 
         .modal.active {
@@ -296,16 +243,39 @@
             border: 2px solid var(--primary);
             border-radius: 12px;
             padding: 20px;
-            max-width: 600px;
+            max-width: 500px;
             max-height: 80vh;
             overflow-y: auto;
             color: var(--text);
+            position: relative;
         }
 
         .modal-content h2 {
             color: var(--primary);
             margin-bottom: 15px;
             font-size: 1.3rem;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: var(--primary);
+            color: var(--bg-dark);
         }
 
         .achievement-grid {
@@ -316,39 +286,40 @@
         }
 
         .achievement {
-            background: rgba(0, 255, 204, 0.1);
+            background: rgba(0, 255, 204, 0.15);
             border: 1px solid rgba(0, 255, 204, 0.3);
             border-radius: 8px;
-            padding: 10px;
+            padding: 12px;
             text-align: center;
             font-size: 0.8rem;
         }
 
         .achievement.locked {
             opacity: 0.3;
-            border-color: rgba(200, 200, 200, 0.3);
         }
 
-        .typing {
-            display: flex;
-            gap: 4px;
-            padding: 10px;
+        .game-btn {
+            background: rgba(255, 27, 141, 0.3);
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            transition: all 0.2s;
+            margin: 5px 5px 5px 0;
         }
 
-        .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--primary);
-            animation: bounce 1.4s infinite;
+        .game-btn:hover {
+            background: rgba(255, 27, 141, 0.5);
+            box-shadow: 0 0 10px rgba(255, 27, 141, 0.5);
         }
 
-        .dot:nth-child(2) { animation-delay: 0.2s; }
-        .dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes bounce {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-8px); }
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .msg-ia span, .msg-user span { max-width: 85%; }
         }
 
         .confetti {
@@ -360,325 +331,498 @@
         @keyframes confetti-fall {
             to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
         }
-
-        @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .container { flex-direction: column; }
-            .msg-ia span, .msg-user span { max-width: 85%; }
-        }
-
-        .close-modal {
-            float: right;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--primary);
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="sidebar">
-        <button class="sidebar-btn active" onclick="switchTab('chat')">💬 Chat</button>
-        <button class="sidebar-btn" onclick="switchTab('profile')">👤 Profil</button>
-        <button class="sidebar-btn" onclick="switchTab('achievements')">🏆 Achievements</button>
-        <button class="sidebar-btn" onclick="switchTab('stats')">📊 Stats</button>
-        <button class="sidebar-btn" onclick="switchTab('games')">🎮 Jeux</button>
-        <button class="sidebar-btn" onclick="switchTab('search')">🔍 Recherche</button>
-        <button class="sidebar-btn" onclick="openModal('settings')">⚙️ Paramètres</button>
-        <button class="sidebar-btn" onclick="exportChat()">📥 Export</button>
+        <button class="sidebar-btn" onclick="switchToChat()">💬 Chat</button>
+        <button class="sidebar-btn" onclick="openModal('profile')">👤 Profil</button>
+        <button class="sidebar-btn" onclick="openModal('achievements')">🏆 Achievements</button>
+        <button class="sidebar-btn" onclick="openModal('stats')">📊 Stats</button>
+        <button class="sidebar-btn" onclick="openModal('games')">🎮 Jeux</button>
+        <button class="sidebar-btn" onclick="openModal('search')">🔍 Recherche</button>
         <button class="sidebar-btn" onclick="openModal('daily')">📅 Défis</button>
+        <button class="sidebar-btn" onclick="openModal('settings')">⚙️ Param.</button>
+        <button class="sidebar-btn" onclick="exportChat()">📥 Export</button>
         <button class="sidebar-btn" onclick="toggleTheme()">🎨 Thème</button>
-        <button class="sidebar-btn" onclick="openModal('leaderboard')">🥇 Classement</button>
     </div>
 
     <div class="main-chat">
         <div class="header">
-            <div class="header-left">
-                <h1 id="title">🤖 CHATBOT IA V4</h1>
+            <div>
+                <h1>🤖 CHATBOT V4.1</h1>
                 <div style="font-size: 11px; color: rgba(0, 255, 204, 0.7);" id="userGreeting">Bienvenue!</div>
             </div>
             <div class="header-stats">
                 <div>💬 <span id="msgCount">0</span></div>
                 <div>🔥 <span id="streakCount">0</span></div>
                 <div>⭐ <span id="scoreCount">0</span></div>
-                <div>🎯 Lvl <span id="levelCount">1</span></div>
-            </div>
-            <div class="header-controls">
-                <button onclick="clearChat()">🗑️</button>
-                <button onclick="location.reload()">⟳</button>
+                <div>Lvl <span id="levelCount">1</span></div>
             </div>
         </div>
 
         <div class="chat-box" id="chatBox"></div>
 
         <div class="input-section">
-            <input type="text" id="chatInput" class="chat-input" placeholder="Type /help for commands..." onkeypress="if(event.key==='Enter') sendMessage()">
-            <button class="send-btn" onclick="sendMessage()">SEND</button>
+            <input type="text" id="chatInput" class="chat-input" placeholder="Écris un message... (/help)" onkeypress="if(event.key==='Enter') sendMessage()">
+            <button class="send-btn" onclick="sendMessage()" id="sendBtnLang">ENVOYER</button>
         </div>
     </div>
 </div>
 
-<div id="modals">
-    <div id="profileModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('profile')">&times;</span>
-            <h2>👤 Profil</h2>
-            <p id="profileInfo"></p>
-        </div>
+<!-- MODALES -->
+<div id="profileModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('profile')">×</button>
+        <h2>👤 Profil</h2>
+        <div id="profileInfo"></div>
     </div>
+</div>
 
-    <div id="achievementsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('achievements')">&times;</span>
-            <h2>🏆 Achievements</h2>
-            <div class="achievement-grid" id="achievementGrid"></div>
-        </div>
+<div id="achievementsModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('achievements')">×</button>
+        <h2>🏆 Achievements</h2>
+        <div class="achievement-grid" id="achievementGrid"></div>
     </div>
+</div>
 
-    <div id="statsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('stats')">&times;</span>
-            <h2>📊 Statistiques</h2>
-            <p id="statsInfo"></p>
-        </div>
+<div id="statsModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('stats')">×</button>
+        <h2>📊 Stats</h2>
+        <div id="statsInfo"></div>
     </div>
+</div>
 
-    <div id="gamesModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('games')">&times;</span>
-            <h2>🎮 Mini-Jeux</h2>
-            <p id="gamesInfo"></p>
-        </div>
+<div id="gamesModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('games')">×</button>
+        <h2>🎮 Mini-Jeux</h2>
+        <button class="game-btn" onclick="playGame('coinflip')">🪙 Coin Flip</button>
+        <button class="game-btn" onclick="playGame('dice')">🎲 Dice Roll</button>
+        <button class="game-btn" onclick="playGame('quiz')">🎯 Quiz ZyntraCode</button>
     </div>
+</div>
 
-    <div id="searchModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('search')">&times;</span>
-            <h2>🔍 Rechercher</h2>
-            <input type="text" placeholder="Cherche dans le chat..." id="searchInput" onkeyup="searchChat()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--primary); background: rgba(0, 255, 204, 0.1); color: var(--text); font-family: 'Space Mono', monospace; margin-bottom: 10px;">
-            <div id="searchResults" style="font-size: 0.9rem;"></div>
-        </div>
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('search')">×</button>
+        <h2>🔍 Rechercher</h2>
+        <input type="text" id="searchInput" placeholder="Cherche dans le chat..." onkeyup="searchChat()" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--primary); background: rgba(0, 255, 204, 0.1); color: var(--text); font-family: 'Space Mono', monospace; margin-bottom: 10px;">
+        <div id="searchResults" style="font-size: 0.9rem;"></div>
     </div>
+</div>
 
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('settings')">&times;</span>
-            <h2>⚙️ Paramètres</h2>
-            <p>Langue: 
-                <select id="langSelect" onchange="changeLanguage(this.value)" style="background: rgba(0, 255, 204, 0.2); border: 1px solid var(--primary); color: var(--text); padding: 5px; border-radius: 4px; font-family: 'Space Mono', monospace;">
-                    <option value="fr">Français 🇫🇷</option>
-                    <option value="en">English 🇬🇧</option>
-                </select>
-            </p>
-            <p>
-                <label>
-                    <input type="checkbox" id="ttsToggle" onchange="toggleTTS()"> Activer Text-to-Speech
-                </label>
-            </p>
-            <p>
-                <label>
-                    <input type="checkbox" id="oledToggle" onchange="toggleOLED()"> Mode OLED (Noir pur)
-                </label>
-            </p>
-        </div>
+<div id="dailyModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('daily')">×</button>
+        <h2>📅 Défis Quotidiens</h2>
+        <div id="dailyInfo"></div>
     </div>
+</div>
 
-    <div id="dailyModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('daily')">&times;</span>
-            <h2>📅 Défis Quotidiens</h2>
-            <p id="dailyInfo"></p>
-        </div>
-    </div>
-
-    <div id="leaderboardModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal('leaderboard')">&times;</span>
-            <h2>🥇 Classement</h2>
-            <p id="leaderboardInfo"></p>
-        </div>
+<div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('settings')">×</button>
+        <h2>⚙️ Paramètres</h2>
+        <p style="margin: 15px 0;">
+            <strong>🌍 Langue:</strong><br>
+            <button class="game-btn" onclick="changeLang('fr')" style="margin-top: 8px;">🇫🇷 Français</button>
+            <button class="game-btn" onclick="changeLang('en')" style="margin-left: 8px;">🇬🇧 English</button>
+        </p>
+        <p style="margin-top: 15px;">
+            <label>
+                <input type="checkbox" id="oledToggle" onchange="toggleOLED()"> Mode OLED (Noir pur)
+            </label>
+        </p>
     </div>
 </div>
 
 <script>
-    // ========== DONNÉES & SYSTÈME DE SAUVEGARDE ==========
-    const LANG = { fr: {}, en: {} };
+    // ========== SYSTÈME DE LANGUE ==========
+    const TRANSLATIONS = {
+        fr: {
+            welcome: 'Bienvenue sur ZyntraCode ChatBot V4.1! 🚀',
+            placeholder: 'Écris un message...',
+            send: 'ENVOYER',
+            language: 'Langue:',
+            save: 'Enregistrer',
+            exported: 'Chat exporté! 📥'
+        },
+        en: {
+            welcome: 'Welcome to ZyntraCode ChatBot V4.1! 🚀',
+            placeholder: 'Write a message...',
+            send: 'SEND',
+            language: 'Language:',
+            save: 'Save',
+            exported: 'Chat exported! 📥'
+        }
+    };
+
     let currentLang = localStorage.getItem('lang') || 'fr';
+
+    function t(key) {
+        return TRANSLATIONS[currentLang][key] || key;
+    }
+
+    function changeLang(lang) {
+        if (!['fr', 'en'].includes(lang)) {
+            console.warn(`Langue invalide: ${lang}`);
+            return;
+        }
+        currentLang = lang;
+        try {
+            localStorage.setItem('lang', lang);
+            location.reload();
+        } catch (e) {
+            console.error('Erreur localStorage:', e);
+            alert('❌ Erreur lors du changement de langue');
+        }
+    }
+
+    // ========== SYSTÈME DE STOCKAGE ==========
     let gameState = JSON.parse(localStorage.getItem('gameState')) || {
-        userName: null,
         messages: 0,
         streak: 0,
         score: 0,
         level: 1,
         history: [],
         achievements: {},
-        dailyChallenges: { explored: 0, gamesPlayed: 0, eastereggs: 0, completed: false },
-        favoriteTopics: {},
-        lastReset: new Date().toDateString()
+        userName: null
     };
 
     const ACHIEVEMENTS = {
-        first_chat: { title: "First Chat", desc: "Envoie ton premier message", icon: "🎮" },
-        100_msgs: { title: "Bavard", desc: "100 messages", icon: "💬" },
-        500_msgs: { title: "Intarissable", desc: "500 messages", icon: "📢" },
-        streak_10: { title: "Addict", desc: "Streak de 10", icon: "🔥" },
-        win_game: { title: "Gamer", desc: "Gagne un mini-jeu", icon: "🎯" },
-        easter_5: { title: "Explorateur", desc: "Trouve 5 easter eggs", icon: "🥚" },
-        level_5: { title: "Novice", desc: "Atteins niveau 5", icon: "⭐" },
-        explore_all: { title: "Curieux", desc: "Explore tous les sujets", icon: "🧠" }
+        first: { title: "Premier Chat", icon: "🎮" },
+        hun: { title: "Bavard (100)", icon: "💬" },
+        win: { title: "Gamer", icon: "🎯" },
+        streak5: { title: "Addict (5)", icon: "🔥" }
     };
 
-    // ========== FONCTION DE TRADUCTION ==========
-    function translate(key) {
-        return LANG[currentLang][key] || key;
-    }
-
-    // ========== MINI-JEUX ==========
-    function playGame(type) {
-        if (type === 'coinflip') {
-            const result = Math.random() > 0.5 ? 'Heads 🪙' : 'Tails 🪙';
-            addMessage(`Résultat: ${result}!`, 'bot');
-            gameState.gamesPlayed = (gameState.gamesPlayed || 0) + 1;
-            updateScore(50);
-            unlockAchievement('win_game');
-        }
-        if (type === 'dice') {
-            const result = Math.floor(Math.random() * 6) + 1;
-            addMessage(`🎲 Résultat: ${result}!`, 'bot');
-            gameState.gamesPlayed = (gameState.gamesPlayed || 0) + 1;
-            updateScore(50 + result * 10);
-            unlockAchievement('win_game');
-        }
-        if (type === 'quiz') {
-            startQuiz();
-        }
-    }
-
-    function startQuiz() {
-        const questions = [
-            { q: 'Qui a créé ZyntraCode?', a: 'mga', p: 50 },
-            { q: 'Quel est notre jeu de combat?', a: 'arena', p: 40 },
-            { q: 'ZyntraCode est basé où?', a: 'suisse', p: 30 },
-            { q: 'Combien de features le bot Discord?', a: '10', p: 60 }
-        ];
-        const q = questions[Math.floor(Math.random() * questions.length)];
-        addMessage(`🎯 Quiz: ${q.q}`, 'bot');
-        window.currentQuizAnswer = q.a;
-        window.currentQuizPoints = q.p;
-    }
-
-    // ========== SYSTÈME D'ACHIEVEMENTS ==========
-    function unlockAchievement(achId) {
-        if (!gameState.achievements[achId]) {
-            gameState.achievements[achId] = true;
-            throwConfetti();
-            addMessage(`🏆 ACHIEVEMENT UNLOCK: ${ACHIEVEMENTS[achId].title}! +100 points!`, 'bot');
-            updateScore(100);
-        }
-    }
-
-    // ========== CONFETTI & ANIMATIONS ==========
-    function throwConfetti() {
-        for (let i = 0; i < 30; i++) {
-            const conf = document.createElement('div');
-            conf.className = 'confetti';
-            conf.innerHTML = ['🎉', '⭐', '🔥', '💫', '✨'][Math.floor(Math.random() * 5)];
-            conf.style.left = Math.random() * 100 + '%';
-            conf.style.top = '0';
-            document.body.appendChild(conf);
-            setTimeout(() => conf.remove(), 2000);
-        }
-    }
-
-    // ========== GESTION DES MESSAGES ==========
-    function addMessage(text, sender = 'user') {
-        const chatBox = document.getElementById('chatBox');
-        const msgDiv = document.createElement('div');
-        msgDiv.className = sender === 'user' ? 'msg-user' : 'msg-ia';
-        msgDiv.innerHTML = `<span>${text}</span>`;
-        chatBox.appendChild(msgDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
-        
-        if (sender === 'bot') {
-            const msg = { text, sender, time: new Date() };
-            gameState.history.push(msg);
-            saveGame();
-        }
-    }
-
+    // ========== FONCTIONS PRINCIPALES ==========
     function sendMessage() {
         const input = document.getElementById('chatInput');
         const msg = input.value.trim();
-        if (!msg) return;
+        if (!msg || msg.length === 0) return;
 
+        // Ajoute le message utilisateur
         addMessage(msg, 'user');
         input.value = '';
 
+        // Met à jour stats
         gameState.messages++;
         gameState.streak++;
         updateStats();
-        unlockAchievement('first_chat');
-        if (gameState.messages >= 100) unlockAchievement('100_msgs');
-        if (gameState.messages >= 500) unlockAchievement('500_msgs');
-        if (gameState.streak >= 10) unlockAchievement('streak_10');
 
-        // Répondre avec IA simple
+        // Achievements
+        if (gameState.messages === 1) unlockAchievement('first');
+        if (gameState.messages === 100) unlockAchievement('hun');
+        if (gameState.streak === 5) unlockAchievement('streak5');
+
+        // Traite les commandes spéciales
+        if (msg.toLowerCase() === '/help') {
+            addMessage('📖 **COMMANDES DISPONIBLES:**\n/help - Voir l\'aide\n/quiz - Quiz ZyntraCode\n/dice - Lancer un dé\n/coin - Coin flip\n/stats - Voir tes stats\n/clear - Effacer le chat', 'bot');
+            saveGame();
+            return;
+        }
+        if (msg.toLowerCase() === '/quiz') {
+            playGame('quiz');
+            saveGame();
+            return;
+        }
+        if (msg.toLowerCase() === '/dice') {
+            playGame('dice');
+            saveGame();
+            return;
+        }
+        if (msg.toLowerCase() === '/coin') {
+            playGame('coinflip');
+            saveGame();
+            return;
+        }
+        if (msg.toLowerCase() === '/stats') {
+            addMessage(`📊 Tes stats:\n💬 Messages: ${gameState.messages}\n⭐ Score: ${gameState.score}\n🔥 Streak: ${gameState.streak}\n📈 Level: ${gameState.level}`, 'bot');
+            saveGame();
+            return;
+        }
+        if (msg.toLowerCase() === '/clear') {
+            document.getElementById('chatBox').innerHTML = '';
+            gameState.history = [];
+            saveGame();
+            return;
+        }
+
+        // Répond avec IA
         setTimeout(() => {
             const response = generateResponse(msg);
             addMessage(response, 'bot');
-            if (Math.random() > 0.7) throwConfetti();
         }, 400 + Math.random() * 600);
+
+        saveGame();
+    }
+
+    function addMessage(text, sender) {
+        const chatBox = document.getElementById('chatBox');
+        const msgDiv = document.createElement('div');
+        msgDiv.className = sender === 'user' ? 'msg-user' : 'msg-ia';
+        
+        // Créer un span et utiliser textContent pour éviter XSS
+        const span = document.createElement('span');
+        span.textContent = text;
+        msgDiv.appendChild(span);
+        
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        if (sender === 'bot') {
+            gameState.history.push({ text, sender, time: new Date().toISOString() });
+        }
     }
 
     function generateResponse(msg) {
-        const responses = [
+        const msgLower = msg.toLowerCase();
+
+        // Salutations
+        if (msgLower.match(/salut|bonjour|hello|coucou|yo|hey/i)) {
+            const greetings = [
+                'Salut toi! 👋 Comment ça va?',
+                'Yo! 🎮 Quoi de neuf?',
+                'Bonjour! 😊 Ça va bien?',
+                'Hello là! 👽 Comment tu vas?',
+                'Coucou 👻 Du nouveau?'
+            ];
+            return greetings[Math.floor(Math.random() * greetings.length)];
+        }
+
+        // Questions "comment ça va"
+        if (msgLower.match(/ça va|comment ça va|tu vas bien|comment tu vas|et toi/i)) {
+            const states = [
+                'Je vais super ! 🚀 Et toi, comment tu vas?',
+                'Franchement bien! 😊 Et de ton côté?',
+                'Excellent! 🎉 Raconte comment tu vas!',
+                'Très bien! 👍 Et toi, ça roule?'
+            ];
+            return states[Math.floor(Math.random() * states.length)];
+        }
+
+        // Questions sur ZyntraCode
+        if (msgLower.match(/zyntracode|c'est quoi|qu'est-ce que c'est/i)) {
+            const info = [
+                'ZyntraCode c\'est une plateforme gaming suisse ! 🚀 Des jeux + scripts Python !',
+                'On fait des jeux HTML et des scripts Python depuis la Suisse ! 🇨🇭',
+                'ZyntraCode = jeux DINGUES + scripts utiles ! 🎮✨'
+            ];
+            return info[Math.floor(Math.random() * info.length)];
+        }
+
+        // Questions sur les jeux
+        if (msgLower.match(/jeu|game|morpion|rpg|arena|zyntra arena/i)) {
+            const games = [
+                'Nos jeux c\'est fou ! 🎮 Zyntra Arena, RPG, Morpion... tous gratuits!',
+                'Zyntra Arena c\'est notre jeu de combat! 🔥 Check-le!',
+                'On a des jeux sympas: Morpion, RPG, Arena... 🚀',
+                'Tu veux jouer? On a plein de jeux! 🎯'
+            ];
+            return games[Math.floor(Math.random() * games.length)];
+        }
+
+        // Questions sur les scripts
+        if (msgLower.match(/script|python|code|automatisation/i)) {
+            const scripts = [
+                'On vend des scripts Python super utiles! 🐍 Password generators, automations...',
+                'Les scripts ZyntraCode c\'est du code de qualité! 💻',
+                'Besoin d\'un script? On en a des sympas! 🔧'
+            ];
+            return scripts[Math.floor(Math.random() * scripts.length)];
+        }
+
+        // Questions sur Mga
+        if (msgLower.match(/mga|créateur|développeur|qui a créé/i)) {
+            const mga = [
+                'Mga c\'est le créateur fou de ZyntraCode! 🚀 Un dev suisse de ouf!',
+                'Mga? C\'est le boss! 😎 Il code, il crée, il innove!',
+                'Le fondateur c\'est Mga! 🇨🇭 Basé en Suisse, rêve d\'Epic Games!'
+            ];
+            return mga[Math.floor(Math.random() * mga.length)];
+        }
+
+        // Questions sur le bot Discord
+        if (msgLower.match(/bot|discord|moderation|economy|casino/i)) {
+            const bot = [
+                'Notre bot Discord c\'est UN MONSTRE! 🔥 Modération, economy, casino, tickets!',
+                'Le bot Discord? C\'est fou! 🎲 Mini-jeux intégrés, XP system, modération complète!',
+                'Bot Discord = notre fierté! 🚀 Modération, economy, jeux de casino...'
+            ];
+            return bot[Math.floor(Math.random() * bot.length)];
+        }
+
+        // Merci/Remerciements
+        if (msgLower.match(/merci|thanks|thx|cool|sympa|génial/i)) {
+            const thanks = [
+                'De rien! 😊 Des questions?',
+                'Avec plaisir! 🎉 On est là pour toi!',
+                'C\'est normal! 👍 Besoin d\'autre chose?'
+            ];
+            return thanks[Math.floor(Math.random() * thanks.length)];
+        }
+
+        // Au revoir
+        if (msgLower.match(/au revoir|bye|adieu|cya|a\+|goodbye|tchao/i)) {
+            const goodbye = [
+                'À bientôt! 👋 Reviens nous voir!',
+                'Bye! 😊 À la prochaine!',
+                'À plus tard! 🚀 Amusez-vous bien!'
+            ];
+            return goodbye[Math.floor(Math.random() * goodbye.length)];
+        }
+
+        // Réponses par défaut (variées)
+        const defaults = [
             'Intéressant! 🤔',
-            'J\'adore cette question! 😊',
-            'Ouf, tu explores! 🚀',
-            'Trop bien! 🔥',
+            'J\'adore! 😊',
+            'Trop cool! 🚀',
+            'Ouf! 🔥',
             'Je vois! 👍',
             'Raconte plus! 📢',
-            'Génial! ⭐'
+            'Génial! ⭐',
+            'Well said! 💯',
+            'Sympas! 🎉',
+            'Top question! 🧠',
+            'Franchement cool! 😄',
+            'C\'est ouf! 🤯',
+            'J\'adore ta question! 💭',
+            'C\'est dingue! 🎯'
         ];
-        return responses[Math.floor(Math.random() * responses.length)];
-    }
-
-    function updateScore(points) {
-        gameState.score += points;
-        gameState.level = Math.floor(gameState.score / 500) + 1;
-        updateStats();
+        return defaults[Math.floor(Math.random() * defaults.length)];
     }
 
     function updateStats() {
         document.getElementById('msgCount').innerText = gameState.messages;
         document.getElementById('streakCount').innerText = gameState.streak;
         document.getElementById('scoreCount').innerText = gameState.score;
+        gameState.level = Math.floor(gameState.messages / 10) + 1;
         document.getElementById('levelCount').innerText = gameState.level;
-        if (gameState.userName) {
-            document.getElementById('userGreeting').innerText = `Bienvenue, ${gameState.userName}! 👋`;
+    }
+
+    // ========== MINI-JEUX ==========
+    function playGame(type) {
+        let pointsEarned = 0;
+        
+        if (type === 'coinflip') {
+            const result = Math.random() > 0.5 ? 'HEADS 🪙' : 'TAILS 🪙';
+            addMessage(`🪙 Résultat: ${result}!`, 'bot');
+            pointsEarned = 50;
+        } else if (type === 'dice') {
+            const result = Math.floor(Math.random() * 6) + 1;
+            addMessage(`🎲 Tu as lancé: ${result}!`, 'bot');
+            pointsEarned = 50 + result * 10;
+        } else if (type === 'quiz') {
+            const quiz = [
+                { q: 'Qui a créé ZyntraCode?', a: 'mga' },
+                { q: 'Quel est notre jeu de combat?', a: 'arena' },
+                { q: 'Où est basée ZyntraCode?', a: 'suisse' }
+            ];
+            const current = quiz[Math.floor(Math.random() * quiz.length)];
+            addMessage(`🎯 ${current.q}`, 'bot');
+            window.currentQuizAnswer = current.a;
+            pointsEarned = 100;
+            unlockAchievement('win');
+            gameState.score += pointsEarned;
+            updateStats();
+            saveGame();
+            return;
+        }
+        
+        gameState.score += pointsEarned;
+        unlockAchievement('win');
+        updateStats();
+        saveGame();
+    }
+
+    // ========== ACHIEVEMENTS ==========
+    function unlockAchievement(achId) {
+        if (!gameState.achievements[achId]) {
+            gameState.achievements[achId] = true;
+            throwConfetti();
+            addMessage(`🏆 ACHIEVEMENT! ${ACHIEVEMENTS[achId].title}!`, 'bot');
         }
     }
 
-    function saveGame() {
-        localStorage.setItem('gameState', JSON.stringify(gameState));
+    function throwConfetti() {
+        for (let i = 0; i < 20; i++) {
+            const conf = document.createElement('div');
+            conf.className = 'confetti';
+            conf.innerHTML = ['🎉', '⭐', '🔥', '💫'][Math.floor(Math.random() * 4)];
+            conf.style.left = Math.random() * 100 + '%';
+            conf.style.top = '0';
+            conf.style.fontSize = '1.5rem';
+            document.body.appendChild(conf);
+            setTimeout(() => conf.remove(), 2000);
+        }
     }
 
     // ========== MODALES ==========
     function openModal(modalType) {
         const modal = document.getElementById(modalType + 'Modal');
-        if (modal) {
-            modal.classList.add('active');
+        if (!modal) {
+            console.warn(`Modal ${modalType}Modal not found`);
+            return;
+        }
+        modal.classList.add('active');
+
+        try {
             if (modalType === 'achievements') updateAchievementsModal();
             if (modalType === 'stats') updateStatsModal();
+            if (modalType === 'profile') updateProfileModal();
             if (modalType === 'daily') updateDailyModal();
-            if (modalType === 'leaderboard') updateLeaderboardModal();
+            if (modalType === 'search') {
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) searchInput.focus();
+            }
+        } catch (e) {
+            console.error('Erreur lors de la mise à jour de la modale:', e);
         }
     }
 
     function closeModal(modalType) {
         const modal = document.getElementById(modalType + 'Modal');
         if (modal) modal.classList.remove('active');
+    }
+
+    function updateProfileModal() {
+        const info = document.getElementById('profileInfo');
+        info.innerHTML = `
+            <p style="margin: 10px 0;">Nom: <input type="text" id="nameInput" value="${gameState.userName || ''}" placeholder="Ton nom?" style="padding: 5px; border: 1px solid var(--primary); background: rgba(0, 255, 204, 0.1); color: var(--text); border-radius: 4px; font-family: 'Space Mono', monospace;"></p>
+            <button class="game-btn" onclick="saveName()">Enregistrer</button>
+            <p style="margin-top: 15px; font-size: 0.9rem;">Messages: ${gameState.messages}</p>
+            <p>Score: ${gameState.score}</p>
+        `;
+    }
+
+    function saveName() {
+        const nameInput = document.getElementById('nameInput');
+        if (!nameInput) {
+            alert('❌ Erreur: champ nom non trouvé');
+            return;
+        }
+        
+        const name = nameInput.value.trim();
+        if (!name || name.length === 0) {
+            alert('⚠️ Veuillez entrer un nom');
+            return;
+        }
+        
+        if (name.length > 50) {
+            alert('⚠️ Le nom doit faire moins de 50 caractères');
+            return;
+        }
+        
+        gameState.userName = name;
+        saveGame();
+        updateStats();
+        alert('✅ Nom sauvegardé! 👤');
     }
 
     function updateAchievementsModal() {
@@ -688,130 +832,185 @@
             const ach = ACHIEVEMENTS[id];
             const div = document.createElement('div');
             div.className = 'achievement' + (gameState.achievements[id] ? '' : ' locked');
-            div.innerHTML = `<div style="font-size: 1.5rem;">${ach.icon}</div><div>${ach.title}</div>`;
+            div.innerHTML = `<div style="font-size: 2rem;">${ach.icon}</div><div style="margin-top: 5px;">${ach.title}</div>`;
             grid.appendChild(div);
         }
     }
 
     function updateStatsModal() {
-        const stats = document.getElementById('statsInfo');
-        stats.innerHTML = `
-            <p>Messages: ${gameState.messages}</p>
-            <p>Streak: ${gameState.streak}</p>
-            <p>Score: ${gameState.score}</p>
-            <p>Niveau: ${gameState.level}</p>
-            <p>Achievements: ${Object.keys(gameState.achievements).length}/${Object.keys(ACHIEVEMENTS).length}</p>
+        const info = document.getElementById('statsInfo');
+        info.innerHTML = `
+            <p>💬 Messages: <strong>${gameState.messages}</strong></p>
+            <p>🔥 Streak: <strong>${gameState.streak}</strong></p>
+            <p>⭐ Score: <strong>${gameState.score}</strong></p>
+            <p>📈 Level: <strong>${gameState.level}</strong></p>
+            <p>🏆 Achievements: <strong>${Object.keys(gameState.achievements).length}/${Object.keys(ACHIEVEMENTS).length}</strong></p>
         `;
     }
 
     function updateDailyModal() {
-        const daily = document.getElementById('dailyInfo');
-        const exp = 3 - gameState.dailyChallenges.explored;
-        const games = 2 - gameState.dailyChallenges.gamesPlayed;
-        const eggs = 2 - gameState.dailyChallenges.eastereggs;
-        daily.innerHTML = `
-            <p>📍 Explorer ${exp} sujets (${gameState.dailyChallenges.explored}/3)</p>
-            <p>🎮 Jouer ${games} jeux (${gameState.dailyChallenges.gamesPlayed}/2)</p>
-            <p>🥚 Trouver ${eggs} easter eggs (${gameState.dailyChallenges.eastereggs}/2)</p>
-            <p>${gameState.dailyChallenges.completed ? '✅ Complété!' : '⏳ En cours'}</p>
-            <button class="game-btn" onclick="resetDaily()">Reset pour demain</button>
+        const info = document.getElementById('dailyInfo');
+        info.innerHTML = `
+            <p>📍 Explore 3 sujets</p>
+            <p>🎮 Joue 2 jeux</p>
+            <p>🥚 Trouve 2 easter eggs</p>
+            <button class="game-btn" onclick="alert('Défis quotidiens actifs!')">Voir Défis</button>
         `;
-    }
-
-    function updateLeaderboardModal() {
-        const board = document.getElementById('leaderboardInfo');
-        board.innerHTML = `
-            <p>🥇 1er: ${gameState.score} points</p>
-            <p>📊 Ton ranking sera basé sur ton score</p>
-            <p>Partage ton score pour le leaderboard global!</p>
-        `;
-    }
-
-    function resetDaily() {
-        gameState.dailyChallenges = { explored: 0, gamesPlayed: 0, eastereggs: 0, completed: false };
-        saveGame();
-        updateDailyModal();
     }
 
     // ========== UTILITAIRES ==========
-    function clearChat() {
-        document.getElementById('chatBox').innerHTML = '';
-        gameState.history = [];
-        saveGame();
-    }
-
-    function exportChat() {
-        const data = JSON.stringify(gameState, null, 2);
-        const blob = new Blob([data], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'chatbot_data.json';
-        a.click();
-    }
-
     function searchChat() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
+        const searchInput = document.getElementById('searchInput');
+        if (!searchInput) return;
+        
+        const query = searchInput.value.toLowerCase();
         const results = document.getElementById('searchResults');
         results.innerHTML = '';
-        gameState.history.filter(h => h.text.toLowerCase().includes(query)).forEach(h => {
-            const div = document.createElement('p');
-            div.innerHTML = `<strong>${h.sender}:</strong> ${h.text}`;
+        
+        const filtered = gameState.history.filter(h => h.text.toLowerCase().includes(query));
+        
+        if (filtered.length === 0) {
+            results.innerHTML = 'Aucun résultat trouvé.';
+            return;
+        }
+        
+        filtered.forEach(h => {
+            const div = document.createElement('div');
             div.style.fontSize = '0.85rem';
-            div.style.marginBottom = '5px';
-            div.style.padding = '5px';
+            div.style.marginBottom = '8px';
+            div.style.padding = '8px';
             div.style.background = 'rgba(0, 255, 204, 0.1)';
             div.style.borderRadius = '4px';
+            
+            const strong = document.createElement('strong');
+            strong.textContent = h.sender === 'user' ? 'Toi' : 'Bot';
+            
+            const textSpan = document.createElement('span');
+            textSpan.textContent = ': ' + h.text;
+            
+            div.appendChild(strong);
+            div.appendChild(textSpan);
             results.appendChild(div);
         });
     }
 
+    function exportChat() {
+        try {
+            const data = JSON.stringify(gameState, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `chatbot_data_${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            alert('✅ Chat exporté avec succès! 📥');
+        } catch (e) {
+            console.error('Erreur lors de l\'export:', e);
+            alert('❌ Erreur lors de l\'export du chat');
+        }
+    }
+
     function toggleTheme() {
-        document.body.classList.toggle('theme-disco');
-        localStorage.setItem('theme', document.body.classList.contains('theme-disco') ? 'disco' : 'default');
+        try {
+            document.body.classList.toggle('theme-disco');
+            const isDiscoMode = document.body.classList.contains('theme-disco');
+            localStorage.setItem('theme', isDiscoMode ? 'disco' : 'default');
+        } catch (e) {
+            console.error('Erreur lors du changement de thème:', e);
+        }
     }
 
     function toggleOLED() {
-        const isOLED = document.getElementById('oledToggle').checked;
-        if (isOLED) {
-            document.documentElement.style.setProperty('--bg-dark', '#000000');
-            document.documentElement.style.setProperty('--bg-card', '#000000');
+        try {
+            const isOLED = document.getElementById('oledToggle').checked;
+            if (isOLED) {
+                document.documentElement.style.setProperty('--bg-dark', '#000000');
+                document.documentElement.style.setProperty('--bg-card', '#000000');
+            } else {
+                document.documentElement.style.setProperty('--bg-dark', '#0a0e27');
+                document.documentElement.style.setProperty('--bg-card', '#1a1a2e');
+            }
+            localStorage.setItem('oled', isOLED ? 'true' : 'false');
+        } catch (e) {
+            console.error('Erreur lors du changement OLED:', e);
         }
-        localStorage.setItem('oled', isOLED);
     }
 
-    function toggleTTS() {
-        localStorage.setItem('tts', document.getElementById('ttsToggle').checked);
+    function switchToChat() {
+        const chatInput = document.getElementById('chatInput');
+        if (chatInput) {
+            chatInput.focus();
+        }
     }
 
-    function changeLanguage(lang) {
-        currentLang = lang;
-        localStorage.setItem('lang', lang);
-        location.reload();
-    }
-
-    function switchTab(tab) {
-        if (tab === 'chat') closeModal('profile');
-        else if (tab === 'profile') openModal('profile');
-        // ... autres tabs
+    function saveGame() {
+        try {
+            localStorage.setItem('gameState', JSON.stringify(gameState));
+        } catch (e) {
+            console.error('Erreur lors de la sauvegarde:', e);
+            if (e.name === 'QuotaExceededError') {
+                console.warn('⚠️ Stockage local plein! Certaines données ne seront pas sauvegardées.');
+            }
+        }
     }
 
     // ========== INITIALISATION ==========
     document.addEventListener('DOMContentLoaded', () => {
-        updateStats();
-        if (localStorage.getItem('theme') === 'disco') toggleTheme();
-        if (localStorage.getItem('oled')) document.getElementById('oledToggle').checked = true;
-        
-        const msg = document.createElement('div');
-        msg.className = 'msg-ia';
-        msg.innerHTML = `<span>Bienvenue sur ZyntraCode ChatBot V4 ULTIME! 🚀 Avec 18 features complètes: mini-jeux, achievements, daily challenges, leaderboard, TTS, multi-langue, et plus! Tape /help pour les commandes! 🎉</span>`;
-        document.getElementById('chatBox').appendChild(msg);
+        try {
+            updateStats();
+            
+            // Restaurer les thèmes sauvegardés
+            if (localStorage.getItem('theme') === 'disco') {
+                toggleTheme();
+            }
+            
+            if (localStorage.getItem('oled') === 'true') {
+                const oledToggle = document.getElementById('oledToggle');
+                if (oledToggle) {
+                    oledToggle.checked = true;
+                    toggleOLED();
+                }
+            }
 
-        document.getElementById('chatInput').focus();
+            // Message de bienvenue
+            const welcomeMsg = 'Bienvenue sur ZyntraCode ChatBot V4.1! 🚀 Avec mini-jeux, achievements, stats, défis quotidiens et bien plus! Tape /help pour les commandes! 🎉';
+            addMessage(welcomeMsg, 'bot');
+
+            // Setup input
+            const chatInput = document.getElementById('chatInput');
+            if (chatInput) {
+                chatInput.focus();
+                chatInput.placeholder = t('placeholder');
+            }
+            
+            const sendBtn = document.getElementById('sendBtnLang');
+            if (sendBtn) {
+                sendBtn.innerText = t('send');
+            }
+            
+            // Sauvegarde auto toutes les 5s
+            setInterval(saveGame, 5000);
+        } catch (e) {
+            console.error('Erreur lors de l\'initialisation:', e);
+            alert('❌ Erreur lors du chargement du chatbot');
+        }
     });
 
-    // Sauvegarde auto
-    setInterval(saveGame, 5000);
+    // Fermer modales au click extérieur
+    try {
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+    } catch (e) {
+        console.error('Erreur lors de l\'initialisation des modales:', e);
+    }
 </script>
 
 </body>
