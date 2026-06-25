@@ -285,65 +285,87 @@
     </div>
 
     <script>
+        let dernierContext = null; // Mémoire du dernier contexte
+
         const CONNAISSANCES = {
             salutation: {
                 mots: ["bonjour", "salut", "hello", "bonsoir", "hey", "coucou", "yo"],
                 reponses: [
-                    "Bonjour 👋 Comment je peux t'aider ?",
-                    "Salut 😊 Ça va ?",
-                    "Hello ! Quelque chose de spécifique ?",
-                    "Coucou 👻 Je suis là pour t'aider !"
-                ]
+                    "Salut 👋 Ça va toi ?",
+                    "Bonjour 😊 Comment tu vas ?",
+                    "Hello ! Ça va bien ?",
+                    "Coucou 👻 Et toi, ça va ?"
+                ],
+                context: "greeting"
             },
-            vabien: {
-                mots: ["Tu vas bien ?", "tu vas bien", "ça va ?"],
-                reponses: [
-                    "ça vas bien comment un robot et vous ?",
-                    "ça va, très bien et toi ?"
-                ]
+            reponsePositive: {
+                mots: ["oui", "ouais", "yep", "bien", "super", "tres bien", "très bien", "genial", "génial", "cool", "ok"],
+                reponses: function() {
+                    if (dernierContext === "greeting") {
+                        return [
+                            "Super ! 😊 Je vais bien aussi ! Comment je peux t'aider ?",
+                            "Trop bien 🎉 Du coup, sur quoi tu voudrais que je t'aide ?",
+                            "Excellent ! 🚀 Qu'est-ce que je peux faire pour toi ?",
+                            "Génial ! 😄 Dis-moi, comment je peux t'assister ?"
+                        ];
+                    }
+                    return [
+                        "C'est cool ! 😊",
+                        "Super ! 🎉",
+                        "Génial ! 🚀",
+                        "Trop bien ! 😄"
+                    ];
+                },
+                context: "positive"
             },
             identite: {
                 mots: ["qui es tu", "c'est quoi", "tu es quoi", "zyntracode"],
                 reponses: [
                     "Je suis l'IA de ZyntraCode 🤖 Une plateforme pour les jeux et scripts Python !",
                     "ZyntraCode est une plateforme gaming avec des jeux en HTML et des scripts Python 🚀"
-                ]
+                ],
+                context: "identite"
             },
             bot: {
                 mots: ["bot", "discord", "moderation", "moderion"],
                 reponses: [
                     "On a un super bot Discord avec moderation, economy, casino et bien plus 🎮",
                     "Ouais, notre bot Discord fait de tout : tickets, moderation, XP... 🤩"
-                ]
+                ],
+                context: "bot"
             },
             prix: {
                 mots: ["prix", "gratuit", "payant", "cout", "acheter"],
                 reponses: [
                     "Nos jeux sont super accessibles 💰 Les prix varient selon les produits !",
                     "ZyntraCode propose des scripts, e-books et des jeux à des bons prix 📚"
-                ]
+                ],
+                context: "prix"
             },
             contact: {
                 mots: ["contact", "email", "support", "aide", "probleme"],
                 reponses: [
                     "Tu peux nous contacter sur zyntracode.ch 📧",
                     "Besoin d'aide ? Va sur zyntracode.ch pour nous écrire ! 💬"
-                ]
+                ],
+                context: "contact"
             },
             jeux: {
                 mots: ["jeu", "game", "morpion", "rpg", "arena"],
                 reponses: [
                     "On a plein de jeux sympas : Zyntra Arena, RPG, Morpion... 🎮",
                     "Zyntra Arena c'est notre jeu de combat gratuit ! Tu peux aussi checker le RPG 🚀"
-                ]
+                ],
+                context: "jeux"
             },
             merci: {
-                mots: ["merci", "thanks", "merci beaucoup", "cool"],
+                mots: ["merci", "thanks", "merci beaucoup"],
                 reponses: [
                     "De rien ! 😊 Des questions ?",
                     "Avec plaisir ! 🎉 On est là pour toi !",
-                    "No problem ! À bientôt ! 👋"
-                ]
+                    "Pas de souci ! 👋"
+                ],
+                context: "merci"
             },
             aurevoir: {
                 mots: ["au revoir", "bye", "a+", "cya", "goodbye"],
@@ -351,7 +373,8 @@
                     "À bientôt ! 👋",
                     "Bye bye ! 😊",
                     "À plus tard ! 🚀"
-                ]
+                ],
+                context: "aurevoir"
             }
         };
 
@@ -363,9 +386,24 @@
                 const data = CONNAISSANCES[categorie];
                 for (const mot of data.mots) {
                     if (message.includes(mot)) {
-                        return data.reponses[
-                            Math.floor(Math.random() * data.reponses.length)
-                        ];
+                        // Récupère la réponse (fonction ou array)
+                        let reponse;
+                        if (typeof data.reponses === 'function') {
+                            reponse = data.reponses()[
+                                Math.floor(Math.random() * data.reponses().length)
+                            ];
+                        } else {
+                            reponse = data.reponses[
+                                Math.floor(Math.random() * data.reponses.length)
+                            ];
+                        }
+                        
+                        // Met à jour le contexte
+                        if (data.context) {
+                            dernierContext = data.context;
+                        }
+                        
+                        return reponse;
                     }
                 }
             }
