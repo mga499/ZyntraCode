@@ -6,84 +6,47 @@
 <title>Atelier — Porte-monnaie faits main</title>
 <style>
   :root{
-    --bg:#ffffff;
-    --ink:#1a1714;          /* presque noir, chaud */
-    --muted:#6b6259;        /* gris taupe */
-    --line:#ece7e0;         /* filets très clairs */
-    --cuir:#9c5a34;         /* accent cognac / cuir */
-    --cuir-d:#7c4526;
-    --card:#fbfaf8;         /* blanc cassé pour les cartes */
-    --radius:14px;
+    --bg:#ffffff;--ink:#1a1714;--muted:#6b6259;--line:#ece7e0;
+    --cuir:#9c5a34;--cuir-d:#7c4526;--card:#fbfaf8;--radius:14px;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--ink);
-    font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
-    line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-  }
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6;
+    -webkit-font-smoothing:antialiased}
   .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
-
-  /* ---------- Header ---------- */
-  header{
-    position:sticky;top:0;z-index:10;
-    background:rgba(255,255,255,.85);
-    backdrop-filter:saturate(180%) blur(10px);
-    border-bottom:1px solid var(--line);
-  }
+  header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.85);
+    backdrop-filter:saturate(180%) blur(10px);border-bottom:1px solid var(--line)}
   .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
-  .brand{
-    font-weight:700;letter-spacing:.04em;font-size:18px;text-transform:uppercase;
-    text-decoration:none;color:var(--ink);
-  }
+  .brand{font-weight:700;letter-spacing:.04em;font-size:18px;text-transform:uppercase;
+    text-decoration:none;color:var(--ink)}
   .brand span{color:var(--cuir)}
   .nav a.link{color:var(--muted);text-decoration:none;font-size:14px;margin-left:24px}
   .nav a.link:hover{color:var(--ink)}
   @media(max-width:560px){.nav a.link{display:none}}
-
-  /* ---------- Hero ---------- */
   .hero{padding:80px 0 56px;border-bottom:1px solid var(--line)}
-  .eyebrow{
-    font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--cuir);
-    font-weight:600;margin:0 0 16px;
-  }
-  .hero h1{
-    font-size:clamp(34px,6vw,56px);line-height:1.05;margin:0 0 18px;
-    font-weight:800;letter-spacing:-.02em;max-width:14ch;
-  }
+  .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--cuir);
+    font-weight:600;margin:0 0 16px}
+  .hero h1{font-size:clamp(34px,6vw,56px);line-height:1.05;margin:0 0 18px;
+    font-weight:800;letter-spacing:-.02em;max-width:14ch}
   .hero p{font-size:18px;color:var(--muted);max-width:52ch;margin:0 0 28px}
-  .btn{
-    display:inline-block;background:var(--cuir);color:#fff;text-decoration:none;
+  .btn{display:inline-block;background:var(--cuir);color:#fff;text-decoration:none;
     padding:13px 26px;border-radius:999px;font-weight:600;font-size:15px;
-    transition:background .15s ease, transform .15s ease;
-  }
+    transition:background .15s ease, transform .15s ease}
   .btn:hover{background:var(--cuir-d);transform:translateY(-1px)}
-
-  /* ---------- Section ---------- */
   .section{padding:64px 0}
-  .section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:32px;gap:16px;flex-wrap:wrap}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;
+    margin-bottom:32px;gap:16px;flex-wrap:wrap}
   .section-head h2{font-size:26px;font-weight:700;margin:0;letter-spacing:-.01em}
   .section-head .note{color:var(--muted);font-size:14px}
-
-  /* ---------- Cards ---------- */
-  .grid{
-    display:grid;gap:24px;
-    grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
-  }
-  .card{
-    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  .grid{display:grid;gap:24px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
     overflow:hidden;display:flex;flex-direction:column;
-    transition:transform .18s ease, box-shadow .18s ease;
-  }
+    transition:transform .18s ease, box-shadow .18s ease}
   .card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(26,23,20,.08)}
-  .thumb{
-    aspect-ratio:4/3;background:linear-gradient(135deg,#efe9e1,#e3d8cb);
+  .thumb{aspect-ratio:4/3;background:linear-gradient(135deg,#efe9e1,#e3d8cb);
     display:flex;align-items:center;justify-content:center;color:#b9a892;
-    font-size:13px;letter-spacing:.08em;text-transform:uppercase;
-  }
+    font-size:13px;letter-spacing:.08em;text-transform:uppercase}
   .thumb img{width:100%;height:100%;object-fit:cover;display:block}
   .card-body{padding:18px 18px 20px;display:flex;flex-direction:column;flex:1}
   .card-body h3{margin:0 0 6px;font-size:17px;font-weight:700}
@@ -91,21 +54,15 @@
   .card-foot{display:flex;align-items:center;justify-content:space-between}
   .price{font-weight:700;font-size:16px}
   .price small{color:var(--muted);font-weight:400;font-size:12px}
-  .order{
-    background:none;border:1px solid var(--cuir);color:var(--cuir);
+  .order{background:none;border:1px solid var(--cuir);color:var(--cuir);
     padding:8px 16px;border-radius:999px;font-weight:600;font-size:13px;cursor:pointer;
-    text-decoration:none;transition:background .15s ease,color .15s ease;
-  }
+    text-decoration:none;transition:background .15s ease,color .15s ease}
   .order:hover{background:var(--cuir);color:#fff}
-
-  /* ---------- Story strip ---------- */
   .story{background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .story .wrap{padding:56px 24px;display:grid;gap:32px;grid-template-columns:1fr 1fr}
   @media(max-width:680px){.story .wrap{grid-template-columns:1fr}}
   .story h2{font-size:24px;margin:0 0 12px}
   .story p{color:var(--muted);margin:0 0 12px}
-
-  /* ---------- Footer ---------- */
   footer{padding:40px 0;color:var(--muted);font-size:13px;text-align:center}
   footer a{color:var(--cuir);text-decoration:none}
 </style>
@@ -123,7 +80,6 @@
   </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
   <div class="wrap">
     <p class="eyebrow">Fait main · Valais, Suisse</p>
@@ -134,20 +90,16 @@
   </div>
 </section>
 
-<!-- PIECES -->
 <section class="section" id="pieces">
   <div class="wrap">
     <div class="section-head">
       <h2>Les pièces</h2>
       <span class="note">Fabriqué sur commande · 1 à 2 semaines</span>
     </div>
-
-    <!-- Les cartes sont générées depuis la liste plus bas. -->
     <div class="grid" id="grid"></div>
   </div>
 </section>
 
-<!-- STORY -->
 <section class="story" id="histoire">
   <div class="wrap">
     <div>
@@ -173,37 +125,62 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // ===== Tes pièces : modifie juste cette liste =====
-  // Pour une vraie photo : remplace "img:null" par img:"chemin/photo.jpg"
-  const pieces = [
-    { nom:"Porte-monnaie Simple",  desc:"Le modèle de base. Compact, deux compartiments, coutures à la main.", prix:39, img:null },
-    { nom:"Porte-monnaie Plat",    desc:"Ultra-fin pour la poche. Cartes + quelques billets.", prix:45, img:null },
-    { nom:"Porte-monnaie Zip",     desc:"Fermeture éclair, pour la monnaie. Solide au quotidien.", prix:49, img:null },
+  /* ===== CONFIG : mêmes valeurs que la page admin =====
+     L'anon key est publique par design — aucun risque.
+     Ne mets JAMAIS la service_role key ici. */
+  const SUPABASE_URL  = "https://nvvpvwqcjqujyzvdimix.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_7oQ8rUh7OCE0Uo-DUwSUcw_CKOPnCU4";
+  const CONTACT = "zyntracode@gmail.com"; // ton mail (ou lien Insta DM)
+
+  // Exemples affichés tant que Supabase n'est pas branché
+  const exemples = [
+    { nom:"Porte-monnaie Simple", description:"Le modèle de base. Deux compartiments, coutures à la main.", prix:39, image_url:null },
+    { nom:"Porte-monnaie Plat",   description:"Ultra-fin pour la poche. Cartes + quelques billets.", prix:45, image_url:null },
+    { nom:"Porte-monnaie Zip",    description:"Fermeture éclair, pour la monnaie. Solide au quotidien.", prix:49, image_url:null },
   ];
 
-  const CONTACT = "ton@email.ch"; // ← mets ton mail (ou un lien Insta DM)
-
   const grid = document.getElementById("grid");
-  grid.innerHTML = pieces.map(p => `
-    <article class="card">
-      <div class="thumb">
-        ${p.img ? `<img src="${p.img}" alt="${p.nom}">` : "Photo à venir"}
-      </div>
-      <div class="card-body">
-        <h3>${p.nom}</h3>
-        <p class="desc">${p.desc}</p>
-        <div class="card-foot">
-          <span class="price">${p.prix} CHF <small>fait main</small></span>
-          <a class="order"
-             href="mailto:${CONTACT}?subject=${encodeURIComponent('Commande : ' + p.nom)}">
-             Commander
-          </a>
-        </div>
-      </div>
-    </article>
-  `).join("");
-</script>
+  const configured = !SUPABASE_URL.includes("TON-PROJET") && !SUPABASE_ANON_KEY.includes("TON_");
 
+  function render(pieces){
+    if(!pieces.length){
+      grid.innerHTML = "<p style='color:var(--muted)'>Les pièces arrivent bientôt.</p>";
+      return;
+    }
+    grid.innerHTML = pieces.map(p => `
+      <article class="card">
+        <div class="thumb">
+          ${p.image_url ? `<img src="${p.image_url}" alt="${esc(p.nom)}">` : "Photo à venir"}
+        </div>
+        <div class="card-body">
+          <h3>${esc(p.nom)}</h3>
+          <p class="desc">${esc(p.description||"")}</p>
+          <div class="card-foot">
+            <span class="price">${p.prix ?? "—"} CHF <small>fait main</small></span>
+            <a class="order" href="mailto:${CONTACT}?subject=${encodeURIComponent('Commande : ' + p.nom)}">Commander</a>
+          </div>
+        </div>
+      </article>`).join("");
+  }
+
+  async function load(){
+    if(!configured){ render(exemples); return; }
+    try{
+      const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const { data, error } = await sb.from("products")
+        .select("*").eq("visible", true)
+        .order("ordre",{ascending:true}).order("created_at",{ascending:false});
+      if(error) throw error;
+      render(data);
+    }catch(e){ console.error(e); render(exemples); }
+  }
+
+  function esc(s){ return (s||"").replace(/[&<>"]/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+  load();
+</script>
 </body>
 </html>
