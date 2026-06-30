@@ -100,6 +100,24 @@
     <button id="loginBtn" class="btn">Se connecter</button>
   </div>
   <div id="loginMsg" class="msg"></div>
+
+  <!-- =====================================================
+       PREMIÈRE FOIS UNIQUEMENT : créer ton compte admin.
+       Remplis e-mail + mot de passe ci-dessus, clique le
+       bouton, puis SUPPRIME tout ce bloc <details>…</details>.
+       Le mot de passe n'est jamais stocké en clair : Supabase
+       le hache automatiquement. Tu ne le vois nulle part.
+       ===================================================== -->
+  <details id="signupBox" style="margin-top:22px;border-top:1px solid var(--line);padding-top:16px">
+    <summary style="cursor:pointer;color:var(--muted);font-size:13px">Première fois ? Créer le compte</summary>
+    <p style="color:var(--muted);font-size:13px;margin:10px 0 4px">
+      Utilise les champs ci-dessus, puis clique. À faire <b>une seule fois</b>,
+      ensuite supprime ce bloc du code.
+    </p>
+    <button id="signupBtn" class="btn ghost" style="margin-top:8px">Créer mon compte admin</button>
+    <div id="signupMsg" class="msg"></div>
+  </details>
+  <!-- ===== FIN DU BLOC À SUPPRIMER APRÈS USAGE ===== -->
 </div>
 
 <!-- ===== PANEL ===== -->
@@ -159,8 +177,8 @@
      L'ANON KEY est faite pour être publique : aucun risque ici.
      ⚠️ NE METS JAMAIS la "service_role" key dans cette page.
      =========================================================== */
-  const SUPABASE_URL  = "https://nvvpvwqcjqujyzvdimix.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_7oQ8rUh7OCE0Uo-DUwSUcw_CKOPnCU4";
+  const SUPABASE_URL  = "https://TON-PROJET.supabase.co";
+  const SUPABASE_ANON_KEY = "TON_ANON_KEY";
   const BUCKET = "produits";
   /* =========================================================== */
 
@@ -204,6 +222,26 @@
     else { m.textContent = ""; }
   };
   $("logoutBtn").onclick = () => sb.auth.signOut();
+
+  /* ---------- Créer le compte (À USAGE UNIQUE) ----------
+     Envoie e-mail + mot de passe à Supabase, qui les hache
+     et les range en sécurité. Rien n'est stocké en clair. */
+  const signupBtn = $("signupBtn");
+  if(signupBtn){
+    signupBtn.onclick = async () => {
+      const email = $("email").value.trim();
+      const password = $("pass").value;
+      const m = $("signupMsg");
+      if(!email || password.length < 6){
+        m.textContent = "Mets un e-mail et un mot de passe d'au moins 6 caractères."; m.className="msg err"; return;
+      }
+      m.textContent = "Création…"; m.className = "msg";
+      const { error } = await sb.auth.signUp({ email, password });
+      if(error){ m.textContent = "Erreur : " + error.message; m.className = "msg err"; return; }
+      m.textContent = "Compte créé ✓ Tu peux te connecter. (Supprime ce bloc du code maintenant.)";
+      m.className = "msg ok";
+    };
+  }
 
   /* ---------- Aperçu photo ---------- */
   $("image").onchange = e => {
