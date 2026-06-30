@@ -5,10 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Atelier — Admin</title>
 <style>
-  :root{
-    --bg:#ffffff;--ink:#1a1714;--muted:#6b6259;--line:#ece7e0;
-    --cuir:#9c5a34;--cuir-d:#7c4526;--card:#fbfaf8;--ok:#2f7d4f;--err:#b23b3b;
-  }
+  :root{--bg:#fff;--ink:#1a1714;--muted:#6b6259;--line:#ece7e0;
+    --cuir:#9c5a34;--cuir-d:#7c4526;--card:#fbfaf8;--ok:#2f7d4f;--err:#b23b3b}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
     font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.55}
@@ -26,31 +24,25 @@
   .btn.danger{background:none;color:var(--err);border:1px solid var(--err)}
   .btn.danger:hover{background:var(--err);color:#fff}
   .hidden{display:none!important}
-
-  /* Login */
   .login{max-width:380px;margin:80px auto;padding:32px;border:1px solid var(--line);
     border-radius:16px;background:var(--card)}
   .login h1{margin:0 0 6px;font-size:22px}
   .login p{margin:0 0 22px;color:var(--muted);font-size:14px}
-
   label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px;color:var(--ink)}
   input,textarea{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;
     font-family:inherit;font-size:15px;background:#fff;color:var(--ink)}
   input:focus,textarea:focus{outline:none;border-color:var(--cuir)}
   textarea{resize:vertical;min-height:70px}
-
+  .code-input{letter-spacing:.4em;text-align:center;font-size:20px;font-weight:700}
   .msg{font-size:13px;margin-top:14px;min-height:18px}
   .msg.ok{color:var(--ok)} .msg.err{color:var(--err)}
-
-  /* Panel */
   .panel{padding:36px 0}
-  .form-card{border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--card);margin-bottom:36px}
+  .form-card{border:1px solid var(--line);border-radius:16px;padding:24px;background:var(--card);margin-bottom:28px}
   .form-card h2{margin:0 0 4px;font-size:18px}
   .form-card .sub{color:var(--muted);font-size:13px;margin:0 0 8px}
   .row{display:grid;grid-template-columns:1fr 140px;gap:16px}
   @media(max-width:520px){.row{grid-template-columns:1fr}}
-  .actions{display:flex;gap:10px;margin-top:18px;align-items:center}
-
+  .actions{display:flex;gap:10px;margin-top:18px;align-items:center;flex-wrap:wrap}
   .list h2{font-size:18px;margin:0 0 16px}
   .item{display:flex;gap:16px;align-items:center;border:1px solid var(--line);
     border-radius:12px;padding:12px;margin-bottom:12px;background:#fff}
@@ -65,10 +57,17 @@
   .pill{font-size:11px;padding:2px 8px;border-radius:999px;background:#eee;color:#666;margin-left:8px}
   .pill.off{background:#f3e0e0;color:var(--err)}
   .preview{width:90px;height:90px;border-radius:10px;object-fit:cover;margin-top:8px;display:none}
-
   .warn{background:#fff7ed;border:1px solid #f5d9b8;color:#8a5a1e;
     border-radius:12px;padding:14px 16px;font-size:13px;margin:24px 0}
   code{background:#f0ece6;padding:1px 6px;border-radius:5px;font-size:12px}
+  .mfa-card{border:1px solid var(--line);border-radius:16px;padding:20px;background:#fff;margin-bottom:28px}
+  .mfa-card h2{margin:0 0 4px;font-size:16px}
+  .mfa-card .sub{color:var(--muted);font-size:13px;margin:0 0 10px}
+  #qrBox{margin:14px 0}
+  #qrBox img{width:180px;height:180px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:8px}
+  .secret{font-family:monospace;font-size:12px;background:#f0ece6;padding:6px 8px;border-radius:6px;word-break:break-all}
+  .badge{font-size:12px;padding:3px 10px;border-radius:999px;font-weight:600}
+  .badge.on{background:#e3f3e9;color:var(--ok)} .badge.off{background:#f3e0e0;color:var(--err)}
 </style>
 </head>
 <body>
@@ -80,62 +79,90 @@
   </div>
 </header>
 
-<!-- Avertissement config -->
 <div class="wrap">
   <div id="configWarn" class="warn hidden">
-    ⚠️ Supabase n'est pas encore configuré. Renseigne <code>SUPABASE_URL</code> et
-    <code>SUPABASE_ANON_KEY</code> en haut du script de cette page.
+    ⚠️ Supabase pas configuré. Renseigne <code>SUPABASE_URL</code>, <code>SUPABASE_ANON_KEY</code>
+    et <code>ADMIN_EMAIL</code> en haut du script.
   </div>
 </div>
 
-<!-- ===== LOGIN ===== -->
+<!-- ===== CONNEXION ===== -->
 <div id="loginView" class="login hidden">
   <h1>Connexion</h1>
-  <p>Espace réservé. Connecte-toi avec ton compte Supabase.</p>
-  <label for="email">E-mail</label>
-  <input id="email" type="email" autocomplete="username" placeholder="toi@email.ch">
-  <label for="pass">Mot de passe</label>
-  <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••">
-  <div class="actions" style="margin-top:20px">
-    <button id="loginBtn" class="btn">Se connecter</button>
+  <p>Espace réservé.</p>
+
+  <!-- étape 1 : mot de passe -->
+  <div id="step1">
+    <label for="pass">Mot de passe</label>
+    <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••">
+    <div class="actions" style="margin-top:18px">
+      <button id="loginBtn" class="btn">Continuer</button>
+    </div>
   </div>
+
+  <!-- étape 2 : code 2FA (apparaît si la 2FA est active) -->
+  <div id="step2" class="hidden">
+    <label for="code">Code de l'application (6 chiffres)</label>
+    <input id="code" class="code-input" inputmode="numeric" maxlength="6" placeholder="······">
+    <div class="actions" style="margin-top:18px">
+      <button id="verifyBtn" class="btn">Valider le code</button>
+      <button id="backBtn" class="btn ghost">Retour</button>
+    </div>
+  </div>
+
   <div id="loginMsg" class="msg"></div>
 
-  <!-- =====================================================
-       PREMIÈRE FOIS UNIQUEMENT : créer ton compte admin.
-       Remplis e-mail + mot de passe ci-dessus, clique le
-       bouton, puis SUPPRIME tout ce bloc <details>…</details>.
-       Le mot de passe n'est jamais stocké en clair : Supabase
-       le hache automatiquement. Tu ne le vois nulle part.
-       ===================================================== -->
+  <!-- ====== PREMIÈRE FOIS : enregistrer le mot de passe ======
+       À faire UNE SEULE FOIS, puis supprime ce bloc <details>. -->
   <details id="signupBox" style="margin-top:22px;border-top:1px solid var(--line);padding-top:16px">
-    <summary style="cursor:pointer;color:var(--muted);font-size:13px">Première fois ? Créer le compte</summary>
+    <summary style="cursor:pointer;color:var(--muted);font-size:13px">Première fois ? Enregistrer le mot de passe</summary>
     <p style="color:var(--muted);font-size:13px;margin:10px 0 4px">
-      Utilise les champs ci-dessus, puis clique. À faire <b>une seule fois</b>,
+      Tape ton mot de passe deux fois, clique, et c'est enregistré. À faire <b>une seule fois</b>,
       ensuite supprime ce bloc du code.
     </p>
-    <button id="signupBtn" class="btn ghost" style="margin-top:8px">Créer mon compte admin</button>
+    <label for="newPass">Mot de passe</label>
+    <input id="newPass" type="password" placeholder="6 caractères minimum">
+    <label for="newPass2">Confirme le mot de passe</label>
+    <input id="newPass2" type="password" placeholder="le même">
+    <button id="signupBtn" class="btn ghost" style="margin-top:12px">Enregistrer le mot de passe</button>
     <div id="signupMsg" class="msg"></div>
   </details>
-  <!-- ===== FIN DU BLOC À SUPPRIMER APRÈS USAGE ===== -->
+  <!-- ====== FIN DU BLOC À SUPPRIMER ====== -->
 </div>
 
 <!-- ===== PANEL ===== -->
 <div id="panelView" class="panel hidden">
   <div class="wrap">
 
+    <!-- 2FA -->
+    <div class="mfa-card">
+      <h2>Double sécurité (2FA) <span id="mfaBadge" class="badge off">désactivée</span></h2>
+      <p class="sub">Ajoute un code d'application à ton mot de passe. Sans ton téléphone, personne n'entre.</p>
+      <button id="enrollBtn" class="btn">Activer la 2FA</button>
+      <div id="enrollArea" class="hidden">
+        <div id="qrBox"><img id="qrImg" alt="QR code 2FA"></div>
+        <p class="sub">1. Scanne ce QR avec ton app (Google Authenticator, Authy…).<br>
+           Si le scan ne marche pas, entre ce code à la main :</p>
+        <div class="secret" id="secretTxt"></div>
+        <label for="enrollCode" style="margin-top:14px">2. Tape le code à 6 chiffres affiché par l'app</label>
+        <input id="enrollCode" class="code-input" inputmode="numeric" maxlength="6" placeholder="······">
+        <div class="actions">
+          <button id="enrollConfirm" class="btn">Confirmer</button>
+          <button id="enrollCancel" class="btn ghost">Annuler</button>
+        </div>
+        <div id="enrollMsg" class="msg"></div>
+      </div>
+    </div>
+
+    <!-- Formulaire produit -->
     <div class="form-card">
       <h2 id="formTitle">Ajouter une pièce</h2>
       <p class="sub">Remplis les champs, ajoute une photo, et enregistre.</p>
-
       <input id="editId" type="hidden">
-
       <label for="nom">Nom</label>
       <input id="nom" type="text" placeholder="Porte-monnaie Simple">
-
       <label for="desc">Description</label>
       <textarea id="desc" placeholder="Compact, deux compartiments, coutures à la main."></textarea>
-
       <div class="row">
         <div>
           <label for="image">Photo</label>
@@ -149,11 +176,9 @@
           <input id="ordre" type="number" step="1" value="0">
         </div>
       </div>
-
       <label style="display:flex;align-items:center;gap:8px;margin-top:16px;font-weight:500">
         <input id="visible" type="checkbox" checked style="width:auto"> Visible sur le site
       </label>
-
       <div class="actions">
         <button id="saveBtn" class="btn">Enregistrer</button>
         <button id="cancelBtn" class="btn ghost hidden">Annuler</button>
@@ -165,101 +190,150 @@
       <h2>Tes pièces</h2>
       <div id="items"></div>
     </div>
-
   </div>
 </div>
 
-<!-- Supabase client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   /* ===========================================================
-     1) CONFIG — remplace par tes valeurs (Supabase → Settings → API)
-     L'ANON KEY est faite pour être publique : aucun risque ici.
-     ⚠️ NE METS JAMAIS la "service_role" key dans cette page.
+     CONFIG
+     - anon key = publique, aucun risque.
+     - NE METS JAMAIS la service_role key ici.
+     - ADMIN_EMAIL = identifiant interne caché (tu ne le tapes jamais).
+       Conseil : mets un VRAI e-mail à toi → tu pourras récupérer
+       ton mot de passe si tu l'oublies. Un e-mail bidon marche
+       aussi mais alors aucune récupération possible.
      =========================================================== */
   const SUPABASE_URL  = "https://nvvpvwqcjqujyzvdimix.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_7oQ8rUh7OCE0Uo-DUwSUcw_CKOPnCU4";
+  const ADMIN_EMAIL = "zyntracode@gmail.com";  // identifiant interne, caché
   const BUCKET = "produits";
   /* =========================================================== */
 
-  const configured = !SUPABASE_URL.includes("TON-PROJET") && !SUPABASE_ANON_KEY.includes("TON_");
+  const $ = id => document.getElementById(id);
+  const configured = !SUPABASE_URL.includes("TON-PROJET")
+                  && !SUPABASE_ANON_KEY.includes("TON_");
   let sb = null;
 
-  const $ = id => document.getElementById(id);
-  const loginView = $("loginView"), panelView = $("panelView");
-
-  function show(el){ el.classList.remove("hidden"); }
-  function hide(el){ el.classList.add("hidden"); }
-
   if(!configured){
-    show($("configWarn"));
-    show(loginView);
-    $("loginMsg").textContent = "Configure Supabase d'abord (voir le haut du script).";
+    $("configWarn").classList.remove("hidden");
+    $("loginView").classList.remove("hidden");
+    $("loginMsg").textContent = "Configure Supabase d'abord.";
     $("loginMsg").className = "msg err";
   } else {
     sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    init();
+    sb.auth.onAuthStateChange(() => route());
+    route();
   }
 
-  async function init(){
+  /* ---------- Routage selon session + niveau 2FA ---------- */
+  async function route(){
     const { data:{ session } } = await sb.auth.getSession();
-    route(session);
-    sb.auth.onAuthStateChange((_e, s) => route(s));
+    if(!session){ showLogin(); return; }
+    const { data: aal } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
+    if(aal && aal.nextLevel === "aal2" && aal.currentLevel !== "aal2"){
+      showLogin(); showStep(2); return;   // 2FA exigée : demande le code
+    }
+    showPanel();
   }
 
-  function route(session){
-    if(session){ hide(loginView); show(panelView); show($("logoutBtn")); loadProducts(); }
-    else { show(loginView); hide(panelView); hide($("logoutBtn")); }
+  function showLogin(){ $("loginView").classList.remove("hidden");
+    $("panelView").classList.add("hidden"); $("logoutBtn").classList.add("hidden"); showStep(1); }
+  function showPanel(){ $("loginView").classList.add("hidden");
+    $("panelView").classList.remove("hidden"); $("logoutBtn").classList.remove("hidden");
+    refreshMfaBadge(); loadProducts(); }
+  function showStep(n){
+    $("step1").classList.toggle("hidden", n!==1);
+    $("step2").classList.toggle("hidden", n!==2);
   }
 
-  /* ---------- Login / Logout ---------- */
+  /* ---------- Connexion : mot de passe ---------- */
   $("loginBtn").onclick = async () => {
-    const email = $("email").value.trim();
-    const password = $("pass").value;
     const m = $("loginMsg"); m.textContent = "Connexion…"; m.className = "msg";
-    const { error } = await sb.auth.signInWithPassword({ email, password });
-    if(error){ m.textContent = "Identifiants incorrects."; m.className = "msg err"; }
-    else { m.textContent = ""; }
+    const { error } = await sb.auth.signInWithPassword({
+      email: ADMIN_EMAIL, password: $("pass").value });
+    if(error){ m.textContent = "Mot de passe incorrect."; m.className = "msg err"; return; }
+    m.textContent = "";
+    route(); // décide : panel direct, ou demande le code 2FA
   };
+
+  /* ---------- Connexion : code 2FA ---------- */
+  $("verifyBtn").onclick = async () => {
+    const m = $("loginMsg"); m.textContent = "Vérification…"; m.className = "msg";
+    const { data: factors } = await sb.auth.mfa.listFactors();
+    const totp = (factors.totp || []).find(f => f.status === "verified") || (factors.totp||[])[0];
+    if(!totp){ m.textContent = "Aucun facteur 2FA trouvé."; m.className="msg err"; return; }
+    const { data: ch, error: e1 } = await sb.auth.mfa.challenge({ factorId: totp.id });
+    if(e1){ m.textContent = "Erreur."; m.className="msg err"; return; }
+    const { error: e2 } = await sb.auth.mfa.verify({
+      factorId: totp.id, challengeId: ch.id, code: $("code").value.trim() });
+    if(e2){ m.textContent = "Code incorrect."; m.className = "msg err"; return; }
+    m.textContent = ""; route();
+  };
+  $("backBtn").onclick = () => { sb.auth.signOut(); showStep(1); };
   $("logoutBtn").onclick = () => sb.auth.signOut();
 
-  /* ---------- Créer le compte (À USAGE UNIQUE) ----------
-     Envoie e-mail + mot de passe à Supabase, qui les hache
-     et les range en sécurité. Rien n'est stocké en clair. */
+  /* ---------- Enregistrer le mot de passe (UNE FOIS) ---------- */
   const signupBtn = $("signupBtn");
   if(signupBtn){
     signupBtn.onclick = async () => {
-      const email = $("email").value.trim();
-      const password = $("pass").value;
-      const m = $("signupMsg");
-      if(!email || password.length < 6){
-        m.textContent = "Mets un e-mail et un mot de passe d'au moins 6 caractères."; m.className="msg err"; return;
-      }
-      m.textContent = "Création…"; m.className = "msg";
-      const { error } = await sb.auth.signUp({ email, password });
+      const p1 = $("newPass").value, p2 = $("newPass2").value, m = $("signupMsg");
+      if(p1.length < 6){ m.textContent = "6 caractères minimum."; m.className="msg err"; return; }
+      if(p1 !== p2){ m.textContent = "Les deux mots de passe sont différents."; m.className="msg err"; return; }
+      m.textContent = "Enregistrement…"; m.className = "msg";
+      const { error } = await sb.auth.signUp({ email: ADMIN_EMAIL, password: p1 });
       if(error){ m.textContent = "Erreur : " + error.message; m.className = "msg err"; return; }
-      m.textContent = "Compte créé ✓ Tu peux te connecter. (Supprime ce bloc du code maintenant.)";
+      m.textContent = "Mot de passe enregistré ✓ Connecte-toi, puis active la 2FA. (Supprime ce bloc.)";
       m.className = "msg ok";
     };
   }
 
-  /* ---------- Aperçu photo ---------- */
+  /* ---------- Activer la 2FA ---------- */
+  let enrollFactorId = null;
+  $("enrollBtn").onclick = async () => {
+    const { data, error } = await sb.auth.mfa.enroll({ factorType: "totp", friendlyName: "Atelier" });
+    if(error){ alert("Erreur 2FA : " + error.message); return; }
+    enrollFactorId = data.id;
+    $("qrImg").src = data.totp.qr_code;       // QR à scanner
+    $("secretTxt").textContent = data.totp.secret; // code manuel de secours
+    $("enrollArea").classList.remove("hidden");
+    $("enrollBtn").classList.add("hidden");
+  };
+  $("enrollConfirm").onclick = async () => {
+    const m = $("enrollMsg"); m.textContent = "Vérification…"; m.className="msg";
+    const { data: ch, error: e1 } = await sb.auth.mfa.challenge({ factorId: enrollFactorId });
+    if(e1){ m.textContent = "Erreur."; m.className="msg err"; return; }
+    const { error: e2 } = await sb.auth.mfa.verify({
+      factorId: enrollFactorId, challengeId: ch.id, code: $("enrollCode").value.trim() });
+    if(e2){ m.textContent = "Code incorrect, réessaie."; m.className="msg err"; return; }
+    m.textContent = "2FA activée ✓"; m.className="msg ok";
+    $("enrollArea").classList.add("hidden"); refreshMfaBadge();
+  };
+  $("enrollCancel").onclick = () => {
+    if(enrollFactorId) sb.auth.mfa.unenroll({ factorId: enrollFactorId });
+    $("enrollArea").classList.add("hidden"); $("enrollBtn").classList.remove("hidden");
+  };
+  async function refreshMfaBadge(){
+    const { data } = await sb.auth.mfa.listFactors();
+    const on = (data?.totp || []).some(f => f.status === "verified");
+    const b = $("mfaBadge");
+    b.textContent = on ? "activée" : "désactivée";
+    b.className = "badge " + (on ? "on" : "off");
+    $("enrollBtn").classList.toggle("hidden", on);
+  }
+
+  /* ---------- Produits ---------- */
   $("image").onchange = e => {
-    const f = e.target.files[0];
-    const p = $("preview");
-    if(f){ p.src = URL.createObjectURL(f); p.style.display = "block"; }
-    else { p.style.display = "none"; }
+    const f = e.target.files[0], p = $("preview");
+    if(f){ p.src = URL.createObjectURL(f); p.style.display = "block"; } else p.style.display = "none";
   };
 
-  /* ---------- Charger les pièces ---------- */
   async function loadProducts(){
-    const box = $("items");
-    box.innerHTML = "Chargement…";
-    const { data, error } = await sb.from("products")
-      .select("*").order("ordre",{ascending:true}).order("created_at",{ascending:false});
+    const box = $("items"); box.innerHTML = "Chargement…";
+    const { data, error } = await sb.from("products").select("*")
+      .order("ordre",{ascending:true}).order("created_at",{ascending:false});
     if(error){ box.innerHTML = "Erreur de chargement."; return; }
-    if(!data.length){ box.innerHTML = "<p style='color:var(--muted)'>Aucune pièce pour l'instant.</p>"; return; }
-
+    if(!data.length){ box.innerHTML = "<p style='color:var(--muted)'>Aucune pièce.</p>"; return; }
     box.innerHTML = data.map(p => `
       <div class="item">
         ${p.image_url ? `<img src="${p.image_url}" alt="">` : `<div class="ph"></div>`}
@@ -273,26 +347,21 @@
           <button class="btn danger" data-del="${p.id}" data-img="${p.image_url||""}">Suppr.</button>
         </div>
       </div>`).join("");
-
     box.querySelectorAll("[data-edit]").forEach(b =>
       b.onclick = () => startEdit(data.find(x => x.id === b.dataset.edit)));
     box.querySelectorAll("[data-del]").forEach(b =>
       b.onclick = () => removeProduct(b.dataset.del, b.dataset.img));
   }
 
-  /* ---------- Enregistrer (ajout ou modif) ---------- */
   $("saveBtn").onclick = async () => {
     const m = $("formMsg"); m.textContent = "Enregistrement…"; m.className = "msg";
-    const id = $("editId").value;
-    const file = $("image").files[0];
-
+    const id = $("editId").value, file = $("image").files[0];
     let image_url = $("preview").dataset.existing || null;
     if(file){
       const url = await uploadImage(file);
-      if(!url){ m.textContent = "Échec de l'upload de l'image."; m.className="msg err"; return; }
+      if(!url){ m.textContent = "Échec upload image."; m.className="msg err"; return; }
       image_url = url;
     }
-
     const payload = {
       nom: $("nom").value.trim(),
       description: $("desc").value.trim(),
@@ -301,19 +370,14 @@
       visible: $("visible").checked,
     };
     if(image_url) payload.image_url = image_url;
-
     if(!payload.nom){ m.textContent = "Le nom est obligatoire."; m.className="msg err"; return; }
-
     let error;
     if(id){ ({ error } = await sb.from("products").update(payload).eq("id", id)); }
     else  { ({ error } = await sb.from("products").insert(payload)); }
-
     if(error){ m.textContent = "Erreur : " + error.message; m.className = "msg err"; return; }
-    m.textContent = "Enregistré ✓"; m.className = "msg ok";
-    resetForm(); loadProducts();
+    m.textContent = "Enregistré ✓"; m.className = "msg ok"; resetForm(); loadProducts();
   };
 
-  /* ---------- Upload image ---------- */
   async function uploadImage(file){
     const ext = (file.name.split(".").pop()||"jpg").toLowerCase();
     const path = `${crypto.randomUUID()}.${ext}`;
@@ -322,43 +386,31 @@
     return sb.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
   }
 
-  /* ---------- Edit / Cancel / Delete ---------- */
   function startEdit(p){
     $("formTitle").textContent = "Modifier la pièce";
-    $("editId").value = p.id;
-    $("nom").value = p.nom || "";
-    $("desc").value = p.description || "";
-    $("prix").value = p.prix ?? "";
-    $("ordre").value = p.ordre ?? 0;
-    $("visible").checked = !!p.visible;
+    $("editId").value = p.id; $("nom").value = p.nom||""; $("desc").value = p.description||"";
+    $("prix").value = p.prix ?? ""; $("ordre").value = p.ordre ?? 0; $("visible").checked = !!p.visible;
     const prev = $("preview");
-    if(p.image_url){ prev.src = p.image_url; prev.style.display="block"; prev.dataset.existing = p.image_url; }
-    else { prev.style.display="none"; prev.dataset.existing = ""; }
-    $("image").value = "";
-    show($("cancelBtn"));
+    if(p.image_url){ prev.src=p.image_url; prev.style.display="block"; prev.dataset.existing=p.image_url; }
+    else { prev.style.display="none"; prev.dataset.existing=""; }
+    $("image").value=""; $("cancelBtn").classList.remove("hidden");
     window.scrollTo({top:0,behavior:"smooth"});
   }
   $("cancelBtn").onclick = resetForm;
   function resetForm(){
     $("formTitle").textContent = "Ajouter une pièce";
-    ["editId","nom","desc","prix"].forEach(i => $(i).value = "");
-    $("ordre").value = 0; $("visible").checked = true;
-    const prev = $("preview"); prev.style.display="none"; prev.dataset.existing=""; $("image").value="";
-    hide($("cancelBtn")); $("formMsg").textContent = "";
+    ["editId","nom","desc","prix"].forEach(i => $(i).value="");
+    $("ordre").value=0; $("visible").checked=true;
+    const prev=$("preview"); prev.style.display="none"; prev.dataset.existing=""; $("image").value="";
+    $("cancelBtn").classList.add("hidden"); $("formMsg").textContent="";
   }
-
   async function removeProduct(id, imgUrl){
     if(!confirm("Supprimer cette pièce ?")) return;
     const { error } = await sb.from("products").delete().eq("id", id);
     if(error){ alert("Erreur : " + error.message); return; }
-    // supprime aussi le fichier image du stockage si présent
-    if(imgUrl){
-      const path = imgUrl.split(`/${BUCKET}/`)[1];
-      if(path) sb.storage.from(BUCKET).remove([path]);
-    }
+    if(imgUrl){ const path = imgUrl.split(`/${BUCKET}/`)[1]; if(path) sb.storage.from(BUCKET).remove([path]); }
     loadProducts();
   }
-
   function esc(s){ return (s||"").replace(/[&<>"]/g, c =>
     ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
 </script>
