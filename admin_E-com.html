@@ -157,6 +157,8 @@
     <div class="account-card">
       <h2>Mon compte</h2>
       <p class="sub">Changer ton mot de passe. Le nouveau remplace l'ancien (toujours haché, jamais en clair).</p>
+      <label for="pwCur">Mot de passe actuel</label>
+      <input id="pwCur" type="password" autocomplete="current-password" placeholder="ton mot de passe actuel">
       <label for="pwA">Nouveau mot de passe</label>
       <input id="pwA" type="password" autocomplete="new-password" placeholder="6 caractères minimum">
       <label for="pwB">Confirme le nouveau mot de passe</label>
@@ -298,14 +300,20 @@
 
   /* ---------- CHANGER le mot de passe (connecté) ---------- */
   $("changePwBtn").onclick = async () => {
-    const p1 = $("pwA").value, p2 = $("pwB").value, m = $("changePwMsg");
-    if(p1.length < 6){ m.textContent = "6 caractères minimum."; m.className="msg err"; return; }
-    if(p1 !== p2){ m.textContent = "Les deux mots de passe sont différents."; m.className="msg err"; return; }
-    m.textContent = "Changement…"; m.className = "msg";
+    const cur = $("pwCur").value, p1 = $("pwA").value, p2 = $("pwB").value, m = $("changePwMsg");
+    if(!cur){ m.textContent = "Entre ton mot de passe actuel."; m.className="msg err"; return; }
+    if(p1.length < 6){ m.textContent = "Le nouveau doit faire 6 caractères minimum."; m.className="msg err"; return; }
+    if(p1 !== p2){ m.textContent = "Les deux nouveaux mots de passe sont différents."; m.className="msg err"; return; }
+    if(p1 === cur){ m.textContent = "Le nouveau est identique à l'ancien."; m.className="msg err"; return; }
+    m.textContent = "Vérification…"; m.className = "msg";
+    // 1) on revérifie l'ancien mot de passe
+    const { error: eVerif } = await sb.auth.signInWithPassword({ email: ADMIN_EMAIL, password: cur });
+    if(eVerif){ m.textContent = "Mot de passe actuel incorrect."; m.className="msg err"; return; }
+    // 2) on applique le nouveau
     const { error } = await sb.auth.updateUser({ password: p1 });
     if(error){ m.textContent = "Erreur : " + error.message; m.className = "msg err"; return; }
     m.textContent = "Mot de passe changé ✓"; m.className = "msg ok";
-    $("pwA").value = ""; $("pwB").value = "";
+    $("pwCur").value = ""; $("pwA").value = ""; $("pwB").value = "";
   };
 
   /* ---------- 2FA : activer / désactiver ---------- */
