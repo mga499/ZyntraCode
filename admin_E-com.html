@@ -208,7 +208,7 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.102.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   /* ===========================================================
      CONFIG
@@ -308,11 +308,7 @@
     m.textContent = "Changement…"; m.className = "msg";
     // Supabase vérifie le mot de passe actuel côté serveur (currentPassword)
     const { error } = await sb.auth.updateUser({ password: p1, currentPassword: cur });
-    if(error){
-      const em = /current password|incorrect|invalid/i.test(error.message)
-        ? "Mot de passe actuel incorrect." : ("Erreur : " + error.message);
-      m.textContent = em; m.className = "msg err"; return;
-    }
+    if(error){ m.textContent = "Erreur : " + error.message; m.className = "msg err"; return; }
     m.textContent = "Mot de passe changé ✓"; m.className = "msg ok";
     $("pwCur").value = ""; $("pwA").value = ""; $("pwB").value = "";
   };
