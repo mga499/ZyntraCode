@@ -60,9 +60,9 @@
   .warn{background:#fff7ed;border:1px solid #f5d9b8;color:#8a5a1e;
     border-radius:12px;padding:14px 16px;font-size:13px;margin:24px 0}
   code{background:#f0ece6;padding:1px 6px;border-radius:5px;font-size:12px}
-  .mfa-card{border:1px solid var(--line);border-radius:16px;padding:20px;background:#fff;margin-bottom:28px}
-  .mfa-card h2{margin:0 0 4px;font-size:16px}
-  .mfa-card .sub{color:var(--muted);font-size:13px;margin:0 0 10px}
+  .mfa-card,.account-card{border:1px solid var(--line);border-radius:16px;padding:20px;background:#fff;margin-bottom:28px}
+  .mfa-card h2,.account-card h2{margin:0 0 4px;font-size:16px}
+  .mfa-card .sub,.account-card .sub{color:var(--muted);font-size:13px;margin:0 0 10px}
   #qrBox{margin:14px 0}
   #qrBox img{width:180px;height:180px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:8px}
   .secret{font-family:monospace;font-size:12px;background:#f0ece6;padding:6px 8px;border-radius:6px;word-break:break-all}
@@ -91,7 +91,6 @@
   <h1>Connexion</h1>
   <p>Espace réservé.</p>
 
-  <!-- étape 1 : mot de passe -->
   <div id="step1">
     <label for="pass">Mot de passe</label>
     <input id="pass" type="password" autocomplete="current-password" placeholder="••••••••">
@@ -100,7 +99,6 @@
     </div>
   </div>
 
-  <!-- étape 2 : code 2FA (apparaît si la 2FA est active) -->
   <div id="step2" class="hidden">
     <label for="code">Code de l'application (6 chiffres)</label>
     <input id="code" class="code-input" inputmode="numeric" maxlength="6" placeholder="······">
@@ -139,6 +137,7 @@
       <h2>Double sécurité (2FA) <span id="mfaBadge" class="badge off">désactivée</span></h2>
       <p class="sub">Ajoute un code d'application à ton mot de passe. Sans ton téléphone, personne n'entre.</p>
       <button id="enrollBtn" class="btn">Activer la 2FA</button>
+      <button id="disableMfaBtn" class="btn danger hidden">Désactiver la 2FA</button>
       <div id="enrollArea" class="hidden">
         <div id="qrBox"><img id="qrImg" alt="QR code 2FA"></div>
         <p class="sub">1. Scanne ce QR avec ton app (Google Authenticator, Authy…).<br>
@@ -151,6 +150,20 @@
           <button id="enrollCancel" class="btn ghost">Annuler</button>
         </div>
         <div id="enrollMsg" class="msg"></div>
+      </div>
+    </div>
+
+    <!-- MON COMPTE : changer le mot de passe -->
+    <div class="account-card">
+      <h2>Mon compte</h2>
+      <p class="sub">Changer ton mot de passe. Le nouveau remplace l'ancien (toujours haché, jamais en clair).</p>
+      <label for="pwA">Nouveau mot de passe</label>
+      <input id="pwA" type="password" autocomplete="new-password" placeholder="6 caractères minimum">
+      <label for="pwB">Confirme le nouveau mot de passe</label>
+      <input id="pwB" type="password" autocomplete="new-password" placeholder="le même">
+      <div class="actions">
+        <button id="changePwBtn" class="btn">Changer le mot de passe</button>
+        <span id="changePwMsg" class="msg"></span>
       </div>
     </div>
 
@@ -197,16 +210,13 @@
 <script>
   /* ===========================================================
      CONFIG
-     - anon key = publique, aucun risque.
-     - NE METS JAMAIS la service_role key ici.
-     - ADMIN_EMAIL = identifiant interne caché (tu ne le tapes jamais).
-       Conseil : mets un VRAI e-mail à toi → tu pourras récupérer
-       ton mot de passe si tu l'oublies. Un e-mail bidon marche
-       aussi mais alors aucune récupération possible.
+     - publishable/anon key = publique, aucun risque ici.
+     - NE METS JAMAIS la secret/service_role key.
+     - ADMIN_EMAIL = identifiant interne caché.
      =========================================================== */
   const SUPABASE_URL  = "https://nvvpvwqcjqujyzvdimix.supabase.co";
   const SUPABASE_ANON_KEY = "sb_publishable_7oQ8rUh7OCE0Uo-DUwSUcw_CKOPnCU4";
-  const ADMIN_EMAIL = "zyntracode@gmail.com";  // identifiant interne, caché
+  const ADMIN_EMAIL = "zyntracode@gmail.com";
   const BUCKET = "produits";
   /* =========================================================== */
 
@@ -226,13 +236,12 @@
     route();
   }
 
-  /* ---------- Routage selon session + niveau 2FA ---------- */
   async function route(){
     const { data:{ session } } = await sb.auth.getSession();
     if(!session){ showLogin(); return; }
     const { data: aal } = await sb.auth.mfa.getAuthenticatorAssuranceLevel();
     if(aal && aal.nextLevel === "aal2" && aal.currentLevel !== "aal2"){
-      showLogin(); showStep(2); return;   // 2FA exigée : demande le code
+      showLogin(); showStep(2); return;
     }
     showPanel();
   }
@@ -253,8 +262,7 @@
     const { error } = await sb.auth.signInWithPassword({
       email: ADMIN_EMAIL, password: $("pass").value });
     if(error){ m.textContent = "Mot de passe incorrect."; m.className = "msg err"; return; }
-    m.textContent = "";
-    route(); // décide : panel direct, ou demande le code 2FA
+    m.textContent = ""; route();
   };
 
   /* ---------- Connexion : code 2FA ---------- */
@@ -288,14 +296,26 @@
     };
   }
 
-  /* ---------- Activer la 2FA ---------- */
+  /* ---------- CHANGER le mot de passe (connecté) ---------- */
+  $("changePwBtn").onclick = async () => {
+    const p1 = $("pwA").value, p2 = $("pwB").value, m = $("changePwMsg");
+    if(p1.length < 6){ m.textContent = "6 caractères minimum."; m.className="msg err"; return; }
+    if(p1 !== p2){ m.textContent = "Les deux mots de passe sont différents."; m.className="msg err"; return; }
+    m.textContent = "Changement…"; m.className = "msg";
+    const { error } = await sb.auth.updateUser({ password: p1 });
+    if(error){ m.textContent = "Erreur : " + error.message; m.className = "msg err"; return; }
+    m.textContent = "Mot de passe changé ✓"; m.className = "msg ok";
+    $("pwA").value = ""; $("pwB").value = "";
+  };
+
+  /* ---------- 2FA : activer / désactiver ---------- */
   let enrollFactorId = null;
   $("enrollBtn").onclick = async () => {
     const { data, error } = await sb.auth.mfa.enroll({ factorType: "totp", friendlyName: "Atelier" });
     if(error){ alert("Erreur 2FA : " + error.message); return; }
     enrollFactorId = data.id;
-    $("qrImg").src = data.totp.qr_code;       // QR à scanner
-    $("secretTxt").textContent = data.totp.secret; // code manuel de secours
+    $("qrImg").src = data.totp.qr_code;
+    $("secretTxt").textContent = data.totp.secret;
     $("enrollArea").classList.remove("hidden");
     $("enrollBtn").classList.add("hidden");
   };
@@ -313,6 +333,12 @@
     if(enrollFactorId) sb.auth.mfa.unenroll({ factorId: enrollFactorId });
     $("enrollArea").classList.add("hidden"); $("enrollBtn").classList.remove("hidden");
   };
+  $("disableMfaBtn").onclick = async () => {
+    if(!confirm("Désactiver la 2FA ? Tu te connecteras avec le mot de passe seul.")) return;
+    const { data } = await sb.auth.mfa.listFactors();
+    for(const f of (data?.totp || [])){ await sb.auth.mfa.unenroll({ factorId: f.id }); }
+    refreshMfaBadge();
+  };
   async function refreshMfaBadge(){
     const { data } = await sb.auth.mfa.listFactors();
     const on = (data?.totp || []).some(f => f.status === "verified");
@@ -320,6 +346,7 @@
     b.textContent = on ? "activée" : "désactivée";
     b.className = "badge " + (on ? "on" : "off");
     $("enrollBtn").classList.toggle("hidden", on);
+    $("disableMfaBtn").classList.toggle("hidden", !on);
   }
 
   /* ---------- Produits ---------- */
