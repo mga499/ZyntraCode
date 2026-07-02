@@ -208,7 +208,7 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.102.0"></script>
 <script>
   /* ===========================================================
      CONFIG
@@ -305,13 +305,14 @@
     if(p1.length < 6){ m.textContent = "Le nouveau doit faire 6 caractères minimum."; m.className="msg err"; return; }
     if(p1 !== p2){ m.textContent = "Les deux nouveaux mots de passe sont différents."; m.className="msg err"; return; }
     if(p1 === cur){ m.textContent = "Le nouveau est identique à l'ancien."; m.className="msg err"; return; }
-    m.textContent = "Vérification…"; m.className = "msg";
-    // 1) on revérifie l'ancien mot de passe
-    const { error: eVerif } = await sb.auth.signInWithPassword({ email: ADMIN_EMAIL, password: cur });
-    if(eVerif){ m.textContent = "Mot de passe actuel incorrect."; m.className="msg err"; return; }
-    // 2) on applique le nouveau
-    const { error } = await sb.auth.updateUser({ password: p1 });
-    if(error){ m.textContent = "Erreur : " + error.message; m.className = "msg err"; return; }
+    m.textContent = "Changement…"; m.className = "msg";
+    // Supabase vérifie le mot de passe actuel côté serveur (currentPassword)
+    const { error } = await sb.auth.updateUser({ password: p1, currentPassword: cur });
+    if(error){
+      const em = /current password|incorrect|invalid/i.test(error.message)
+        ? "Mot de passe actuel incorrect." : ("Erreur : " + error.message);
+      m.textContent = em; m.className = "msg err"; return;
+    }
     m.textContent = "Mot de passe changé ✓"; m.className = "msg ok";
     $("pwCur").value = ""; $("pwA").value = ""; $("pwB").value = "";
   };
