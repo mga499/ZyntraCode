@@ -153,20 +153,29 @@
       </div>
     </div>
 
-    <!-- MON COMPTE : changer le mot de passe -->
+    <!-- MON COMPTE : changer le mot de passe par code e-mail -->
     <div class="account-card">
       <h2>Mon compte</h2>
-      <p class="sub">Changer ton mot de passe. Le nouveau remplace l'ancien (toujours haché, jamais en clair).</p>
-      <label for="pwCur">Mot de passe actuel</label>
-      <input id="pwCur" type="password" autocomplete="current-password" placeholder="ton mot de passe actuel">
+      <p class="sub">Changer ton mot de passe. Un code de confirmation est envoyé sur ton e-mail.</p>
       <label for="pwA">Nouveau mot de passe</label>
       <input id="pwA" type="password" autocomplete="new-password" placeholder="6 caractères minimum">
       <label for="pwB">Confirme le nouveau mot de passe</label>
       <input id="pwB" type="password" autocomplete="new-password" placeholder="le même">
       <div class="actions">
-        <button id="changePwBtn" class="btn">Changer le mot de passe</button>
-        <span id="changePwMsg" class="msg"></span>
+        <button id="sendCodeBtn" class="btn">Envoyer le code par e-mail</button>
       </div>
+
+      <!-- étape 2 : le code reçu par mail -->
+      <div id="codeChangeArea" class="hidden">
+        <label for="pwCode" style="margin-top:16px">Code reçu par e-mail</label>
+        <input id="pwCode" class="code-input" inputmode="numeric" maxlength="8" placeholder="······">
+        <div class="actions">
+          <button id="confirmChangeBtn" class="btn">Valider le changement</button>
+          <button id="resendCodeBtn" class="btn ghost">Renvoyer le code</button>
+        </div>
+      </div>
+
+      <div id="changePwMsg" class="msg"></div>
     </div>
 
     <!-- Formulaire produit -->
@@ -298,19 +307,34 @@
     };
   }
 
-  /* ---------- CHANGER le mot de passe (connecté) ---------- */
-  $("changePwBtn").onclick = async () => {
-    const cur = $("pwCur").value, p1 = $("pwA").value, p2 = $("pwB").value, m = $("changePwMsg");
-    if(!cur){ m.textContent = "Entre ton mot de passe actuel."; m.className="msg err"; return; }
-    if(p1.length < 6){ m.textContent = "Le nouveau doit faire 6 caractères minimum."; m.className="msg err"; return; }
-    if(p1 !== p2){ m.textContent = "Les deux nouveaux mots de passe sont différents."; m.className="msg err"; return; }
-    if(p1 === cur){ m.textContent = "Le nouveau est identique à l'ancien."; m.className="msg err"; return; }
+  /* ---------- CHANGER le mot de passe par CODE E-MAIL ----------
+     Supabase exige "Secure password change" -> réauthentification :
+     1) reauthenticate() envoie un code sur l'e-mail
+     2) updateUser({ password, nonce: code }) applique le changement */
+  async function sendChangeCode(){
+    const p1 = $("pwA").value, p2 = $("pwB").value, m = $("changePwMsg");
+    if(p1.length < 6){ m.textContent = "6 caractères minimum."; m.className="msg err"; return false; }
+    if(p1 !== p2){ m.textContent = "Les deux mots de passe sont différents."; m.className="msg err"; return false; }
+    m.textContent = "Envoi du code…"; m.className = "msg";
+    const { error } = await sb.auth.reauthenticate();
+    if(error){ m.textContent = "Erreur : " + error.message; m.className="msg err"; return false; }
+    m.textContent = "Code envoyé sur ton e-mail. Regarde ta boîte (et les spams).";
+    m.className = "msg ok";
+    $("codeChangeArea").classList.remove("hidden");
+    return true;
+  }
+  $("sendCodeBtn").onclick = () => sendChangeCode();
+  $("resendCodeBtn").onclick = () => sendChangeCode();
+
+  $("confirmChangeBtn").onclick = async () => {
+    const p1 = $("pwA").value, code = $("pwCode").value.trim(), m = $("changePwMsg");
+    if(!code){ m.textContent = "Entre le code reçu par e-mail."; m.className="msg err"; return; }
     m.textContent = "Changement…"; m.className = "msg";
-    // Supabase vérifie le mot de passe actuel côté serveur (currentPassword)
-    const { error } = await sb.auth.updateUser({ password: p1, currentPassword: cur });
+    const { error } = await sb.auth.updateUser({ password: p1, nonce: code });
     if(error){ m.textContent = "Erreur : " + error.message; m.className = "msg err"; return; }
     m.textContent = "Mot de passe changé ✓"; m.className = "msg ok";
-    $("pwCur").value = ""; $("pwA").value = ""; $("pwB").value = "";
+    $("pwA").value = ""; $("pwB").value = ""; $("pwCode").value = "";
+    $("codeChangeArea").classList.add("hidden");
   };
 
   /* ---------- 2FA : activer / désactiver ---------- */
