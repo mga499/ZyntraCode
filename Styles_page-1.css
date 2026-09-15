@@ -525,6 +525,30 @@ footer{
   margin-top:50px;
 }
 
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:24px;
+  transform:translate(-50%, 20px);
+  max-width:calc(100% - 32px);
+  background:var(--card);
+  border:1px solid var(--border);
+  color:var(--text-0);
+  font-size:0.88rem;
+  font-weight:600;
+  padding:14px 20px;
+  border-radius:12px;
+  box-shadow:var(--shadow);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  z-index:200;
+}
+.toast.show{
+  opacity:1;
+  transform:translate(-50%, 0);
+}
+
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 860px){
   .shop{ grid-template-columns:1fr; }
