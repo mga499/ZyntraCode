@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="Styles_page-1.css">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 <body>
 
@@ -131,13 +132,15 @@
           Discord ZyntraCode — réponse sous 24h
         </div>
       </div>
-      <form class="contact-form" onsubmit="return false;">
+      <form class="contact-form" id="contact-form">
         <div class="row">
-          <input type="text" placeholder="Votre nom" required>
-          <input type="email" placeholder="Votre email" required>
+          <input type="text" name="from_name" placeholder="Votre nom" required>
+          <input type="email" name="from_email" placeholder="Votre email" required>
         </div>
-        <textarea placeholder="Votre message…" required></textarea>
-        <button type="submit" class="btn btn-primary">Envoyer le message</button>
+        <textarea name="message" placeholder="Votre message…" required></textarea>
+        <input type="hidden" name="name">
+        <input type="hidden" name="time">
+        <button type="submit" class="btn btn-primary" id="contact-submit">Envoyer le message</button>
       </form>
     </section>
 
@@ -149,6 +152,15 @@
 
   <script>
     (function(){
+      // --- EmailJS (formulaire de contact) ---
+      var EMAILJS_PUBLIC_KEY  = "CIEjPItwnunl99qyE";
+      var EMAILJS_SERVICE_ID  = "service_w538eid";
+      var EMAILJS_TEMPLATE_ID = "template_bb5opqq";
+
+      if (window.emailjs) {
+        emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+      }
+
       var catLabels = {
         all: "Populaires en ce moment",
         jeux: "Jeux navigateur",
@@ -271,6 +283,33 @@
           }
         });
       });
+
+      var contactForm   = document.getElementById("contact-form");
+      var contactSubmit = document.getElementById("contact-submit");
+
+      if (contactForm){
+        contactForm.addEventListener("submit", function(e){
+          e.preventDefault();
+
+          var originalLabel = contactSubmit.textContent;
+          contactSubmit.disabled = true;
+          contactSubmit.textContent = "Envoi en cours…";
+
+          emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, contactForm)
+            .then(function(){
+              showToast("✅ Message envoyé — merci, on vous répond vite !");
+              contactForm.reset();
+            })
+            .catch(function(err){
+              console.error("EmailJS error:", err);
+              showToast("❌ Échec de l'envoi. Réessayez ou écrivez sur Discord.");
+            })
+            .finally(function(){
+              contactSubmit.disabled = false;
+              contactSubmit.textContent = originalLabel;
+            });
+        });
+      }
 
       var exploreBtn = document.getElementById("explore-btn");
       if (exploreBtn){
