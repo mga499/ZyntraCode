@@ -141,12 +141,22 @@
         <input type="hidden" name="name">
         <input type="hidden" name="time">
         <button type="submit" class="btn btn-primary" id="contact-submit">Envoyer le message</button>
+        <p class="consent-note">
+          En envoyant ce formulaire, vous acceptez notre
+          <a href="politique-confidentialite.html">politique de confidentialité</a>.
+        </p>
       </form>
     </section>
 
   </main>
 
-  <footer>© 2026 ZyntraCode — zyntracode.ch</footer>
+  <footer>
+    © 2026 ZyntraCode — zyntracode.ch
+    <div class="legal-links">
+      <a href="politique-confidentialite.html">Politique de confidentialité</a>
+      <a href="conditions-utilisation.html">Conditions d'utilisation</a>
+    </div>
+  </footer>
 
   <div class="toast" id="toast"></div>
 
@@ -290,6 +300,13 @@
       if (contactForm){
         contactForm.addEventListener("submit", function(e){
           e.preventDefault();
+
+          // Complète les champs cachés attendus par le template EmailJS
+          contactForm.elements["name"].value = contactForm.elements["from_name"].value;
+          contactForm.elements["time"].value = new Date().toLocaleString("fr-CH", {
+            dateStyle: "short",
+            timeStyle: "short"
+          });
 
           var originalLabel = contactSubmit.textContent;
           contactSubmit.disabled = true;
