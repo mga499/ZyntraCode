@@ -382,12 +382,18 @@ header{
 .card .thumb{
   height:120px;
   background:var(--accent-grad);
-  opacity:0.85;
   display:flex;
   align-items:center;
   justify-content:center;
   font-size:1.8rem;
   position:relative;
+  overflow:hidden;
+}
+.card .thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
 }
 .card .thumb .badge{
   position:absolute;
@@ -597,6 +603,88 @@ footer .legal-links a:hover{ color:var(--accent-2); }
 
 @media (max-width:560px){
   .legal-content{ padding:26px 22px; }
+}
+
+/* ---------- PAGE ENVOYER UN EMAIL ---------- */
+.send-card{
+  max-width:520px;
+}
+.send-form{
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.form-field{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.form-field label{
+  color:var(--text-1);
+  font-size:0.85rem;
+  font-weight:600;
+}
+.form-field input,
+.form-field textarea{
+  width:100%;
+  background:var(--bg-1);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:13px 14px;
+  color:var(--text-0);
+  font-size:0.9rem;
+  font-family:inherit;
+  outline:none;
+  transition:border-color .2s ease, box-shadow .2s ease;
+}
+.form-field input:focus,
+.form-field textarea:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(108,92,231,0.18);
+}
+.form-field textarea{
+  min-height:160px;
+  resize:vertical;
+}
+.send-form .btn{
+  align-self:flex-start;
+}
+
+/* ---------- BANDEAU COOKIES ---------- */
+.cookie-banner{
+  position:fixed;
+  left:0; right:0; bottom:0;
+  z-index:300;
+  background:var(--card);
+  border-top:1px solid var(--border);
+  padding:18px calc(24px + env(safe-area-inset-left, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) 24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:24px;
+  flex-wrap:wrap;
+  box-shadow:0 -8px 24px rgba(0,0,0,0.35);
+}
+.cookie-banner p{
+  margin:0;
+  color:var(--text-1);
+  font-size:0.85rem;
+  max-width:640px;
+  line-height:1.5;
+}
+.cookie-banner p a{ color:var(--accent-2); text-decoration:underline; }
+.cookie-banner-actions{
+  display:flex;
+  gap:10px;
+  flex:none;
+}
+.cookie-banner .btn{
+  padding:10px 20px;
+  font-size:0.85rem;
+}
+
+@media (max-width:560px){
+  .cookie-banner{ flex-direction:column; text-align:center; gap:14px; }
 }
 
 .toast{
