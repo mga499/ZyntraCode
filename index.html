@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="Styles_page-1.css">
+<link rel="stylesheet" href="style.css">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script src="analytics.js" defer></script>
 </head>
@@ -72,8 +72,10 @@
     <section class="shop" id="catalogue">
       <aside class="filters">
         <h3>Filtrer</h3>
-        <button class="filter-opt free active" data-price="free">Jeux Gratuits <span class="tag">FREE</span></button>
-        <button class="filter-opt paid" data-price="all">Gratuit &amp; Payant <span class="tag">ALL</span></button>
+        <div class="price-row">
+          <button class="filter-opt free active" data-price="free">Jeux Gratuits <span class="tag">FREE</span></button>
+          <button class="filter-opt paid" data-price="all">Gratuit &amp; Payant <span class="tag">ALL</span></button>
+        </div>
         <hr>
         <h3>Catégories</h3>
         <div class="cat-list">
@@ -283,6 +285,7 @@
           state.cat = link.dataset.cat;
           catLinks.forEach(function(l){ l.classList.remove("active"); });
           link.classList.add("active");
+          link.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
 
           // Une recherche en cours ne doit pas masquer les produits de la catégorie choisie
           state.query = "";
