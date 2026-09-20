@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Politique de cookies — ZyntraCode</title>
+<meta name="description" content="Politique de cookies de ZyntraCode : cookies utilisés, finalité et gestion de votre consentement.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="canonical" href="https://zyntracode.ch/politique-cookies.html">
+<meta name="robots" content="noindex">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ZyntraCode">
+<meta property="og:title" content="Politique de cookies — ZyntraCode">
+<meta property="og:image" content="https://zyntracode.ch/og-image.png">
+<meta property="og:url" content="https://zyntracode.ch/politique-cookies.html">
+<meta property="og:locale" content="fr_CH">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="Styles_page-1.css">
+<script src="analytics.js" defer></script>
+</head>
+<body>
+
+  <header>
+    <div class="nav-bar">
+      <div class="nav-left">
+        <a href="index.html" class="logo"><span class="dot"></span>Zyntra<span>Code</span></a>
+      </div>
+      <span></span>
+      <div class="nav-right">
+        <a href="index.html#contact" class="nav-link">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap legal-page">
+    <a href="index.html" class="legal-back">← Retour à l'accueil</a>
+    <h1>Politique de cookies</h1>
+    <p class="updated">Dernière mise à jour : 20 septembre 2026</p>
+
+    <div class="legal-content">
+
+      <h2>1. Qu'est-ce qu'un cookie ?</h2>
+      <p>Un cookie (ou une technologie de stockage similaire, comme le <em>local storage</em>) est un petit
+         fichier déposé par un site web dans votre navigateur, qui permet de mémoriser des informations lors de
+         votre visite ou entre deux visites.</p>
+
+      <h2>2. Cookies utilisés sur ce Site</h2>
+      <p><strong>Cookie / stockage technique essentiel</strong> — une information (« zc_cookie_consent ») est
+         enregistrée dans le stockage local de votre navigateur pour mémoriser votre choix d'accepter ou de
+         refuser les cookies de mesure d'audience. Ce stockage est indispensable au fonctionnement du bandeau de
+         consentement et ne nécessite pas votre accord préalable.</p>
+      <p><strong>Cookies de mesure d'audience (Google Analytics 4)</strong> — si vous les acceptez, des cookies
+         déposés par Google LLC (États-Unis) nous permettent de mesurer la fréquentation du Site (pages visitées,
+         durée de visite, provenance) de façon agrégée, avec anonymisation de l'adresse IP. Ces cookies ne sont
+         chargés qu'après votre consentement explicite via le bandeau affiché lors de votre première visite.</p>
+      <p>Le Site n'utilise <strong>aucun cookie publicitaire ou de ciblage marketing</strong> à ce jour.</p>
+
+      <h2>3. Consentement</h2>
+      <p>Lors de votre première visite, un bandeau vous permet d'accepter ou de refuser les cookies de mesure
+         d'audience. Votre choix est mémorisé et vous pouvez le modifier à tout moment en cliquant sur
+         « <a href="#" id="cookie-relaunch">Gérer les cookies</a> » ci-dessous ou dans le pied de page de chaque
+         page du Site.</p>
+
+      <h2>4. Durée de conservation</h2>
+      <p>Votre choix de consentement est conservé dans votre navigateur jusqu'à ce que vous le modifiiez ou
+         effaciez les données de ce site. Les cookies Google Analytics, lorsqu'ils sont acceptés, sont conservés
+         selon les durées par défaut de Google Analytics 4 (généralement jusqu'à 14 mois).</p>
+
+      <h2>5. Gérer les cookies depuis votre navigateur</h2>
+      <p>Vous pouvez également configurer votre navigateur pour refuser tous les cookies ou être averti avant leur
+         dépôt. La désactivation de certains cookies techniques peut toutefois affecter le fonctionnement du
+         Site.</p>
+
+      <h2>6. En savoir plus</h2>
+      <p>Pour plus d'informations sur le traitement de vos données personnelles, consultez notre
+         <a href="politique-confidentialite.html">politique de confidentialité</a>.</p>
+
+      <h2>7. Contact</h2>
+      <p>Pour toute question relative à cette politique de cookies, contactez-nous à
+         <a href="mailto:zyntracode@gmail.com">zyntracode@gmail.com</a>.</p>
+
+    </div>
+  </main>
+
+  <footer>
+    © 2026 ZyntraCode — zyntracode.ch
+    <div class="legal-links">
+      <a href="mentions-legales.html">Mentions légales</a>
+      <a href="conditions-utilisation.html">Conditions d'utilisation</a>
+      <a href="conditions-generales-vente.html">Conditions de vente</a>
+      <a href="politique-confidentialite.html">Politique de confidentialité</a>
+      <a href="politique-cookies.html">Politique de cookies</a>
+      <a href="#" id="footer-cookie-manage">Gérer les cookies</a>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var link = document.getElementById("cookie-relaunch");
+      if (link) {
+        link.addEventListener("click", function (e) {
+          e.preventDefault();
+          if (window.zcManageCookies) window.zcManageCookies();
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
