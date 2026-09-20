@@ -719,56 +719,9 @@ footer .legal-links a:hover{ color:var(--accent-2); }
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 860px){
   .shop{ grid-template-columns:1fr; }
-  .filters{
-    position:static;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    padding:16px;
-  }
-  .filters h3{ display:none; }
+  .filters{ position:static; display:flex; gap:12px; overflow-x:auto; }
+  .filters .cat-list{ display:none; }
   .filters hr{ display:none; }
-
-  /* Filtre de prix : rangée de puces qui défile horizontalement */
-  .price-row{
-    display:flex;
-    gap:8px;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-  }
-  .price-row::-webkit-scrollbar{ display:none; }
-  .price-row .filter-opt{
-    flex:none;
-    width:auto;
-    white-space:nowrap;
-    margin-bottom:0;
-  }
-
-  /* Catégories : rangée de puces qui défile horizontalement, toujours visible */
-  .filters .cat-list{
-    display:flex;
-    gap:8px;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-  }
-  .filters .cat-list::-webkit-scrollbar{ display:none; }
-  .filters .cat-list a{
-    flex:none;
-    white-space:nowrap;
-    padding:9px 14px;
-    border-radius:999px;
-    background:var(--bg-1);
-    border:1px solid var(--border);
-  }
-  .filters .cat-list a.active{
-    background:var(--accent-grad);
-    color:#fff;
-    border-color:transparent;
-  }
-  .filters .cat-list a:hover{ background:var(--bg-1); }
-
   .cards{ grid-template-columns:repeat(2,1fr); }
   .peek-thumbs{ display:none; }
   .contact{ grid-template-columns:1fr; padding:32px 24px; }
