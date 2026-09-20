@@ -379,6 +379,7 @@ header{
   border-color:var(--accent);
   background:var(--card-hover);
 }
+.card[hidden]{ display:none; }
 .card .thumb{
   height:120px;
   background:var(--accent-grad);
@@ -539,6 +540,10 @@ footer{
 }
 footer .legal-links{
   margin-top:8px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:2px 4px;
 }
 footer .legal-links a{
   color:var(--text-2);
