@@ -106,7 +106,7 @@
               </div>
             </div>
             <div class="card" data-cat="scripts" data-price="free">
-              <div class="thumb"><img src="genersateur_de_motde_passe.png" alt="Générateur de Mot de Passe"><span class="badge">Gratuit</span></div>
+              <div class="thumb"><img src="générateurdemotdepasse.png" alt="Générateur de Mot de Passe"><span class="badge">Gratuit</span></div>
               <div class="body">
                 <h4>Générateur de Mot de Passe</h4>
                 <p>Script Python (.exe) — génère des mots de passe forts et sécurisés.</p>
@@ -161,7 +161,8 @@
         <button type="submit" class="btn btn-primary" id="contact-submit">Envoyer le message</button>
         <p class="consent-note">
           En envoyant ce formulaire, vous acceptez notre
-          <a href="politique-confidentialite.html">politique de confidentialité</a>.
+          <a href="politique-confidentialite.html">politique de confidentialité</a> et nos
+          <a href="conditions-utilisation.html">conditions d'utilisation</a>.
         </p>
       </form>
     </section>
@@ -171,8 +172,12 @@
   <footer>
     © 2026 ZyntraCode — zyntracode.ch
     <div class="legal-links">
-      <a href="politique-confidentialite.html">Politique de confidentialité</a>
+      <a href="mentions-legales.html">Mentions légales</a>
       <a href="conditions-utilisation.html">Conditions d'utilisation</a>
+      <a href="conditions-generales-vente.html">Conditions de vente</a>
+      <a href="politique-confidentialite.html">Politique de confidentialité</a>
+      <a href="politique-cookies.html">Politique de cookies</a>
+      <a href="#" id="footer-cookie-manage">Gérer les cookies</a>
     </div>
   </footer>
 
@@ -278,6 +283,11 @@
           state.cat = link.dataset.cat;
           catLinks.forEach(function(l){ l.classList.remove("active"); });
           link.classList.add("active");
+
+          // Une recherche en cours ne doit pas masquer les produits de la catégorie choisie
+          state.query = "";
+          if (searchInput) searchInput.value = "";
+
           applyFilters();
         });
       });
@@ -366,6 +376,21 @@
       if (searchInput){
         searchInput.addEventListener("input", function(){
           state.query = searchInput.value;
+
+          // Une recherche doit porter sur tout le catalogue, pas seulement
+          // sur la catégorie / le filtre de prix actuellement sélectionné.
+          if (state.query.trim() !== ""){
+            state.cat = "all";
+            catLinks.forEach(function(l){ l.classList.remove("active"); });
+            var allCatLink = document.querySelector('.cat-link[data-cat="all"]');
+            if (allCatLink) allCatLink.classList.add("active");
+
+            state.price = "all";
+            priceBtns.forEach(function(b){ b.classList.remove("active"); });
+            var allPriceBtn = document.querySelector('.filter-opt[data-price="all"]');
+            if (allPriceBtn) allPriceBtn.classList.add("active");
+          }
+
           applyFilters();
         });
         searchInput.addEventListener("keydown", function(e){
