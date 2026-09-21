@@ -70,7 +70,7 @@
     </section>
 
     <section class="shop" id="catalogue">
-      <aside class="filters">
+      <aside class="filters reveal">
         <h3>Filtrer</h3>
         <div class="price-row">
           <button class="filter-opt free active" data-price="free">Jeux Gratuits <span class="tag">FREE</span></button>
@@ -88,7 +88,7 @@
       </aside>
 
       <div class="catalogue-main">
-        <div class="carousel-head">
+        <div class="carousel-head reveal">
           <h2 id="cat-title">Populaires en ce moment</h2>
           <span id="cat-count">4 sur 24 résultats</span>
         </div>
@@ -99,16 +99,16 @@
           </button>
 
           <div class="cards" id="cards-grid">
-            <div class="card" data-cat="jeux" data-price="free">
-              <div class="thumb"><img src="gerre_pay.png" alt="Empire Mondial"><span class="badge">Gratuit</span></div>
+            <div class="card reveal" data-cat="jeux" data-price="free">
+              <div class="thumb"><img src="gerre_pay.png" alt="Empire Mondial"><span class="badge">Gratuit</span><span class="badge new-badge">✨ Nouveau</span></div>
               <div class="body">
                 <h4>Empire Mondial</h4>
                 <p>Stratégie mondiale en HTML/JS — alliances &amp; conquêtes.</p>
                 <div class="foot"><span class="price free">Gratuit</span><a class="mini-btn" href="https://mga499.github.io/test-mobile/" target="_blank" rel="noopener">Jouer</a></div>
               </div>
             </div>
-            <div class="card" data-cat="scripts" data-price="free">
-              <div class="thumb"><img src="icone_générateur_motde_passe.png" alt="Générateur de Mot de Passe"><span class="badge">Gratuit</span></div>
+            <div class="card reveal" data-cat="scripts" data-price="free">
+              <div class="thumb"><img src="icone_générateur_motde_passe.png" alt="Générateur de Mot de Passe"><span class="badge">Gratuit</span><span class="badge new-badge">✨ Nouveau</span></div>
               <div class="body">
                 <h4>Générateur de Mot de Passe</h4>
                 <p>Script Python (.exe) — génère des mots de passe forts et sécurisés.</p>
@@ -138,7 +138,7 @@
     </section>
 
     <section class="contact" id="contact">
-      <div class="contact-info">
+      <div class="contact-info reveal">
         <span class="eyebrow">Une question ?</span>
         <h2>Nous contacter</h2>
         <p>Une idée de collaboration, un bug à signaler ou juste envie de dire bonjour :
@@ -152,7 +152,7 @@
           Discord ZyntraCode — réponse sous 24h
         </div>
       </div>
-      <form class="contact-form" id="contact-form">
+      <form class="contact-form reveal" id="contact-form">
         <div class="row">
           <input type="text" name="from_name" placeholder="Votre nom" required>
           <input type="email" name="from_email" placeholder="Votre email" required>
@@ -235,6 +235,22 @@
         }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
 
         sections.forEach(function(s){ observer.observe(s.el); });
+      }
+
+      // --- Apparitions douces au scroll ---
+      var revealEls = document.querySelectorAll(".reveal");
+      if ("IntersectionObserver" in window && revealEls.length){
+        var revealObserver = new IntersectionObserver(function(entries, obs){
+          entries.forEach(function(entry){
+            if (entry.isIntersecting){
+              entry.target.classList.add("in-view");
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+        revealEls.forEach(function(el){ revealObserver.observe(el); });
+      } else {
+        revealEls.forEach(function(el){ el.classList.add("in-view"); });
       }
 
       var catLinks   = document.querySelectorAll(".cat-link");
