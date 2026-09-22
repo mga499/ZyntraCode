@@ -854,7 +854,7 @@ textarea:focus-visible{
   .contact-form .row{ flex-direction:column; }
 
   /* Cartes catalogue : vrai carrousel qui glisse au doigt, une carte à la fois */
-  .arrow-btn{ display:flex; }
+  .arrow-btn{ display:flex; width:30px; }
   .cards{
     display:flex;
     flex-wrap:nowrap;
@@ -871,7 +871,7 @@ textarea:focus-visible{
     scroll-snap-align:start;
     flex:0 0 100%;
   }
-  .card .thumb{ height:70px; }
+  .card .thumb{ height:150px; }
   .card .thumb .badge{ font-size:0.54rem; padding:3px 6px; top:6px; left:6px; }
   .card .thumb .new-badge{ left:auto; right:6px; }
   .card .body{ padding:9px 11px 11px; gap:3px; }
