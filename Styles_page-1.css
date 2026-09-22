@@ -835,19 +835,27 @@ textarea:focus-visible{
   .hero h1{ font-size:1.6rem; }
   .contact-form .row{ flex-direction:column; }
 
-  /* Cartes catalogue : plus compactes, 2 par ligne au lieu d'une carte géante */
-  .cards{ grid-template-columns:repeat(2,1fr); gap:10px; }
-  .card .thumb{ height:88px; }
-  .card .thumb .badge{ font-size:0.56rem; padding:3px 7px; top:7px; left:7px; }
-  .card .thumb .new-badge{ left:auto; right:7px; }
-  .card .body{ padding:10px 12px 12px; gap:4px; }
-  .card .body h4{ font-size:0.82rem; line-height:1.25; }
-  .card .body p{ font-size:0.7rem; line-height:1.35; }
-  .card .foot{
-    flex-direction:column;
-    align-items:stretch;
-    gap:8px;
+  /* Cartes catalogue : une par ligne, en format compact "liste" (image à gauche, texte à droite) */
+  .cards{ grid-template-columns:1fr; gap:10px; }
+  .card{ flex-direction:row; }
+  .card:hover{ transform:none; }
+  .card .thumb{
+    width:92px;
+    height:auto;
+    flex:none;
   }
-  .card .foot .price{ font-size:0.8rem; }
-  .card .mini-btn{ width:100%; text-align:center; font-size:0.74rem; padding:7px 10px; }
+  .card .thumb .badge{ font-size:0.54rem; padding:3px 6px; top:6px; left:6px; }
+  .card .thumb .new-badge{ left:auto; right:6px; }
+  .card .body{ padding:10px 12px; gap:4px; flex:1; min-width:0; }
+  .card .body h4{ font-size:0.88rem; line-height:1.25; }
+  .card .body p{
+    font-size:0.74rem;
+    line-height:1.35;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .card .foot{ margin-top:8px; }
+  .card .mini-btn{ font-size:0.74rem; padding:6px 12px; }
 }
