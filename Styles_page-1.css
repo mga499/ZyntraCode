@@ -866,6 +866,22 @@ textarea:focus-visible{
   .search{ flex:1 1 auto; }
   .hero{ padding:36px 22px; }
   .hero h1{ font-size:1.6rem; }
-  .cards{ grid-template-columns:1fr; }
   .contact-form .row{ flex-direction:column; }
+
+  /* Cartes catalogue : plus compactes, 2 par ligne au lieu d'une carte géante */
+  .carousel-row .arrow-btn{ display:none; }
+  .cards{ grid-template-columns:repeat(2,1fr); gap:10px; }
+  .card .thumb{ height:88px; }
+  .card .thumb .badge{ font-size:0.56rem; padding:3px 7px; top:7px; left:7px; }
+  .card .thumb .new-badge{ left:auto; right:7px; }
+  .card .body{ padding:10px 12px 12px; gap:4px; }
+  .card .body h4{ font-size:0.82rem; line-height:1.25; }
+  .card .body p{ font-size:0.7rem; line-height:1.35; }
+  .card .foot{
+    flex-direction:column;
+    align-items:stretch;
+    gap:8px;
+  }
+  .card .foot .price{ font-size:0.8rem; }
+  .card .mini-btn{ width:100%; text-align:center; font-size:0.74rem; padding:7px 10px; }
 }
