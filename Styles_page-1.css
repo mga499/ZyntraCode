@@ -41,7 +41,7 @@ button{font-family:inherit; cursor:pointer;}
   padding:0 24px;
 }
 
-/* ---------- HEADER ----------- */
+/* ---------- HEADER ---------- */
 header{
   position:sticky; top:0; z-index:50;
   background:rgba(11,14,26,0.85);
@@ -363,23 +363,6 @@ header{
   align-items:stretch;
   gap:14px;
 }
-.arrow-btn{
-  flex:none;
-  width:44px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:12px;
-  color:var(--text-1);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  transition:all .2s ease;
-}
-.arrow-btn:hover{
-  background:var(--accent-grad);
-  color:#fff;
-  border-color:transparent;
-}
 
 .cards{
   flex:1;
@@ -465,21 +448,6 @@ header{
   cursor:pointer;
 }
 .mini-btn:hover{ background:var(--accent-grad); border-color:transparent; }
-
-.peek-thumbs{
-  flex:none;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  width:70px;
-}
-.peek-thumbs .p-thumb{
-  flex:1;
-  border-radius:12px;
-  background:var(--bg-2);
-  border:1px solid var(--border);
-  opacity:0.55;
-}
 
 .see-more{
   display:flex;
@@ -852,7 +820,6 @@ textarea:focus-visible{
   .filters .cat-list a:hover{ background:var(--bg-1); }
 
   .cards{ grid-template-columns:repeat(2,1fr); }
-  .peek-thumbs{ display:none; }
   .contact{ grid-template-columns:1fr; padding:32px 24px; }
 }
 @media (max-width: 560px){
@@ -869,7 +836,6 @@ textarea:focus-visible{
   .contact-form .row{ flex-direction:column; }
 
   /* Cartes catalogue : plus compactes, 2 par ligne au lieu d'une carte géante */
-  .carousel-row .arrow-btn{ display:none; }
   .cards{ grid-template-columns:repeat(2,1fr); gap:10px; }
   .card .thumb{ height:88px; }
   .card .thumb .badge{ font-size:0.56rem; padding:3px 7px; top:7px; left:7px; }
