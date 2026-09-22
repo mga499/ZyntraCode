@@ -94,6 +94,10 @@
         </div>
 
         <div class="carousel-row">
+          <button class="arrow-btn" id="cat-prev" aria-label="Précédent">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+
           <div class="cards" id="cards-grid">
             <div class="card reveal" data-cat="jeux" data-price="free">
               <div class="thumb"><img src="gerre_pay.png" alt="Empire Mondial"><span class="badge">Gratuit</span><span class="badge new-badge">✨ Nouveau</span></div>
@@ -112,6 +116,10 @@
               </div>
             </div>
           </div>
+
+          <button class="arrow-btn" id="cat-next" aria-label="Suivant">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
         </div>
 
         <p class="empty-state" id="empty-state" hidden>Aucun résultat pour ce filtre.</p>
@@ -240,6 +248,21 @@
         revealEls.forEach(function(el){ el.classList.add("in-view"); });
       }
 
+      // --- Carrousel du catalogue (mobile) ---
+      var cardsGrid = document.getElementById("cards-grid");
+      var catPrev   = document.getElementById("cat-prev");
+      var catNext   = document.getElementById("cat-next");
+
+      function scrollCardsBy(direction){
+        if (!cardsGrid) return;
+        var firstVisible = cardsGrid.querySelector(".card:not([hidden])");
+        var step = firstVisible ? firstVisible.getBoundingClientRect().width + 12 : cardsGrid.clientWidth * 0.85;
+        cardsGrid.scrollBy({ left: direction * step, behavior: "smooth" });
+      }
+
+      if (catPrev) catPrev.addEventListener("click", function(){ scrollCardsBy(-1); });
+      if (catNext) catNext.addEventListener("click", function(){ scrollCardsBy(1); });
+
       var catLinks   = document.querySelectorAll(".cat-link");
       var priceBtns  = document.querySelectorAll(".filter-opt");
       var cards      = document.querySelectorAll("#cards-grid .card");
@@ -280,6 +303,9 @@
         } else {
           emptyState.hidden = true;
         }
+
+        // Remet le carrousel au début à chaque changement de filtre
+        if (cardsGrid) cardsGrid.scrollTo({ left: 0 });
       }
 
       catLinks.forEach(function(link){
